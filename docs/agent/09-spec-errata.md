@@ -16,13 +16,13 @@ agent that touches it STOPS and asks; prompt P3 settles OPEN rows with the owner
 | D-7 | DEFAULT | Redis: sixth container | state engine, inner loop, approval gate |
 | D-8 | DECIDED | The "85 features" claim is wrong | - |
 | D-9 | OPEN (owner edits spec) | Duplicate section ids | tracker mapping by id |
-| D-10 | OPEN | Where the `locus.*` config tree is stored | every feature (via the accessor) |
+| D-10 | DECIDED | Where the `locus.*` config tree is stored | every feature (via the accessor) |
 | D-11 | DEFAULT | `inner_loop_audit` and `inner_loop_log` are two tables | F-0058 |
 | D-12 | DEFAULT | Registry / config file names and off conventions (03) | every feature |
 | D-13 | OPEN | How a hybrid TUI reaches the VM | hybrid mode (F-0085) |
 | D-14 | DEFAULT | `LOCUS_HOME` and timezone come from config | every path and schedule |
-| D-15 | OPEN | Format of owner-defined research cron jobs | the "ultimate goal" |
-| D-16 | OPEN (low urgency) | Runtime working directory for Pi | S-3 follow-up |
+| D-15 | DECIDED | Format of owner-defined research cron jobs | the "ultimate goal" |
+| D-16 | DECIDED | Runtime working directory for Pi | S-3 follow-up |
 Security items S-1 to S-3 are in 10-security.md; they are not optional.
 
 ## B. The decisions
@@ -78,10 +78,11 @@ listed (rows marked `origin: spec-gap`). The verifier's spec-gap list, not any o
 Forge (1752) and Model Selection (2465); 26.1 is the heading of the combined "12.1-12.5 + 26.1" scheduler section (4217) and of "Inner Loop" (4768).
 Until the owner renumbers, the tracker cites these by title and line, and agents never edit the spec.
 
-**D-10 Config location (OPEN).** The spec says both: Pi `settings.json` under a `locus` key (lines 465, 545, 5283-5327) and `.locus/config.yaml`
-(31 mentions). An earlier session already analysed it and chose `~/.locus/.env` for secrets and `~/.locus/config.yaml` for the rest.
-Recommendation: `LOCUS_HOME/config.yaml` is the only home of the `locus.*` tree; the TypeScript accessor reads the same file (the sidecar may not be
-up when Pi starts); Pi keeps its own `settings.json` for Pi's settings only. Until decided, nobody reads either file outside the accessor (03).
+**D-10 Config location (DECIDED 2026-10-15).** The spec says both: Pi `settings.json` under a `locus` key (lines 465, 545, 5283-5327) and `.locus/config.yaml`
+(31 mentions). Decision: "LOCUS_HOME/config.yaml is the canonical home of the locus.* tree; secrets stay in ~/.locus/.env".
+Rule: `LOCUS_HOME/config.yaml` is the only home of the `locus.*` tree; the TypeScript accessor reads the same file (the sidecar may not be
+up when Pi starts); Pi keeps its own `settings.json` for Pi's settings only. All modules access configuration via `sidecar.config` or
+`locus-extension/src/config.ts`; nobody reads either file outside the accessor.
 
 **D-11 Inner-loop tables (DEFAULT).** Spec 26.1 step 9 writes `inner_loop_audit` (one row per candidate thought: text, scores, routing); the schema
 and the data-flow summary list `inner_loop_log` (one row per pass: tokens, suppressed, surfaced). Default: two tables, one each.
@@ -95,11 +96,11 @@ Recommendation: a first, b later.
 **D-14 Home and timezone (DEFAULT).** `LOCUS_HOME` (default `~/.locus`) replaces the spec's `C:\Users\soni8\.locus`. Times and the timezone
 (the spec writes IST everywhere) come from config; the owner's default is `Asia/Kolkata`.
 
-**D-15 Research cron jobs (OPEN).** The owner's ultimate goal has no spec section. Needed: job format (name, schedule, prompt, tier, allowed paths,
-budget, destination), how results are stored and reported, how a failed job is retried, where its trail goes (D-4).
+**D-15 Research cron jobs (DECIDED 2026-10-15).** The owner's ultimate goal has no spec section. Decision: "Research jobs are defined in YAML files under LOCUS_HOME/jobs/ (or config key locus.research.jobs) with cron schedules, prompts, model tiers, and vault destinations".
+Rule: Each job defines `{name, schedule, prompt, tier, allowed_paths, budget, destination, notify, retry}`. The scheduler invokes `sidecar/cron_runner.py` with `session_id="cron_<job_id>"`, executing the prompt via `run_pi_turn`. Outputs write to the specified markdown destination under `vault/` (e.g. `vault/05-Daily/Research/`) and run metadata is appended to the execution log table.
 
-**D-16 Runtime cwd (OPEN, low urgency).** Pi runs with cwd = the repo so `--approve` loads `.pi/extensions`; `--no-context-files` stops the developer
-rules leaking in. Cleaner: a dedicated runtime folder and `-e <extension>` so `--approve` is not needed. Decide after the installer works.
+**D-16 Runtime cwd (DECIDED 2026-10-15).** Pi runs with cwd = the repo root so `--approve` loads `.pi/extensions` / `locus-extension`; `--no-context-files` stops developer rules from leaking in. Decision: "Pi bridge runs from repo root with mandatory --approve --no-context-files flags until installer packaging moves to -e extension flags".
+Rule: `sidecar/pi_bridge.py` executes Pi with working directory set to repository root, enforcing `--approve --no-context-files`. Future installer packaging may move to dedicated runtime directory with `-e <path>`.
 
 ## C. The four principles you asked about, checked against the spec
 | Principle | In the spec? | Evidence |

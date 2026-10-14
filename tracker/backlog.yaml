@@ -143,6 +143,13 @@ stories:
     points: 3
     target_level: 3
     depends_on: [US-02, US-04, US-06]
+    accept:
+      - "sidecar/channel_telegram.py implements the ChannelProvider interface and registers under ('channel', 'telegram') in ProviderRegistry."
+      - "When locus.channel.telegram.enabled is false, the gateway does not connect to Telegram or poll for updates."
+      - "Inbound messages from the paired owner chat ID trigger run_pi_turn and stream/reply the generated answer back to the owner's Telegram chat."
+      - "Messages from any chat ID other than the paired owner are rejected/ignored with no execution or leak of system info."
+      - "Webhook mode requires TELEGRAM_WEBHOOK_SECRET and fails closed if unset."
+    demo: 'With a TEST bot token on this PC: start the Telegram channel provider. Send a message from an unpaired test account: the bot ignores or returns the fixed denial line. Send a message from the paired owner account: the bot invokes Pi via run_pi_turn and returns Pi''s response to the chat. Disable locus.channel.telegram.enabled in config: the provider disconnects and stops polling.'
 
   - id: US-08
     epic: E3
@@ -153,6 +160,13 @@ stories:
     target_level: 3
     requires_decisions: [D-15, D-16]
     depends_on: [US-02, US-06]
+    accept:
+      - "sidecar/scheduler.py loads research jobs matching the D-15 format from LOCUS_HOME/jobs/ or locus.research.jobs."
+      - "When scheduled, the job triggers sidecar/cron_runner.py with session_id='cron_<job_id>', executing the job's prompt via run_pi_turn."
+      - "The output of the research turn is written to the configured destination in vault/ (e.g. vault/05-Daily/Research/YYYY-MM-DD-<name>.md)."
+      - "A run log entry is recorded in the execution log table with timestamp, status, token usage, and output path."
+      - "Respects locus.scheduler.enabled: when disabled, no jobs fire."
+    demo: 'Place a test job test_research.yaml in LOCUS_HOME/jobs/ with a 1-minute schedule and destination vault/05-Daily/Research/test.md. Start the scheduler. Wait for the job to fire: verify test.md is created in the vault with Pi''s output and verify the run is logged. Stop the scheduler and remove the test job.'
 
   - id: US-09
     epic: E3
