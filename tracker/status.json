@@ -1,31 +1,31 @@
 {
-  "generated_at": "2026-10-15T03:48:43+0530",
-  "commit": "5c5e85f24e3e21109a409b86debdc0c41e3e2fe4",
-  "dirty": false,
+  "generated_at": "2026-10-15T03:53:01+0530",
+  "commit": "389f5d524b69631d6131aa7152515a0f19d4de99",
+  "dirty": true,
   "static": false,
   "guard": {
     "verdict": "FAIL",
     "counts": {
-      "FAIL": 2,
+      "FAIL": 1,
       "WARN": 12,
       "INFO": 0
     }
   },
   "summary": {
     "features": 125,
-    "verified_mean_pct": 12.3,
+    "verified_mean_pct": 12.8,
     "claimed_mean_pct": 71.4,
     "claimed_rows": 86,
     "by_label": {
       "FILES_PRESENT": 5,
       "INHERITED_OK": 12,
-      "NO_EVIDENCE": 104,
-      "UNIT_VERIFIED": 4
+      "NO_EVIDENCE": 103,
+      "UNIT_VERIFIED": 5
     },
     "integrated_or_better": 12,
     "proven": 0,
     "overclaims": 71,
-    "no_evidence": 104,
+    "no_evidence": 103,
     "spec_sections_total": 135,
     "spec_changed": 0
   },
@@ -1177,9 +1177,9 @@
         "OVERCLAIM"
       ],
       "reasons": [
-        "declared files missing: sidecar/gateway/, locus-extension/"
+        "declared files missing: sidecar/gateway/"
       ],
-      "next": "Files claimed but absent: sidecar/gateway/, locus-extension/. Create them or correct the path.",
+      "next": "Files claimed but absent: sidecar/gateway/. Create them or correct the path.",
       "checks": {}
     },
     "F-0065": {
@@ -1553,7 +1553,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..........                                                               [100%]\n10 passed in 0.12s\n",
+            "tail": "..........                                                               [100%]\n10 passed in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 1.7
@@ -1716,7 +1716,7 @@
             "tail": "......                                                                   [100%]\n6 passed in 0.03s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 1.7
+            "seconds": 1.6
           }
         ],
         "guard": [
@@ -2330,19 +2330,37 @@
       "id": "F-0125",
       "title": "Modularity foundation: provider registry + config accessor (sidecar and TypeScript)",
       "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 3,
+      "label": "UNIT_VERIFIED",
+      "pct": 65,
       "claimed_pct": null,
       "gap": null,
-      "flags": [
-        "CLAIMED_FILES_MISSING"
-      ],
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/registry.py, sidecar/config.py, locus-extension/src/registry.ts, locus-extension/src/config.ts"
+        "no integration test declared"
       ],
-      "next": "Files claimed but absent: sidecar/registry.py, sidecar/config.py, locus-extension/src/registry.ts, locus-extension/src/config.ts. Create them or correct the path.",
-      "checks": {}
+      "next": "Add evidence.integration: a DIFFERENT test that crosses a boundary (sidecar<->Pi, extension<->Pi, service<->service).",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_config_accessor.py -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".......                                                                  [100%]\n7 passed in 0.71s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.2
+          }
+        ],
+        "guard": [],
+        "integration": []
+      }
     }
   },
   "regressions": []

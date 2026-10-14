@@ -4033,20 +4033,17 @@ features:
   spec_sha: {}
   evidence:
     files:
-    - sidecar/registry.py
     - sidecar/config.py
-    - locus-extension/src/registry.ts
     - locus-extension/src/config.ts
+    - tests/test_config_accessor.py
     symbols:
-    - file: sidecar/registry.py
-      name: ProviderRegistry
-    - file: sidecar/registry.py
-      name: get_registry
     - file: sidecar/config.py
       name: get
     - file: sidecar/config.py
       name: is_enabled
     guard: []
-    unit: []
+    unit:
+    - py -3 -m pytest tests/test_config_accessor.py -q
     integration: []
   depends_on: []
+

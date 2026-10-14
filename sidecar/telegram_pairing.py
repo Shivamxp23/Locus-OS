@@ -52,9 +52,9 @@ def hash_pairing_code(code: str) -> str:
 
 def get_default_config_path() -> Path:
     """Determine canonical config.yaml path in LOCUS_HOME."""
-    home_env = os.environ.get("LOCUS_HOME")
-    home = Path(home_env) if home_env else (Path.home() / ".locus")
-    return home / "config.yaml"
+    from sidecar.config import get_config_path
+
+    return get_config_path()
 
 
 def validate_webhook_config(webhook_url: Optional[str], webhook_secret: Optional[str]) -> bool:

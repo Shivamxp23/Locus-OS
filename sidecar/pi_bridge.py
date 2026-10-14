@@ -40,7 +40,9 @@ class PiTurnResult:
 
 def get_node_executable() -> str:
     """Resolve the Node.js executable on PATH or via environment override."""
-    override = os.environ.get("NODE_EXECUTABLE")
+    from sidecar.config import get_env
+
+    override = get_env("NODE_EXECUTABLE")
     if override and shutil.which(override):
         return override
     exe = shutil.which("node") or shutil.which("node.exe")

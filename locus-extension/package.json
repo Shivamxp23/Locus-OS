@@ -1,0 +1,6 @@
+{
+  "name": "locus-extension",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Locus OS TypeScript extensions for Pi Agent"
+}
