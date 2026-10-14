@@ -4034,16 +4034,29 @@ features:
   evidence:
     files:
     - sidecar/config.py
+    - sidecar/registry.py
     - locus-extension/src/config.ts
+    - locus-extension/src/registry.ts
     - tests/test_config_accessor.py
+    - tests/test_provider_registry.py
+    - tests/test_registry_integration.py
     symbols:
     - file: sidecar/config.py
       name: get
     - file: sidecar/config.py
       name: is_enabled
+    - file: sidecar/registry.py
+      name: ProviderRegistry
+    - file: sidecar/registry.py
+      name: get_registry
+    - file: locus-extension/src/registry.ts
+      name: ProviderRegistry
+    - file: locus-extension/src/registry.ts
+      name: get_registry
     guard: []
     unit:
-    - py -3 -m pytest tests/test_config_accessor.py -q
-    integration: []
+    - py -3 -m pytest tests/test_config_accessor.py tests/test_provider_registry.py -q
+    integration:
+    - py -3 -m pytest tests/test_registry_integration.py -q
   depends_on: []
 
