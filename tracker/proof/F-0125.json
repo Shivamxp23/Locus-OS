@@ -1,0 +1,13 @@
+{
+  "id": "F-0125",
+  "commit": "ee1f9e70841f1c6e33a8197580d1d6fe82095846",
+  "dirty": true,
+  "ran_at": "2026-10-15T04:23:05+0530",
+  "files_sha256": "915acb16de5001ddbc0578cc137136234c0573249e8c2bfcb296388c5648b69d",
+  "cmd": null,
+  "manual": true,
+  "exit": 0,
+  "note": "Ran off, swap, health tests: all passed. Live route answered 503 with locus.test.dummy.enabled.",
+  "artifact": "tracker/proof/F-0125-evidence.txt",
+  "artifact_sha256": "5baa365db605d4c39556a040f6d7f44840ff123200f707c2a6c30bf438caf79d"
+}

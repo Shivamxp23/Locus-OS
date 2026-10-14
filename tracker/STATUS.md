@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `7ca8649617` (dirty working tree) - 2026-10-15T04:18:05+0530 - with test runs
-- guard: FAIL {'FAIL': 3, 'WARN': 12, 'INFO': 0}
-- features: 125 | verified average **13.0%** | old claimed average 71.4% over 86 rows
-- integrated or better: 13 | proven: 0 | overclaims (claimed >= verified + 25): 71 | no evidence: 103
-- by level: {'FILES_PRESENT': 5, 'INHERITED_OK': 12, 'INTEGRATED': 1, 'NO_EVIDENCE': 103, 'UNIT_VERIFIED': 4}
+- commit `ee1f9e7084` (dirty working tree) - 2026-10-15T04:24:38+0530 - with test runs
+- guard: FAIL {'FAIL': 1, 'WARN': 14, 'INFO': 0}
+- features: 125 | verified average **13.1%** | old claimed average 71.4% over 86 rows
+- integrated or better: 13 | proven: 1 | overclaims (claimed >= verified + 25): 71 | no evidence: 103
+- by level: {'FILES_PRESENT': 5, 'INHERITED_OK': 12, 'NO_EVIDENCE': 103, 'PROVEN': 1, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -157,4 +157,4 @@
 | F-0122 | LOCUS_SHORTHAND 4× Text Compressor | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0123 | 3-Level Tag Hierarchy & Semantic Indexing | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0124 | Auxiliary LLM Client | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
-| F-0125 | Modularity foundation: provider registry + c | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0125 | Modularity foundation: provider registry + c | - | 100% | PROVEN |  |  |

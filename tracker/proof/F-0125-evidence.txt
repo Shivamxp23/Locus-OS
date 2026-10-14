@@ -1,0 +1,51 @@
+================================================================================
+LOCUS OS FEATURE PROOF: F-0125 (Universal Provider Registry + Config Accessor)
+================================================================================
+Timestamp: 2026-10-15T04:22:00+05:30
+Sprint: S3 (US-06)
+Verdict: ACCEPT (L4 INTEGRATED -> L5 PROVEN)
+
+1. MODULARITY TESTS (OFF, SWAP, HEALTH)
+Command: py -3 -m pytest tests/test_provider_registry.py -k "test_provider_off or test_provider_swap or test_provider_health" -v
+Output:
+tests/test_provider_registry.py::test_provider_off_http_route PASSED     [ 16%]
+tests/test_provider_registry.py::test_provider_off_tools_suppressed PASSED [ 33%]
+tests/test_provider_registry.py::test_provider_off_jobs_suppressed PASSED [ 50%]
+tests/test_provider_registry.py::test_provider_off_direct_get_raises PASSED [ 66%]
+tests/test_provider_registry.py::test_provider_swap_without_code_edit PASSED [ 83%]
+tests/test_provider_registry.py::test_provider_health_checks PASSED      [100%]
+======================= 6 passed, 3 deselected in 0.11s =======================
+
+2. LIVE ROUTE DEMO WITH DISABLED CONFIG
+Command:
+py -3 -c "
+import yaml, tempfile
+from pathlib import Path
+from sidecar.registry import get_registry
+
+with tempfile.TemporaryDirectory() as td:
+    cfg = Path(td) / 'config.yaml'
+    cfg.write_text(yaml.safe_dump({'locus': {'test': {'dummy': {'enabled': False}}}}), encoding='utf-8')
+    reg = get_registry()
+    @reg.route_guard('locus.test.dummy', custom_config_path=cfg)
+    def my_route(): return 200, {'status': 'ok'}
+    status, body = my_route()
+    print('ROUTE STATUS:', status)
+    print('ROUTE BODY:', body)
+"
+Output:
+ROUTE STATUS: 503
+ROUTE BODY: {'disabled': 'locus.test.dummy.enabled'}
+
+3. BOUNDARY CROSSING INTEGRATION TESTS
+Command: py -3 -m pytest tests/test_registry_integration.py -v
+Output:
+tests/test_registry_integration.py::test_integration_http_service_boundary_with_route_guard PASSED [ 50%]
+tests/test_registry_integration.py::test_integration_cross_runtime_python_and_typescript_registry PASSED [100%]
+============================== 2 passed in 0.85s ==============================
+
+4. TYPESCRIPT EXTENSION PARITY
+Command: node --experimental-strip-types -e "import('./locus-extension/src/registry.ts').then(m => console.log('Loaded:', Object.keys(m)))"
+Output:
+Loaded: [ 'BaseProvider', 'FeatureDisabledError', 'ProviderRegistry', 'getRegistry', 'get_registry' ]
+================================================================================

@@ -1,30 +1,30 @@
 {
-  "generated_at": "2026-10-15T04:18:05+0530",
-  "commit": "7ca8649617ca484bdb0cc8924d9461af233dc228",
+  "generated_at": "2026-10-15T04:24:38+0530",
+  "commit": "ee1f9e70841f1c6e33a8197580d1d6fe82095846",
   "dirty": true,
   "static": false,
   "guard": {
     "verdict": "FAIL",
     "counts": {
-      "FAIL": 3,
-      "WARN": 12,
+      "FAIL": 1,
+      "WARN": 14,
       "INFO": 0
     }
   },
   "summary": {
     "features": 125,
-    "verified_mean_pct": 13.0,
+    "verified_mean_pct": 13.1,
     "claimed_mean_pct": 71.4,
     "claimed_rows": 86,
     "by_label": {
       "FILES_PRESENT": 5,
       "INHERITED_OK": 12,
-      "INTEGRATED": 1,
       "NO_EVIDENCE": 103,
+      "PROVEN": 1,
       "UNIT_VERIFIED": 4
     },
     "integrated_or_better": 13,
-    "proven": 0,
+    "proven": 1,
     "overclaims": 71,
     "no_evidence": 103,
     "spec_sections_total": 135,
@@ -1554,10 +1554,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..........                                                               [100%]\n10 passed in 0.20s\n",
+            "tail": "..........                                                               [100%]\n10 passed in 0.30s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.2
+            "seconds": 6.0
           }
         ],
         "guard": [],
@@ -1592,10 +1592,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "......                                                                   [100%]\n6 passed in 0.05s\n",
+            "tail": "......                                                                   [100%]\n6 passed in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 5.2
           }
         ],
         "guard": [
@@ -1678,10 +1678,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed in 0.04s\n",
+            "tail": ".....                                                                    [100%]\n5 passed in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 4.6
           }
         ],
         "guard": [],
@@ -1714,10 +1714,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "......                                                                   [100%]\n6 passed in 0.06s\n",
+            "tail": "......                                                                   [100%]\n6 passed in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 4.9
           }
         ],
         "guard": [
@@ -2331,16 +2331,14 @@
       "id": "F-0125",
       "title": "Modularity foundation: provider registry + config accessor (sidecar and TypeScript)",
       "verdict": "LOCUS-NEW",
-      "level": 4,
-      "label": "INTEGRATED",
-      "pct": 85,
+      "level": 5,
+      "label": "PROVEN",
+      "pct": 100,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
-      "reasons": [
-        "no recorded proof"
-      ],
-      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "reasons": [],
+      "next": "",
       "checks": {
         "symbols": {
           "ok": true,
@@ -2353,10 +2351,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "................                                                         [100%]\n16 passed in 1.11s\n",
+            "tail": "................                                                         [100%]\n16 passed in 3.22s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.8
+            "seconds": 7.9
           }
         ],
         "guard": [],
@@ -2367,10 +2365,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed in 0.71s\n",
+            "tail": "..                                                                       [100%]\n2 passed in 2.26s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.1
+            "seconds": 7.6
           }
         ]
       }
