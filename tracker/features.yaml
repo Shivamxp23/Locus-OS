@@ -1,0 +1,4030 @@
+# tracker/features.yaml -- SOURCE OF TRUTH for WHAT must exist and HOW to prove it.
+#
+#   * Status is COMPUTED by tools/tracker/verify.py from `evidence`. It is never written here.
+#     Keys like status / pct / complete are rejected by the guard.
+#   * `claimed` is what the old LLM-maintained workbook said. It is kept for comparison only.
+#   * To advance a feature, add evidence: files -> symbols -> unit (L3) -> integration (L4) -> proof + signoff (L5).
+#   * Do not read this whole file (thousands of lines). Use: python tools/tracker/show.py F-0007
+#   * Agents may ADD evidence for the feature they are working on. They may not delete or weaken existing evidence.
+schema: 1
+spec_file: .keysndocs/Documentation/Implementation Plans/LOCUS_FEATURE_LOGIC_DECOMPOSITION.md
+features:
+- id: F-0001
+  title: Pi Agent Loop
+  spec_refs:
+  - '§1.1: Pi Agent Loop (Foundation)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Foundation
+  verdict: KEEP-PI
+  source: Pi agent-loop.ts
+  provider: null
+  layer: pi
+  inherited: true
+  manual: false
+  claimed:
+    legacy_id: §1.1
+    legacy_row: 2
+    pi_status: ✅ INHERITED
+    sidecar_status: N/A
+    pct: 100
+    remaining: None
+    notes: Core dual-loop inherited from Pi Agent
+    key_files_raw: packages/agent/src/agent-loop.ts
+  spec_targets: []
+  spec_sha:
+    '§1.1: Pi Agent Loop (Foundation)': 1fde395dd6e71505
+  evidence:
+    files:
+    - packages/agent/src/agent-loop.ts
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0002
+  title: System Prompt Construction
+  spec_refs:
+  - '§1.2: System Prompt Construction'
+  mapping: exact
+  origin: legacy-tracker
+  category: Foundation
+  verdict: AUGMENT
+  source: Pi system-prompt.ts
+  provider: null
+  layer: extension
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §1.2
+    legacy_row: 3
+    pi_status: ✅ AUGMENTED
+    sidecar_status: ✅ Done
+    pct: 100
+    remaining: None
+    notes: Context Forge injection via transformContext hook
+    key_files_raw: locus-extension/src/hooks/index.ts
+  spec_targets:
+  - locus/core/prompt-builder.ts
+  spec_sha:
+    '§1.2: System Prompt Construction': 5a83aa278c006d8d
+  evidence:
+    files:
+    - locus-extension/src/hooks/index.ts
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0003
+  title: Tool System (13 Canonical Tools)
+  spec_refs:
+  - '§1.3: Tool System'
+  mapping: exact
+  origin: legacy-tracker
+  category: Foundation
+  verdict: AUGMENT
+  source: Pi tools/index.ts + Locus
+  provider: AgentTool
+  layer: extension
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §1.3
+    legacy_row: 4
+    pi_status: ✅ IMPLEMENTED
+    sidecar_status: ✅ Done
+    pct: 100
+    remaining: None
+    notes: 13 tools registered via pi.registerTool()
+    key_files_raw: locus-extension/src/tools/index.ts
+  spec_targets: []
+  spec_sha:
+    '§1.3: Tool System': e11c10359208c9aa
+  evidence:
+    files:
+    - locus-extension/src/tools/index.ts
+    symbols:
+    - file: locus-extension/src/tools/index.ts
+      contains:
+      - locus_checkin
+      - locus_life
+      - locus_goals
+      - locus_memory
+      - locus_vault
+      - locus_brain
+      - locus_research
+      - locus_delegate_code
+      - locus_doctor
+      - locus_pageindex
+      - locus_diagram
+      - locus_capture
+      - locus_schedule
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0004
+  title: Model Management & Escalation
+  spec_refs:
+  - '§1.4: Model Management'
+  mapping: exact
+  origin: legacy-tracker
+  category: Foundation
+  verdict: AUGMENT
+  source: Pi model-resolver.ts
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §1.4
+    legacy_row: 5
+    pi_status: ✅ INHERITED
+    sidecar_status: ⚠️ Escalation logic exists
+    pct: 85
+    remaining: Wire model escalation into prepareNextTurn hook
+    notes: Escalation rules in Python, need TS hook
+    key_files_raw: sidecar/life_os.py (model selection)
+  spec_targets:
+  - locus/core/model-escalation.ts
+  spec_sha:
+    '§1.4: Model Management': 4d349b5dd0c333dd
+  evidence:
+    files:
+    - sidecar/life_os.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0005
+  title: Extension Lifecycle
+  spec_refs:
+  - '§1.5: Extension Lifecycle (25+ Events)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Foundation
+  verdict: KEEP-PI
+  source: Pi agent-session.ts
+  provider: null
+  layer: extension
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §1.5
+    legacy_row: 6
+    pi_status: ✅ IMPLEMENTED
+    sidecar_status: N/A
+    pct: 100
+    remaining: None
+    notes: Extension loads, hooks registered
+    key_files_raw: locus-extension/index.ts
+  spec_targets:
+  - locus-os/extensions/
+  - locus/extensions/
+  spec_sha:
+    '§1.5: Extension Lifecycle (25+ Events)': fb48b8709445021b
+  evidence:
+    files:
+    - locus-extension/index.ts
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0006
+  title: Context Window Management
+  spec_refs:
+  - '§1.6: Context Window Management'
+  mapping: exact
+  origin: legacy-tracker
+  category: Foundation
+  verdict: AUGMENT
+  source: Pi compaction/ + Headroom
+  provider: CompressionProvider
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §1.6
+    legacy_row: 7
+    pi_status: ✅ INHERITED
+    sidecar_status: ⚠️ Headroom adapter exists
+    pct: 70
+    remaining: Wire Headroom CCR into Pi's compaction hook
+    notes: Pi compaction works; Headroom CCR integration unclear
+    key_files_raw: sidecar/context/headroom_adapter.py
+  spec_targets: []
+  spec_sha:
+    '§1.6: Context Window Management': 86ef8ba90be8f58b
+  evidence:
+    files:
+    - sidecar/context/headroom_adapter.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0007
+  title: Post-Turn Review
+  spec_refs:
+  - '§1.7 + §10.1: Post-Turn Background Review'
+  mapping: exact
+  origin: legacy-tracker
+  category: Foundation
+  verdict: AUGMENT
+  source: Hermes background_review.py
+  provider: PostTurnProvider
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §1.7
+    legacy_row: 8
+    pi_status: ⚠️ Hook exists
+    sidecar_status: ✅ Done
+    pct: 80
+    remaining: Verify afterToolCall hook fires learning
+    notes: Called by conductor post_turn_sync
+    key_files_raw: sidecar/learning/reflector.py
+  spec_targets:
+  - locus/providers/learning/post-turn-reviewer.ts
+  spec_sha:
+    '§1.7 + §10.1: Post-Turn Background Review': d422689a15861362
+  evidence:
+    files:
+    - sidecar/learning/reflector.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0008
+  title: Stream Diagnostics
+  spec_refs:
+  - '§1.8: Stream Diagnostics'
+  mapping: exact
+  origin: legacy-tracker
+  category: Foundation
+  verdict: KEEP-PI
+  source: Pi Agent built-in
+  provider: null
+  layer: pi
+  inherited: true
+  manual: false
+  claimed:
+    legacy_id: §1.8
+    legacy_row: 9
+    pi_status: ✅ INHERITED
+    sidecar_status: N/A
+    pct: 100
+    remaining: None
+    notes: Native Pi streaming
+    key_files_raw: packages/agent/
+  spec_targets: []
+  spec_sha:
+    '§1.8: Stream Diagnostics': fbec3f3dcd4c0668
+  evidence:
+    files:
+    - packages/agent/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0009
+  title: Rate Limit Tracking
+  spec_refs:
+  - '§1.9: Rate Limit Tracking'
+  mapping: exact
+  origin: legacy-tracker
+  category: Foundation
+  verdict: AUGMENT
+  source: Pi + Locus
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §1.9
+    legacy_row: 10
+    pi_status: ⚠️ Partial
+    sidecar_status: ✅ Done
+    pct: 80
+    remaining: Wire x-ratelimit header parsing
+    notes: Python rate limiter works; Pi-side header extraction needed
+    key_files_raw: sidecar/rate_limiter.py
+  spec_targets:
+  - locus/core/tracking/rate-limits.ts
+  spec_sha:
+    '§1.9: Rate Limit Tracking': 0d51c8f77a88f125
+  evidence:
+    files:
+    - sidecar/rate_limiter.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0010
+  title: Usage/Cost Tracking
+  spec_refs:
+  - '§1.10: Usage / Cost Tracking'
+  mapping: exact
+  origin: legacy-tracker
+  category: Foundation
+  verdict: AUGMENT
+  source: Pi + Locus
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §1.10
+    legacy_row: 11
+    pi_status: ⚠️ Partial
+    sidecar_status: ✅ Done
+    pct: 75
+    remaining: Wire token counting to Pi's usage events
+    notes: Python tracker works; Pi usage event hookup needed
+    key_files_raw: sidecar/cost_tracker.py
+  spec_targets:
+  - locus/core/tracking/pricing.ts
+  - locus/core/tracking/usage.ts
+  spec_sha:
+    '§1.10: Usage / Cost Tracking': 9c4383764f3159fb
+  evidence:
+    files:
+    - sidecar/cost_tracker.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0011
+  title: Title Generation
+  spec_refs:
+  - '§1.11: Title Generation'
+  mapping: exact
+  origin: legacy-tracker
+  category: Foundation
+  verdict: AUGMENT
+  source: Pi + Locus
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §1.11
+    legacy_row: 12
+    pi_status: ⚠️ Partial
+    sidecar_status: ✅ Done
+    pct: 75
+    remaining: Wire async title gen to Pi session
+    notes: Python implementation exists
+    key_files_raw: sidecar/title_generator.py
+  spec_targets:
+  - locus/core/sessions/title-gen.ts
+  spec_sha:
+    '§1.11: Title Generation': bf24481768d78927
+  evidence:
+    files:
+    - sidecar/title_generator.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0012
+  title: Onboarding Flow
+  spec_refs:
+  - '§1.12: Onboarding Flow'
+  mapping: exact
+  origin: legacy-tracker
+  category: Foundation
+  verdict: AUGMENT
+  source: Pi + Locus CLI
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §1.12
+    legacy_row: 13
+    pi_status: ✅ IMPLEMENTED
+    sidecar_status: ✅ Done
+    pct: 100
+    remaining: None (install.ps1/sh/bat with full wizard created)
+    notes: CLI setup wizard works but install scripts don't exist
+    key_files_raw: locus_cli/setup.py
+  spec_targets: []
+  spec_sha:
+    '§1.12: Onboarding Flow': 631c8b158baad280
+  evidence:
+    files:
+    - locus_cli/setup.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0013
+  title: Agent Initialization
+  spec_refs:
+  - '§1.13: Agent Initialization'
+  mapping: exact
+  origin: legacy-tracker
+  category: Foundation
+  verdict: KEEP-PI
+  source: Pi Agent
+  provider: null
+  layer: pi
+  inherited: true
+  manual: false
+  claimed:
+    legacy_id: §1.13
+    legacy_row: 14
+    pi_status: ✅ INHERITED
+    sidecar_status: N/A
+    pct: 100
+    remaining: None
+    notes: Native Pi init
+    key_files_raw: packages/agent/
+  spec_targets: []
+  spec_sha:
+    '§1.13: Agent Initialization': 18e00b0f0c832d6b
+  evidence:
+    files:
+    - packages/agent/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0014
+  title: 30+ LLM Providers
+  spec_refs:
+  - '§2.1: 30+ LLM Providers'
+  mapping: exact
+  origin: legacy-tracker
+  category: LLM Providers
+  verdict: KEEP-PI
+  source: Pi model-registry.ts
+  provider: null
+  layer: pi
+  inherited: true
+  manual: false
+  claimed:
+    legacy_id: §2.1
+    legacy_row: 15
+    pi_status: ✅ INHERITED
+    sidecar_status: N/A
+    pct: 100
+    remaining: None
+    notes: OpenRouter, Anthropic, OpenAI, Gemini, etc.
+    key_files_raw: packages/ai/
+  spec_targets: []
+  spec_sha:
+    '§2.1: 30+ LLM Providers': 556fab310857b651
+  evidence:
+    files:
+    - packages/ai/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0015
+  title: OAuth Flows
+  spec_refs:
+  - '§2.2: OAuth Flows'
+  mapping: exact
+  origin: legacy-tracker
+  category: LLM Providers
+  verdict: KEEP-PI
+  source: Pi Agent
+  provider: null
+  layer: pi
+  inherited: true
+  manual: false
+  claimed:
+    legacy_id: §2.2
+    legacy_row: 16
+    pi_status: ✅ INHERITED
+    sidecar_status: N/A
+    pct: 100
+    remaining: None
+    notes: Native
+    key_files_raw: packages/ai/
+  spec_targets: []
+  spec_sha:
+    '§2.2: OAuth Flows': 6ebadb5996e192d9
+  evidence:
+    files:
+    - packages/ai/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0016
+  title: Custom/Local Models
+  spec_refs:
+  - '§2.3: Custom / Local Models'
+  mapping: exact
+  origin: legacy-tracker
+  category: LLM Providers
+  verdict: KEEP-PI
+  source: Pi Agent
+  provider: null
+  layer: pi
+  inherited: true
+  manual: false
+  claimed:
+    legacy_id: §2.3
+    legacy_row: 17
+    pi_status: ✅ INHERITED
+    sidecar_status: N/A
+    pct: 100
+    remaining: None
+    notes: Ollama, etc.
+    key_files_raw: packages/ai/
+  spec_targets: []
+  spec_sha:
+    '§2.3: Custom / Local Models': 4cdb4a09883e3622
+  evidence:
+    files:
+    - packages/ai/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0017
+  title: Provider Registry
+  spec_refs:
+  - '§2.4: Provider Registry'
+  mapping: exact
+  origin: legacy-tracker
+  category: LLM Providers
+  verdict: KEEP-PI
+  source: Pi Agent
+  provider: null
+  layer: pi
+  inherited: true
+  manual: false
+  claimed:
+    legacy_id: §2.4
+    legacy_row: 18
+    pi_status: ✅ INHERITED
+    sidecar_status: N/A
+    pct: 100
+    remaining: None
+    notes: Native
+    key_files_raw: packages/ai/
+  spec_targets: []
+  spec_sha:
+    '§2.4: Provider Registry': e3cd21df0025ab3a
+  evidence:
+    files:
+    - packages/ai/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0018
+  title: Model Selection
+  spec_refs:
+  - '§2.5: Model Selection'
+  mapping: exact
+  origin: legacy-tracker
+  category: LLM Providers
+  verdict: KEEP-PI
+  source: Pi Agent
+  provider: null
+  layer: pi
+  inherited: true
+  manual: false
+  claimed:
+    legacy_id: §2.5
+    legacy_row: 19
+    pi_status: ✅ INHERITED
+    sidecar_status: N/A
+    pct: 100
+    remaining: None
+    notes: Native
+    key_files_raw: packages/ai/
+  spec_targets: []
+  spec_sha:
+    '§2.5: Model Selection': a68677852107a768
+  evidence:
+    files:
+    - packages/ai/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0019
+  title: File/Shell/Search Tools
+  spec_refs:
+  - '§3.1: File Read/Write/Edit'
+  - '§3.2: Shell / Bash'
+  - '§3.3: Grep / Search'
+  - '§3.4: List / Find'
+  - '§3.5: Web Search'
+  - '§3.6: Web Fetch'
+  mapping: grouped
+  origin: legacy-tracker
+  category: Built-in Tools
+  verdict: KEEP-PI
+  source: Pi tools/*
+  provider: null
+  layer: pi
+  inherited: true
+  manual: false
+  claimed:
+    legacy_id: §3.1-3.6
+    legacy_row: 20
+    pi_status: ✅ INHERITED
+    sidecar_status: N/A
+    pct: 100
+    remaining: None
+    notes: read, bash, edit, write, grep, ls, find
+    key_files_raw: packages/coding-agent/src/core/tools/
+  spec_targets: []
+  spec_sha:
+    '§3.1: File Read/Write/Edit': 6b63b7b3288d49fc
+    '§3.2: Shell / Bash': 8d6e684aeab4efc6
+    '§3.3: Grep / Search': 249656665e9b60a9
+    '§3.4: List / Find': 6c840c44b8989f78
+    '§3.5: Web Search': a5b5de0834f19828
+    '§3.6: Web Fetch': 7e41592dc24a1c03
+  evidence:
+    files:
+    - packages/coding-agent/src/core/tools/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0020
+  title: Harness Delegation
+  spec_refs:
+  - '§3.7 + §11.5: Coding Harness Delegation'
+  mapping: exact
+  origin: legacy-tracker
+  category: Built-in Tools
+  verdict: MULTI-PROVIDER
+  source: Pi + Hermes + Locus
+  provider: HarnessProvider
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §3.7
+    legacy_row: 21
+    pi_status: ⚠️ Partial
+    sidecar_status: ✅ Done
+    pct: 65
+    remaining: Wire inter-harness bridge to Pi Agent
+    notes: Python bridge exists; TS integration needed
+    key_files_raw: sidecar/inter_harness_bridge.py
+  spec_targets:
+  - locus/providers/harness/
+  spec_sha:
+    '§3.7 + §11.5: Coding Harness Delegation': 965dfbc6844c5e75
+  evidence:
+    files:
+    - sidecar/inter_harness_bridge.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0021
+  title: Neo4j Agent Memory (POLE+O)
+  spec_refs:
+  - '§4.1-4.2: Graph-Native Memory (Neo4j Agent Memory)'
+  mapping: grouped
+  origin: legacy-tracker
+  category: Memory
+  verdict: KEEP-PREBUILT
+  source: neo4j-labs/agent-memory
+  provider: MemoryProvider
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §4.1-4.2
+    legacy_row: 22
+    pi_status: ⚠️ Via tool only
+    sidecar_status: ✅ Done
+    pct: 80
+    remaining: Verify Neo4j connection; test with live graph
+    notes: POLE+O schema, extraction pipeline
+    key_files_raw: sidecar/neo4j_memory.py, sidecar/neo4j_memory.py
+  spec_targets:
+  - locus/providers/memory/neo4j-agent-memory.ts
+  spec_sha:
+    '§4.1-4.2: Graph-Native Memory (Neo4j Agent Memory)': 20566a0867575d97
+  evidence:
+    files:
+    - sidecar/neo4j_memory.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0022
+  title: Holographic HRR
+  spec_refs:
+  - '§4.10: Holographic Reduced Representations (HRR Memory Binding)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Memory
+  verdict: LOCUS-NEW
+  source: Locus design spec
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §4.10
+    legacy_row: 23
+    pi_status: ❌ Not wired
+    sidecar_status: ⚠️ Stub
+    pct: 30
+    remaining: Implement circular convolution, encode/decode
+    notes: Design spec exists in decomp doc
+    key_files_raw: sidecar/holographic/
+  spec_targets:
+  - locus-os/sidecar/memory/hrr.py
+  - locus-os/sidecar/memory/hrr_codebook.py
+  - locus-os/src/core/memory/hrr-adapter.ts
+  - sidecar/brain/state_engine.py
+  - sidecar/memory/hrr.py
+  - sidecar/memory/hrr_codebook.py
+  spec_sha:
+    '§4.10: Holographic Reduced Representations (HRR Memory Binding)': 47cf02cb2a5441f6
+  evidence:
+    files:
+    - sidecar/holographic/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0023
+  title: STDP Reinforcement
+  spec_refs:
+  - '§4.12: STDP Reinforcement (Spike-Timing-Dependent Plasticity)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Memory
+  verdict: LOCUS-NEW
+  source: Locus design spec
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §4.12
+    legacy_row: 24
+    pi_status: ❌ Not wired
+    sidecar_status: ⚠️ Partial
+    pct: 40
+    remaining: Wire STDP to afterToolCall; test weight updates
+    notes: Hebbian pathway exists but STDP specifics unclear
+    key_files_raw: sidecar/patterns/hebbian.py
+  spec_targets:
+  - locus-os/sidecar/memory/graph_reinforcement.py
+  - locus-os/sidecar/memory/stdp_updater.py
+  - sidecar/brain/reward_model.py
+  - sidecar/memory/stdp_updater.py
+  spec_sha:
+    '§4.12: STDP Reinforcement (Spike-Timing-Dependent Plasticity)': 47739408cc3c9631
+  evidence:
+    files:
+    - sidecar/patterns/hebbian.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0024
+  title: Spaced Repetition
+  spec_refs:
+  - '§4.13: Spaced Repetition Memory Consolidation (FSRS / SM-2)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Memory
+  verdict: LOCUS-NEW
+  source: Locus design spec
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §4.13
+    legacy_row: 25
+    pi_status: ❌ Not wired
+    sidecar_status: ✅ Done
+    pct: 60
+    remaining: Wire to nightly cron schedule
+    notes: SM-2 algorithm implemented
+    key_files_raw: sidecar/spaced_rep.py
+  spec_targets:
+  - locus-os/sidecar/memory/memory_scheduler.py
+  - locus-os/sidecar/memory/spaced_repetition.py
+  - sidecar/brain/inner_loop.py
+  - sidecar/memory/spaced_repetition.py
+  spec_sha:
+    '§4.13: Spaced Repetition Memory Consolidation (FSRS / SM-2)': 4b11f2c205d13174
+  evidence:
+    files:
+    - sidecar/spaced_rep.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0025
+  title: Project Memory Decay
+  spec_refs:
+  - '§4.14: Project-Specific Memory Decay Engine'
+  mapping: exact
+  origin: legacy-tracker
+  category: Memory
+  verdict: LOCUS-NEW
+  source: Locus design spec
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §4.14
+    legacy_row: 26
+    pi_status: ❌ Not wired
+    sidecar_status: ⚠️ Stub
+    pct: 25
+    remaining: Implement half-life decay, cold archive
+    notes: No implementation found
+    key_files_raw: null
+  spec_targets:
+  - locus-os/sidecar/memory/cold_archiver.py
+  - locus-os/sidecar/memory/project_decay.py
+  - sidecar/brain/state_engine.py
+  - sidecar/memory/project_decay.py
+  spec_sha:
+    '§4.14: Project-Specific Memory Decay Engine': e40cf51381a79282
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0026
+  title: Headroom CCR
+  spec_refs:
+  - '§4.17: Token Compression (Headroom CCR)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Memory
+  verdict: KEEP-PREBUILT
+  source: headroomlabs-ai/headroom
+  provider: CompressionProvider
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §4.17
+    legacy_row: 27
+    pi_status: ❌ Not wired
+    sidecar_status: ⚠️ Adapter exists
+    pct: 50
+    remaining: Wire to Pi compaction; test with real context
+    notes: Adapter code exists but untested
+    key_files_raw: sidecar/context/headroom_adapter.py
+  spec_targets:
+  - locus/providers/compression/headroom-ccr.ts
+  spec_sha:
+    '§4.17: Token Compression (Headroom CCR)': 71814da0512a3235
+  evidence:
+    files:
+    - sidecar/context/headroom_adapter.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0027
+  title: Session Management
+  spec_refs:
+  - '§5.1-5.8: Session Management & Telegram Bridge'
+  mapping: grouped
+  origin: legacy-tracker
+  category: Sessions
+  verdict: AUGMENT
+  source: Pi session-manager.ts + Locus
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §5.1-5.4
+    legacy_row: 28
+    pi_status: ✅ INHERITED (Pi)
+    sidecar_status: ✅ Own sessions
+    pct: 80
+    remaining: Bridge Pi sessions with sidecar sessions
+    notes: Two session systems coexist
+    key_files_raw: sidecar/memory.py, sidecar/session_export.py
+  spec_targets:
+  - locus/core/session-bridge.ts
+  spec_sha:
+    '§5.1-5.8: Session Management & Telegram Bridge': c87e52a20fd82846
+  evidence:
+    files:
+    - sidecar/memory.py
+    - sidecar/session_export.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0028
+  title: Context References
+  spec_refs:
+  - '§6.2: Dynamic Context References (@file, @symbol, @git, @diff)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Context
+  verdict: AUGMENT
+  source: Pi context-references.ts
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §6.2
+    legacy_row: 29
+    pi_status: ⚠️ Pi built-in
+    sidecar_status: ❌ Not wired
+    pct: 40
+    remaining: Implement Locus-specific context injection
+    notes: Pi's context references work; Locus additions needed
+    key_files_raw: null
+  spec_targets:
+  - locus-os/src/core/context/references.ts
+  spec_sha:
+    '§6.2: Dynamic Context References (@file, @symbol, @git, @diff)': 7fdc99d63dce7d1d
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0029
+  title: Coding Context
+  spec_refs:
+  - '§6.3: Coding Context Engine (Repo Map, AST Index, Active Diff)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Context
+  verdict: AUGMENT
+  source: Pi coding-context.ts
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §6.3
+    legacy_row: 30
+    pi_status: ✅ INHERITED
+    sidecar_status: N/A
+    pct: 90
+    remaining: 'Minor: add project-specific context'
+    notes: Pi's coding context is functional
+    key_files_raw: null
+  spec_targets:
+  - locus-os/src/core/context/coding-context.ts
+  spec_sha:
+    '§6.3: Coding Context Engine (Repo Map, AST Index, Active Diff)': e75dbc1f029134ac
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0030
+  title: TUI / Dashboard
+  spec_refs:
+  - '§7.1-7.9: Terminal Interface & Footer Widget'
+  mapping: grouped
+  origin: legacy-tracker
+  category: Interface
+  verdict: AUGMENT
+  source: Pi TUI + Locus dashboard
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §7.1-7.5
+    legacy_row: 31
+    pi_status: ✅ INHERITED (Pi TUI)
+    sidecar_status: ⚠️ Partial
+    pct: 55
+    remaining: Wire DCS gauge, faction bars to Pi TUI footer widget
+    notes: Pi TUI works; Locus dashboard is separate Python curses
+    key_files_raw: locus_cli/curses_ui.py, sidecar/display/dashboard.py
+  spec_targets:
+  - locus/extensions/footer-widget/
+  spec_sha:
+    '§7.1-7.9: Terminal Interface & Footer Widget': fff228a89d6ea4b8
+  evidence:
+    files:
+    - locus_cli/curses_ui.py
+    - sidecar/display/dashboard.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0031
+  title: CLI / Doctor Diagnostics
+  spec_refs:
+  - '§8.1-8.10: CLI Commands'
+  mapping: grouped
+  origin: legacy-tracker
+  category: CLI
+  verdict: AUGMENT
+  source: Pi CLI + Locus CLI
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §8.1-8.6
+    legacy_row: 32
+    pi_status: ⚠️ Locus CLI only
+    sidecar_status: ✅ Done
+    pct: 85
+    remaining: Register footer widget in Pi TUI; add missing install scripts
+    notes: locus setup/config/gateway/doctor all work
+    key_files_raw: locus_cli/main.py
+  spec_targets: []
+  spec_sha:
+    '§8.1-8.10: CLI Commands': 68fee6a2a53a040a
+  evidence:
+    files:
+    - locus_cli/main.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0032
+  title: Extension System
+  spec_refs:
+  - '§9.1: Extension System & Event Lifecycle (25+ Events)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Extensions
+  verdict: KEEP-PI
+  source: Pi extensions
+  provider: null
+  layer: pi
+  inherited: true
+  manual: false
+  claimed:
+    legacy_id: §9.1
+    legacy_row: 33
+    pi_status: ✅ INHERITED
+    sidecar_status: N/A
+    pct: 100
+    remaining: None
+    notes: Native Pi extension system
+    key_files_raw: packages/coding-agent/
+  spec_targets:
+  - locus-os/src/core/events.ts
+  spec_sha:
+    '§9.1: Extension System & Event Lifecycle (25+ Events)': 92706d4009899a04
+  evidence:
+    files:
+    - packages/coding-agent/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0033
+  title: ACP Protocol
+  spec_refs:
+  - '§9.4: Agent Communication Protocol (ACP Client & Transport)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Extensions
+  verdict: LOCUS-NEW
+  source: Hermes copilot_acp_client.py
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §9.4
+    legacy_row: 34
+    pi_status: ❌ Not wired
+    sidecar_status: ✅ Done
+    pct: 55
+    remaining: Test JSON-RPC 2.0 server; wire to Pi
+    notes: ACP server implemented in Python
+    key_files_raw: sidecar/acp_server.py
+  spec_targets:
+  - locus-os/src/protocols/acp/client.ts
+  spec_sha:
+    '§9.4: Agent Communication Protocol (ACP Client & Transport)': d767157a54bafe07
+  evidence:
+    files:
+    - sidecar/acp_server.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0034
+  title: Plugin LLM
+  spec_refs:
+  - '§9.9: Plugin LLM Sandboxing & Auxiliary Bridge'
+  mapping: exact
+  origin: legacy-tracker
+  category: Extensions
+  verdict: LOCUS-NEW
+  source: Hermes plugin_llm.py
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §9.9
+    legacy_row: 35
+    pi_status: ❌ Not wired
+    sidecar_status: ❌ Not started
+    pct: 10
+    remaining: Implement plugin LLM system
+    notes: No implementation found
+    key_files_raw: null
+  spec_targets:
+  - locus-os/src/plugins/llm-bridge.ts
+  spec_sha:
+    '§9.9: Plugin LLM Sandboxing & Auxiliary Bridge': a0529db70a17ca0a
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0035
+  title: Learning / Profiling / Reward Model
+  spec_refs:
+  - '§1.7 + §10.1: Post-Turn Background Review'
+  - '§10.3: User Profile Building'
+  - '§10.5: Personal Reward Model'
+  - '§10.6-10.7: Hebbian Learning & Pattern Engine'
+  mapping: grouped
+  origin: legacy-tracker
+  category: Learning
+  verdict: MULTI-PROVIDER
+  source: Hermes + OpenHuman + Locus
+  provider: LearningProvider
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §10.1-10.7
+    legacy_row: 36
+    pi_status: ⚠️ Hook exists
+    sidecar_status: ✅ Done
+    pct: 70
+    remaining: Verify reflector fires; test reward model
+    notes: Reflector, user profile, reward model all exist
+    key_files_raw: sidecar/learning/, sidecar/learning/
+  spec_targets:
+  - locus/providers/learning/
+  - locus/providers/learning/post-turn-reviewer.ts
+  spec_sha:
+    '§1.7 + §10.1: Post-Turn Background Review': d422689a15861362
+    '§10.3: User Profile Building': 1671854daef92eb3
+    '§10.5: Personal Reward Model': afd6e02f362c3f7c
+    '§10.6-10.7: Hebbian Learning & Pattern Engine': 05372a5b6111ac36
+  evidence:
+    files:
+    - sidecar/learning/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0036
+  title: Subagents / AutoResearch
+  spec_refs:
+  - '§3.7 + §11.5: Coding Harness Delegation'
+  - '§11.1-11.5: Subagent Spawning, Archetypes, Depth Limiting'
+  mapping: grouped
+  origin: legacy-tracker
+  category: Subagents
+  verdict: AUGMENT
+  source: Pi + OpenHuman + AutoResearch
+  provider: SubagentArchetype
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §11.1-11.6
+    legacy_row: 37
+    pi_status: ⚠️ Via tool only
+    sidecar_status: ✅ Done
+    pct: 60
+    remaining: Wire AutoResearch depth; test faction archetypes
+    notes: locus_research tool exists; full AutoResearch integration unclear
+    key_files_raw: sidecar/delegation/
+  spec_targets:
+  - locus/core/subagents/
+  - locus/providers/harness/
+  spec_sha:
+    '§3.7 + §11.5: Coding Harness Delegation': 965dfbc6844c5e75
+    '§11.1-11.5: Subagent Spawning, Archetypes, Depth Limiting': caa3928d95a201a2
+  evidence:
+    files:
+    - sidecar/delegation/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0037
+  title: Injection Filter
+  spec_refs:
+  - '§13.1: Prompt Injection Protection'
+  mapping: exact
+  origin: legacy-tracker
+  category: Security
+  verdict: AUGMENT
+  source: Pi + Hermes + Locus
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §13.1
+    legacy_row: 38
+    pi_status: ⚠️ Hook exists
+    sidecar_status: ✅ Done
+    pct: 80
+    remaining: Wire to beforeToolCall hook
+    notes: Normalization + regex rules implemented
+    key_files_raw: sidecar/security/injection_filter.py
+  spec_targets:
+  - locus/security/prompt-injection.ts
+  spec_sha:
+    '§13.1: Prompt Injection Protection': 4df3bf3a4076dbfe
+  evidence:
+    files:
+    - sidecar/security/injection_filter.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0038
+  title: Shell Sandbox
+  spec_refs:
+  - '§13.3: Sandbox Backends'
+  mapping: exact
+  origin: legacy-tracker
+  category: Security
+  verdict: KEEP-PI
+  source: Pi trust model
+  provider: SandboxProvider
+  layer: pi
+  inherited: true
+  manual: false
+  claimed:
+    legacy_id: §13.3
+    legacy_row: 39
+    pi_status: ✅ INHERITED
+    sidecar_status: N/A
+    pct: 100
+    remaining: None
+    notes: Pi trust model
+    key_files_raw: packages/coding-agent/
+  spec_targets:
+  - locus/providers/sandbox/
+  spec_sha:
+    '§13.3: Sandbox Backends': 4771ad6eff693b89
+  evidence:
+    files:
+    - packages/coding-agent/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0039
+  title: Project Trust
+  spec_refs:
+  - '§13.6: Project Trust'
+  mapping: exact
+  origin: legacy-tracker
+  category: Security
+  verdict: KEEP-PI
+  source: Pi Agent
+  provider: null
+  layer: pi
+  inherited: true
+  manual: false
+  claimed:
+    legacy_id: §13.6
+    legacy_row: 40
+    pi_status: ✅ INHERITED
+    sidecar_status: N/A
+    pct: 100
+    remaining: None
+    notes: Native Pi
+    key_files_raw: packages/coding-agent/
+  spec_targets: []
+  spec_sha:
+    '§13.6: Project Trust': 7e3259bfd5a5fb33
+  evidence:
+    files:
+    - packages/coding-agent/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0040
+  title: Shell Blocklist
+  spec_refs:
+  - '§13.7: Shell Blocklist'
+  mapping: exact
+  origin: legacy-tracker
+  category: Security
+  verdict: AUGMENT
+  source: Pi + Locus
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §13.7
+    legacy_row: 41
+    pi_status: ⚠️ Partial
+    sidecar_status: ✅ Done
+    pct: 70
+    remaining: Wire blocklist to beforeToolCall
+    notes: Blocklist exists
+    key_files_raw: sidecar/security/
+  spec_targets:
+  - locus/core/security/shell-policy.ts
+  spec_sha:
+    '§13.7: Shell Blocklist': a63a698dca5c38c4
+  evidence:
+    files:
+    - sidecar/security/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0041
+  title: Data Redaction
+  spec_refs:
+  - '§13.8: Data Redaction'
+  mapping: exact
+  origin: legacy-tracker
+  category: Security
+  verdict: AUGMENT
+  source: Pi + Locus
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §13.8
+    legacy_row: 42
+    pi_status: ⚠️ Partial
+    sidecar_status: ✅ Done
+    pct: 75
+    remaining: Test with real API keys
+    notes: Regex scrubber implemented
+    key_files_raw: sidecar/security/redact.py
+  spec_targets:
+  - locus/core/security/redact.ts
+  spec_sha:
+    '§13.8: Data Redaction': fa06a100109aeb0d
+  evidence:
+    files:
+    - sidecar/security/redact.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0042
+  title: Think Token Scrubbing
+  spec_refs:
+  - '§13.9: Think Token Scrubbing'
+  mapping: exact
+  origin: legacy-tracker
+  category: Security
+  verdict: AUGMENT
+  source: Pi + Locus
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §13.9
+    legacy_row: 43
+    pi_status: ⚠️ Partial
+    sidecar_status: ✅ Done
+    pct: 75
+    remaining: Wire to streaming output
+    notes: State machine implemented
+    key_files_raw: sidecar/security/think_scrubber.py
+  spec_targets:
+  - locus/core/security/think-scrubber.ts
+  spec_sha:
+    '§13.9: Think Token Scrubbing': cad8d674d7fa7708
+  evidence:
+    files:
+    - sidecar/security/think_scrubber.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0043
+  title: Message Sanitization
+  spec_refs:
+  - '§13.10: Message Sanitization'
+  mapping: exact
+  origin: legacy-tracker
+  category: Security
+  verdict: AUGMENT
+  source: Pi + Locus
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §13.10
+    legacy_row: 44
+    pi_status: ⚠️ Partial
+    sidecar_status: ✅ Done
+    pct: 75
+    remaining: Wire to egress pipeline
+    notes: Surrogate stripper implemented
+    key_files_raw: sidecar/security/sanitizer.py
+  spec_targets:
+  - locus/core/security/message-sanitize.ts
+  spec_sha:
+    '§13.10: Message Sanitization': 5093d6ff954830b4
+  evidence:
+    files:
+    - sidecar/security/sanitizer.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0044
+  title: STT / TTS Providers
+  spec_refs:
+  - '§14.1-14.4: Voice Pipeline'
+  mapping: grouped
+  origin: legacy-tracker
+  category: Voice
+  verdict: MULTI-PROVIDER
+  source: Hermes + Locus
+  provider: STTProvider, TTSProvider
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §14.1-14.2
+    legacy_row: 45
+    pi_status: ❌ Not wired
+    sidecar_status: ✅ Done
+    pct: 60
+    remaining: Wire voice pipeline to Telegram voice messages
+    notes: Whisper, Groq, Azure, OpenAI STT + Edge, ElevenLabs, Piper TTS
+    key_files_raw: sidecar/voice/
+  spec_targets:
+  - locus/providers/voice/
+  spec_sha:
+    '§14.1-14.4: Voice Pipeline': 8a4b2db661c1b83b
+  evidence:
+    files:
+    - sidecar/voice/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0045
+  title: Browser Automation
+  spec_refs:
+  - '§16.1-16.2 + §20.1-20.3: Browser Automation & Desktop Control'
+  mapping: exact
+  origin: legacy-tracker
+  category: Browser
+  verdict: MULTI-PROVIDER
+  source: OpenHuman + Pi
+  provider: BrowserProvider
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §16.1
+    legacy_row: 46
+    pi_status: ❌ Not wired
+    sidecar_status: ⚠️ Partial
+    pct: 45
+    remaining: Install Playwright binaries; test headless browsing
+    notes: Playwright engine exists but no browser binaries
+    key_files_raw: sidecar/browser/
+  spec_targets:
+  - locus/providers/browser/
+  spec_sha:
+    '§16.1-16.2 + §20.1-20.3: Browser Automation & Desktop Control': 834e3869ac84f0f5
+  evidence:
+    files:
+    - sidecar/browser/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0046
+  title: Telegram Gateway
+  spec_refs:
+  - '§17.1-17.11: Channel Adapters & Platform Registry'
+  mapping: exact
+  origin: legacy-tracker
+  category: Gateway
+  verdict: AUGMENT
+  source: Hermes + Locus
+  provider: ChannelProvider
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §17.1
+    legacy_row: 47
+    pi_status: ✅ Via pi_bridge
+    sidecar_status: ✅ Done
+    pct: 90
+    remaining: Test voice messages; add inline keyboards for checkins
+    notes: Bot works, routes through conductor → pi_bridge
+    key_files_raw: sidecar/gateway/, gateway/
+  spec_targets:
+  - locus/core/channel-registry.ts
+  - locus/providers/channels/
+  spec_sha:
+    '§17.1-17.11: Channel Adapters & Platform Registry': 3dcb11d7cd5698ec
+  evidence:
+    files:
+    - sidecar/gateway/
+    - gateway/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0047
+  title: Graceful Restart
+  spec_refs:
+  - '§17.10: Graceful Gateway Restart & State Snapshotting'
+  mapping: exact
+  origin: legacy-tracker
+  category: Gateway
+  verdict: AUGMENT
+  source: Hermes + Locus
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §17.10
+    legacy_row: 48
+    pi_status: ⚠️ Partial
+    sidecar_status: ⚠️ Partial
+    pct: 50
+    remaining: Implement 30s connection drain
+    notes: Basic restart exists
+    key_files_raw: sidecar/gateway/
+  spec_targets:
+  - locus-os/src/gateway/lifecycle.ts
+  - sidecar/gateway/lifecycle.py
+  spec_sha:
+    '§17.10: Graceful Gateway Restart & State Snapshotting': ac1dbd8e3a4e96cc
+  evidence:
+    files:
+    - sidecar/gateway/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0048
+  title: MCP Server/Client
+  spec_refs:
+  - '§18.1-18.4: Model Context Protocol'
+  - '§18.5: Obsidian MCP (Vault Bridge)'
+  mapping: grouped
+  origin: legacy-tracker
+  category: MCP
+  verdict: AUGMENT
+  source: OpenHuman + Locus
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §18.1-18.5
+    legacy_row: 49
+    pi_status: ⚠️ Partial
+    sidecar_status: ✅ Done
+    pct: 55
+    remaining: Test MCP server; wire Obsidian MCP bridge
+    notes: Client exists; server needs testing
+    key_files_raw: sidecar/mcp_client.py
+  spec_targets:
+  - locus/core/mcp/
+  - locus/core/mcp/client.ts
+  - locus/core/mcp/registry.ts
+  - locus/core/mcp/server.ts
+  - locus/providers/vault/obsidian-mcp.ts
+  spec_sha:
+    '§18.1-18.4: Model Context Protocol': e1ed621569139fd6
+    '§18.5: Obsidian MCP (Vault Bridge)': d136113d50bb1ae7
+  evidence:
+    files:
+    - sidecar/mcp_client.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0049
+  title: Trajectory Recording
+  spec_refs:
+  - '§19.2: Trajectory Recording'
+  mapping: exact
+  origin: legacy-tracker
+  category: Observability
+  verdict: AUGMENT
+  source: Hermes trajectory_compressor.py
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §19.2
+    legacy_row: 50
+    pi_status: ❌ Not wired
+    sidecar_status: ⚠️ Partial
+    pct: 40
+    remaining: Wire to Pi session events
+    notes: Implementation exists
+    key_files_raw: sidecar/learning/trajectory.py
+  spec_targets:
+  - locus/core/trajectory.ts
+  spec_sha:
+    '§19.2: Trajectory Recording': 0529d368ebc89f69
+  evidence:
+    files:
+    - sidecar/learning/trajectory.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0050
+  title: AI Chat Archiver
+  spec_refs:
+  - '§19.3: Daily AI Chat Archiver (Multi-Platform Ingestion)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Observability
+  verdict: LOCUS-NEW
+  source: Locus design spec
+  provider: ChatArchiverProvider
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §19.3
+    legacy_row: 51
+    pi_status: ❌ Not wired
+    sidecar_status: ✅ Done
+    pct: 55
+    remaining: Wire to nightly cron (23:45 IST); auto-replicate to CouchDB LiveSync
+    notes: Parses ChatGPT, Claude, Cursor, Pi, Telegram dumps into Obsidian vault (/vault/04-Captures/AI Chats/)
+      and Neo4j POLE+O entities, automatically replicated via CouchDB LiveSync
+    key_files_raw: sidecar/ingestion/chat_archiver.py, sidecar/crawlers/chat_crawler.py
+  spec_targets:
+  - locus-os/sidecar/crawlers/chat_crawler.py
+  - locus-os/sidecar/ingestion/chat_archiver.py
+  spec_sha:
+    '§19.3: Daily AI Chat Archiver (Multi-Platform Ingestion)': 646c6938ddf44632
+  evidence:
+    files:
+    - sidecar/ingestion/chat_archiver.py
+    - sidecar/crawlers/chat_crawler.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0051
+  title: Computer Use / Screen
+  spec_refs:
+  - '§16.1-16.2 + §20.1-20.3: Browser Automation & Desktop Control'
+  mapping: low-confidence
+  origin: legacy-tracker
+  category: Desktop
+  verdict: AUGMENT
+  source: OpenHuman + Pi
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §20.1-20.2
+    legacy_row: 52
+    pi_status: ❌ Not wired
+    sidecar_status: ⚠️ Partial
+    pct: 40
+    remaining: Test screen capture; wire to Pi tool
+    notes: Capture and vision modules exist
+    key_files_raw: sidecar/screen/
+  spec_targets:
+  - locus/providers/browser/
+  spec_sha:
+    '§16.1-16.2 + §20.1-20.3: Browser Automation & Desktop Control': 834e3869ac84f0f5
+  evidence:
+    files:
+    - sidecar/screen/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0052
+  title: VNC Remote
+  spec_refs:
+  - '§20.3: VNC / Remote Desktop Protocol Control'
+  mapping: exact
+  origin: legacy-tracker
+  category: Desktop
+  verdict: LOCUS-NEW
+  source: Locus design spec
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §20.3
+    legacy_row: 53
+    pi_status: ❌ Not wired
+    sidecar_status: ⚠️ Stub
+    pct: 20
+    remaining: Implement VNC RFB client
+    notes: Minimal stub
+    key_files_raw: null
+  spec_targets:
+  - locus-os/sidecar/desktop/vnc_client.py
+  - locus-os/src/tools/desktop-vnc.ts
+  - sidecar/desktop/vnc_client.py
+  spec_sha:
+    '§20.3: VNC / Remote Desktop Protocol Control': f8a5707589bbf271
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0053
+  title: Google Calendar
+  spec_refs:
+  - '§21.1-21.3: Google Calendar, Gmail, Webhooks'
+  mapping: exact
+  origin: legacy-tracker
+  category: Integrations
+  verdict: LOCUS-NEW
+  source: Locus design spec
+  provider: IntegrationProvider
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §21.1
+    legacy_row: 54
+    pi_status: ❌ Not wired
+    sidecar_status: ⚠️ Partial
+    pct: 35
+    remaining: Complete OAuth flow; wire to scheduler
+    notes: Sync module exists
+    key_files_raw: sidecar/integrations/calendar_sync.py
+  spec_targets:
+  - locus/integrations/
+  spec_sha:
+    '§21.1-21.3: Google Calendar, Gmail, Webhooks': 35034705b410f2c6
+  evidence:
+    files:
+    - sidecar/integrations/calendar_sync.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0054
+  title: CI/CD / Docker
+  spec_refs:
+  - '§23.1-23.5: Tests, Docker, Batch Runner'
+  mapping: grouped
+  origin: legacy-tracker
+  category: Deployment
+  verdict: AUGMENT
+  source: Pi + Locus
+  provider: null
+  layer: mixed
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §23.1-23.5
+    legacy_row: 55
+    pi_status: ⚠️ Partial
+    sidecar_status: ✅ Done
+    pct: 65
+    remaining: Test docker-compose; verify systemd gen
+    notes: Docker compose + systemd generator exist
+    key_files_raw: docker-compose.yml, sidecar/deployment/
+  spec_targets:
+  - locus-os/Dockerfile
+  - locus-os/sidecar/Dockerfile
+  spec_sha:
+    '§23.1-23.5: Tests, Docker, Batch Runner': df6d32c51734c79d
+  evidence:
+    files:
+    - docker-compose.yml
+    - sidecar/deployment/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0055
+  title: DCS / TWS / Factions
+  spec_refs:
+  - '§25.1: Four Factions Framework'
+  - '§25.2: Daily Capacity Score (DCS)'
+  - '§25.3: Five Operating Modes'
+  - '§25.4: Task Weight Score (TWS)'
+  mapping: grouped
+  origin: legacy-tracker
+  category: Life OS
+  verdict: LOCUS-NEW
+  source: Locus LOCUS_SYSTEM_v1.md
+  provider: LifeOSProvider
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §25.1-25.4
+    legacy_row: 56
+    pi_status: ✅ Via tool
+    sidecar_status: ✅ Done
+    pct: 90
+    remaining: Verify formulas match LOCUS_SYSTEM_v1.md
+    notes: 671 lines, all formulas implemented
+    key_files_raw: sidecar/life_os.py
+  spec_targets:
+  - locus-os/sidecar/life_os/dcs.py
+  - locus-os/sidecar/life_os/factions.py
+  - locus-os/sidecar/life_os/modes.py
+  - locus-os/sidecar/life_os/tws.py
+  spec_sha:
+    '§25.1: Four Factions Framework': 56c319db415f197c
+    '§25.2: Daily Capacity Score (DCS)': 7fcbfbc26793adfe
+    '§25.3: Five Operating Modes': 8d152886e67b5bc0
+    '§25.4: Task Weight Score (TWS)': b879c71cfd50328f
+  evidence:
+    files:
+    - sidecar/life_os.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0056
+  title: Operating Modes / Scheduler
+  spec_refs:
+  - '§25.5: Three-Layer Goal Stack'
+  - '§25.6: Action Gap Tracking'
+  - '§25.7: Deferral Detection (3/5/8+)'
+  - '§25.8: Lag Score + TWS Lag Bonus'
+  mapping: low-confidence
+  origin: legacy-tracker
+  category: Life OS
+  verdict: LOCUS-NEW
+  source: Locus design spec
+  provider: SchedulerProvider
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §25.5-25.8
+    legacy_row: 57
+    pi_status: ✅ Via tool
+    sidecar_status: ✅ Done
+    pct: 85
+    remaining: Test 6-step scheduling with real tasks
+    notes: Scheduler algorithm implemented
+    key_files_raw: sidecar/life_os.py, sidecar/scheduler/
+  spec_targets:
+  - locus-os/sidecar/life_os/action_gap.py
+  - locus-os/sidecar/life_os/deferral.py
+  - locus-os/sidecar/life_os/goal_stack.py
+  - locus-os/sidecar/life_os/lag.py
+  spec_sha:
+    '§25.5: Three-Layer Goal Stack': 647e6b718e561ecf
+    '§25.6: Action Gap Tracking': 95e260f612c8e765
+    '§25.7: Deferral Detection (3/5/8+)': 7b7b34e98084f984
+    '§25.8: Lag Score + TWS Lag Bonus': 90930bd774906637
+  evidence:
+    files:
+    - sidecar/life_os.py
+    - sidecar/scheduler/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0057
+  title: Goal Tracker (3-Layer Stack)
+  spec_refs:
+  - '§25.12: Six-Step Scheduling Algorithm (Full Mathematical Specification)'
+  mapping: low-confidence
+  origin: legacy-tracker
+  category: Life OS
+  verdict: LOCUS-NEW
+  source: Locus design spec
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §25.12
+    legacy_row: 58
+    pi_status: ✅ Via tool
+    sidecar_status: ✅ Done
+    pct: 85
+    remaining: Test goal lifecycle
+    notes: Outcome → Project → Task
+    key_files_raw: sidecar/life_os.py
+  spec_targets:
+  - locus-os/sidecar/life_os/faction_balancer.py
+  - locus-os/sidecar/life_os/scheduler.py
+  spec_sha:
+    '§25.12: Six-Step Scheduling Algorithm (Full Mathematical Specification)': e545346d531a4185
+  evidence:
+    files:
+    - sidecar/life_os.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0058
+  title: Proactive Inner Loop
+  spec_refs:
+  - '§12.1-12.5 + §26.1: Proactive Inner Loop & Scheduling'
+  - '§26.1: Inner Loop (Proactive Thinker — 10-Step Execution Pipeline)'
+  - '§26.2: State Engine + Inferred Cause Chain'
+  - '§26.3: Multi-Horizon Pattern Engine'
+  - '§26.7: Weekly Full Vault Synthesis'
+  mapping: grouped
+  origin: legacy-tracker
+  category: Proactive
+  verdict: LOCUS-NEW
+  source: Locus design spec
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §26.1-26.7
+    legacy_row: 59
+    pi_status: ✅ Via pi_bridge
+    sidecar_status: ✅ Done
+    pct: 70
+    remaining: Test 90-min cron; verify Sunday synthesis
+    notes: APScheduler + pi_bridge verified
+    key_files_raw: sidecar/cron_runner.py, sidecar/scheduler/
+  spec_targets:
+  - locus-os/core/scheduler.ts
+  - locus-os/sidecar/brain/cause_chain.py
+  - locus-os/sidecar/brain/inner_loop.py
+  - locus-os/sidecar/brain/pattern_engine.py
+  - locus-os/sidecar/brain/proactive_router.py
+  - locus-os/sidecar/brain/state_engine.py
+  - locus-os/sidecar/brain/weekly_synthesis.py
+  - sidecar/scheduler/
+  spec_sha:
+    '§12.1-12.5 + §26.1: Proactive Inner Loop & Scheduling': b3c85c95cb832a5b
+    '§26.1: Inner Loop (Proactive Thinker — 10-Step Execution Pipeline)': 09ea5e55d31cf026
+    '§26.2: State Engine + Inferred Cause Chain': ed3bf687833b8bb8
+    '§26.3: Multi-Horizon Pattern Engine': a008d75213894d3d
+    '§26.7: Weekly Full Vault Synthesis': f6d004b735c578e5
+  evidence:
+    files:
+    - sidecar/cron_runner.py
+    - sidecar/scheduler/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0059
+  title: PageIndex Retrieval
+  spec_refs:
+  - '§27.1: Vectorless Retrieval (PageIndex)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Retrieval
+  verdict: KEEP-PREBUILT
+  source: VectifyAI/PageIndex
+  provider: RetrievalProvider
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §27.1
+    legacy_row: 60
+    pi_status: ✅ Via tool
+    sidecar_status: ✅ Done
+    pct: 85
+    remaining: Test with large vault
+    notes: Hierarchical tree indexing works
+    key_files_raw: sidecar/search/pageindex.py
+  spec_targets:
+  - locus/providers/retrieval/pageindex.ts
+  - sidecar/pageindex/
+  spec_sha:
+    '§27.1: Vectorless Retrieval (PageIndex)': 217ccf4148412526
+  evidence:
+    files:
+    - sidecar/search/pageindex.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0060
+  title: Obsidian Self-Hosted LiveSync & CouchDB Real-Time Sync Engine
+  spec_refs:
+  - '§27.2: Obsidian Self-Hosted LiveSync & CouchDB Real-Time Sync Engine'
+  mapping: exact
+  origin: legacy-tracker
+  category: Retrieval
+  verdict: AUGMENT
+  source: CouchDB 3.3 + vstor/obsidian-livesync protocol
+  provider: VaultSyncProvider
+  layer: mixed
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §27.2
+    legacy_row: 61
+    pi_status: ✅ IMPLEMENTED
+    sidecar_status: ✅ Done
+    pct: 100
+    remaining: None (CouchDB LiveSync container :5984, CORS local.ini, 8-folder standard hierarchy, and Pi Agent
+      locus_vault extension configured)
+    notes: Self-hosted CouchDB Docker container (:5984) with CORS + Obsidian LiveSync real-time sync with mobile/desktop,
+      bypassing iOS background execution limitations and eliminating Git merge conflict bloat; integrated with Pi
+      Agent locus_vault extension tool and sidecar event bus.
+    key_files_raw: sidecar/vault/livesync_bridge.py, src/extensions/locus-extension.ts, docker-compose.yml, data/couchdb/local.ini
+  spec_targets:
+  - locus-os/data/couchdb/
+  - locus-os/data/couchdb/local.ini
+  - locus-os/docker-compose.yml
+  - locus-os/sidecar/crawlers/vault_crawler.py
+  - locus-os/sidecar/vault/livesync_bridge.py
+  - locus-os/src/extensions/locus-extension.ts
+  - locus-os/vault/
+  - locus-os/vault/00-System-Data/LIVESYNC_SETUP.md
+  - sidecar/vault/
+  - src/extensions/
+  spec_sha:
+    '§27.2: Obsidian Self-Hosted LiveSync & CouchDB Real-Time Sync Engine': 0f8bafa4140b0eb7
+  evidence:
+    files:
+    - sidecar/vault/livesync_bridge.py
+    - src/extensions/locus-extension.ts
+    - docker-compose.yml
+    - data/couchdb/local.ini
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0061
+  title: Rough Note Parser
+  spec_refs:
+  - '§27.5: Rough Note Parser & Idea Tracker'
+  mapping: exact
+  origin: legacy-tracker
+  category: Retrieval
+  verdict: LOCUS-NEW
+  source: Locus design spec
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §27.5
+    legacy_row: 62
+    pi_status: ✅ Via capture tool
+    sidecar_status: ✅ Done
+    pct: 75
+    remaining: Test with real brain dumps
+    notes: Freeform text → atomic notes
+    key_files_raw: sidecar/ingestion/rough_note_parser.py
+  spec_targets:
+  - locus-os/sidecar/ingestion/rough_note_parser.py
+  spec_sha:
+    '§27.5: Rough Note Parser & Idea Tracker': e9a9c6ae572d2fb6
+  evidence:
+    files:
+    - sidecar/ingestion/rough_note_parser.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0062
+  title: Link Dump Logger
+  spec_refs:
+  - '§27.6: Link Dump & Web Resource Logger'
+  mapping: exact
+  origin: legacy-tracker
+  category: Retrieval
+  verdict: LOCUS-NEW
+  source: Locus design spec
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §27.6
+    legacy_row: 63
+    pi_status: ✅ Via capture tool
+    sidecar_status: ✅ Done
+    pct: 75
+    remaining: Test URL scraping
+    notes: URL → 3-bullet takeaway
+    key_files_raw: sidecar/ingestion/link_logger.py
+  spec_targets:
+  - locus-os/sidecar/ingestion/link_logger.py
+  spec_sha:
+    '§27.6: Link Dump & Web Resource Logger': e9c40c7d53833843
+  evidence:
+    files:
+    - sidecar/ingestion/link_logger.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0063
+  title: Excalidraw MCP Skill
+  spec_refs:
+  - '§27.7: Excalidraw MCP Skill (Visual Architecture Diagrams)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Retrieval
+  verdict: LOCUS-NEW
+  source: Locus design spec
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §27.7
+    legacy_row: 64
+    pi_status: ✅ Via diagram tool
+    sidecar_status: ✅ Done
+    pct: 70
+    remaining: Test diagram generation
+    notes: DAG layout → .excalidraw
+    key_files_raw: sidecar/display/excalidraw_builder.py
+  spec_targets:
+  - locus-os/sidecar/tools/excalidraw_builder.py
+  - locus-os/src/tools/excalidraw.ts
+  - sidecar/tools/excalidraw_builder.py
+  spec_sha:
+    '§27.7: Excalidraw MCP Skill (Visual Architecture Diagrams)': 1f8c0f9b253f9fcb
+  evidence:
+    files:
+    - sidecar/display/excalidraw_builder.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0064
+  title: Dual Interface / Check-ins
+  spec_refs:
+  - '§28.1-28.6: Dual-Interface, Check-ins, Voice, Cost Model'
+  mapping: grouped
+  origin: legacy-tracker
+  category: Interface
+  verdict: LOCUS-NEW
+  source: Locus design spec
+  provider: null
+  layer: mixed
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §28.1-28.3
+    legacy_row: 65
+    pi_status: ✅ Pi TUI + Telegram
+    sidecar_status: ✅ Done
+    pct: 85
+    remaining: Test check-in flow end-to-end
+    notes: TUI + Telegram + Checkin flows
+    key_files_raw: sidecar/gateway/, locus-extension/
+  spec_targets: []
+  spec_sha:
+    '§28.1-28.6: Dual-Interface, Check-ins, Voice, Cost Model': 7ead669cd8430646
+  evidence:
+    files:
+    - sidecar/gateway/
+    - locus-extension/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0065
+  title: Error Classifier
+  spec_refs:
+  - '§29.1: Error Classifier'
+  mapping: exact
+  origin: legacy-tracker
+  category: Observability
+  verdict: AUGMENT
+  source: Hermes error_classifier.py
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §29.1
+    legacy_row: 66
+    pi_status: ❌ Not wired
+    sidecar_status: ✅ Done
+    pct: 55
+    remaining: Wire to Pi error events
+    notes: 5-category taxonomy exists
+    key_files_raw: sidecar/diagnostics/error_classifier.py
+  spec_targets:
+  - locus/core/error-classifier.ts
+  spec_sha:
+    '§29.1: Error Classifier': b4529b74134dba46
+  evidence:
+    files:
+    - sidecar/diagnostics/error_classifier.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0066
+  title: Health Checks
+  spec_refs:
+  - '§29.3: Health Checks'
+  mapping: exact
+  origin: legacy-tracker
+  category: Observability
+  verdict: AUGMENT
+  source: Hermes + OpenHuman
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §29.3
+    legacy_row: 67
+    pi_status: ✅ Via tool
+    sidecar_status: ✅ Done
+    pct: 90
+    remaining: Comprehensive doctor command
+    notes: locus doctor works
+    key_files_raw: locus_cli/main.py (doctor)
+  spec_targets:
+  - locus/core/health/
+  spec_sha:
+    '§29.3: Health Checks': 90e74c316b160aa9
+  evidence:
+    files:
+    - locus_cli/main.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0067
+  title: Notifications
+  spec_refs:
+  - '§29.4: Notifications'
+  mapping: exact
+  origin: legacy-tracker
+  category: Observability
+  verdict: AUGMENT
+  source: Locus
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §29.4
+    legacy_row: 68
+    pi_status: ⚠️ Telegram only
+    sidecar_status: ✅ Done
+    pct: 65
+    remaining: Add desktop notifications; wire to more channels
+    notes: Telegram push works
+    key_files_raw: sidecar/gateway/
+  spec_targets:
+  - locus/core/notifications.ts
+  spec_sha:
+    '§29.4: Notifications': 9cb87d20a10c9c63
+  evidence:
+    files:
+    - sidecar/gateway/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0068
+  title: Connectivity Check
+  spec_refs:
+  - '§29.5: Connectivity Check'
+  mapping: exact
+  origin: legacy-tracker
+  category: Observability
+  verdict: AUGMENT
+  source: Locus
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §29.5
+    legacy_row: 69
+    pi_status: ⚠️ Partial
+    sidecar_status: ✅ Done
+    pct: 60
+    remaining: Test all connectivity probes
+    notes: Doctor includes connectivity
+    key_files_raw: null
+  spec_targets:
+  - locus/core/connectivity.ts
+  spec_sha:
+    '§29.5: Connectivity Check': d771bc096021533a
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0069
+  title: Code Graph
+  spec_refs:
+  - '§29.6: Code Graph Analysis'
+  mapping: exact
+  origin: legacy-tracker
+  category: Observability
+  verdict: AUGMENT
+  source: Locus
+  provider: null
+  layer: infra
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §29.6
+    legacy_row: 70
+    pi_status: ⚠️ External
+    sidecar_status: ⚠️ External
+    pct: 50
+    remaining: graphify integration needs testing
+    notes: Uses external graphify tool
+    key_files_raw: .graphifyignore
+  spec_targets:
+  - locus/core/codegraph/
+  spec_sha:
+    '§29.6: Code Graph Analysis': 31eaaa728660618a
+  evidence:
+    files:
+    - .graphifyignore
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0070
+  title: Subconscious
+  spec_refs:
+  - '§29.7: Subconscious Background Processing'
+  mapping: exact
+  origin: legacy-tracker
+  category: Observability
+  verdict: LOCUS-NEW
+  source: Locus design spec
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §29.7
+    legacy_row: 71
+    pi_status: ❌ Not wired
+    sidecar_status: ⚠️ Partial
+    pct: 40
+    remaining: Wire heartbeat loop to cron
+    notes: Heartbeat module exists
+    key_files_raw: sidecar/heartbeat/
+  spec_targets:
+  - locus/core/subconscious.ts
+  - sidecar/subconscious/
+  spec_sha:
+    '§29.7: Subconscious Background Processing': 5cc1da1216579fdf
+  evidence:
+    files:
+    - sidecar/heartbeat/
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0071
+  title: Workflows
+  spec_refs:
+  - '§29.8: Workflows'
+  mapping: exact
+  origin: legacy-tracker
+  category: Observability
+  verdict: LOCUS-NEW
+  source: Locus design spec
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §29.8
+    legacy_row: 72
+    pi_status: ❌ Not wired
+    sidecar_status: ✅ Done
+    pct: 55
+    remaining: Test YAML workflow engine
+    notes: Workflow engine exists
+    key_files_raw: sidecar/scheduler/workflow.py
+  spec_targets:
+  - locus-os/workflows/
+  - locus/core/workflows/
+  spec_sha:
+    '§29.8: Workflows': 1a50f8cc72c0ffe6
+  evidence:
+    files:
+    - sidecar/scheduler/workflow.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0072
+  title: Collector + Chunker
+  spec_refs:
+  - '§30.1: Collector + Chunker (Ingestion Pipeline)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Microsystems
+  verdict: LOCUS-NEW
+  source: Locus microsystems.html
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §30.1
+    legacy_row: 73
+    pi_status: ❌ Not wired
+    sidecar_status: ✅ Done
+    pct: 60
+    remaining: Test vault crawling; verify MD5 diff
+    notes: Vault crawler + 5-prop chunker
+    key_files_raw: sidecar/ingestion/collector.py
+  spec_targets: []
+  spec_sha:
+    '§30.1: Collector + Chunker (Ingestion Pipeline)': 4066a978cf8a5364
+  evidence:
+    files:
+    - sidecar/ingestion/collector.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0073
+  title: Cause Chain Engine
+  spec_refs:
+  - '§30.2: Cause Chain Engine (Inferred Causation)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Microsystems
+  verdict: LOCUS-NEW
+  source: Locus comprehensive_design.html
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §30.2
+    legacy_row: 74
+    pi_status: ❌ Not wired
+    sidecar_status: ✅ Done
+    pct: 55
+    remaining: Wire to DCS drop trigger
+    notes: Auto-fires on DCS ≥ 2.0 drop
+    key_files_raw: sidecar/cause_chain.py
+  spec_targets: []
+  spec_sha:
+    '§30.2: Cause Chain Engine (Inferred Causation)': 164d469c03011814
+  evidence:
+    files:
+    - sidecar/cause_chain.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0074
+  title: SOUL.md / Wants Engine
+  spec_refs:
+  - '§30.3: SOUL.md / Wants Engine (Personality Layer)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Microsystems
+  verdict: LOCUS-NEW
+  source: Locus comprehensive_design.html
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §30.3
+    legacy_row: 75
+    pi_status: ❌ Not wired
+    sidecar_status: ✅ Done
+    pct: 55
+    remaining: Wire identity preservation to prompt builder
+    notes: Identity + curiosity nudging
+    key_files_raw: sidecar/soul.py
+  spec_targets: []
+  spec_sha:
+    '§30.3: SOUL.md / Wants Engine (Personality Layer)': 51f8e15a9b2d3d1a
+  evidence:
+    files:
+    - sidecar/soul.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0075
+  title: Content Engine
+  spec_refs:
+  - '§30.4: Content Engine (8-Step Social & Thought Publication Pipeline)'
+  mapping: low-confidence
+  origin: legacy-tracker
+  category: Microsystems
+  verdict: LOCUS-NEW
+  source: Locus microsystems.html
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §30.4
+    legacy_row: 76
+    pi_status: ⚠️ Post-turn hook
+    sidecar_status: ✅ Done
+    pct: 60
+    remaining: Test milestone detection; verify voice scorer
+    notes: 8-step pipeline with anti-cringe
+    key_files_raw: sidecar/content/engine.py
+  spec_targets:
+  - locus-os/sidecar/content/content_engine.py
+  - locus-os/sidecar/content/voice_matcher.py
+  spec_sha:
+    '§30.4: Content Engine (8-Step Social & Thought Publication Pipeline)': b2ea101ec4521e6c
+  evidence:
+    files:
+    - sidecar/content/engine.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0076
+  title: Spaced Repetition
+  spec_refs:
+  - '§30.5: Spaced Repetition Engine'
+  mapping: exact
+  origin: legacy-tracker
+  category: Microsystems
+  verdict: LOCUS-NEW
+  source: Locus microsystems.html
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §30.5
+    legacy_row: 77
+    pi_status: ❌ Not wired
+    sidecar_status: ✅ Done
+    pct: 60
+    remaining: Wire to nightly cron
+    notes: SM-2 / FSRS algorithm
+    key_files_raw: sidecar/spaced_rep.py
+  spec_targets: []
+  spec_sha:
+    '§30.5: Spaced Repetition Engine': 628f83ddbe3544ce
+  evidence:
+    files:
+    - sidecar/spaced_rep.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0077
+  title: QLoRA Pipeline
+  spec_refs:
+  - '§30.6: QLoRA Fine-Tuning Pipeline'
+  mapping: exact
+  origin: legacy-tracker
+  category: Microsystems
+  verdict: LOCUS-NEW
+  source: Locus pyramid.html
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §30.6
+    legacy_row: 78
+    pi_status: ❌ Not started
+    sidecar_status: ⚠️ Partial
+    pct: 25
+    remaining: Implement dataset curation; test Unsloth config
+    notes: Dataset curator exists; training pipeline not
+    key_files_raw: sidecar/evolution/dataset_curator.py
+  spec_targets: []
+  spec_sha:
+    '§30.6: QLoRA Fine-Tuning Pipeline': efca3f5e4e81adea
+  evidence:
+    files:
+    - sidecar/evolution/dataset_curator.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0078
+  title: Master Conductor
+  spec_refs:
+  - '§30.7: Master Conductor (11-Step Ingress-to-Egress Pipeline)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Microsystems
+  verdict: LOCUS-NEW
+  source: Locus microsystems.html
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §30.7
+    legacy_row: 79
+    pi_status: ✅ Via pi_bridge
+    sidecar_status: ✅ Done
+    pct: 90
+    remaining: Working 11-step pipeline
+    notes: 498 lines, routes through pi_bridge
+    key_files_raw: sidecar/conductor.py
+  spec_targets:
+  - locus-os/src/core/master-conductor.ts
+  - locus-os/src/core/rate-limiter.ts
+  spec_sha:
+    '§30.7: Master Conductor (11-Step Ingress-to-Egress Pipeline)': e370d5231a58114a
+  evidence:
+    files:
+    - sidecar/conductor.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0079
+  title: Dashboard/TUI Spec
+  spec_refs:
+  - '§30.8: Real-Time Dashboard & TUI Specification (6-Step Architecture)'
+  mapping: exact
+  origin: legacy-tracker
+  category: Microsystems
+  verdict: LOCUS-NEW
+  source: Locus microsystems.html
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §30.8
+    legacy_row: 80
+    pi_status: ⚠️ Separate
+    sidecar_status: ⚠️ Partial
+    pct: 45
+    remaining: Wire to Pi TUI footer widget API
+    notes: Python curses dashboard, not in Pi TUI
+    key_files_raw: locus_cli/curses_ui.py
+  spec_targets:
+  - locus-os/src/tui/dashboard.ts
+  - locus-os/src/tui/widgets/faction_bar.ts
+  spec_sha:
+    '§30.8: Real-Time Dashboard & TUI Specification (6-Step Architecture)': ff4101ea48120989
+  evidence:
+    files:
+    - locus_cli/curses_ui.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0080
+  title: Redis Integration
+  spec_refs:
+  - '§30.9: Redis High-Performance State & Pub/Sub Integration'
+  mapping: exact
+  origin: legacy-tracker
+  category: Microsystems
+  verdict: LOCUS-NEW
+  source: Locus microsystems.html
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §30.9
+    legacy_row: 81
+    pi_status: N/A
+    sidecar_status: ⚠️ With fallback
+    pct: 55
+    remaining: Test Redis connection; verify fallback
+    notes: Redis + in-memory fallback
+    key_files_raw: sidecar/redis_state.py
+  spec_targets:
+  - locus-os/sidecar/state/redis_manager.py
+  - locus-os/src/core/redis.ts
+  spec_sha:
+    '§30.9: Redis High-Performance State & Pub/Sub Integration': 9158344c9d2fbc57
+  evidence:
+    files:
+    - sidecar/redis_state.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0081
+  title: Obsidian/LightRAG Bridge
+  spec_refs:
+  - '§30.10: Obsidian & LightRAG Dual-Index Knowledge Bridge'
+  mapping: exact
+  origin: legacy-tracker
+  category: Microsystems
+  verdict: LOCUS-NEW
+  source: Locus microsystems.html
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: §30.10
+    legacy_row: 82
+    pi_status: ❌ Not wired
+    sidecar_status: ⚠️ Partial
+    pct: 45
+    remaining: Test MCP bridge; wire vault sync
+    notes: Dual-level entity & theme indexing bridging Obsidian vault notes with LightRAG and Neo4j agent memory;
+      consumes CouchDB changes feed
+    key_files_raw: sidecar/vault/lightrag_bridge.py
+  spec_targets:
+  - locus-os/sidecar/vault/lightrag_bridge.py
+  spec_sha:
+    '§30.10: Obsidian & LightRAG Dual-Index Knowledge Bridge': 0741f76e5e63fcb8
+  evidence:
+    files:
+    - sidecar/vault/lightrag_bridge.py
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0082
+  title: Install Script (ALL platforms)
+  spec_refs: []
+  mapping: none
+  origin: user-requirement (not a spec section)
+  category: Infrastructure
+  verdict: LOCUS-NEW
+  source: Locus design
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: ARCH-1
+    legacy_row: 83
+    pi_status: ✅ IMPLEMENTED
+    sidecar_status: ✅ Done
+    pct: 100
+    remaining: None (install.ps1, install.sh, install.bat created with interactive wizard)
+    notes: 'CRITICAL: No install scripts exist!'
+    key_files_raw: null
+  spec_targets: []
+  spec_sha: {}
+  evidence:
+    files:
+    - install.ps1
+    - install.sh
+    - install.bat
+    - locus.bat
+    - locus.cmd
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0083
+  title: Telegram Setup via /setup command
+  spec_refs: []
+  mapping: none
+  origin: user-requirement (not a spec section)
+  category: Infrastructure
+  verdict: LOCUS-NEW
+  source: Locus design
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: ARCH-2
+    legacy_row: 84
+    pi_status: ✅ IMPLEMENTED
+    sidecar_status: ✅ Done
+    pct: 100
+    remaining: None (20-category Telegram /setup wizard + First-Touch Auto-Pairing verified)
+    notes: User requested Telegram-based setup
+    key_files_raw: null
+  spec_targets: []
+  spec_sha: {}
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0084
+  title: core/ vs sidecar/ Deduplication
+  spec_refs: []
+  mapping: none
+  origin: user-requirement (not a spec section)
+  category: Infrastructure
+  verdict: UNKNOWN
+  source: Internal cleanup
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: ARCH-3
+    legacy_row: 85
+    pi_status: ✅ IMPLEMENTED
+    sidecar_status: ✅ Done
+    pct: 100
+    remaining: None (462 imports migrated to sidecar.*, junction deleted, sys.modules shim)
+    notes: 'COMPLETE: core/ NTFS junction deleted; 462 imports migrated to sidecar.*; sys.modules runtime fallback
+      shim active in sidecar/__init__.py'
+    key_files_raw: sidecar/
+  spec_targets: []
+  spec_sha: {}
+  evidence:
+    files:
+    - sidecar/
+    - sidecar/__init__.py
+    symbols:
+    - file: sidecar/__init__.py
+      contains:
+      - __version__
+    guard:
+    - forbidden-path
+    - reparse-point
+    - py-import-core
+    - core-alias-shim
+    - core-module-run
+    - core-path-in-scripts
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0085
+  title: VM Backend Setup
+  spec_refs: []
+  mapping: none
+  origin: user-requirement (not a spec section)
+  category: Infrastructure
+  verdict: LOCUS-NEW
+  source: Locus design
+  provider: null
+  layer: infra
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: ARCH-4
+    legacy_row: 86
+    pi_status: ✅ IMPLEMENTED
+    sidecar_status: ✅ Done
+    pct: 100
+    remaining: None (Hybrid mode RPC & CouchDB LiveSync docker-compose configured)
+    notes: 'COMPLETE: Automated installers (install.ps1/install.sh) configure Local, VM, and Hybrid modes with CouchDB
+      LiveSync (:5984), Neo4j, Redis, and Pi Agent systemd/background services'
+    key_files_raw: HEADLESS_VM_AND_CRON_SETUP_GUIDE.md, install.sh, install.ps1, docker-compose.yml
+  spec_targets: []
+  spec_sha: {}
+  evidence:
+    files:
+    - HEADLESS_VM_AND_CRON_SETUP_GUIDE.md
+    - install.sh
+    - install.ps1
+    - docker-compose.yml
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0086
+  title: Deployment (systemd/Docker)
+  spec_refs: []
+  mapping: none
+  origin: user-requirement (not a spec section)
+  category: Infrastructure
+  verdict: AUGMENT
+  source: Locus design
+  provider: null
+  layer: infra
+  inherited: false
+  manual: false
+  claimed:
+    legacy_id: ARCH-5
+    legacy_row: 87
+    pi_status: ⚠️ Partial
+    sidecar_status: ✅ Done
+    pct: 65
+    remaining: Test docker-compose; verify systemd generator
+    notes: Docker compose + systemd gen exist
+    key_files_raw: docker-compose.yml
+  spec_targets: []
+  spec_sha: {}
+  evidence:
+    files:
+    - docker-compose.yml
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0087
+  title: ARCH-6 Pi bridge (sidecar -> Pi CLI, used by cron + Telegram + conductor)
+  spec_refs: []
+  mapping: none
+  origin: session-report (Pi Agent Integration, Phase B)
+  category: Infrastructure
+  verdict: LOCUS-NEW
+  source: Locus-original
+  provider: null
+  layer: sidecar
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets: []
+  spec_sha: {}
+  evidence:
+    files:
+    - sidecar/pi_bridge.py
+    - sidecar/cron_runner.py
+    symbols:
+    - file: sidecar/pi_bridge.py
+      name: run_pi_turn
+    - file: sidecar/pi_bridge.py
+      name: get_node_executable
+    guard:
+    - must-define
+    - pi-bridge-flags
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0088
+  title: Memory Tree (Hierarchical Summarization Cascade)
+  spec_refs:
+  - '§4.5: Memory Tree (Hierarchical Summarization Cascade)'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: AUGMENT
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus/providers/memory/tree.ts
+  - sidecar/memory/tree_ops.py
+  spec_sha:
+    '§4.5: Memory Tree (Hierarchical Summarization Cascade)': 5c641f6ae93c3fd9
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0089
+  title: Memory Sync (Multi-Source Ingestion Pipelines)
+  spec_refs:
+  - '§4.7: Memory Sync (Multi-Source Ingestion Pipelines)'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: AUGMENT
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus/providers/memory/sync/
+  spec_sha:
+    '§4.7: Memory Sync (Multi-Source Ingestion Pipelines)': 285830d927f1d5bc
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0090
+  title: Memory Queue (Async Job Pipeline)
+  spec_refs:
+  - '§4.8: Memory Queue (Async Job Pipeline)'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: AUGMENT
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus/providers/memory/queue.ts
+  - sidecar/memory/queue_worker.py
+  spec_sha:
+    '§4.8: Memory Queue (Async Job Pipeline)': a44808a7a3e91430
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0091
+  title: Memory Diff (Snapshot-Based Change Tracking)
+  spec_refs:
+  - '§4.9: Memory Diff (Snapshot-Based Change Tracking)'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus/providers/memory/diff.ts
+  - sidecar/memory/diff_ops.py
+  spec_sha:
+    '§4.9: Memory Diff (Snapshot-Based Change Tracking)': e2860eb0c2bb961b
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0092
+  title: Query Router / Intent Classifier (Stage 2)
+  spec_refs:
+  - '§2.1-2.3: Query Router / Intent Classifier (Stage 2)'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: UNKNOWN
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus/core/intent-classifier.ts
+  - sidecar/router/classifier.py
+  spec_sha:
+    '§2.1-2.3: Query Router / Intent Classifier (Stage 2)': befca9e03d856062
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0093
+  title: State Engine (Stage 3)
+  spec_refs:
+  - '§2.4: State Engine (Stage 3)'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: UNKNOWN
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus/core/state-engine.ts
+  - sidecar/state_engine.py
+  spec_sha:
+    '§2.4: State Engine (Stage 3)': 4558f8578b654dd9
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0094
+  title: Context Forge (Stage 6) — The 6-Layer Assembler
+  spec_refs:
+  - '§2.5: Context Forge (Stage 6) — The 6-Layer Assembler'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: UNKNOWN
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus/core/context-forge.ts
+  spec_sha:
+    '§2.5: Context Forge (Stage 6) — The 6-Layer Assembler': 01ab8fc70c3253de
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0095
+  title: Anti-Hallucination Guard (Stage 10)
+  spec_refs:
+  - '§2.6: Anti-Hallucination Guard (Stage 10)'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: UNKNOWN
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus/core/anti-hallucination.ts
+  spec_sha:
+    '§2.6: Anti-Hallucination Guard (Stage 10)': a542ebcf7334ec6d
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0096
+  title: Intelligent Model Routing + Quality-Based Fallback
+  spec_refs:
+  - '§2.7-2.8: Intelligent Model Routing + Quality-Based Fallback'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: AUGMENT
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus/core/routing/
+  spec_sha:
+    '§2.7-2.8: Intelligent Model Routing + Quality-Based Fallback': d6564ea8364220d5
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0097
+  title: Streaming (SSE)
+  spec_refs:
+  - '§2.6a: Streaming (SSE)'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: KEEP-PI
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets: []
+  spec_sha:
+    '§2.6a: Streaming (SSE)': 99180ae504c12ae5
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0098
+  title: Image Generation
+  spec_refs:
+  - '§2.9: Image Generation'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: KEEP-PI
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets: []
+  spec_sha:
+    '§2.9: Image Generation': 0d212844c386c27e
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0099
+  title: Git Tools
+  spec_refs:
+  - '§3.7a: Git Tools'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: AUGMENT
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets: []
+  spec_sha:
+    '§3.7a: Git Tools': 5cfef52a9397edf2
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0100
+  title: Tool Call Validation
+  spec_refs:
+  - '§3.8: Tool Call Validation'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: AUGMENT
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets: []
+  spec_sha:
+    '§3.8: Tool Call Validation': 201989bf91de614f
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0101
+  title: Tool Result Classification
+  spec_refs:
+  - '§3.9: Tool Result Classification'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets: []
+  spec_sha:
+    '§3.9: Tool Result Classification': f36faf9c7c05c0d2
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0102
+  title: Tool Output Accumulator
+  spec_refs:
+  - '§3.10: Tool Output Accumulator'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: KEEP-PI
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets: []
+  spec_sha:
+    '§3.10: Tool Output Accumulator': 2d14514d16667477
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0103
+  title: Tool Timeout / Budget
+  spec_refs:
+  - '§3.11: Tool Timeout / Budget'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets: []
+  spec_sha:
+    '§3.11: Tool Timeout / Budget': 1e96cc2f9058ed64
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0104
+  title: Custom Locus Tools
+  spec_refs:
+  - '§3.12: Custom Locus Tools'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus-os/tools/
+  spec_sha:
+    '§3.12: Custom Locus Tools': 11453ad8cc43104d
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0105
+  title: Web Search (8 Providers)
+  spec_refs:
+  - '§15.1: Web Search (8 Providers)'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: KEEP-PI
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets: []
+  spec_sha:
+    '§15.1: Web Search (8 Providers)': 702677e9e5d3e2da
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0106
+  title: Pi Utilities (Clipboard, Syntax Highlighting, Frontmatter, File Watcher)
+  spec_refs:
+  - '§24.1: Pi Utilities (Clipboard, Syntax Highlighting, Frontmatter, File Watcher)'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: KEEP-PI
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets: []
+  spec_sha:
+    '§24.1: Pi Utilities (Clipboard, Syntax Highlighting, Frontmatter, File Watcher)': 2a14a69e2b4663f6
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0107
+  title: File Safety
+  spec_refs:
+  - '§13.2: File Safety'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus/security/file-safety.ts
+  spec_sha:
+    '§13.2: File Safety': 9a92d07f68eff7ee
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0108
+  title: Autonomy Tiers
+  spec_refs:
+  - '§13.4: Autonomy Tiers'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus/security/autonomy-tiers.ts
+  spec_sha:
+    '§13.4: Autonomy Tiers': 6a1ade1216592cf0
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0109
+  title: Approval Gate
+  spec_refs:
+  - '§13.5: Approval Gate'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus/core/approval_store.py
+  - locus/security/approval-gate.ts
+  spec_sha:
+    '§13.5: Approval Gate': b3813471e5ae7785
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0110
+  title: Context Compression
+  spec_refs:
+  - '§4.16: Context Compression'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: UNKNOWN
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus/providers/compaction/
+  spec_sha:
+    '§4.16: Context Compression': 4db85e910e34f80c
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0111
+  title: Emergency Task Injection
+  spec_refs:
+  - '§25.9: Emergency Task Injection'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus-os/sidecar/life_os/emergency.py
+  spec_sha:
+    '§25.9: Emergency Task Injection': 1aed1b6df1181bc2
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0112
+  title: Exhaustion Predictor
+  spec_refs:
+  - '§25.10: Exhaustion Predictor'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus-os/sidecar/life_os/exhaustion.py
+  spec_sha:
+    '§25.10: Exhaustion Predictor': f7215c6ac4a60376
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0113
+  title: Weekly Faction Rebalance
+  spec_refs:
+  - '§25.11: Weekly Faction Rebalance'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus-os/sidecar/life_os/rebalance.py
+  spec_sha:
+    '§25.11: Weekly Faction Rebalance': 8b647b7bb21283a7
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0114
+  title: Review Cadence System
+  spec_refs:
+  - '§25.13: Review Cadence System'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus-os/sidecar/life_os/reviews.py
+  spec_sha:
+    '§25.13: Review Cadence System': 4ab08118bc6a54da
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0115
+  title: Goal Stack Enforcement
+  spec_refs:
+  - '§25.14: Goal Stack Enforcement'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus-os/sidecar/life_os/goal_enforcement.py
+  spec_sha:
+    '§25.14: Goal Stack Enforcement': 4d7fb02bfc4211c8
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0116
+  title: Cross-Faction Efficiency
+  spec_refs:
+  - '§25.15: Cross-Faction Efficiency'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus-os/sidecar/life_os/cross_faction.py
+  spec_sha:
+    '§25.15: Cross-Faction Efficiency': a3514f328b5079e2
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0117
+  title: Four-Level Emergency Protocol
+  spec_refs:
+  - '§25.16: Four-Level Emergency Protocol'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus-os/sidecar/life_os/emergency_protocol.py
+  spec_sha:
+    '§25.16: Four-Level Emergency Protocol': 912ce423df96144a
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0118
+  title: Memory Provider Interface
+  spec_refs:
+  - '§4.18: Memory Provider Interface'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: UNKNOWN
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus/providers/memory/interface.ts
+  spec_sha:
+    '§4.18: Memory Provider Interface': c25ef100889b096f
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0119
+  title: Skill System & Multi-Source Marketplace
+  spec_refs:
+  - '§9.2: Skill System & Multi-Source Marketplace'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus-os/src/skills/marketplace.ts
+  spec_sha:
+    '§9.2: Skill System & Multi-Source Marketplace': ef174370c43422dc
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0120
+  title: Self-Evolving Architect Bot
+  spec_refs:
+  - '§10.8: Self-Evolving Architect Bot'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: UNKNOWN
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus/core/architect/
+  spec_sha:
+    '§10.8: Self-Evolving Architect Bot': 07ee48faf951cd68
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0121
+  title: Agent Experience Tracking (Procedural Memory)
+  spec_refs:
+  - '§10.9: Agent Experience Tracking (Procedural Memory)'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: MULTI-PROVIDER
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus/core/experience/
+  - src/openhuman/agent_experience/
+  spec_sha:
+    '§10.9: Agent Experience Tracking (Procedural Memory)': 1a8f6904e6270e82
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0122
+  title: LOCUS_SHORTHAND 4× Text Compressor
+  spec_refs:
+  - '§27.3: LOCUS_SHORTHAND 4× Text Compressor'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus-os/src/core/compression/shorthand.ts
+  spec_sha:
+    '§27.3: LOCUS_SHORTHAND 4× Text Compressor': a01c1c483a7a134f
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0123
+  title: 3-Level Tag Hierarchy & Semantic Indexing
+  spec_refs:
+  - '§27.4: 3-Level Tag Hierarchy & Semantic Indexing'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus-os/sidecar/vault/tag_manager.py
+  spec_sha:
+    '§27.4: 3-Level Tag Hierarchy & Semantic Indexing': 5d253b4e944ee45e
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0124
+  title: Auxiliary LLM Client
+  spec_refs:
+  - '§29.2: Auxiliary LLM Client'
+  mapping: exact
+  origin: spec-gap (the old tracker had no row for this section)
+  category: null
+  verdict: LOCUS-NEW
+  source: null
+  provider: null
+  layer: unknown
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets:
+  - locus/core/auxiliary-client.ts
+  spec_sha:
+    '§29.2: Auxiliary LLM Client': 9f48b55bdb49c40e
+  evidence:
+    files: []
+    symbols: []
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []
+- id: F-0125
+  title: 'Modularity foundation: provider registry + config accessor (sidecar and TypeScript)'
+  spec_refs: []
+  mapping: none
+  origin: 'user-requirement (not a spec section): LITERALLY EVERYTHING modular, switch off or swap'
+  category: Infrastructure
+  verdict: LOCUS-NEW
+  source: Locus-original
+  provider: null
+  layer: mixed
+  inherited: false
+  manual: false
+  claimed: null
+  spec_targets: []
+  spec_sha: {}
+  evidence:
+    files:
+    - sidecar/registry.py
+    - sidecar/config.py
+    - locus-extension/src/registry.ts
+    - locus-extension/src/config.ts
+    symbols:
+    - file: sidecar/registry.py
+      name: ProviderRegistry
+    - file: sidecar/registry.py
+      name: get_registry
+    - file: sidecar/config.py
+      name: get
+    - file: sidecar/config.py
+      name: is_enabled
+    guard: []
+    unit: []
+    integration: []
+  depends_on: []

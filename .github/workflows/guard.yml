@@ -1,0 +1,28 @@
+# Locus guard in CI: the same checks the hooks run, on a clean machine that nobody can bypass with --no-verify.
+name: guard
+on:
+  push:
+  pull_request:
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # the upstream-Pi pin needs history
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r tools/requirements.txt
+      - name: Guard (full)
+        run: python tools/guard/check.py --full
+      - name: Guard self-tests
+        run: python -m pytest tests/guard -q
+      - name: Tracker (static: files, symbols, guard checks; test commands are run locally)
+        run: python tools/tracker/verify.py --static --no-write --fail-on-guard
+      - name: Backlog (stories, sprint log, WIP limit)
+        run: python tools/tracker/backlog.py --check
+      - name: List protected files changed in this push (a human must have meant it)
+        if: github.event_name == 'push'
+        run: |
+          git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" -- AGENTS.md CLAUDE.md docs/agent tools .githooks .github/workflows/guard.yml tracker/signoff.yaml tracker/overrides.yaml tracker/backlog.yaml tracker/sprints.jsonl tracker/retro tests/guard 2>/dev/null | sed 's/^/::warning title=protected file changed::/' || true

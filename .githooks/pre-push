@@ -1,0 +1,11 @@
+#!/bin/sh
+# Locus pre-push: the full guard (adds upstream-Pi pin, spec lint, tracker integrity, git hygiene).
+cd "$(git rev-parse --show-toplevel)" || exit 1
+for PY in "${LOCUS_PYTHON:-}" python3 python py; do
+  [ -n "$PY" ] || continue
+  if "$PY" -c "import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)" >/dev/null 2>&1; then
+    exec "$PY" tools/guard/check.py --full
+  fi
+done
+echo "Locus guard: no Python 3.11+ found. Set LOCUS_PYTHON to its full path." >&2
+exit 1

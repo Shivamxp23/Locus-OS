@@ -1,0 +1,10 @@
+.env
+.venv/
+node_modules/
+dist/
+data/couchdb/*
+!data/couchdb/local.ini
+__pycache__/
+tracker/.cache/
+.keysndocs/*
+!.keysndocs/Documentation/
