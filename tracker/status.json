@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-14T21:14:57+0530",
-  "commit": "c531733a066df09bc733a0013d3a4011e88fe298",
-  "dirty": false,
+  "generated_at": "2026-10-15T03:45:44+0530",
+  "commit": "1a8901c73521a130fb9157b24038f1b390ce1ca5",
+  "dirty": true,
   "static": false,
   "guard": {
     "verdict": "FAIL",
@@ -13,19 +13,19 @@
   },
   "summary": {
     "features": 125,
-    "verified_mean_pct": 11.8,
+    "verified_mean_pct": 12.3,
     "claimed_mean_pct": 71.4,
     "claimed_rows": 86,
     "by_label": {
       "FILES_PRESENT": 5,
       "INHERITED_OK": 12,
-      "NO_EVIDENCE": 105,
-      "UNIT_VERIFIED": 3
+      "NO_EVIDENCE": 104,
+      "UNIT_VERIFIED": 4
     },
     "integrated_or_better": 12,
     "proven": 0,
     "overclaims": 71,
-    "no_evidence": 105,
+    "no_evidence": 104,
     "spec_sections_total": 135,
     "spec_changed": 0
   },
@@ -1529,20 +1529,39 @@
       "id": "F-0083",
       "title": "Telegram Setup via /setup command",
       "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 3,
+      "label": "UNIT_VERIFIED",
+      "pct": 65,
       "claimed_pct": 100.0,
-      "gap": 100.0,
+      "gap": 35.0,
       "flags": [
-        "NO_FILES_NAMED",
         "OVERCLAIM"
       ],
       "reasons": [
-        "no evidence files declared"
+        "no integration test declared"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.integration: a DIFFERENT test that crosses a boundary (sidecar<->Pi, extension<->Pi, service<->service).",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_telegram_pairing.py -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..........                                                               [100%]\n10 passed in 0.09s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 1.7
+          }
+        ],
+        "guard": [],
+        "integration": []
+      }
     },
     "F-0084": {
       "id": "F-0084",
@@ -1658,10 +1677,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed in 0.06s\n",
+            "tail": ".....                                                                    [100%]\n5 passed in 0.03s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 1.7
+            "seconds": 1.5
           }
         ],
         "guard": [],
@@ -1697,7 +1716,7 @@
             "tail": "......                                                                   [100%]\n6 passed in 0.03s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 1.6
+            "seconds": 1.7
           }
         ],
         "guard": [
