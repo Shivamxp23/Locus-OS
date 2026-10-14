@@ -1,7 +1,7 @@
 # Tracker status (computed, not written)
 
-- commit `4c0b14e7a0` (dirty working tree) - 2026-10-14T17:01:43+0530 - static
-- guard: FAIL {'FAIL': 7, 'WARN': 13, 'INFO': 0}
+- commit `cdd03da3bf` - 2026-10-14T17:26:50+0530 - static
+- guard: FAIL {'FAIL': 7, 'WARN': 12, 'INFO': 0}
 - features: 125 | verified average **9.6%** | old claimed average 71.4% over 86 rows
 - integrated or better: 12 | proven: 0 | overclaims (claimed >= verified + 25): 72 | no evidence: 113
 - by level: {'INHERITED_OK': 12, 'NO_EVIDENCE': 113}
