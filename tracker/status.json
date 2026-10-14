@@ -1,29 +1,31 @@
 {
-  "generated_at": "2026-10-14T17:26:50+0530",
-  "commit": "cdd03da3bf2dcd0eb8149420469aaec1eaba04e1",
-  "dirty": false,
-  "static": true,
+  "generated_at": "2026-10-14T20:22:28+0530",
+  "commit": "04def0cf61888958bf6677fc99e9d4cc1a5f7607",
+  "dirty": true,
+  "static": false,
   "guard": {
     "verdict": "FAIL",
     "counts": {
-      "FAIL": 7,
+      "FAIL": 5,
       "WARN": 12,
       "INFO": 0
     }
   },
   "summary": {
     "features": 125,
-    "verified_mean_pct": 9.6,
+    "verified_mean_pct": 10.7,
     "claimed_mean_pct": 71.4,
     "claimed_rows": 86,
     "by_label": {
+      "FILES_PRESENT": 5,
       "INHERITED_OK": 12,
-      "NO_EVIDENCE": 113
+      "NO_EVIDENCE": 107,
+      "UNIT_VERIFIED": 1
     },
     "integrated_or_better": 12,
     "proven": 0,
     "overclaims": 72,
-    "no_evidence": 113,
+    "no_evidence": 107,
     "spec_sections_total": 135,
     "spec_changed": 0
   },
@@ -665,19 +667,18 @@
       "id": "F-0037",
       "title": "Injection Filter",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 1,
+      "label": "FILES_PRESENT",
+      "pct": 15,
       "claimed_pct": 80.0,
-      "gap": 80.0,
+      "gap": 65.0,
       "flags": [
-        "CLAIMED_FILES_MISSING",
         "OVERCLAIM"
       ],
       "reasons": [
-        "declared files missing: sidecar/security/injection_filter.py"
+        "no symbols declared: file existence alone proves nothing"
       ],
-      "next": "Files claimed but absent: sidecar/security/injection_filter.py. Create them or correct the path.",
+      "next": "Declare evidence.symbols that prove the implementation exists.",
       "checks": {}
     },
     "F-0038": {
@@ -712,76 +713,72 @@
       "id": "F-0040",
       "title": "Shell Blocklist",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 1,
+      "label": "FILES_PRESENT",
+      "pct": 15,
       "claimed_pct": 70.0,
-      "gap": 70.0,
+      "gap": 55.0,
       "flags": [
-        "CLAIMED_FILES_MISSING",
         "OVERCLAIM"
       ],
       "reasons": [
-        "declared files missing: sidecar/security/"
+        "no symbols declared: file existence alone proves nothing"
       ],
-      "next": "Files claimed but absent: sidecar/security/. Create them or correct the path.",
+      "next": "Declare evidence.symbols that prove the implementation exists.",
       "checks": {}
     },
     "F-0041": {
       "id": "F-0041",
       "title": "Data Redaction",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 1,
+      "label": "FILES_PRESENT",
+      "pct": 15,
       "claimed_pct": 75.0,
-      "gap": 75.0,
+      "gap": 60.0,
       "flags": [
-        "CLAIMED_FILES_MISSING",
         "OVERCLAIM"
       ],
       "reasons": [
-        "declared files missing: sidecar/security/redact.py"
+        "no symbols declared: file existence alone proves nothing"
       ],
-      "next": "Files claimed but absent: sidecar/security/redact.py. Create them or correct the path.",
+      "next": "Declare evidence.symbols that prove the implementation exists.",
       "checks": {}
     },
     "F-0042": {
       "id": "F-0042",
       "title": "Think Token Scrubbing",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 1,
+      "label": "FILES_PRESENT",
+      "pct": 15,
       "claimed_pct": 75.0,
-      "gap": 75.0,
+      "gap": 60.0,
       "flags": [
-        "CLAIMED_FILES_MISSING",
         "OVERCLAIM"
       ],
       "reasons": [
-        "declared files missing: sidecar/security/think_scrubber.py"
+        "no symbols declared: file existence alone proves nothing"
       ],
-      "next": "Files claimed but absent: sidecar/security/think_scrubber.py. Create them or correct the path.",
+      "next": "Declare evidence.symbols that prove the implementation exists.",
       "checks": {}
     },
     "F-0043": {
       "id": "F-0043",
       "title": "Message Sanitization",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 1,
+      "label": "FILES_PRESENT",
+      "pct": 15,
       "claimed_pct": 75.0,
-      "gap": 75.0,
+      "gap": 60.0,
       "flags": [
-        "CLAIMED_FILES_MISSING",
         "OVERCLAIM"
       ],
       "reasons": [
-        "declared files missing: sidecar/security/sanitizer.py"
+        "no symbols declared: file existence alone proves nothing"
       ],
-      "next": "Files claimed but absent: sidecar/security/sanitizer.py. Create them or correct the path.",
+      "next": "Declare evidence.symbols that prove the implementation exists.",
       "checks": {}
     },
     "F-0044": {
@@ -1551,20 +1548,70 @@
       "id": "F-0084",
       "title": "core/ vs sidecar/ Deduplication",
       "verdict": "UNKNOWN",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 3,
+      "label": "UNIT_VERIFIED",
+      "pct": 65,
       "claimed_pct": 100.0,
-      "gap": 100.0,
+      "gap": 35.0,
       "flags": [
-        "CLAIMED_FILES_MISSING",
         "OVERCLAIM"
       ],
       "reasons": [
-        "declared files missing: sidecar/, sidecar/__init__.py"
+        "no integration test declared"
       ],
-      "next": "Files claimed but absent: sidecar/, sidecar/__init__.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Add evidence.integration: a DIFFERENT test that crosses a boundary (sidecar<->Pi, extension<->Pi, service<->service).",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "python -m pytest tests/test_sidecar_layout.py -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "......                                                                   [100%]\n6 passed in 0.05s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.1
+          }
+        ],
+        "guard": [
+          {
+            "check": "forbidden-path",
+            "ok": true,
+            "why": ""
+          },
+          {
+            "check": "reparse-point",
+            "ok": true,
+            "why": ""
+          },
+          {
+            "check": "py-import-core",
+            "ok": true,
+            "why": ""
+          },
+          {
+            "check": "core-alias-shim",
+            "ok": true,
+            "why": ""
+          },
+          {
+            "check": "core-module-run",
+            "ok": true,
+            "why": ""
+          },
+          {
+            "check": "core-path-in-scripts",
+            "ok": true,
+            "why": ""
+          }
+        ],
+        "integration": []
+      }
     },
     "F-0085": {
       "id": "F-0085",

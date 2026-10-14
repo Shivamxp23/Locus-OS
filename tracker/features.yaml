@@ -2972,7 +2972,8 @@ features:
     - core-alias-shim
     - core-module-run
     - core-path-in-scripts
-    unit: []
+    unit:
+    - python -m pytest tests/test_sidecar_layout.py -q
     integration: []
   depends_on: []
 - id: F-0085
