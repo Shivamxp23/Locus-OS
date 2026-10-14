@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Locus OS — Architecture Pyramid</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #FAFAFA;   /* Light background for reduced eye strain */
+    color: #222222;         /* Dark text for high contrast */
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px;
+  }
+
+  h1 {
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: #C4813F;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .subtitle {
+    font-size: 10px;
+    color: #555555;
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+  }
+
+  .layout {
+    display: flex;
+    gap: 0;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 1100px;
+    position: relative;
+  }
+
+  /* PYRAMID */
+  .pyramid {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.3s ease;
+  }
+
+  .pyramid.shifted {
+    transform: translateX(-60px);
+  }
+
+  .tier {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  /* connector line between tiers */
+  .connector {
+    width: 1px;
+    height: 12px;
+    background: #777777;
+    margin: -4px auto;
+  }
+
+  .node {
+    background: #FFFFFF;    /* White node background */
+    border: 1px solid #CCCCCC; /* Light gray border */
+    border-radius: 4px;
+    padding: 8px 14px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    position: relative;
+    user-select: none;
+    color: #222222;
+  }
+
+  .node:hover {
+    border-color: #C4813F;
+    color: #C4813F;
+    background: #E0E0E0;    /* Slightly darker on hover */
+  }
+
+  .node.active {
+    border-color: #C4813F;
+    color: #C4813F;
+    background: #D8D8D8;    /* Light gray when active */
+    box-shadow: 0 0 12px rgba(196,129,63,0.2);
+  }
+
+  /* tier color coding */
+  .tier-0 .node { border-color: #C4813F; color: #C4813F; font-size: 11px; padding: 10px 24px; }
+  .tier-1 .node { border-color: #777777; }
+  .tier-2 .node { border-color: #666666; }
+  .tier-3 .node { border-color: #555555; }
+  .tier-4 .node { border-color: #444444; }
+  .tier-5 .node { border-color: #333333; font-size: 9px; }
+
+  .tier-label {
+    font-size: 8px;
+    color: #444444;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    align-self: flex-start;
+    padding-left: 8px;
+  }
+
+  /* horizontal sections */
+  .h-section {
+    width: 100%;
+    max-width: 700px;
+    margin-top: 6px;
+  }
+
+  .h-label {
+    font-size: 8px;
+    color: #444444;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #DDDDDD;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+  }
+
+  .h-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .h-node {
+    background: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .h-node:hover, .h-node.active {
+    border-color: #C4813F;
+    color: #C4813F;
+    background: #E0E0E0;
+  }
+
+  .divider {
+    width: 100%;
+    max-width: 700px;
+    height: 1px;
+    background: #EEEEEE;
+    margin: 16px 0 10px;
+  }
+
+  /* SIDE PANEL */
+  .panel {
+    width: 0;
+    overflow: hidden;
+    transition: width 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    position: sticky;
+    top: 32px;
+    flex-shrink: 0;
+  }
+
+  .panel.open {
+    width: 300px;
+    opacity: 1;
+    margin-left: 24px;
+  }
+
+  .panel-inner {
+    width: 300px;
+    background: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 6px;
+    padding: 20px;
+  }
+
+  .panel-tag {
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: #C4813F;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .panel-title {
+    font-size: 13px;
+    color: #222222;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  .panel-body {
+    font-size: 10px;
+    color: #333333;
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .panel-meta {
+    font-size: 9px;
+    color: #555555;
+    border-top: 1px solid #EEEEEE;
+    padding-top: 10px;
+    line-height: 1.8;
+  }
+
+  .panel-meta span {
+    color: #666666;
+  }
+
+  .close-btn {
+    float: right;
+    background: none;
+    border: none;
+    color: #555555;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 10px;
+    letter-spacing: 1px;
+    transition: color 0.2s;
+  }
+
+  .close-btn:hover { color: #C4813F; }
+
+  .tag-chip {
+    display: inline-block;
+    background: #E0E0E0;
+    border: 1px solid #CCCCCC;
+    border-radius: 2px;
+    padding: 2px 6px;
+    font-size: 8px;
+    color: #222222;
+    margin: 2px 2px 0 0;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+<h1>Locus OS</h1>
+<div class="subtitle">Architecture Pyramid — click any node to inspect</div>
+
+<div class="layout" id="layout">
+
+  <!-- PYRAMID -->
+  <div class="pyramid" id="pyramid">
+
+    <!-- TIER 0: Master -->
+    <div class="tier tier-0">
+      <div class="node" data-id="master">Master Conductor</div>
+    </div>
+    <div class="connector"></div>
+
+    <!-- TIER 1: Orchestration -->
+    <div class="tier-label">Orchestration</div>
+    <div class="tier tier-1">
+      <div class="node" data-id="router">Query Router</div>
+      <div class="node" data-id="inner">Inner Loop</div>
+      <div class="node" data-id="forge">Context Forge</div>
+    </div>
+    <div class="connector"></div>
+
+    <!-- TIER 2: Intelligence -->
+    <div class="tier-label">Intelligence Pipeline</div>
+    <div class="tier tier-2">
+      <div class="node" data-id="pattern">Pattern Engine</div>
+      <div class="node" data-id="scheduler">Scheduler / Planner</div>
+      <div class="node" data-id="goals">Goal Tracker</div>
+      <div class="node" data-id="state">State Engine</div>
+      <div class="node" data-id="web">Web Searcher</div>
+    </div>
+    <div class="connector"></div>
+
+    <!-- TIER 3: Retrieval -->
+    <div class="tier-label">Retrieval</div>
+    <div class="tier tier-3">
+      <div class="node" data-id="retriever">Retriever</div>
+      <div class="node" data-id="reader">Reader</div>
+      <div class="node" data-id="collector">Collector + Chunker</div>
+    </div>
+    <div class="connector"></div>
+
+    <!-- TIER 4: Storage -->
+    <div class="tier-label">Storage</div>
+    <div class="tier tier-4">
+      <div class="node" data-id="postgres">PostgreSQL</div>
+      <div class="node" data-id="neo4j">Neo4j</div>
+      <div class="node" data-id="qdrant">Qdrant</div>
+      <div class="node" data-id="obsidian">Obsidian + LightRAG + Redis</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- HORIZONTAL: Input -->
+    <div class="h-section">
+      <div class="h-label">Input</div>
+      <div class="h-row">
+        <div class="h-node" data-id="telegram">Telegram Bot</div>
+        <div class="h-node" data-id="voice">Voice Call + Whisper</div>
+        <div class="h-node" data-id="archiver">AI Chat Archiver</div>
+      </div>
+    </div>
+
+    <!-- HORIZONTAL: Output -->
+    <div class="h-section" style="margin-top:12px">
+      <div class="h-label">Output</div>
+      <div class="h-row">
+        <div class="h-node" data-id="dashboard">Obsidian Dashboard</div>
+        <div class="h-node" data-id="content">Content Engine</div>
+        <div class="h-node" data-id="calendar">Calendar Bridge</div>
+        <div class="h-node" data-id="push">Push Notifications</div>
+      </div>
+    </div>
+
+    <!-- HORIZONTAL: Feedback -->
+    <div class="h-section" style="margin-top:12px">
+      <div class="h-label">Feedback</div>
+      <div class="h-row">
+        <div class="h-node" data-id="reward">Reward Model</div>
+        <div class="h-node" data-id="rlhf">RLHF Pipeline</div>
+        <div class="h-node" data-id="hebbian">Hebbian Decay</div>
+      </div>
+    </div>
+
+    <!-- HORIZONTAL: Self-maintenance -->
+    <div class="h-section" style="margin-top:12px">
+      <div class="h-label">Self-Maintenance</div>
+      <div class="h-row">
+        <div class="h-node" data-id="architect">Architect Bot</div>
+        <div class="h-node" data-id="security">Security Layer</div>
+        <div class="h-node" data-id="backup">Backup System</div>
+        <div class="h-node" data-id="selfmaint">Auto-Update System</div>
+      </div>
+    </div>
+
+  </div><!-- end pyramid -->
+
+  <!-- SIDE PANEL -->
+  <div class="panel" id="panel">
+    <div class="panel-inner">
+      <button class="close-btn" id="closeBtn">✕ close</button>
+      <div class="panel-tag" id="pTag"></div>
+      <div class="panel-title" id="pTitle"></div>
+      <div class="panel-body" id="pBody"></div>
+      <div class="panel-meta" id="pMeta"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const DATA = {
+  master: {
+    tag: "Tier 0 · Orchestration",
+    title: "Master Conductor",
+    body: "The top of the pyramid. Receives all inputs — Telegram messages, scheduled triggers, inner loop outputs. Decides which pipeline components to invoke, in what order, with what parameters. Manages the LLM cascade selection: 8b-instant for simple queries, 70b-versatile for deep reasoning, Gemini 2.5 Pro for Sunday synthesis. Owns the /brain/chat endpoint. Handles graceful degradation when subsystems are unavailable.",
+    inputs: ["Telegram", "Voice", "AI Chat Archiver", "Inner Loop"],
+    outputs: ["Query Router", "Context Forge", "All pipeline services"],
+    status: "Partial"
+  },
+  router: {
+    tag: "Tier 1 · Orchestration",
+    title: "Query Router",
+    body: "The first thing every incoming message hits. Classifies intent into: FACTUAL_PERSONAL, BEHAVIORAL_PATTERN, KNOWLEDGE_RETRIEVAL, TASK_PLANNING, EMOTIONAL_STATE, EXTERNAL_KNOWLEDGE, SYNTHESIS, INFERENCE_REQUEST. Returns which sources to query, temporal scope, and whether deep reasoning is needed. Single cheap Groq 8b-instant call (~50 tokens). If confidence < 0.7, queries all sources.",
+    inputs: ["User message or inner loop trigger"],
+    outputs: ["Source list", "Intent type", "Temporal scope", "Deep reasoning flag"],
+    status: "Not Built"
+  },
+  inner: {
+    tag: "Tier 1 · Orchestration",
+    title: "Inner Loop",
+    body: "The only service that runs without you saying anything. Fires every 90 minutes during active hours (07:00–00:00 IST) and deep pass at 03:00 IST. Reads CURRENT_STATE, active behavioral alerts, recent patterns, compressed recent events. Passes to Groq with instruction: 'You are NOT talking to Shivam. You are thinking about Shivam.' Generates 0–2 specific evidence-based observations. Scores each via reward model before surfacing. This is the Samantha layer.",
+    inputs: ["CURRENT_STATE (Redis)", "Pattern Engine", "PostgreSQL events"],
+    outputs: ["Telegram proactive messages", "Morning briefing queue", "Detected patterns"],
+    status: "Not Built"
+  },
+  forge: {
+    tag: "Tier 1 · Orchestration",
+    title: "Context Forge",
+    body: "Merges parallel retrieval results into a single coherent, token-budgeted context block. Hard budget: 800 tokens total. Layers: user identity (80t), temporal context (60t), PostgreSQL events compressed via LOCUS_SHORTHAND (180t), Neo4j pathways (150t), Qdrant/Obsidian semantic (200t), web (100t). Truncates by relevance score not recency. Increments Hebbian weights on every Neo4j path traversed. This is what the LLM always receives — never raw data.",
+    inputs: ["Retriever results", "State Engine", "Neo4j pathways"],
+    outputs: ["Assembled context block (≤800 tokens)"],
+    status: "Not Built"
+  },
+  pattern: {
+    tag: "Tier 2 · Intelligence Pipeline",
+    title: "Pattern Engine",
+    body: "Runs across five time horizons simultaneously. H1 (6h): acute energy and task state. H2 (24h): daily rhythm, sleep-productivity correlation. H3 (7d): weekly faction neglect, deferral velocity, mood trend. H4 (30d): goal progress, recurring avoidance, energy cycles. H5 (all time): exam behavioral signatures, peak performance windows, long-term goal drift. Promotes high-confidence repeated patterns to persistent patterns feeding User Identity layer.",
+    inputs: ["PostgreSQL events", "Neo4j graph", "Qdrant vectors"],
+    outputs: ["detected_patterns table", "Persistent patterns → User Identity"],
+    status: "Not Built"
+  },
+  scheduler: {
+    tag: "Tier 2 · Intelligence Pipeline",
+    title: "Scheduler / Planner",
+    body: "Reads today's real DCS, real TWS scores for all active tasks, real faction lag scores. Produces a ranked task list for the day. Applies lag bonuses — faction behind by 3+ hours gets TWS+2, 6+ hours gets TWS+4. Applies mode constraints — never recommends D=9 tasks in RECOVERY mode. Handles ripple rescheduling when new urgent tasks arrive. Implements the three-birds-one-stone efficiency mapping for cross-faction tasks. Optionally uses Dijkstra with multi-dimensional weights.",
+    inputs: ["DCS from checkins", "TWS scores", "Faction lag scores", "Task pool"],
+    outputs: ["Ranked daily task list", "Google Calendar events via Calendar Bridge"],
+    status: "Planned"
+  },
+  goals: {
+    tag: "Tier 2 · Intelligence Pipeline",
+    title: "Goal Tracker",
+    body: "Monitors the three-layer goal stack — Outcomes → Projects → Tasks. Flags dead nodes: outcomes untouched for 60 days, projects with zero activity. Tracks action gap: declared priority vs behavioral priority (alert if gap > 5). Detects goal drift — are current tasks still serving declared outcomes? Enforces max 7 outcomes, max 3 active projects per faction. Generates weekly review. Surfaces misalignment proactively.",
+    inputs: ["PostgreSQL tasks/projects/outcomes", "Behavioral event stream"],
+    outputs: ["Dead node alerts", "Action gap score", "Weekly review"],
+    status: "Planned"
+  },
+  state: {
+    tag: "Tier 2 · Intelligence Pipeline",
+    title: "State Engine",
+    body: "Maintains CURRENT_STATE in Redis — a continuously updated multi-dimensional snapshot. Psychological: mood trend, stress indicators, energy level. Operational: momentum, completion rate, deferral rate, last meaningful work timestamp. Contextual flags: exam period, sleep quality, meal energy impact, time-of-day segment. Generates inferred_cause_chain: plain-text explanation of why Shivam is likely in this state, citing specific data points. Triggered by every PostgreSQL write. TTL: 6 hours.",
+    inputs: ["Every new PostgreSQL event write", "Every Telegram message"],
+    outputs: ["CURRENT_STATE (Redis)", "Behavioral alerts", "Inferred cause chain"],
+    status: "Not Built"
+  },
+  web: {
+    tag: "Tier 2 · Intelligence Pipeline",
+    title: "Web Searcher",
+    body: "Only invoked when sources_required includes 'web' OR all personal data sources return empty. Uses DuckDuckGo (free, no API key). Returns top 3 results with title, snippet, and URL. Never invoked for personal data queries — that is a retrieval problem, not a search problem. Hard rule: personal data queries that return empty must say 'I don't have that stored yet', not fall back to web search.",
+    inputs: ["Classified intent (EXTERNAL_KNOWLEDGE)", "Empty retrieval result"],
+    outputs: ["Top 3 web results"],
+    status: "Not Built"
+  },
+  retriever: {
+    tag: "Tier 3 · Retrieval",
+    title: "Retriever (3 modes)",
+    body: "Three modes, auto-selected by Query Router. Mode A (Qdrant): semantic search for conceptual queries — embed query, return top 7 similar vectors boosted by recency. Mode B (PostgreSQL): structured queries for logged data — tasks, scores, history, deferrals, faction stats. Mode C (Neo4j): graph queries for relationships and patterns — traverse behavioral graph 2 hops deep. Returns empty explicitly rather than guessing. Zero hallucination guarantee.",
+    inputs: ["Classified query + intent", "Temporal scope"],
+    outputs: ["Structured results with source, text, and score"],
+    status: "Partial"
+  },
+  reader: {
+    tag: "Tier 3 · Retrieval",
+    title: "Reader (Vault)",
+    body: "Opens specific Obsidian vault files on demand and returns full raw content. Always reads from disk — never from cache. Injects content directly into LLM context with strict instruction: 'Answer ONLY from this document. If the answer is not here, say so.' If file exceeds 8000 words, returns first 8000 and flags truncated. Used when you say 'read this file' or 'what does X note say'. Every read logged to behavioral_events.",
+    inputs: ["File path from vault"],
+    outputs: ["Full raw file content (≤8000 words)"],
+    status: "Not Built"
+  },
+  collector: {
+    tag: "Tier 3 · Retrieval",
+    title: "Collector + Chunker",
+    body: "Collector: crawls all data sources on schedule and on-demand. Sources: Obsidian vault .md files, Telegram captures, morning/evening check-in logs, task events. Incremental — MD5 hashes every file, skips unchanged ones. Chunker: converts raw markdown into factual proposition-based chunks. Strips noise, detects sentence boundaries via spaCy, classifies each sentence as factual via Groq 8b-instant with heuristic fallback. Groups approved sentences into max-5-proposition chunks for Qdrant embedding.",
+    inputs: ["Vault .md files", "Telegram captures", "Checkin logs", "Task events"],
+    outputs: ["vault_chunks table", "Qdrant embeddings", "behavioral_events log"],
+    status: "Partial"
+  },
+  postgres: {
+    tag: "Tier 4 · Storage",
+    title: "PostgreSQL — The Archivist",
+    body: "Raw chronological truth. Every event, log, metric, task, deferral, checkin, faction score, DCS, reward signal, brain error. The single source of timestamped behavioral record. If it happened, it is here. Key tables: behavioral_events, tasks, projects, outcomes, checkins, task_deferrals, vault_chunks, pattern_snapshots, weekly_reviews, reward_signals, state_snapshots, brain_errors.",
+    inputs: ["All engines write here"],
+    outputs: ["Structured event history for all retrieval and pattern detection"],
+    status: "Working"
+  },
+  neo4j: {
+    tag: "Tier 4 · Storage",
+    title: "Neo4j — The Cartographer",
+    body: "The map of how everything connects. Nodes: tasks, projects, outcomes, factions, concepts (ConceptNode), behaviors, time periods. Edges carry Hebbian weights — incremented on traversal (+0.1), reinforced on 👍 (×1.3), weakened on 👎 (×0.7), decayed weekly (×0.95). Traversal paths = Locus's learned intuition about you. Multi-dimensional edges with 17+ parameters per node-pair planned. Strongest pathways feed Context Forge for routing.",
+    inputs: ["Behavioral events", "Hebbian weight updates", "Entity extraction from vault"],
+    outputs: ["Weighted pathways", "Behavioral pattern graph", "Top 10 strongest routes"],
+    status: "Working (data unclear)"
+  },
+  qdrant: {
+    tag: "Tier 4 · Storage",
+    title: "Qdrant — The Librarian",
+    body: "Semantic memory. Every vault chunk, every pattern description, every brain inference embedded as a 384-dimensional vector (BAAI/bge-small-en-v1.5 via fastembed). Finds meaning by similarity, not keyword. The only store that understands concepts rather than facts. Recency boost: vectors from last 7 days get 1.5× score multiplier. Used for conceptual queries, duplicate detection before writing new patterns, and inner loop suppression checks.",
+    inputs: ["Chunker output", "Pattern Engine output"],
+    outputs: ["Semantic similarity results for any query"],
+    status: "Working"
+  },
+  obsidian: {
+    tag: "Tier 4 · Storage",
+    title: "Obsidian + LightRAG + Redis",
+    body: "Obsidian vault 'Appledore': 1,313+ .md files synced via Syncthing to /vault/ on VM. 3-level tag hierarchy (~3,800 unique tags). LightRAG: hybrid vector + graph retrieval over full vault, powered by Groq 70b entity extraction. Indexed 1,313 files, /query endpoint live. Redis: short-term working memory — CURRENT_STATE cache (6h TTL), Groq token usage counter, morning briefing queue, faction scores, active mode. Nothing in Redis is permanent.",
+    inputs: ["Syncthing from phone/desktop", "Collector writes vault notes", "All engines write to Redis cache"],
+    outputs: ["LightRAG knowledge retrieval", "CURRENT_STATE for all services"],
+    status: "Working"
+  },
+  telegram: {
+    tag: "Input · Interface",
+    title: "Telegram Bot",
+    body: "Primary ambient interface. All messages route through the full pipeline: Query Router → Parallel Retrieval → Context Forge → LLM → Response. Quick captures, voice notes, daily briefings, conversational queries, deferral alerts, proactive inner loop messages. 👍/👎 inline keyboard on every response for reward signal collection. /debug command shows last query routing, sources used, tokens per layer. Currently broken — hallucinates without querying databases.",
+    inputs: ["User messages", "Voice notes"],
+    outputs: ["Responses via full pipeline", "Reward signals on feedback"],
+    status: "Broken — needs fix"
+  },
+  voice: {
+    tag: "Input · Interface",
+    title: "Voice Call + Whisper",
+    body: "Daily debriefing and brainstorming via voice call with Locus. Audio captured via Twilio or WebRTC. Transcribed via Whisper-large-v3-turbo with no language lock (auto-detects Hinglish). Context chaining between audio chunks. Transcript fed into LightRAG for ingestion and stored in vault as a tagged .md file. Enables the phone call brainstorming/philosophising mode you described.",
+    inputs: ["Live audio call"],
+    outputs: ["Transcript .md in vault", "LightRAG ingestion trigger"],
+    status: "Idea"
+  },
+  archiver: {
+    tag: "Input · Automation",
+    title: "AI Chat Archiver (Cron)",
+    body: "Nightly cron at 23:45 IST. Uses Playwright to scrape today's chats from ChatGPT (3 accounts), Claude.ai, Gemini (3 Google accounts), Perplexity, NotebookLM. Converts each conversation to a tagged .md file with YAML frontmatter, Q&A formatting, wikilinks, and faction tags. Saves to /vault/03-AI-Chats/{source}/. Triggers LightRAG re-index after. Sends Telegram alert on success/failure. Fragile by design — built with retry logic.",
+    inputs: ["ChatGPT, Claude, Gemini, Perplexity sessions via Playwright"],
+    outputs: ["Tagged .md files in vault", "LightRAG re-index trigger"],
+    status: "Not Built"
+  },
+  dashboard: {
+    tag: "Output · Interface",
+    title: "Obsidian Dashboard",
+    body: "Replaces the PWA entirely. A central Dashboard.md in Obsidian using Dataview plugin to pull live data from all vault sections. Shows: DCS and current mode, faction health scores, active tasks ranked by TWS, dead nodes alert, action gap per faction, momentum score trends, top active projects, recent pattern engine findings. Single glance = full system health. Syncs to phone via Syncthing. The Tree of Life avatar reflects overall health state via animated SVG states (Dead / Struggling / Growing / Thriving / Peak).",
+    inputs: ["All vault data via Dataview", "Personality snapshots"],
+    outputs: ["Visual system health overview in Obsidian"],
+    status: "Idea"
+  },
+  content: {
+    tag: "Output · Automation",
+    title: "Content Engine",
+    body: "Watches for content triggers — project milestone, technical skill demonstrated, film progress, open source contribution, insight captured. When triggered, drafts LinkedIn or Instagram post from your actual logged data in your voice. Direct, curious, honest. No buzzwords. No 'I'm excited to share.' Stores drafts in /vault/06-Content/ for your edit. LinkedIn: 150–300 words, thoughtful + competent. Instagram: short caption, personal + aesthetic.",
+    inputs: ["Behavioral events", "Project milestone flags"],
+    outputs: ["Draft posts in /vault/06-Content/"],
+    status: "Planned"
+  },
+  calendar: {
+    tag: "Output · Integration",
+    title: "Calendar Bridge",
+    body: "Writes scheduled tasks to Google Calendar. Handles ripple rescheduling — when a new urgent task arrives, all planned tasks shift and the calendar updates accordingly. Two-way: reads existing calendar events to factor into scheduling decisions. Calendly webhook integration: when a meeting is booked, it auto-injects into the schedule as a task. OAuth token acquired and refresh handled.",
+    inputs: ["Scheduler output", "Emergency task injection"],
+    outputs: ["Google Calendar events", "Rescheduled task blocks"],
+    status: "Working (OAuth only)"
+  },
+  push: {
+    tag: "Output · Notifications",
+    title: "Push Notifications",
+    body: "Replaced from Web Push API to Telegram push notifications, now that PWA is removed. Check-in reminders at morning, afternoon, evening, night. Inner loop proactive messages. Deferral alerts when a task has been deferred 3+ times. Dead node warnings. Weekly review prompts on Sunday. Rate-limited so it doesn't become noise — max 3 unprompted messages per day outside scheduled check-ins.",
+    inputs: ["APScheduler triggers", "Inner Loop observations"],
+    outputs: ["Telegram messages to Shivam"],
+    status: "Planned"
+  },
+  reward: {
+    tag: "Feedback · Learning",
+    title: "Reward Model",
+    body: "A lightweight sklearn classifier — not an LLM. Trained on 👍/👎 signals collected from every Telegram response and inner loop message. Stores each feedback event with: response type, time of day, faction context, model used, context layers used, pathway IDs traversed. Retrained weekly Sunday 04:00 IST. Used by Inner Loop to score observations before surfacing — only surfaces if predicted score > 0.6. This is how Locus learns what you actually value.",
+    inputs: ["👍/👎 inline keyboard signals"],
+    outputs: ["Relevance score for any candidate observation (0–1)"],
+    status: "Not Built"
+  },
+  rlhf: {
+    tag: "Feedback · Learning",
+    title: "RLHF Pipeline",
+    body: "Collects reward signal data from day one. Stores every interaction, response quality score, and user feedback in structured format. When sufficient data is collected AND GPU access is available (Colab/Kaggle), fine-tune a base model on Shivam's interaction patterns using LoRA (1–2% of parameters). Explicitly marked DO NOT BUILD YET in the feature tracker — collect data first. The reward model is the precursor to this.",
+    inputs: ["reward_signals table", "Interaction history"],
+    outputs: ["Fine-tuned model weights (future)"],
+    status: "Data collection only"
+  },
+  hebbian: {
+    tag: "Feedback · Learning",
+    title: "Hebbian Decay",
+    body: "Implements biological Hebbian learning in Neo4j edge weights. Traversal: +0.1 per traversal. Positive feedback: ×1.3 on session pathways. Negative feedback: ×0.7 on session pathways. Weekly decay (Sunday 03:30 IST): all edge weights ×0.95 — prevents old pathways from permanently dominating and forces recency relevance. Over time, frequently co-activated paths become dominant routing channels. This is Locus's learned intuition hardcoded into the graph.",
+    inputs: ["Context Forge traversal events", "Reward signals"],
+    outputs: ["Updated Neo4j edge weights"],
+    status: "Not Built"
+  },
+  architect: {
+    tag: "Self-Maintenance",
+    title: "Architect Bot",
+    body: "Internal bot that spawns, configures and deploys sub-agents on demand to fulfil new task types that Locus doesn't have a built-in handler for. Think of it as the kernel process manager — Locus is the OS, this is the process spawner. When a new class of problem is encountered repeatedly, Architect Bot creates a new specialized mini-agent or skill to handle it. Future capability — requires stable core pipeline first.",
+    inputs: ["New unhandled task type", "Master Conductor request"],
+    outputs: ["New deployed sub-agent or skill"],
+    status: "Idea"
+  },
+  security: {
+    tag: "Self-Maintenance",
+    title: "Security Layer",
+    body: "Prompt injection protection: regex and LLM-based filter for shell commands (sudo, curl, exec) in user input to Telegram bot. Blocklist + semantic check before routing any user input. Full security audit planned: OWASP top 10, API auth, Docker escape vectors, SSH hardening, injection tests on every FastAPI endpoint. Private data (identity, financial info) explicitly excluded from Locus data scope.",
+    inputs: ["All incoming Telegram messages"],
+    outputs: ["Sanitized input or rejection with reason"],
+    status: "Partial"
+  },
+  backup: {
+    tag: "Self-Maintenance",
+    title: "Backup System",
+    body: "Automated backup of PostgreSQL and full Obsidian vault to Google Drive via rclone cron job. RCLONE_GDRIVE_TOKEN in .env. Backup runs nightly. Format: locus-backup-YYYY-MM-DD.tar.gz. Local database mirror option: pg_dump + rsync to local machine for offline access and inspection. Keeps last 30 days of backups before rotation.",
+    inputs: ["PostgreSQL dump", "Vault directory"],
+    outputs: ["Compressed backup on Google Drive"],
+    status: "Planned"
+  },
+  selfmaint: {
+    tag: "Self-Maintenance",
+    title: "Auto-Update System",
+    body: "Auto-runs dependency updates on schedule (npx --latest equivalent for Python packages). If post-update breakage is detected via test suite: creates Priority 1 fix task in the task system, generates a diagnostic report, and sends a Telegram alert. Needs: update runner cron + test suite + severity classifier + task injector. Locus maintaining itself — the system that keeps the system alive.",
+    inputs: ["Scheduled cron trigger"],
+    outputs: ["Updated dependencies or P1 fix task + diagnostic report"],
+    status: "Idea"
+  }
+};
+
+let activeId = null;
+
+function openPanel(id) {
+  const d = DATA[id];
+  if (!d) return;
+
+  // deactivate previous
+  document.querySelectorAll('.node.active, .h-node.active').forEach(n => n.classList.remove('active'));
+
+  // activate current
+  const el = document.querySelector(`[data-id="${id}"]`);
+  if (el) el.classList.add('active');
+
+  document.getElementById('pTag').textContent = d.tag;
+  document.getElementById('pTitle').textContent = d.title;
+  document.getElementById('pBody').textContent = d.body;
+
+  const meta = document.getElementById('pMeta');
+  let html = `<span>status</span> · ${d.status}<br>`;
+  if (d.inputs) html += `<span>inputs</span> · ${d.inputs.join(', ')}<br>`;
+  if (d.outputs) html += `<span>outputs</span> · ${d.outputs.join(', ')}`;
+  meta.innerHTML = html;
+
+  document.getElementById('panel').classList.add('open');
+  document.getElementById('pyramid').classList.add('shifted');
+  activeId = id;
+}
+
+function closePanel() {
+  document.getElementById('panel').classList.remove('open');
+  document.getElementById('pyramid').classList.remove('shifted');
+  document.querySelectorAll('.node.active, .h-node.active').forEach(n => n.classList.remove('active'));
+  activeId = null;
+}
+
+document.querySelectorAll('.node, .h-node').forEach(n => {
+  n.addEventListener('click', (e) => {
+    const id = e.currentTarget.dataset.id;
+    if (activeId === id) {
+      closePanel();
+    } else {
+      openPanel(id);
+    }
+  });
+});
+
+document.getElementById('closeBtn').addEventListener('click', closePanel);
+</script>
+</body>
+</html>

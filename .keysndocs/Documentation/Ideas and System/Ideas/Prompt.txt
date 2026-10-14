@@ -1,0 +1,137 @@
+Create a scalable, editable, unbreakable system that accounts for my impulsiveness, my laziness and still has room for dedicated work.
+
+One that plans all my work proactively and helps me find opportunities. A plan. A system. That helps me with academics, business, skill development and self exploration.
+
+I dont know if I know what exactly I want. But I wanna make sure there is a proper executable plan, a structure that is designed to have space for my flaws and allow me to grow rapidly. I want to make sure there is no space for paralysis from indecision or overstimulation.
+
+I want help. Fix my life.
+
+I am thinking of using notion and Obsidian together + creating my own web app that integrates with them two plus that is a one stop shop for my calendar that will auto arrange tasks and priorities based on mood logging, perceived stress levels (from gathered data), upcoming work, rest taken + needed etc...
+
+We need to develop each faction of life. We have 4 right now.
+
+Each one relies on logging of progress and current skill level and future scope in relation to established goal and it has to decide daily goals depending on all these factors plus time (in the sense how much I have in a day + if I am lagging on my duties then it needs to lower the task weightage so that I start moving again and gain momentum)
+
+Each faction has to do that. Each faction will try to maximize the time it can get for itself.
+
+Then there has to be a master algorithm that will determine scheduling and workload for the day depending on constant logging of mood, stress, undue emergencies, sleep cycles, past workload, need for rest, future workload, priority management and anything more that would be required by the master system which would be responsible for management. Each faction will try to maximize the amount of time it can get to itself.
+
+Logging will work (KIND OF) in numbers. As in, how hard is a task assigned (1-10) this will be determined how long it took to complete previous tasks in contrast to how much it was supposed to take and the reasons for that. Mood (1-10), sleep type (1-10), priority for new task (1-10), emergency priority (1-10)
+
+We’ll also have to keep a record of how well I did a task so that we can maintain quality as well.
+
+These metrics will HAVE TO BE IN NUMBERS only because I need to be able to audit the system as well.
+
+The master system should be able to automatically move schedule based ONLY on metrics (those 1-10 numbers and all that) and NOTHING ELSE in case of emergencies or new plans or shift in plans. The entire system will ONLY function on metrics and numbers. Nothing else.
+
+Survival / Stability – health, money, academics (keeps you afloat)
+
+Leverage / Output – business, career, visibility (moves you forward)
+
+Skill / Craft – hard + soft skills (makes you valuable)
+
+Meaning / Self – reflection, philosophy, identity (keeps you sane)
+
+These are the factions of my life.
+
+I want a system that maps every action and inaction.
+I wanna account for everything. All projects. Which get done when how to prioritize.
+Need to go super granular though. How to choose which project to work on at what time at what day depending on what’s happening. How to shift timetable if new urgent priorities get added? How to keep a log of active, pending and future tasks. How do we make sure all 4 outcomes get covered daily + what project to work on when and when to shift between projects + what tasks to do based on the project + how to also accommodate non-negotiable daily tasks? Quite a bit in the system is logging of WHAT I did rather I want help with what TO DO and ALSO logging what I did for better time management. The system needs to account for progress as well, if this much progress is achieved, do we improve how? where to get information on how to improve? How much to improve? What is the work load like? etc...
+The system has to be solely driven by the goals of the user, if they're big then they need to divided into smaller ones systematically BY THE SYSTEM ITSELF. Goals for each factions and the life goal of the user (which is me)
+
+The system will not spit out what to do, it is a structure, a bible that I can use to govern what actions I take based on tried and tested metrics, but because the system is so damn big, granular and atomised, it can also be converted into an app, BUT THAT IS NOT THE GOAL.
+Give me an ascii tree that maps everything like that which makes decision making and traversal easy Give full system now like a decision tree with ifs and elses and must dos etc
+
+The master system will have access to my obsidian and notions. The master system will have a reference to a doc called goals which will have all the projects, goals essentially everything I wanna do either with or without deadlines. The master system should also look into these to see what can be worked on. Usually these are what the master system will be working on (in the long term or short term, depending on the project size).
+
+1. Health / Stability
+Health
+Studies (degree = stability infrastructure)
+
+If this collapses, everything else collapses. Non-negotiable.
+
+2. Leverage / Money
+Business
+Film paid projects
+
+Anything that pays, builds network, or increases leverage lives here.
+
+3. Craft / Skill
+Skill development
+Film passion projects (they sharpen craft)
+
+Passion without skill is fantasy. Skill without passion is burnout.
+They belong together.
+
+4. Expression / Exploration
+Passion projects (non-film)
+Identity, philosophy, experimentation
+
+This feeds meaning and long-term direction. Controlled, not chaotic.
+
+THE 3-LAYER GOAL STACK (UNBREAKABLE)
+1. Outcomes (WHY)
+
+Things that change your position in life.
+Examples:
+
+“Become strong and healthy”
+“Be employable / financially independent”
+“Be a competent filmmaker”
+
+These are few. 5–7 max.
+
+2. Projects (WHAT)
+
+Finite efforts with a clear end.
+Examples:
+
+“Complete CS projects notes”
+“Make a 5-minute short film”
+“Launch v1 of X”
+
+Projects serve outcomes.
+
+3. Tasks (HOW)
+
+Tiny, executable actions.
+Examples:
+
+“Finish chapter 3”
+“Edit scene 2”
+“Email X”
+
+Tasks serve projects.
+
+I want a system that maps every action and inaction. 
+
+I wanna account for everything. All projects. Which get done when how to prioritize. 
+
+Give me an ascii tree that maps everything like that which makes decision making and traversal easy
+
+Need to go a quite more granular though. How to choose which project to work on at what time at what day depending on what’s happening. How to shift timetable if new urgent priorities get added? How to keep a log of active, pending and future tasks
+
+How do we make sure all 4 outcomes get covered daily + what project to work on when and when to shift between projects + what tasks to do based on the project + how to also accommodate non-negotiable daily tasks? 
+
+Quite a bit in the system is logging of WHAT I did rather I want help with what TO DO and ALSO logging what I did for better time management
+
+The system needs to account for progress as well, if this much progress is achieved, do we improve how? where to get information on how to improve? How much to improve? What is the work load like? etc...
+
+So how many engines can we divide the system into and which outcomes does it work for? Should we make a dedicated engine for EACH Outcome? and then merge it for prioritization and time management purposes? Because my life revolves around the outcomes, we can make the bigger system to keep the outcomes in check. 
+
+Each engine is the driving force, and the bigger system is the jelly/concrete keeping everything together whose sole purpose is we keep moving on in line with the goals and we keep auditing ourselves and keep ourselves in check
+
+Just a note. The system needs to have something in place that can make and deploy agents on command to fulfill a new type of a task. Just a note for more don’t do anything about it. 
+
+Bottom Line:
+The entire system is also responsible for breaking down big tasks into small manageable chunks on the basis of 
+- workload
+- well being
+- Lag/momentum/deadlines/priority and urgency
+
+THAT is what the system is primarily for:
+1. Breaking down tasks into manageable chunks smartly using AI reasoning capabilities according to my capabilities, schedule, recent wellbeing, upcoming load and manageability according to me and my personality, my personality should also be determined automatically by the AI using ALL the data it has on me.
+2. Effectively distributing the tasks around the calendar in best possible most realistic way. Keep it conversational. 
+
+
+The system (That it what it really is, a system, an algorithm mapping all possible decisions I might make based on my behaviour that we already know because of my patterns because of my personality, the system is designed with rationality, keeping in account of all my behaviours and acting accordingly to help me grow as a person as I want to be) should also account for my sporadic, erratic and sometimes impulsive nature; it should help mitigate it psychologically to the best of it's abilities but life is unpredictable &emergencies may arise/plans may be made suddenly, so I should be able to talk to the system and the schedule has to change dynamically almost like a living creature, specially designed for me and me alone that knows me inside out. 

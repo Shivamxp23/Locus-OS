@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Locus OS — Complete System Design</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080808;
+  --surface: #0f0f0f;
+  --surface2: #141414;
+  --border: #1a1a1a;
+  --border2: #242424;
+  --border3: #2e2e2e;
+  --amber: #C4813F;
+  --amber2: #e09450;
+  --amber-dim: #6b4520;
+  --amber-glow: rgba(196,129,63,0.08);
+  --amber-glow2: rgba(196,129,63,0.15);
+  --text: #c8c8c8;
+  --text2: #888;
+  --text3: #555;
+  --bright: #f0f0f0;
+
+  --l0: #3b82f6; /* infrastructure - blue */
+  --l1: #8b5cf6; /* storage - purple */
+  --l2: #10b981; /* ingestion - green */
+  --l3: #06b6d4; /* retrieval - cyan */
+  --l4: #f59e0b; /* intelligence - yellow */
+  --l5: #ef4444; /* reasoning - red */
+  --l6: #C4813F; /* orchestration - amber */
+  --l7: #6366f1; /* interface - indigo */
+  --l8: #ec4899; /* output - pink */
+  --lf: #84cc16; /* feedback - lime */
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--surface);
+}
+.hdr-left { display:flex; align-items:center; gap:16px; }
+.hdr-title { font-size:11px; letter-spacing:.3em; color:var(--amber); text-transform:uppercase; font-weight:600; }
+.hdr-sub { font-size:10px; color:var(--text3); }
+.hdr-hint { font-size:9px; color:var(--text3); letter-spacing:.1em; }
+.layer-legend { display:flex; gap:10px; flex-wrap:wrap; }
+.ll { display:flex; align-items:center; gap:5px; font-size:9px; color:var(--text2); letter-spacing:.08em; }
+.ll-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+
+/* MAIN LAYOUT */
+.main {
+  display: flex;
+  flex:1;
+  overflow: hidden;
+}
+
+/* PYRAMID AREA */
+.pyr-wrap {
+  flex:1;
+  overflow: auto;
+  padding: 24px 16px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* SEARCH */
+.search-bar {
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 20px;
+  flex-shrink:0;
+}
+.search-bar input {
+  width:100%;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  padding: 8px 14px;
+  outline: none;
+  letter-spacing:.05em;
+}
+.search-bar input:focus { border-color: var(--amber-dim); }
+.search-bar input::placeholder { color:var(--text3); }
+
+/* PYRAMID */
+.pyramid { display:flex; flex-direction:column; align-items:center; gap:2px; width:100%; }
+
+.layer-row {
+  display:flex;
+  justify-content:center;
+  align-items:stretch;
+  gap:2px;
+  width:100%;
+}
+
+.layer-tag {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size:8px;
+  letter-spacing:.2em;
+  color:var(--text3);
+  text-transform:uppercase;
+  padding: 0 6px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-right: 1px solid var(--border);
+  min-width:22px;
+  flex-shrink:0;
+}
+
+.nodes-row { display:flex; gap:2px; flex-wrap:nowrap; justify-content:center; }
+
+/* NODE */
+.node {
+  cursor:pointer;
+  border: 1px solid var(--border2);
+  background: var(--surface);
+  padding: 8px 10px;
+  transition: all .15s ease;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  gap:2px;
+  min-height:46px;
+  position:relative;
+  user-select:none;
+  flex-shrink:0;
+}
+.node:hover { background: var(--surface2); transform:translateY(-1px); z-index:2; }
+.node.active { z-index:3; }
+.node.dimmed { opacity:.25; }
+
+.node-color-bar {
+  position:absolute;
+  top:0; left:0; right:0;
+  height:2px;
+}
+.node-name {
+  font-size:9.5px;
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--bright);
+  line-height:1.2;
+}
+.node-sub {
+  font-size:8.5px;
+  color:var(--text3);
+  letter-spacing:.04em;
+  line-height:1.2;
+}
+.node-steps-count {
+  font-size:7.5px;
+  letter-spacing:.08em;
+  margin-top:3px;
+  opacity:.6;
+}
+
+/* STATUS DOT */
+.sdot {
+  position:absolute;
+  top:6px; right:6px;
+  width:4px; height:4px;
+  border-radius:50%;
+}
+
+/* DIVIDER */
+.pyr-divider {
+  width:100%;
+  max-width:1000px;
+  border-top:1px dashed var(--border2);
+  margin:14px 0 10px;
+  flex-shrink:0;
+}
+
+.h-section { width:100%; max-width:1000px; margin-bottom:6px; }
+.h-label {
+  font-size:8px;
+  letter-spacing:.2em;
+  color:var(--text3);
+  text-transform:uppercase;
+  margin-bottom:6px;
+  padding-bottom:4px;
+  border-bottom:1px solid var(--border);
+}
+.h-nodes { display:flex; gap:2px; flex-wrap:wrap; }
+
+/* SIDE PANEL */
+.panel {
+  width:0;
+  overflow:hidden;
+  transition:width .25s ease;
+  border-left:1px solid var(--border);
+  background:var(--surface);
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+}
+.panel.open { width:380px; }
+
+.panel-scroll { flex:1; overflow-y:auto; padding:20px; }
+.panel-scroll::-webkit-scrollbar { width:3px; }
+.panel-scroll::-webkit-scrollbar-track { background:transparent; }
+.panel-scroll::-webkit-scrollbar-thumb { background:var(--border2); }
+
+.p-close {
+  position:absolute;
+  top:10px; right:12px;
+  background:none; border:none;
+  color:var(--text3); cursor:pointer;
+  font-size:16px; font-family:inherit;
+  padding:4px; line-height:1;
+  transition:color .15s;
+}
+.p-close:hover { color:var(--amber); }
+
+.p-layer { font-size:8px; letter-spacing:.2em; text-transform:uppercase; margin-bottom:6px; }
+.p-name { font-size:15px; font-weight:600; color:var(--bright); letter-spacing:.04em; margin-bottom:3px; padding-right:20px; line-height:1.3; }
+.p-tagline { font-size:10px; color:var(--text2); letter-spacing:.04em; margin-bottom:16px; font-style:italic; font-family:'IBM Plex Mono',monospace; }
+
+.p-sec { margin-bottom:16px; }
+.p-sec-title { font-size:8px; letter-spacing:.2em; text-transform:uppercase; color:var(--text3); margin-bottom:8px; border-bottom:1px solid var(--border); padding-bottom:4px; }
+
+.p-purpose { font-size:11px; line-height:1.7; color:var(--text); font-family:'IBM Plex Sans',sans-serif; }
+
+/* STEPS */
+.steps { list-style:none; }
+.step {
+  display:flex;
+  gap:10px;
+  margin-bottom:8px;
+  font-size:10.5px;
+  line-height:1.6;
+  font-family:'IBM Plex Sans',sans-serif;
+  color:var(--text);
+  padding:7px 10px;
+  background:var(--surface2);
+  border-left:2px solid var(--border2);
+  transition:border-color .15s;
+}
+.step:hover { border-left-color:var(--amber-dim); }
+.step-num {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9px;
+  color:var(--text3);
+  flex-shrink:0;
+  margin-top:2px;
+  min-width:18px;
+}
+.step-text { flex:1; }
+
+/* CHIPS */
+.chips { display:flex; flex-wrap:wrap; gap:4px; }
+.chip {
+  font-size:8.5px;
+  padding:3px 8px;
+  border:1px solid var(--border2);
+  color:var(--text2);
+  letter-spacing:.06em;
+  background:var(--bg);
+  font-family:'IBM Plex Mono',monospace;
+}
+
+/* STATUS */
+.status-row { display:flex; align-items:center; gap:6px; margin-bottom:14px; }
+.status-label { font-size:9px; letter-spacing:.1em; font-family:'IBM Plex Mono',monospace; }
+
+/* CONNECTIONS */
+.conn-row { display:flex; flex-direction:column; gap:4px; }
+.conn {
+  font-size:9.5px;
+  font-family:'IBM Plex Sans',sans-serif;
+  color:var(--text);
+  padding:4px 8px;
+  border-left:2px solid var(--border2);
+  line-height:1.5;
+}
+.conn-dir { font-family:'IBM Plex Mono',monospace; font-size:8px; color:var(--text3); margin-right:6px; }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-left">
+    <div class="hdr-title">Locus OS</div>
+    <div class="hdr-sub">// Complete System Design · 109 features · Every micro-step</div>
+  </div>
+  <div class="layer-legend">
+    <div class="ll"><div class="ll-dot" style="background:var(--l0)"></div>Infra</div>
+    <div class="ll"><div class="ll-dot" style="background:var(--l1)"></div>Storage</div>
+    <div class="ll"><div class="ll-dot" style="background:var(--l2)"></div>Ingestion</div>
+    <div class="ll"><div class="ll-dot" style="background:var(--l3)"></div>Retrieval</div>
+    <div class="ll"><div class="ll-dot" style="background:var(--l4)"></div>Intelligence</div>
+    <div class="ll"><div class="ll-dot" style="background:var(--l5)"></div>Reasoning</div>
+    <div class="ll"><div class="ll-dot" style="background:var(--l6)"></div>Orchestration</div>
+    <div class="ll"><div class="ll-dot" style="background:var(--l7)"></div>Interface</div>
+    <div class="ll"><div class="ll-dot" style="background:var(--l8)"></div>Output</div>
+    <div class="ll"><div class="ll-dot" style="background:var(--lf)"></div>Feedback</div>
+  </div>
+  <div class="hdr-hint">click any node · side panel shows all micro-steps</div>
+</div>
+
+<div class="main">
+<div class="pyr-wrap" id="pyrWrap">
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="search systems... (e.g. 'retrieval', 'neo4j', 'inner loop')" oninput="filterNodes(this.value)">
+  </div>
+
+  <div class="pyramid" id="pyramid">
+
+    <!-- LAYER 6: ORCHESTRATION (TOP) -->
+    <div class="layer-row">
+      <div class="layer-tag" style="color:var(--l6)">orchestration</div>
+      <div class="nodes-row">
+        <div class="node" id="n-conductor" onclick="show('conductor')" style="min-width:200px;">
+          <div class="node-color-bar" style="background:var(--l6)"></div>
+          <div class="sdot" style="background:var(--amber)"></div>
+          <div class="node-name">Master Conductor</div>
+          <div class="node-sub">apex · routes everything</div>
+          <div class="node-steps-count" style="color:var(--l6)">9 steps</div>
+        </div>
+        <div class="node" id="n-innerloop" onclick="show('innerloop')" style="min-width:180px;">
+          <div class="node-color-bar" style="background:var(--l6)"></div>
+          <div class="sdot" style="background:#f59e0b"></div>
+          <div class="node-name">Inner Loop</div>
+          <div class="node-sub">proactive · 90-min · thinker</div>
+          <div class="node-steps-count" style="color:var(--l6)">12 steps</div>
+        </div>
+        <div class="node" id="n-wants" onclick="show('wants')" style="min-width:160px;">
+          <div class="node-color-bar" style="background:var(--l6)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Wants Engine</div>
+          <div class="node-sub">locus has goals too</div>
+          <div class="node-steps-count" style="color:var(--l6)">7 steps</div>
+        </div>
+        <div class="node" id="n-architect" onclick="show('architect')" style="min-width:160px;">
+          <div class="node-color-bar" style="background:var(--l6)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Architect Bot</div>
+          <div class="node-sub">self-improving · spawns agents</div>
+          <div class="node-steps-count" style="color:var(--l6)">8 steps</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONNECTOR -->
+    <div style="width:100%;max-width:900px;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:3px 0;"></div>
+
+    <!-- LAYER 5: REASONING -->
+    <div class="layer-row">
+      <div class="layer-tag" style="color:var(--l5)">reasoning</div>
+      <div class="nodes-row">
+        <div class="node" id="n-router" onclick="show('router')" style="min-width:170px;">
+          <div class="node-color-bar" style="background:var(--l5)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Query Router</div>
+          <div class="node-sub">intent classifier · 50 tokens</div>
+          <div class="node-steps-count" style="color:var(--l5)">8 steps</div>
+        </div>
+        <div class="node" id="n-forge" onclick="show('forge')" style="min-width:190px;">
+          <div class="node-color-bar" style="background:var(--l5)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Context Forge</div>
+          <div class="node-sub">800-token assembler</div>
+          <div class="node-steps-count" style="color:var(--l5)">11 steps</div>
+        </div>
+        <div class="node" id="n-cascade" onclick="show('cascade')" style="min-width:180px;">
+          <div class="node-color-bar" style="background:var(--l5)"></div>
+          <div class="sdot" style="background:var(--amber)"></div>
+          <div class="node-name">LLM Cascade</div>
+          <div class="node-sub">groq→cerebras→deepseek→gemini</div>
+          <div class="node-steps-count" style="color:var(--l5)">10 steps</div>
+        </div>
+        <div class="node" id="n-generator" onclick="show('generator')" style="min-width:160px;">
+          <div class="node-color-bar" style="background:var(--l5)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Generator</div>
+          <div class="node-sub">anti-hallucination · speaker</div>
+          <div class="node-steps-count" style="color:var(--l5)">7 steps</div>
+        </div>
+        <div class="node" id="n-shorthand" onclick="show('shorthand')" style="min-width:160px;">
+          <div class="node-color-bar" style="background:var(--l5)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">LOCUS_SHORTHAND</div>
+          <div class="node-sub">token compression schema</div>
+          <div class="node-steps-count" style="color:var(--l5)">6 steps</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width:100%;max-width:900px;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:3px 0;"></div>
+
+    <!-- LAYER 4: INTELLIGENCE -->
+    <div class="layer-row">
+      <div class="layer-tag" style="color:var(--l4)">intelligence</div>
+      <div class="nodes-row">
+        <div class="node" id="n-state" onclick="show('state')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--l4)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">State Engine</div>
+          <div class="node-sub">CURRENT_STATE · redis</div>
+          <div class="node-steps-count" style="color:var(--l4)">10 steps</div>
+        </div>
+        <div class="node" id="n-pattern" onclick="show('pattern')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--l4)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Pattern Engine</div>
+          <div class="node-sub">5 horizons · behavioral</div>
+          <div class="node-steps-count" style="color:var(--l4)">13 steps</div>
+        </div>
+        <div class="node" id="n-causation" onclick="show('causation')" style="min-width:160px;">
+          <div class="node-color-bar" style="background:var(--l4)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Cause Chain Engine</div>
+          <div class="node-sub">inferred cause · military grade</div>
+          <div class="node-steps-count" style="color:var(--l4)">9 steps</div>
+        </div>
+        <div class="node" id="n-scheduler" onclick="show('scheduler')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--l4)"></div>
+          <div class="sdot" style="background:var(--amber)"></div>
+          <div class="node-name">Scheduler</div>
+          <div class="node-sub">DCS/TWS · ripple · planner</div>
+          <div class="node-steps-count" style="color:var(--l4)">12 steps</div>
+        </div>
+        <div class="node" id="n-goaltracker" onclick="show('goaltracker')" style="min-width:145px;">
+          <div class="node-color-bar" style="background:var(--l4)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Goal Tracker</div>
+          <div class="node-sub">3-layer stack · drift</div>
+          <div class="node-steps-count" style="color:var(--l4)">9 steps</div>
+        </div>
+        <div class="node" id="n-identity" onclick="show('identity')" style="min-width:145px;">
+          <div class="node-color-bar" style="background:var(--l4)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Identity Profile</div>
+          <div class="node-sub">behavioral tendencies</div>
+          <div class="node-steps-count" style="color:var(--l4)">7 steps</div>
+        </div>
+        <div class="node" id="n-hebbian" onclick="show('hebbian')" style="min-width:145px;">
+          <div class="node-color-bar" style="background:var(--l4)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Hebbian Manager</div>
+          <div class="node-sub">weights · decay · STDP</div>
+          <div class="node-steps-count" style="color:var(--l4)">8 steps</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width:100%;max-width:900px;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:3px 0;"></div>
+
+    <!-- LAYER 3: RETRIEVAL -->
+    <div class="layer-row">
+      <div class="layer-tag" style="color:var(--l3)">retrieval</div>
+      <div class="nodes-row">
+        <div class="node" id="n-ret-qdrant" onclick="show('ret-qdrant')" style="min-width:165px;">
+          <div class="node-color-bar" style="background:var(--l3)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Retriever A</div>
+          <div class="node-sub">qdrant semantic · top-7</div>
+          <div class="node-steps-count" style="color:var(--l3)">7 steps</div>
+        </div>
+        <div class="node" id="n-ret-pg" onclick="show('ret-pg')" style="min-width:165px;">
+          <div class="node-color-bar" style="background:var(--l3)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Retriever B</div>
+          <div class="node-sub">postgres structured · sql</div>
+          <div class="node-steps-count" style="color:var(--l3)">8 steps</div>
+        </div>
+        <div class="node" id="n-ret-neo4j" onclick="show('ret-neo4j')" style="min-width:165px;">
+          <div class="node-color-bar" style="background:var(--l3)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Retriever C</div>
+          <div class="node-sub">neo4j graph · cypher · 2-hop</div>
+          <div class="node-steps-count" style="color:var(--l3)">8 steps</div>
+        </div>
+        <div class="node" id="n-reader" onclick="show('reader')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--l3)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Reader</div>
+          <div class="node-sub">vault · on-demand · live disk</div>
+          <div class="node-steps-count" style="color:var(--l3)">6 steps</div>
+        </div>
+        <div class="node" id="n-lightrag" onclick="show('lightrag')" style="min-width:165px;">
+          <div class="node-color-bar" style="background:var(--l3)"></div>
+          <div class="sdot" style="background:var(--amber)"></div>
+          <div class="node-name">LightRAG</div>
+          <div class="node-sub">hybrid graph+vector retrieval</div>
+          <div class="node-steps-count" style="color:var(--l3)">9 steps</div>
+        </div>
+        <div class="node" id="n-websearch" onclick="show('websearch')" style="min-width:145px;">
+          <div class="node-color-bar" style="background:var(--l3)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Web Searcher</div>
+          <div class="node-sub">duckduckgo · fallback only</div>
+          <div class="node-steps-count" style="color:var(--l3)">5 steps</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width:100%;max-width:900px;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:3px 0;"></div>
+
+    <!-- LAYER 2: INGESTION -->
+    <div class="layer-row">
+      <div class="layer-tag" style="color:var(--l2)">ingestion</div>
+      <div class="nodes-row">
+        <div class="node" id="n-collector" onclick="show('collector')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--l2)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Collector</div>
+          <div class="node-sub">crawler · md5 · incremental</div>
+          <div class="node-steps-count" style="color:var(--l2)">10 steps</div>
+        </div>
+        <div class="node" id="n-chunker" onclick="show('chunker')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--l2)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Chunker</div>
+          <div class="node-sub">spacy · propositions · embed</div>
+          <div class="node-steps-count" style="color:var(--l2)">9 steps</div>
+        </div>
+        <div class="node" id="n-archiver" onclick="show('archiver')" style="min-width:165px;">
+          <div class="node-color-bar" style="background:var(--l2)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">AI Chat Archiver</div>
+          <div class="node-sub">playwright/vilix · nightly</div>
+          <div class="node-steps-count" style="color:var(--l2)">11 steps</div>
+        </div>
+        <div class="node" id="n-audio" onclick="show('audio')" style="min-width:160px;">
+          <div class="node-color-bar" style="background:var(--l2)"></div>
+          <div class="sdot" style="background:var(--amber)"></div>
+          <div class="node-name">Audio Transcriber</div>
+          <div class="node-sub">whisper · hinglish · vault</div>
+          <div class="node-steps-count" style="color:var(--l2)">8 steps</div>
+        </div>
+        <div class="node" id="n-eventwriter" onclick="show('eventwriter')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--l2)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Event Writer</div>
+          <div class="node-sub">every action → postgres</div>
+          <div class="node-steps-count" style="color:var(--l2)">7 steps</div>
+        </div>
+        <div class="node" id="n-calendar-pull" onclick="show('calendar-pull')" style="min-width:150px;">
+          <div class="node-color-bar" style="background:var(--l2)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Calendar Puller</div>
+          <div class="node-sub">gcal → postgres · oauth</div>
+          <div class="node-steps-count" style="color:var(--l2)">6 steps</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width:100%;max-width:900px;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:3px 0;"></div>
+
+    <!-- LAYER 1: STORAGE -->
+    <div class="layer-row">
+      <div class="layer-tag" style="color:var(--l1)">storage</div>
+      <div class="nodes-row">
+        <div class="node" id="n-postgres" onclick="show('postgres')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--l1)"></div>
+          <div class="sdot" style="background:var(--amber)"></div>
+          <div class="node-name">PostgreSQL</div>
+          <div class="node-sub">archivist · 16 tables · truth</div>
+          <div class="node-steps-count" style="color:var(--l1)">16 tables</div>
+        </div>
+        <div class="node" id="n-neo4j" onclick="show('neo4j')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--l1)"></div>
+          <div class="sdot" style="background:var(--amber)"></div>
+          <div class="node-name">Neo4j</div>
+          <div class="node-sub">cartographer · hebbian · graph</div>
+          <div class="node-steps-count" style="color:var(--l1)">8 node types</div>
+        </div>
+        <div class="node" id="n-qdrant" onclick="show('qdrant')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--l1)"></div>
+          <div class="sdot" style="background:var(--amber)"></div>
+          <div class="node-name">Qdrant</div>
+          <div class="node-sub">librarian · 384-dim · semantic</div>
+          <div class="node-steps-count" style="color:var(--l1)">4 collections</div>
+        </div>
+        <div class="node" id="n-redis" onclick="show('redis')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--l1)"></div>
+          <div class="sdot" style="background:var(--amber)"></div>
+          <div class="node-name">Redis</div>
+          <div class="node-sub">working memory · ttl · hot-path</div>
+          <div class="node-steps-count" style="color:var(--l1)">7 key spaces</div>
+        </div>
+        <div class="node" id="n-obsidian" onclick="show('obsidian')" style="min-width:175px;">
+          <div class="node-color-bar" style="background:var(--l1)"></div>
+          <div class="sdot" style="background:var(--amber)"></div>
+          <div class="node-name">Obsidian / Appledore</div>
+          <div class="node-sub">vault · 1313 files · SOUL.md</div>
+          <div class="node-steps-count" style="color:var(--l1)">7 directories</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width:100%;max-width:900px;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:3px 0;"></div>
+
+    <!-- LAYER 0: INFRASTRUCTURE -->
+    <div class="layer-row">
+      <div class="layer-tag" style="color:var(--l0)">infra</div>
+      <div class="nodes-row">
+        <div class="node" id="n-vm" onclick="show('vm')" style="min-width:165px;">
+          <div class="node-color-bar" style="background:var(--l0)"></div>
+          <div class="sdot" style="background:var(--amber)"></div>
+          <div class="node-name">Oracle VM</div>
+          <div class="node-sub">arm64 · ubuntu 22.04 · free</div>
+          <div class="node-steps-count" style="color:var(--l0)">6 services</div>
+        </div>
+        <div class="node" id="n-docker" onclick="show('docker')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--l0)"></div>
+          <div class="sdot" style="background:var(--amber)"></div>
+          <div class="node-name">Docker Compose</div>
+          <div class="node-sub">container orchestration</div>
+          <div class="node-steps-count" style="color:var(--l0)">7 containers</div>
+        </div>
+        <div class="node" id="n-network" onclick="show('network')" style="min-width:165px;">
+          <div class="node-color-bar" style="background:var(--l0)"></div>
+          <div class="sdot" style="background:var(--amber)"></div>
+          <div class="node-name">Network Layer</div>
+          <div class="node-sub">cloudflare · tunnel · ssl</div>
+          <div class="node-steps-count" style="color:var(--l0)">5 services</div>
+        </div>
+        <div class="node" id="n-security" onclick="show('security')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--l0)"></div>
+          <div class="sdot" style="background:var(--amber)"></div>
+          <div class="node-name">Security</div>
+          <div class="node-sub">fail2ban · owasp · injection</div>
+          <div class="node-steps-count" style="color:var(--l0)">7 steps</div>
+        </div>
+        <div class="node" id="n-backup" onclick="show('backup')" style="min-width:145px;">
+          <div class="node-color-bar" style="background:var(--l0)"></div>
+          <div class="sdot" style="background:var(--amber)"></div>
+          <div class="node-name">Backup</div>
+          <div class="node-sub">rclone · gdrive · nightly</div>
+          <div class="node-steps-count" style="color:var(--l0)">5 steps</div>
+        </div>
+        <div class="node" id="n-syncthing" onclick="show('syncthing')" style="min-width:145px;">
+          <div class="node-color-bar" style="background:var(--l0)"></div>
+          <div class="sdot" style="background:var(--amber)"></div>
+          <div class="node-name">Syncthing</div>
+          <div class="node-sub">vault sync · bidirectional</div>
+          <div class="node-steps-count" style="color:var(--l0)">4 steps</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HORIZONTAL DIVIDER -->
+    <div class="pyr-divider"></div>
+
+    <!-- INTERFACE LAYER (HORIZONTAL) -->
+    <div class="h-section">
+      <div class="h-label">// interface layer — how locus speaks and listens</div>
+      <div class="h-nodes">
+        <div class="node" id="n-telegram" onclick="show('telegram')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--l7)"></div>
+          <div class="sdot" style="background:#ef4444"></div>
+          <div class="node-name">Telegram Bot</div>
+          <div class="node-sub">primary · BROKEN · fix first</div>
+          <div class="node-steps-count" style="color:var(--l7)">10 steps</div>
+        </div>
+        <div class="node" id="n-mcp" onclick="show('mcp')" style="min-width:165px;">
+          <div class="node-color-bar" style="background:var(--l7)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Locus MCP Server</div>
+          <div class="node-sub">universal · claude/gpt/gemini</div>
+          <div class="node-steps-count" style="color:var(--l7)">12 tools</div>
+        </div>
+        <div class="node" id="n-obsdash" onclick="show('obsdash')" style="min-width:165px;">
+          <div class="node-color-bar" style="background:var(--l7)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Obsidian Dashboard</div>
+          <div class="node-sub">dataview · replaces PWA</div>
+          <div class="node-steps-count" style="color:var(--l7)">8 panels</div>
+        </div>
+        <div class="node" id="n-voice" onclick="show('voice')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--l7)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Voice Interface</div>
+          <div class="node-sub">twilio · whisper · hinglish</div>
+          <div class="node-steps-count" style="color:var(--l7)">8 steps</div>
+        </div>
+        <div class="node" id="n-calbridge" onclick="show('calbridge')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--l7)"></div>
+          <div class="sdot" style="background:var(--amber)"></div>
+          <div class="node-name">Calendar Bridge</div>
+          <div class="node-sub">gcal · ripple reschedule</div>
+          <div class="node-steps-count" style="color:var(--l7)">7 steps</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEEDBACK LAYER (HORIZONTAL) -->
+    <div class="h-section" style="margin-top:6px;">
+      <div class="h-label">// feedback + learning layer — how locus gets smarter</div>
+      <div class="h-nodes">
+        <div class="node" id="n-reward" onclick="show('reward')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--lf)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Reward Model</div>
+          <div class="node-sub">sklearn · 👍/👎 · weekly</div>
+          <div class="node-steps-count" style="color:var(--lf)">9 steps</div>
+        </div>
+        <div class="node" id="n-spacedrep" onclick="show('spacedrep')" style="min-width:165px;">
+          <div class="node-color-bar" style="background:var(--lf)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Spaced Repetition</div>
+          <div class="node-sub">reinforce before forgetting</div>
+          <div class="node-steps-count" style="color:var(--lf)">7 steps</div>
+        </div>
+        <div class="node" id="n-qlora" onclick="show('qlora')" style="min-width:165px;">
+          <div class="node-color-bar" style="background:var(--lf)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">QLoRA Pipeline</div>
+          <div class="node-sub">quarterly fine-tune · $10</div>
+          <div class="node-steps-count" style="color:var(--lf)">10 steps</div>
+        </div>
+        <div class="node" id="n-content" onclick="show('content')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--lf)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">Content Engine</div>
+          <div class="node-sub">linkedin · instagram · auto</div>
+          <div class="node-steps-count" style="color:var(--lf)">7 steps</div>
+        </div>
+        <div class="node" id="n-personality" onclick="show('personality')" style="min-width:155px;">
+          <div class="node-color-bar" style="background:var(--lf)"></div>
+          <div class="sdot" style="background:#555"></div>
+          <div class="node-name">SOUL.md</div>
+          <div class="node-sub">locus personality · wants</div>
+          <div class="node-steps-count" style="color:var(--lf)">6 steps</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /pyramid -->
+</div><!-- /pyr-wrap -->
+
+<!-- SIDE PANEL -->
+<div class="panel" id="sidePanel">
+  <div class="panel-scroll" id="panelContent">
+    <button class="p-close" onclick="closePanel()">×</button>
+    <div id="panelInner"></div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+const nodes = {
+  conductor: {
+    layer: 'Layer 6 — Orchestration', color: 'var(--l6)', status: 'planned', statusColor: '#f59e0b',
+    name: 'Master Conductor', tagline: 'The only service that sees the full picture.',
+    purpose: 'The apex of the pyramid. Receives ALL inputs — Telegram, MCP, voice, scheduled triggers, inner loop outputs — and decides which pipeline components to invoke, in what order, with what parameters. Handles graceful degradation.',
+    steps: [
+      'Receive input event (Telegram message, MCP tool call, APScheduler trigger, Inner Loop output, voice transcript)',
+      'Check Redis: is daily token budget for each provider >80% exhausted? If yes, downgrade model tier before proceeding',
+      'Pass input to Query Router — receive back routing_decision JSON with intents, sources, temporal_scope, requires_deep_reasoning',
+      'Based on routing_decision, fire parallel async retrievals via asyncio.gather across all required sources',
+      'Pass all retrieval results to Context Forge — receive back 800-token assembled context block',
+      'Select LLM from cascade: requires_deep_reasoning=false → Cerebras 70B; true → DeepSeek V4 Flash; SYNTHESIS → Gemini 2.5 Pro; CLASSIFICATION → Groq 8B',
+      'Pass assembled context + input to Generator — receive response',
+      'Log full orchestration event to PostgreSQL: input, routing_decision, sources_used, model_selected, tokens_used, latency_ms',
+      'Return response to originating interface (Telegram, MCP, voice)',
+    ],
+    inputs: ['All interfaces (Telegram, MCP, Voice, APScheduler)', 'Inner Loop observations'],
+    outputs: ['Responses to all interfaces', 'Orchestration logs to PostgreSQL'],
+    tags: ['fastapi', 'asyncio', 'redis-rate-check', 'fault-tolerant', 'central-bus']
+  },
+  innerloop: {
+    layer: 'Layer 6 — Orchestration', color: 'var(--l6)', status: 'not-built', statusColor: '#ef4444',
+    name: 'Inner Loop', tagline: 'Thinks about you without being asked.',
+    purpose: 'The Samantha layer. A persistent background reasoning process that fires every 90 minutes during active hours (07:00–00:00 IST) and a deep synthesis pass at 03:00 IST. The only service that generates output without user input.',
+    steps: [
+      'APScheduler fires: check time — if 07:00–00:00 IST run standard pass; if 03:00 IST run deep synthesis pass',
+      'Check Redis groq_tokens_today and cerebras_tokens_today: if >80% of daily limit, skip this run and send one Telegram warning',
+      'Fetch CURRENT_STATE from Redis. If stale (>6h old) or missing, trigger State Engine to regenerate before continuing',
+      'Fetch top 3 active behavioral_alerts from CURRENT_STATE.behavioral_alerts',
+      'Fetch last 2 hours of PostgreSQL behavioral_events, compress via LOCUS_SHORTHAND encoder',
+      'Fetch top 3 strongest Neo4j pathways active at this time-of-day segment from Hebbian Manager',
+      'Compose inner loop prompt: [SOUL.md identity layer] + [CURRENT_STATE summary] + [alerts] + [compressed events] + [pathways]. System: "You are NOT talking to Shivam. You are thinking about Shivam. Generate 0–2 specific, evidence-based observations. Cite data points. Return JSON array."',
+      'Call Cerebras 70B (standard pass) or DeepSeek V4 Flash (deep synthesis pass)',
+      'For each observation: embed via fastembed, check Qdrant conversation_history for semantic similarity. If >0.85 match to last 6h → suppress (already known)',
+      'Score each surviving observation via Reward Model predict(). If predicted_score <0.6 → hold in detected_patterns. If ≥0.6 → surface',
+      'Route surfaced observations: surface_timing=\'now\' → send Telegram immediately; \'morning_brief\' → append to Redis morning_brief_queue; \'hold\' → write to detected_patterns with status=pending',
+      'Log full inner loop run to PostgreSQL inner_loop_log: run_type, observations_generated, observations_surfaced, model_used, tokens_consumed, runtime_ms',
+    ],
+    inputs: ['APScheduler (time triggers)', 'Redis (CURRENT_STATE, token budgets)', 'PostgreSQL (events)', 'Neo4j (pathways)', 'Qdrant (dedup check)'],
+    outputs: ['Telegram proactive messages', 'Redis morning_brief_queue', 'PostgreSQL inner_loop_log + detected_patterns'],
+    tags: ['apscheduler', 'every-90min', '03:00-deep', 'samantha', 'proactive', 'rate-limit-aware']
+  },
+  wants: {
+    layer: 'Layer 6 — Orchestration', color: 'var(--l6)', status: 'not-built', statusColor: '#ef4444',
+    name: 'Wants Engine', tagline: 'Locus has operational goals of its own.',
+    purpose: 'Generates and maintains "wants" — goal-directed preferences derived from Locus\'s understanding of the user\'s outcomes AND its own operational performance gaps. Locus can want more data, want the user to finish a task, want to improve a subsystem.',
+    steps: [
+      'During each Sunday deep synthesis pass, scan detected_patterns for patterns that suggest data gaps (e.g. low confidence cause chains due to missing mood logs)',
+      'Scan PostgreSQL reward_signals for low-👍 intent types — identify which pipeline components are underperforming',
+      'Generate Want candidates: "I want more consistent sleep logs because State Engine confidence is 0.52 on health patterns" or "I want you to finish Locus retrieval because 11 features depend on it"',
+      'Store each Want as a WantNode in Neo4j with: want_text, target_type (self|user), confidence, evidence_refs, created_at',
+      'Connect WantNode to relevant OutcomeNode, ProjectNode, or SystemNode via WANTS edge with strength score',
+      'During morning briefing compilation, include highest-confidence active Wants that haven\'t been surfaced in last 7 days',
+      'When a Want is fulfilled (e.g. user starts logging sleep consistently), mark WantNode as resolved and update Reward Model with positive signal',
+    ],
+    inputs: ['Sunday synthesis output', 'PostgreSQL reward_signals', 'Neo4j (outcome/project nodes)'],
+    outputs: ['Neo4j WantNodes', 'Morning briefing additions', 'Architect Bot triggers for self-improvement Wants'],
+    tags: ['agency', 'operational-goals', 'neo4j-want-nodes', 'sunday-synthesis']
+  },
+  architect: {
+    layer: 'Layer 6 — Orchestration', color: 'var(--l6)', status: 'not-built', statusColor: '#ef4444',
+    name: 'Architect Bot', tagline: 'Self-improving. Locus codes itself better.',
+    purpose: 'Monitors system performance via Reward Model signals, identifies underperforming components, generates targeted improvement code, writes tests, and submits for human approval before deployment.',
+    steps: [
+      'Weekly scan: query reward_signals for intent types with mean_score <0.55 over last 30 days — these are broken components',
+      'Query PostgreSQL inner_loop_log for runs where observations_surfaced=0 for >5 consecutive runs — Inner Loop may be broken',
+      'For each identified improvement target, compose analysis prompt with component code + failure evidence. Use DeepSeek V4 Flash.',
+      'Generate improvement code patch with: diff format, explanation of change, expected improvement metric',
+      'Auto-generate pytest test cases for the patch',
+      'Classify change risk: LOW (notification templates, shorthand rules, dashboard queries) vs HIGH (retrieval pipeline, orchestrator, database schema)',
+      'LOW risk: deploy automatically to staging Docker container, run tests, if pass → deploy to production',
+      'HIGH risk: format as Telegram message to Shivam with: change description, evidence, expected improvement, diff. Require explicit "approve" reply before deployment',
+    ],
+    inputs: ['PostgreSQL reward_signals', 'inner_loop_log', 'Component source code'],
+    outputs: ['Code patches', 'Telegram approval requests', 'Deployed improvements (low-risk auto, high-risk gated)'],
+    tags: ['self-improving', 'human-in-loop', 'auto-deploy-low-risk', 'approval-gate-high-risk']
+  },
+  router: {
+    layer: 'Layer 5 — Reasoning', color: 'var(--l5)', status: 'not-built', statusColor: '#ef4444',
+    name: 'Query Router', tagline: 'Every prompt classified before a single byte of data is fetched.',
+    purpose: 'The first thing every incoming message hits. Classifies intent and determines which sources to query, what time scope, and whether deep reasoning is needed. Costs ~50 tokens. Saves thousands.',
+    steps: [
+      'Receive raw input string from Master Conductor',
+      'Apply prompt injection filter: check for shell commands (curl, wget, rm, sudo), jailbreak patterns, instruction overrides. If detected → block and log to security_events',
+      'Compose classification prompt: system="Classify this query. Return ONLY valid JSON. No preamble." + input + schema definition',
+      'Call Groq 8B-instant (fastest, free) with max_tokens=120, temperature=0',
+      'Parse JSON response: {primary_intent, secondary_intents[], sources_required[], temporal_scope, requires_deep_reasoning, confidence}',
+      'If confidence <0.7 OR JSON parse fails → set sources_required=["postgres","neo4j","qdrant","obsidian"] (query everything)',
+      'Intents: FACTUAL_PERSONAL, BEHAVIORAL_PATTERN, KNOWLEDGE_RETRIEVAL, TASK_PLANNING, EMOTIONAL_STATE, EXTERNAL_KNOWLEDGE, SYNTHESIS, INFERENCE_REQUEST',
+      'Return routing_decision to Master Conductor',
+    ],
+    inputs: ['Raw user input from any interface'],
+    outputs: ['routing_decision JSON to Master Conductor'],
+    tags: ['groq-8b', '50-tokens', 'json-output', 'injection-filter', 'always-first']
+  },
+  forge: {
+    layer: 'Layer 5 — Reasoning', color: 'var(--l5)', status: 'not-built', statusColor: '#ef4444',
+    name: 'Context Forge', tagline: '800 tokens in. Everything the LLM needs, nothing it doesn\'t.',
+    purpose: 'Merges all parallel retrieval results into one coherent, token-budgeted context block. The core anti-hallucination mechanism. LLM NEVER speaks without this layer having assembled its context first.',
+    steps: [
+      'Receive all retrieval results from async parallel fetch (Qdrant, PostgreSQL, Neo4j, Obsidian/LightRAG, Web if needed)',
+      'Layer 1 — User Identity (80t max): query user_identity table, extract top 3 behavioral_tendencies + active factions + communication_style. Truncate to 80 tokens.',
+      'Layer 2 — Temporal Context (60t max): current time, day of week, exam_period flag from CURRENT_STATE, next 3 known calendar events. Truncate to 60t.',
+      'Layer 3 — PostgreSQL Events (180t max): take last 6h behavioral events, encode via LOCUS_SHORTHAND.encode(), sort by recency, truncate to 180t.',
+      'Layer 4 — Neo4j Pathways (150t max): take top 3 most-relevant pathways from Retriever C result, format as structured pathway notation. For each traversed edge, call Hebbian Manager to increment weight +0.1.',
+      'Layer 5 — Qdrant/Obsidian Semantic (200t max): take top 5 Qdrant results + top LightRAG result, score by relevance, truncate to 200t.',
+      'Layer 6 — Web (100t max): only if sources_required includes "web". Top 3 DuckDuckGo results. Truncate to 100t.',
+      'If ALL layers return empty results: set context_confidence=0.0, inject explicit LLM instruction: "No personal data found. Answer from general knowledge and clearly state this to the user."',
+      'Compose CONTEXT_META header: sources_used, data_confidence, retrieved_at, layers_populated',
+      'Concatenate: [SOUL.md identity preamble 40t] + [CONTEXT_META] + [Layer 1-6 content]. Total must not exceed 800t.',
+      'If total exceeds 800t: truncate by lowest relevance score first, never by recency. Re-count tokens. Assert ≤800t.',
+    ],
+    inputs: ['All parallel retrieval results', 'user_identity table', 'CURRENT_STATE from Redis', 'SOUL.md'],
+    outputs: ['800-token assembled context block to LLM Cascade', 'Hebbian weight increment calls to Neo4j'],
+    tags: ['800-token-hard-limit', 'anti-hallucination', 'parallel-merge', 'hebbian-side-effect']
+  },
+  cascade: {
+    layer: 'Layer 5 — Reasoning', color: 'var(--l5)', status: 'partial', statusColor: '#f59e0b',
+    name: 'LLM Cascade', tagline: 'Right model for right job. $4/year total.',
+    purpose: 'Routes each LLM call to the cheapest/fastest provider capable of handling it. Tracks daily token budgets per provider. Automatic failover when rate limits hit.',
+    steps: [
+      'Receive: assembled_context, user_input, requires_deep_reasoning, intent_type, provider_preference',
+      'Check Redis token budgets: if groq_tokens_today >14000 req OR >500K tokens → groq UNAVAILABLE; if cerebras_tokens_today >1M → cerebras UNAVAILABLE',
+      'Tier 1 — Groq 8B-instant (free, 840 TPS): use for CLASSIFICATION, FACTUAL_PERSONAL simple, sentiment scoring, injection filter. Skip if unavailable.',
+      'Tier 2 — Cerebras Llama 3.3 70B (free, 1M tokens/day): use for STATE_ENGINE, INNER_LOOP standard, PATTERN simple, TASK_PLANNING. Skip if unavailable.',
+      'Tier 3 — DeepSeek V4 Flash (paid ~$0.011/day): use for CONVERSATIONAL, INFERENCE_REQUEST, BEHAVIORAL_PATTERN deep, SYNTHESIS daily. Always available (paid).',
+      'Tier 4 — Gemini 2.5 Pro (free tier, weekly only): use ONLY for Sunday 03:00 synthesis pass requiring 1M context. Never use for daily queries.',
+      'If LoRA adapter exists (post quarterly fine-tune): load via Ollama for conversational responses — overrides Tier 3.',
+      'Make API call. On 429 rate limit → increment retry counter, wait 5s, try next tier. On 3 consecutive failures → return error to Conductor with explanation.',
+      'Update Redis token budget counter: {provider}_tokens_today += tokens_used. Set expiry to next midnight IST.',
+      'Return LLM response text to Generator.',
+    ],
+    inputs: ['Context Forge output (800-token block)', 'User input', 'routing_decision flags'],
+    outputs: ['LLM response text to Generator', 'Redis token budget updates'],
+    tags: ['groq-8b', 'cerebras-70b', 'deepseek-flash', 'gemini-weekly', 'auto-failover', 'budget-aware']
+  },
+  generator: {
+    layer: 'Layer 5 — Reasoning', color: 'var(--l5)', status: 'not-built', statusColor: '#ef4444',
+    name: 'Generator', tagline: 'The only service that produces user-facing output.',
+    purpose: 'Receives LLM response and validates it before delivery. Final anti-hallucination gate. Applies SOUL.md personality rules. Never delivers a response that claims personal knowledge it wasn\'t given.',
+    steps: [
+      'Receive raw LLM response + the context_block that was used to generate it + context_confidence score',
+      'If context_confidence ==0.0: prepend disclaimer "I don\'t have your personal data for this — answering from general knowledge:" to response',
+      'Scan response for any specific factual claims about the user (numbers, dates, task names). Verify each claim appears in context_block. If claim not in context → flag as potential hallucination, soften language to "based on what I have..."',
+      'Apply SOUL.md personality rules: strip sycophantic phrases ("Great question!", "Absolutely!", "Of course!"), enforce direct tone, ensure no unsolicited praise',
+      'Format for delivery channel: Telegram → plain text, max 4096 chars, split if needed; MCP → structured JSON; Obsidian → markdown',
+      'Append 👍/👎 inline keyboard for Telegram delivery (every response, no exceptions)',
+      'Deliver to interface. Log to PostgreSQL responses table: response_id, response_text, context_confidence, model_used, delivery_channel, timestamp.',
+    ],
+    inputs: ['Raw LLM response', 'Context block used', 'SOUL.md personality rules'],
+    outputs: ['Validated, formatted response to interface', 'PostgreSQL responses log'],
+    tags: ['anti-hallucination', 'soul-personality', 'claim-verification', 'feedback-buttons']
+  },
+  shorthand: {
+    layer: 'Layer 5 — Reasoning', color: 'var(--l5)', status: 'not-built', statusColor: '#ef4444',
+    name: 'LOCUS_SHORTHAND', tagline: 'Token compression. Same meaning, 4× fewer tokens.',
+    purpose: 'A symbolic compression schema defined in Python that encodes verbose behavioral event data into compact notation. Applied by Context Forge before injecting PostgreSQL events into the prompt.',
+    steps: [
+      'Define SHORTHAND_MAP dict in app/core/shorthand.py: maps event_type strings to compact notation templates',
+      'encode(events: list[dict]) → str: iterate events, match event_type, substitute values into template, return compressed string',
+      'decode(compressed: str) → list[dict]: reverse operation for debugging and human-readable output',
+      'Key encodings: energy log {e:N,t:HHMM,f:F} | task done {✓:NAME,dur:M,q:N} | deferral {→:NAME,n:N,r:CODE} | mood {m:N,note:TEXT} | sleep {s:H,q:N} | meal {food:DESC,t:HHMM,ei:+/-/0} | faction {H:N,L:N,C:N,E:N}',
+      'Reason codes for deferrals: busy|tired|blocked|forgot|impulse|unclear',
+      'System prompt injection: include SHORTHAND_LEGEND in LLM system prompt explaining the schema. Keep legend under 60 tokens.',
+      'Include encode()/decode() in app/core/shorthand.py. Import and call from Context Forge Layer 3.',
+    ],
+    inputs: ['Raw PostgreSQL behavioral_events list'],
+    outputs: ['Compressed string (4× token reduction) to Context Forge Layer 3'],
+    tags: ['token-compression', 'lossless', 'encode-decode', 'pure-python']
+  },
+  state: {
+    layer: 'Layer 4 — Intelligence', color: 'var(--l4)', status: 'not-built', statusColor: '#ef4444',
+    name: 'State Engine', tagline: 'Knows what state you\'re in before you do.',
+    purpose: 'Maintains CURRENT_STATE in Redis — a continuously updated multi-dimensional snapshot of the user. Triggered by every new PostgreSQL event write. The inferred_cause_chain field is where Locus makes genuine inferences about why you are the way you are right now.',
+    steps: [
+      'Triggered by: every INSERT to behavioral_events PostgreSQL table via LISTEN/NOTIFY OR APScheduler every 30 minutes as fallback',
+      'Fetch last 48h of behavioral_events from PostgreSQL, last 10 mood/energy logs, last 3 sleep logs, last 3 food logs',
+      'Compute psychological_state: mood_trend (slope of last 5 mood values: rising/falling/stable), mood_value (latest), stress_indicators (list: exam_period, sleep_deficit, task_overload, deferral_surge), energy_level (latest), energy_trend',
+      'Compute operational_state: momentum (completion_rate_24h vs completion_rate_7d → building/stalling/blocked/recovering), current_faction_focus, tasks_completed_today, tasks_deferred_today, deferral_rate_7d, last_meaningful_work_hours_ago',
+      'Compute contextual_flags: exam_period (check upcoming_exams table, flag if exam within 14 days), exam_days_remaining, recent_sleep_quality (avg last 3 nights), last_meal_energy_impact, time_of_day_segment (early_morning/morning/afternoon/evening/late_night/deep_night)',
+      'Generate behavioral_alerts: for each alert_type (avoidance_pattern, momentum_loss, energy_mismatch, deadline_risk, faction_neglect) — check thresholds, generate alert if exceeded with severity and evidence list',
+      'Generate inferred_cause_chain: compose prompt with all computed state + detected_patterns from PostgreSQL + historical exam period data. Ask LLM: "Given this data, explain in 3-5 specific sentences why Shivam is in this state right now. Cite data points with numbers." Call Cerebras 70B.',
+      'Write complete CURRENT_STATE JSON to Redis key "locus:current_state" with TTL=21600 (6 hours)',
+      'Write snapshot to PostgreSQL state_snapshots table (id, snapshot JSONB, created_at)',
+      'If any behavioral_alert has severity=HIGH: trigger Inner Loop immediately rather than waiting for 90-min schedule',
+    ],
+    inputs: ['PostgreSQL behavioral_events (LISTEN/NOTIFY)', 'detected_patterns', 'upcoming_exams table'],
+    outputs: ['Redis CURRENT_STATE (6h TTL)', 'PostgreSQL state_snapshots', 'Inner Loop triggers on HIGH severity'],
+    tags: ['listen-notify', 'redis-6h-ttl', 'cause-chain-inference', 'military-grade-profiling']
+  },
+  pattern: {
+    layer: 'Layer 4 — Intelligence', color: 'var(--l4)', status: 'not-built', statusColor: '#ef4444',
+    name: 'Pattern Engine', tagline: '5 time horizons. Behavioral signatures built over time.',
+    purpose: 'Detects behavioral patterns across five simultaneous time horizons. Promotes high-confidence repeated patterns to PERSISTENT_PATTERNS that feed into User Identity and Context Forge identity layer.',
+    steps: [
+      'APScheduler: runs every 6 hours. Receives current timestamp.',
+      'H1 (6h — Acute): query last 6h behavioral_events. Compute energy delta (latest minus 6h-ago). Compute task completion/deferral ratio. Run sentiment analysis on last 5 Telegram messages via Groq 8B (30 tokens each). Flag if energy_delta < -2 or completion_ratio < 0.2.',
+      'H2 (24h — Daily): query last 24h. Correlate sleep_quality from last night with today\'s task completion rate. Check meal timing vs energy spikes (food logs vs energy logs, 2h lag). Check time-of-day vs faction activity: is actual work time matching declared peak windows?',
+      'H3 (7d — Weekly): compute deferral_velocity (deferrals this week vs last week: increasing/decreasing/stable). Identify faction being most neglected (lowest actual_hours/target_hours ratio). Compute mood_trend_slope over 7 days.',
+      'H4 (30d — Monthly): query projects table for tasks deferred 3+ times in 30 days — these are chronic avoidance targets. Check goal_progress: for each active outcome, calculate tasks_completed/tasks_total. Detect energy_cycle: do weekends consistently show different patterns?',
+      'H5 (All-time — Identity): query all exam periods in behavioral_events history. Extract exam_behavioral_signature: average mood, energy, sleep quality, faction activity in 14 days before each exam. Compute peak_performance_windows: for each time_of_day_segment, what is mean task completion rate and quality score? Detect goal_drift: are current active projects still connected to declared outcomes in Neo4j?',
+      'For each detected pattern across all horizons: check detected_patterns table for existing match (same pattern_type + description semantic similarity via Qdrant). If match found: increment confirmation_count, update last_confirmed_at. If new: INSERT with confidence based on data strength.',
+      'Promote patterns where confidence >0.75 AND confirmation_count >2 to PERSISTENT_PATTERNS status.',
+      'For each newly PERSISTENT pattern: call Identity Profile updater — update known_behavioral_tendencies or peak_performance_windows using weighted rolling average (new_value = 0.7*existing + 0.3*new_evidence).',
+      'For H5 exam_behavioral_signature: write to user_identity.exam_behavioral_signature JSONB field.',
+      'Log pattern engine run to PostgreSQL pattern_engine_log: run_at, horizons_processed, patterns_detected, patterns_promoted.',
+      'If any new PERSISTENT pattern conflicts with existing one (contradiction): create contradiction entry, flag for Sunday synthesis resolution.',
+      'Sunday synthesis only: pass all active contradictions to DeepSeek V4 Flash for resolution. Update pattern statuses accordingly.',
+    ],
+    inputs: ['PostgreSQL (all behavioral_events, all horizons)', 'Neo4j (outcome connections for goal drift)', 'Qdrant (semantic dedup of patterns)'],
+    outputs: ['PostgreSQL detected_patterns table', 'user_identity updates', 'Contradictions for Sunday synthesis'],
+    tags: ['6h-schedule', '5-horizons', 'exam-signature', 'persistent-patterns', 'identity-updater']
+  },
+  causation: {
+    layer: 'Layer 4 — Intelligence', color: 'var(--l4)', status: 'not-built', statusColor: '#ef4444',
+    name: 'Cause Chain Engine', tagline: 'Why is Shivam like this right now. Cited. Specific.',
+    purpose: 'Dedicated inference pipeline that produces a plain-language causal explanation of why the user is in their current state, citing specific data points across all time horizons. The feature that separates Locus from every other system.',
+    steps: [
+      'Triggered by: INFERENCE_REQUEST intent from Query Router, State Engine update (HIGH severity alerts), Inner Loop deep pass',
+      'Fetch CURRENT_STATE from Redis (or regenerate if stale)',
+      'Fetch all PERSISTENT detected_patterns with status=active from PostgreSQL',
+      'Fetch historical data for current context: if exam_period=true → fetch all prior exam period state_snapshots; if mood=low → fetch last 5 low-mood periods and their precursors',
+      'Fetch user_identity for baseline behavioral tendencies and known stressors',
+      'Compose cause chain prompt: "Given the following state, patterns, and history, produce a specific 3-5 sentence causal explanation of why this user is in this state right now. Every claim must cite a specific data point. Format: plain English. Include: root cause, contributing factors, confidence score." Pass ALL fetched data.',
+      'Call DeepSeek V4 Flash (requires deep reasoning = true)',
+      'Parse response into: root_cause (string), contributing_factors (list), confidence (float), data_citations (list of event_ids)',
+      'Store to PostgreSQL cause_chains table: id, trigger_type, root_cause, contributing_factors JSONB, confidence, supporting_evidence JSONB, created_at',
+      'Return cause chain to calling service (State Engine / Inner Loop / Master Conductor)',
+    ],
+    inputs: ['CURRENT_STATE (Redis)', 'detected_patterns (PostgreSQL)', 'state_snapshots history', 'user_identity'],
+    outputs: ['PostgreSQL cause_chains table', 'Cause chain text to Inner Loop / Generator'],
+    tags: ['military-grade', 'cite-everything', 'deepseek-flash', 'cross-horizon']
+  },
+  scheduler: {
+    layer: 'Layer 4 — Intelligence', color: 'var(--l4)', status: 'planned', statusColor: '#f59e0b',
+    name: 'Scheduler / Planner', tagline: 'The core reason Locus exists. No more regret.',
+    purpose: 'Reads DCS, TWS scores, faction lag, behavioral state — and produces a ranked, ripple-aware task schedule for the day. Dynamic. Reorganizes itself when life changes. The anti-regret engine.',
+    steps: [
+      'Trigger: morning checkin logged, explicit "what should I do" query, new urgent task added, calendar event changed',
+      'Fetch DCS from CURRENT_STATE (Redis). DCS = f(E, M, S, ST) → maps to operating mode: <4=SURVIVAL, 4-5=RECOVERY, 5-7=NORMAL, 7-8=DEEP, >8=PEAK',
+      'Fetch all active tasks from PostgreSQL tasks table. Compute TWS for each: TWS = (P×0.4) + (U×0.4) + (D×0.2) where P=priority(1-10), U=urgency(1-10), D=difficulty(1-10)',
+      'Apply faction lag bonuses: for each faction, compute actual_hours/target_hours for current week. If lag >3h → TWS+2 for all tasks in that faction. If lag >6h → TWS+4.',
+      'Apply mode constraints: SURVIVAL/RECOVERY mode → exclude all tasks with D≥8; SURVIVAL → exclude D≥6. PEAK → no exclusions.',
+      'Apply parallel task identification: scan task pairs for non-conflicting resource requirements (can code while laundry runs, cannot film while in class). Flag parallelizable pairs.',
+      'Apply three-birds-one-stone scoring: identify tasks that serve multiple factions simultaneously. Bonus TWS+1 per additional faction served.',
+      'Produce ranked daily task list. Map tasks to available time blocks (calendar events fetched from Calendar Puller define constraints).',
+      'If new urgent task arrives mid-day: recompute full ranked list, push all displaced tasks forward respecting deadlines, update Google Calendar via Calendar Bridge.',
+      'Write final schedule to PostgreSQL scheduled_day table: date, task_id, scheduled_start, scheduled_duration, mode_at_scheduling, tws_score, faction',
+      'Pass to Calendar Bridge for Google Calendar sync',
+      'Send morning schedule summary via Telegram if trigger was morning checkin',
+    ],
+    inputs: ['Redis (DCS, CURRENT_STATE)', 'PostgreSQL (tasks, projects)', 'Google Calendar (existing events via Calendar Puller)'],
+    outputs: ['PostgreSQL scheduled_day', 'Google Calendar via Calendar Bridge', 'Telegram morning summary'],
+    tags: ['DCS-driven', 'TWS-scoring', 'ripple-reschedule', 'parallel-detection', '3-birds-1-stone']
+  },
+  goaltracker: {
+    layer: 'Layer 4 — Intelligence', color: 'var(--l4)', status: 'partial', statusColor: '#f59e0b',
+    name: 'Goal Tracker', tagline: 'Three-layer stack. Outcomes → Projects → Tasks.',
+    purpose: 'Monitors the complete goal hierarchy. Detects drift between declared priorities and actual behavior. Flags dead nodes. Generates weekly review.',
+    steps: [
+      'Maintain three-layer hierarchy in PostgreSQL: outcomes (id, title, why, faction, status, created_at), projects (id, outcome_id, title, status, deadline), tasks (id, project_id, title, TWS, deferral_count, last_deferred_at, status)',
+      'Dead node detection (runs daily 02:30 IST): scan outcomes with last_activity >60 days → flag DEAD_OUTCOME. Projects with no task activity >30 days → flag DEAD_PROJECT.',
+      'Deferral escalation: task deferred 3× → send Telegram low-priority flag. 5× → Telegram alert with "is this still relevant?". 8+ → flag for weekly review, auto-reduce priority.',
+      'Action gap computation: for each outcome, action_gap = (declared_priority_rank - (actual_hrs_7d / target_hrs_7d × 10)). High action_gap = saying it matters but not acting like it does.',
+      'Goal drift detection: traverse Neo4j from each active task → check if path exists to any active outcome. If task is orphaned (no outcome connection) → flag as drift candidate.',
+      'Weekly review generation (Sunday 04:30 IST): compile dead nodes, high-deferral tasks, action gap scores, faction balance, progress % per outcome. Format as structured markdown. Write to Obsidian /05-Journal/weekly-reviews/.',
+      'Momentum score per faction: avg task completion rate over last 3 weeks / target completion rate. Below 0.6 → LOW momentum alert.',
+      'Expose GET /goals/stack → returns full three-layer hierarchy with health scores for Obsidian Dashboard.',
+      'Notify Inner Loop when action_gap for any outcome exceeds threshold for 3+ consecutive days (triggers a "Wants" observation).',
+    ],
+    inputs: ['PostgreSQL (tasks, projects, outcomes)', 'Neo4j (outcome connections)'],
+    outputs: ['PostgreSQL flags (dead nodes, deferrals)', 'Obsidian weekly review', 'Inner Loop triggers', 'Telegram alerts'],
+    tags: ['3-layer-hierarchy', 'dead-nodes', 'action-gap', 'momentum-score', 'weekly-review']
+  },
+  identity: {
+    layer: 'Layer 4 — Intelligence', color: 'var(--l4)', status: 'not-built', statusColor: '#ef4444',
+    name: 'Identity Profile', tagline: 'The model of Shivam that Locus carries at all times.',
+    purpose: 'Single-row PostgreSQL table representing Locus\'s current working model of the user. Updated automatically by Pattern Engine when persistent patterns are confirmed. Feeds the 80-token identity layer in every Context Forge call.',
+    steps: [
+      'Create PostgreSQL table user_identity (single row, upserted in place): stated_life_goals JSONB, active_factions JSONB, known_behavioral_tendencies JSONB, peak_performance_windows JSONB, known_stressors JSONB[], known_energizers JSONB[], communication_style JSONB, exam_behavioral_signature JSONB, last_updated TIMESTAMP, update_source TEXT',
+      'Seed initial values manually: stated_life_goals from Locus System Bible, factions from spec, communication_style = {tone: direct, no_sycophancy: true, push_back: true, blunt: true}',
+      'Pattern Engine calls identity_updater() when a new PERSISTENT pattern is confirmed. Update logic: new_value = (0.7 × existing_value) + (0.3 × pattern_evidence_value). Never hard-overwrite.',
+      'known_behavioral_tendencies format: {"impulse_work": 0.7, "deadline_driven": 0.85, "avoidance_creative_when_stressed": 0.6} — all floats 0.0–1.0 representing confidence',
+      'peak_performance_windows: {"late_night_craft": 0.82, "morning_studies": 0.31, "afternoon_shallow": 0.55} — derived from H5 pattern analysis',
+      'Context Forge queries this table at start of every assembly. Formats top 3 tendencies + faction balance + communication style into 80-token identity preamble.',
+      'Expose GET /identity → returns full profile for Obsidian Dashboard display.',
+    ],
+    inputs: ['Pattern Engine (persistent pattern updates)', 'Manual seed data'],
+    outputs: ['80-token identity layer to Context Forge (every LLM call)', 'Obsidian Dashboard display'],
+    tags: ['single-row', 'rolling-average', 'never-overwrite', 'confidence-floats', 'auto-updated']
+  },
+  hebbian: {
+    layer: 'Layer 4 — Intelligence', color: 'var(--l4)', status: 'not-built', statusColor: '#ef4444',
+    name: 'Hebbian Manager', tagline: 'Neurons that fire together wire together.',
+    purpose: 'Manages dynamic edge weight updates in Neo4j based on traversal frequency, user feedback, and time-based decay. Implements STDP-inspired timing-weighted reinforcement.',
+    steps: [
+      'traversal_reinforce(pathway_ids: list): called by Context Forge on every LLM call. For each edge in traversed pathways: SET weight = weight + 0.1',
+      'positive_feedback(session_pathway_ids: list, response_latency_ms: int): called when user taps 👍. Compute timing_weight = max(0.5, 1.5 - (response_latency_ms / 120000)). Applies STDP: fast response = stronger signal. For each edge: SET weight = weight × (1.3 × timing_weight)',
+      'negative_feedback(session_pathway_ids: list): called when user taps 👎. For each edge: SET weight = weight × 0.7',
+      'Store session_pathways in Redis (key: locus:session_pathways:{session_id}) during each Conductor session. Cleared after feedback received or session ends.',
+      'weekly_decay(): APScheduler Sunday 03:30 IST. MATCH ()-[r]-() SET r.weight = r.weight × 0.95. Ensures recency bias.',
+      'project_completion_decay(project_id): called when project status → completed/inactive. Reduce all edges connected to that project\'s nodes by ×0.5.',
+      'spaced_repetition_check(): APScheduler daily 04:00 IST. Find nodes where last_traversed_at < now - (horizon_days × 0.75) but still connected to active nodes. Return node list to Inner Loop for deliberate surfacing.',
+      'Expose GET /brain/pathways → top 10 edges by weight, formatted for Obsidian Dashboard.',
+    ],
+    inputs: ['Context Forge (traversal events)', 'Reward Model (👍/👎 signals)', 'APScheduler (decay jobs)'],
+    outputs: ['Neo4j edge weight updates', 'Spaced repetition node list to Inner Loop', 'GET /brain/pathways endpoint'],
+    tags: ['hebbian', 'stdp-timing', 'weekly-decay-0.95', 'project-decay', 'spaced-rep']
+  },
+  'ret-qdrant': {
+    layer: 'Layer 3 — Retrieval', color: 'var(--l3)', status: 'partial', statusColor: '#f59e0b',
+    name: 'Retriever A — Qdrant Semantic',
+    tagline: 'Finds meaning by concept proximity, not keyword.',
+    purpose: 'Semantic similarity search against all Qdrant collections. Finds content that is conceptually similar to the query even without shared keywords.',
+    steps: [
+      'Receive: query_text, temporal_scope, collection_hint (optional)',
+      'Embed query_text via fastembed BAAI/bge-small-en-v1.5 → 384-dim vector',
+      'Search vault_chunks collection: top_k=7, score_threshold=0.55',
+      'Search conversation_history collection: top_k=3, score_threshold=0.60',
+      'Search detected_patterns collection: top_k=3 (only if intent is BEHAVIORAL_PATTERN)',
+      'Apply recency boost: for each result, if created_at > now-7d multiply score × 1.5 before final ranking',
+      'Sort all results by boosted score. Return top 7 across all collections with: content, metadata, score, collection_name, chunk_id',
+    ],
+    inputs: ['Query text', 'Qdrant collections (vault_chunks, conversation_history, detected_patterns)'],
+    outputs: ['Top 7 semantically similar results to Context Forge'],
+    tags: ['fastembed', 'bge-small-en', '384-dim', 'recency-boost', 'multi-collection']
+  },
+  'ret-pg': {
+    layer: 'Layer 3 — Retrieval', color: 'var(--l3)', status: 'partial', statusColor: '#f59e0b',
+    name: 'Retriever B — PostgreSQL Structured',
+    tagline: 'Finds logged facts. What happened, when, at what score.',
+    purpose: 'Structured SQL queries against PostgreSQL based on query intent. Returns typed, schema-validated facts about logged events, tasks, and behavioral data.',
+    steps: [
+      'Receive: intent_type, temporal_scope, entity_hint (task name, project, faction)',
+      'Map intent to query template: FACTUAL_PERSONAL → recent_events(); TASK_PLANNING → active_tasks_tws_ranked(); EMOTIONAL_STATE → mood_sleep_energy_history(); BEHAVIORAL_PATTERN → deferral_patterns()',
+      'TEMPORAL_SCOPE mapping: last_6h → WHERE created_at > NOW()-INTERVAL\'6 hours\'; last_24h → 24 hours; last_7d → 7 days; last_30d → 30 days; all_time → no filter',
+      'Execute parameterized query (no raw SQL from user input — all queries use pre-defined templates with parameter substitution only)',
+      'For EMOTIONAL_STATE: fetch last 5 mood logs + last 3 sleep logs + last 3 food logs + last 10 energy logs + current DCS from Redis',
+      'For TASK_PLANNING: fetch active tasks with computed TWS, faction, last_deferred_at, deferral_count, deadline',
+      'For BEHAVIORAL_PATTERN: fetch task_deferrals grouped by task_id sorted by deferral_count DESC, faction_weekly_stats for all factions',
+      'Serialize results to structured dict. Return empty list (never None) if no results. Log retrieval to PostgreSQL retrieval_log.',
+    ],
+    inputs: ['routing_decision (intent, temporal_scope)', 'PostgreSQL all tables'],
+    outputs: ['Typed structured data dict to Context Forge Layer 3'],
+    tags: ['parameterized-sql', 'no-raw-input', 'typed-output', 'empty-not-null']
+  },
+  'ret-neo4j': {
+    layer: 'Layer 3 — Retrieval', color: 'var(--l3)', status: 'partial', statusColor: '#f59e0b',
+    name: 'Retriever C — Neo4j Graph',
+    tagline: 'Finds relationships. How things connect to things.',
+    purpose: 'Cypher query traversal of the behavioral knowledge graph. Returns weighted pathways, entity relationships, and behavioral patterns up to 2 hops deep.',
+    steps: [
+      'Receive: query_entity (extracted from routing_decision), intent_type, time_of_day_segment from CURRENT_STATE',
+      'For TASK_PLANNING: MATCH strongest weighted pathways from current_state_node → goal_nodes at current time segment. Cypher: MATCH p=(c:TimeSegment {name:$seg})-[r*1..2]-(g:Outcome) WHERE g.status=\'active\' RETURN p ORDER BY sum([rel in relationships(p) | rel.weight]) DESC LIMIT 5',
+      'For BEHAVIORAL_PATTERN: MATCH entity node matching query_entity. Traverse 2 hops: MATCH (e)-[r1]-(n1)-[r2]-(n2) WHERE e.name CONTAINS $entity AND r1.weight > 0.3 RETURN e, r1, n1, r2, n2 ORDER BY r1.weight+r2.weight DESC',
+      'For INFERENCE_REQUEST: MATCH all nodes connected to subject entity. Traverse outward 2 hops. Return full subgraph.',
+      'For time-of-day routing: MATCH (t:TimeSegment {name: $current_segment})-[r]->(concept:ConceptNode) RETURN concept, r.weight ORDER BY r.weight DESC LIMIT 3',
+      'Format pathway results as human-readable notation: "late_night → craft_work [0.72] → high_satisfaction [0.58]"',
+      'Pass traversed edge IDs to Hebbian Manager for weight increment (+0.1 per traversal)',
+      'Return: pathway list, entity subgraph, traversed_edge_ids. Return empty list if no results — never fabricate.',
+    ],
+    inputs: ['routing_decision entity + intent', 'Neo4j graph', 'CURRENT_STATE time_of_day_segment'],
+    outputs: ['Pathway data to Context Forge Layer 4', 'Traversed edge IDs to Hebbian Manager'],
+    tags: ['cypher', '2-hop-max', 'hebbian-side-effect', 'weighted-traversal', 'no-fabrication']
+  },
+  reader: {
+    layer: 'Layer 3 — Retrieval', color: 'var(--l3)', status: 'partial', statusColor: '#f59e0b',
+    name: 'Reader', tagline: 'Opens vault files on demand. Always from disk. Never from cache.',
+    purpose: 'Direct vault file access for specific note retrieval. Used when the user explicitly references a file or when LightRAG identifies a specific note as most relevant.',
+    steps: [
+      'Receive: file_path (relative to /vault/) or file_name_hint',
+      'If file_name_hint provided (not full path): scan vault_index_state table for matching filenames, return closest match path',
+      'Construct absolute path: /vault/ + relative_path. Verify file exists via os.path.exists(). If not found: return {found: false, error: "file not found"} — never guess.',
+      'Read file content from disk: open(path, \'r\', encoding=\'utf-8\'). Never use any cache.',
+      'Strip YAML frontmatter (lines between --- markers). Preserve all content below.',
+      'If content length > 8000 words: return first 8000 words. Append metadata: {truncated: true, total_words: N}.',
+      'Log to behavioral_events: event_type=file_read, entity=file_path, created_at=now()',
+    ],
+    inputs: ['File path or name hint from Query Router / LightRAG'],
+    outputs: ['Full file content to Context Forge Layer 5', 'behavioral_events log'],
+    tags: ['live-disk-read', 'no-cache', 'strip-frontmatter', '8000-word-limit', 'not-found-explicit']
+  },
+  lightrag: {
+    layer: 'Layer 3 — Retrieval', color: 'var(--l3)', status: 'working', statusColor: '#10b981',
+    name: 'LightRAG', tagline: 'Hybrid graph+vector. Two retrieval paths, one answer.',
+    purpose: 'Hybrid retrieval system combining Neo4j graph traversal with Qdrant vector search over the Obsidian vault. LightRAG runs two paths in parallel and fuses results.',
+    steps: [
+      'Receive: query_text from Master Conductor or Retriever',
+      'Dual-level keyword extraction via LLM: high-level keywords (conceptual themes) + low-level keywords (specific entities and names)',
+      'Path A — Graph path (high-level keywords): query Neo4j knowledge graph for relationship patterns relevant to conceptual themes. Retrieves structural knowledge — patterns that are true because of connections, not single documents.',
+      'Path B — Vector path (low-level keywords): embed low-level keywords, query Qdrant vault_chunks for semantic similarity. Finds specific passages containing named entities.',
+      'Run Path A and Path B concurrently via asyncio.gather()',
+      'Link vector results to Neo4j nodes via chunk_id → node_id join. Enrich vector matches with graph context.',
+      'Fuse results: deduplicate, rank by combined graph_relevance + vector_score, return top 5.',
+      'If LightRAG returns empty or errors: fall back to direct Qdrant semantic search (Retriever A) + direct Neo4j query (Retriever C) independently.',
+      'Return fused results to Context Forge Layer 5 (Qdrant/Obsidian semantic layer).',
+    ],
+    inputs: ['Query text', 'Neo4j (graph path)', 'Qdrant vault_chunks (vector path)'],
+    outputs: ['Fused top-5 results to Context Forge', 'Falls back to Retriever A+C on failure'],
+    tags: ['hybrid', 'dual-path', 'parallel-async', 'graph-vector-fusion', 'fallback-aware']
+  },
+  websearch: {
+    layer: 'Layer 3 — Retrieval', color: 'var(--l3)', status: 'not-built', statusColor: '#ef4444',
+    name: 'Web Searcher', tagline: 'Last resort. Only when personal data has nothing.',
+    purpose: 'DuckDuckGo search invoked only when Query Router specifies "web" in sources_required OR when all personal data retrievers return empty results.',
+    steps: [
+      'Triggered only by: sources_required includes "web" in routing_decision OR all other retrievers returned empty',
+      'Sanitize query: strip personal identifiers, PII, sensitive terms before sending to external service',
+      'Call DuckDuckGo Instant Answer API (no API key required)',
+      'Parse top 3 results: title, snippet (max 200 chars each), url',
+      'Return structured list to Context Forge Web Layer (100t budget). If no results → return empty.',
+    ],
+    inputs: ['Sanitized query string'],
+    outputs: ['Top 3 web results to Context Forge Layer 6'],
+    tags: ['duckduckgo', 'no-api-key', 'fallback-only', 'sanitized', 'free']
+  },
+  collector: {
+    layer: 'Layer 2 — Ingestion', color: 'var(--l2)', status: 'partial', statusColor: '#f59e0b',
+    name: 'Collector', tagline: 'The crawler. Everything in. Nothing missed. Nothing duplicated.',
+    purpose: 'Crawls all data sources on schedule (02:00 AM nightly) and on-demand. Incremental via MD5 hashing. One bad file never stops the full crawl.',
+    steps: [
+      'APScheduler: fires nightly at 02:00 IST. Also triggered manually by POST /collect/run.',
+      'Scan VAULT_SCAN_DIRS (env var) for all .md files. For each file: compute md5(file_content). Query vault_index_state for existing md5. If match → skip (unchanged). If different or new → add to changed_files list.',
+      'For each file in changed_files: wrap in try/except. On exception: log error to brain_errors table with file_path, error_message, stack_trace. Continue to next file (never abort full crawl).',
+      'Pass each changed file to Chunker pipeline.',
+      'Query PostgreSQL for new behavioral_events since last collector run (using collector_last_run Redis key). Ensure all new events have corresponding Neo4j nodes.',
+      'Fetch Google Calendar events for next 30 days via Calendar Puller. Upsert to upcoming_events table.',
+      'Update vault_index_state: for each processed file → upsert {file_path, md5, last_processed_at, chunk_count}.',
+      'Write collector_last_run timestamp to Redis.',
+      'Log collector run to PostgreSQL collector_log: run_at, files_scanned, files_changed, files_processed, files_errored, duration_ms.',
+      'If AI Chat Archiver ran and added new files: re-scan only the new file paths (no full vault re-scan).',
+    ],
+    inputs: ['Obsidian vault filesystem', 'PostgreSQL (behavioral_events)', 'Google Calendar API'],
+    outputs: ['Changed files to Chunker', 'PostgreSQL vault_index_state updates', 'collector_log'],
+    tags: ['md5-incremental', 'fault-tolerant', '02:00-nightly', 'no-abort-on-error']
+  },
+  chunker: {
+    layer: 'Layer 2 — Ingestion', color: 'var(--l2)', status: 'partial', statusColor: '#f59e0b',
+    name: 'Chunker', tagline: 'Markdown to propositions to vectors. The indexing engine.',
+    purpose: 'Converts raw markdown files into clean, factual proposition-based chunks ready for vector embedding. Uses spaCy for sentence boundaries and Groq 8B for factual classification with heuristic fallback.',
+    steps: [
+      'Receive: file_path, file_content from Collector',
+      'Strip markdown syntax: remove headers (#), bold (**), italic (*), links ([text](url) → text), code blocks (keep content), YAML frontmatter (already stripped by Reader)',
+      'Detect sentence boundaries via spaCy nlp.pipe() with en_core_web_sm model. Returns list of sentence strings.',
+      'Factual classification (batch): send sentences in batches of 20 to Groq 8B-instant. System: "For each sentence, reply YES if it is a factual statement (not a heading, list marker, or filler). Reply NO otherwise. Return only a JSON array of YES/NO." Heuristic fallback if Groq unavailable: keep sentences with len(words) > 8 that don\'t start with #/-/*.',
+      'Filter to only YES sentences.',
+      'Group into chunks of max 5 sentences OR 512 tokens, whichever is smaller. Preserve sentence order.',
+      'For each chunk: embed via fastembed.TextEmbedding("BAAI/bge-small-en-v1.5") → 384-dim vector',
+      'Upsert to Qdrant vault_chunks collection: payload={file_path, chunk_index, text, faction_tags (from YAML frontmatter), created_at, file_md5}',
+      'Write chunk metadata to PostgreSQL vault_chunks: chunk_id (matches Qdrant point ID), file_path, chunk_index, text_preview (first 100 chars), embedding_model, created_at',
+    ],
+    inputs: ['File content from Collector'],
+    outputs: ['Qdrant vault_chunks vectors', 'PostgreSQL vault_chunks metadata'],
+    tags: ['spacy', 'groq-8b-classification', 'fastembed', 'bge-small-en', '5-sentence-chunks']
+  },
+  archiver: {
+    layer: 'Layer 2 — Ingestion', color: 'var(--l2)', status: 'partial', statusColor: '#f59e0b',
+    name: 'AI Chat Archiver', tagline: 'Every AI conversation you\'ve ever had. In Obsidian. Searchable.',
+    purpose: 'Nightly Playwright-based scraper that extracts today\'s conversations from ChatGPT, Claude.ai, and Gemini across all accounts, converts to tagged Obsidian markdown, and triggers re-indexing.',
+    steps: [
+      'APScheduler: fires at 23:45 IST nightly.',
+      'Evaluate whether to use Playwright custom scraper or Vilix (configurable via env var USE_VILIX=true/false). If Vilix: call Vilix API with credentials. If Playwright: proceed with steps below.',
+      'For each account (soni82003@gmail.com, soni820034@gmail.com, shivamsonifilms@gmail.com): launch Playwright persistent browser context from /vault/.auth/{account}/. Check session validity. If session expired: send Telegram alert "Locus: {platform} session expired for {account}, manual re-auth needed." Skip that account.',
+      'Navigate to conversation list. Filter to conversations modified today (last 24h). For each conversation: click, extract Q&A pairs.',
+      'Format each conversation as markdown: YAML frontmatter (date, platform, account, faction_tags, summary), Q&A format with speaker labels, auto-detect wikilinks to existing vault notes by entity matching.',
+      'Save to /vault/03-AI-Chats/{platform}/{YYYY-MM-DD}-{slug}.md',
+      'After all accounts processed: write archiver_run_log to PostgreSQL with platforms_scraped, conversations_archived, sessions_failed.',
+      'Trigger Collector to re-scan /vault/03-AI-Chats/ only (not full vault).',
+      'Send Telegram summary: "Archived {N} conversations from {platforms}."',
+      'On any unhandled exception: log to brain_errors, send Telegram error alert, abort current platform and continue to next.',
+      'Playwright contexts use --no-sandbox --disable-dev-shm-usage for ARM64 Docker compatibility.',
+    ],
+    inputs: ['ChatGPT, Claude.ai, Gemini (browser automation)', 'Playwright persistent auth contexts'],
+    outputs: ['Obsidian vault markdown files', 'Triggers Collector re-scan', 'Telegram summary + error alerts'],
+    tags: ['playwright', 'vilix-option', 'multi-account', 'nightly-23:45', 'arm64-compatible']
+  },
+  audio: {
+    layer: 'Layer 2 — Ingestion', color: 'var(--l2)', status: 'working', statusColor: '#10b981',
+    name: 'Audio Transcriber', tagline: '128 files processed. Hinglish auto-detected.',
+    purpose: 'Transcribes audio files and Telegram voice notes into searchable Obsidian markdown using Whisper-large-v3-turbo with Hinglish (Hindi+English) auto-detection and context chaining for coherence.',
+    steps: [
+      'Trigger: new audio file detected in /vault/audio_inbox/ OR new Telegram voice note received',
+      'For Telegram voice notes: download from Telegram file server, save to /vault/audio_inbox/{timestamp}.ogg',
+      'Convert audio to 16kHz mono WAV if not already: ffmpeg -i input.ogg -ar 16000 -ac 1 output.wav',
+      'Split into chunks of max 25 minutes (Groq Whisper API limit)',
+      'Context chain: for chunk N, prepend last 3 sentences of chunk N-1 as context hint to maintain coherence across split',
+      'Call Groq Whisper API: model=whisper-large-v3-turbo, NO language parameter (auto-detect Hinglish). If Groq unavailable: fall back to local whisper.cpp on VM CPU.',
+      'Format transcript as markdown: YAML frontmatter (date, source, duration_mins, language_detected), timestamped paragraphs',
+      'Save to /vault/03-AI-Chats/voice/{YYYY-MM-DD}-voice-{slug}.md',
+      'Trigger Collector to re-scan that specific file',
+    ],
+    inputs: ['Audio files from /vault/audio_inbox/', 'Telegram voice notes'],
+    outputs: ['Obsidian markdown transcripts', 'Triggers Collector for new file'],
+    tags: ['whisper-large-v3-turbo', 'hinglish', 'context-chaining', '128-files-done', 'working']
+  },
+  eventwriter: {
+    layer: 'Layer 2 — Ingestion', color: 'var(--l2)', status: 'partial', statusColor: '#f59e0b',
+    name: 'Event Writer', tagline: 'Every action and inaction recorded. The behavioral ledger.',
+    purpose: 'Centralizes all behavioral event writes to PostgreSQL. Every significant user action, Locus action, and system event goes through this single service to ensure consistent schema, timestamps, and triggers.',
+    steps: [
+      'Expose write_event(event_type, entity, data: dict, source) function imported by all other services',
+      'Validate event_type against ALLOWED_EVENT_TYPES enum: task_completed, task_deferred, mood_logged, energy_logged, sleep_logged, food_logged, checkin_morning, checkin_evening, file_read, message_sent, message_received, calendar_event, faction_score_update, deferral_escalation, pattern_detected, inner_loop_run, locus_response',
+      'Construct behavioral_events row: id=uuid4(), event_type, entity (what the event is about), data JSONB (all event-specific fields), source (telegram/mcp/voice/scheduler/inner_loop/system), created_at=NOW()',
+      'INSERT into behavioral_events table',
+      'After INSERT: fire PostgreSQL NOTIFY behavioral_event_inserted (triggers State Engine update)',
+      'After INSERT: check if this event creates a new entity that needs a Neo4j node. If so: queue Neo4j node creation job in Redis.',
+      'Log write latency to Redis for performance monitoring.',
+    ],
+    inputs: ['All services (any behavioral event)'],
+    outputs: ['PostgreSQL behavioral_events INSERT', 'PostgreSQL NOTIFY (triggers State Engine)', 'Redis Neo4j node creation queue'],
+    tags: ['single-write-path', 'listen-notify', 'uuid', 'enum-validated', 'neo4j-queue']
+  },
+  'calendar-pull': {
+    layer: 'Layer 2 — Ingestion', color: 'var(--l2)', status: 'planned', statusColor: '#f59e0b',
+    name: 'Calendar Puller', tagline: 'Google Calendar → Postgres. Constraints for the Scheduler.',
+    purpose: 'Reads upcoming Google Calendar events into PostgreSQL so the Scheduler knows what time blocks are unavailable and can plan around them.',
+    steps: [
+      'OAuth2 token management: load token from .env. Refresh automatically if expired via google-auth-oauthlib.',
+      'Fetch events for next 30 days: calendar.events().list(calendarId=\'primary\', timeMin=now, timeMax=now+30d, singleEvents=True, orderBy=\'startTime\')',
+      'For each event: upsert to upcoming_events table (event_id, title, start_dt, end_dt, is_blocked, source=\'gcal\', created_at)',
+      'Mark is_blocked=true for all events (they occupy time — Scheduler treats them as hard constraints)',
+      'Trigger Scheduler to recompute if any new event conflicts with existing scheduled_day entries',
+      'Run nightly at 02:15 IST (after Collector, before Chunker completes).',
+    ],
+    inputs: ['Google Calendar API'],
+    outputs: ['PostgreSQL upcoming_events', 'Scheduler recompute trigger'],
+    tags: ['oauth2', 'google-calendar', 'hard-constraints', 'nightly-02:15']
+  },
+  postgres: {
+    layer: 'Layer 1 — Storage', color: 'var(--l1)', status: 'working', statusColor: '#10b981',
+    name: 'PostgreSQL', tagline: 'The Archivist. If it happened, it\'s here.',
+    purpose: 'Primary relational store. 16 tables covering every aspect of behavioral logging, goal stack, scheduling, pattern detection, feedback, and system operations.',
+    steps: [
+      'behavioral_events: id UUID, event_type ENUM, entity TEXT, data JSONB, source TEXT, created_at TIMESTAMPTZ',
+      'tasks: id, project_id, title, priority, urgency, difficulty, TWS GENERATED ALWAYS AS (priority*0.4+urgency*0.4+difficulty*0.2), status, deferral_count, last_deferred_at, deadline, faction',
+      'projects: id, outcome_id, title, status (active/completed/inactive/dead), deadline, faction',
+      'outcomes: id, title, why TEXT, faction, status, created_at, last_activity_at',
+      'checkins: id, checkin_type (morning/evening), E INT, M INT, S INT, ST INT, DCS GENERATED AS, mode TEXT, notes TEXT, created_at',
+      'faction_weekly_stats: id, faction, week_start, target_hours, actual_hours, CR, CS, MS, LS, AG, created_at',
+      'task_deferrals: id, task_id, deferred_at, reason_code TEXT, deferral_count_at_time INT',
+      'detected_patterns: id UUID, horizon INT, pattern_type TEXT, description TEXT, confidence FLOAT, first_detected_at, last_confirmed_at, confirmation_count INT, supporting_event_ids JSONB, status (active/resolved/false_positive)',
+      'state_snapshots: id, snapshot JSONB, created_at',
+      'reward_signals: id, response_id, signal INT(1/-1), response_type, time_of_day, faction_context, model_used, context_layers_used, pathway_ids_traversed JSONB, created_at',
+      'vault_chunks: id UUID, file_path, chunk_index INT, text_preview TEXT, embedding_model, created_at',
+      'vault_index_state: file_path PRIMARY KEY, md5 TEXT, last_processed_at, chunk_count INT',
+      'user_identity: id=1 (single row), all behavioral model fields JSONB, last_updated, update_source',
+      'telegram_logs: id, direction (in/out), message_id, raw_text, created_at',
+      'cause_chains: id UUID, trigger_type, root_cause TEXT, contributing_factors JSONB, confidence FLOAT, supporting_evidence JSONB, created_at',
+      'daily_synthesis: id, date, synthesis_text TEXT, key_insight TEXT, tomorrow_framing TEXT, model_used, created_at',
+    ],
+    inputs: ['All services via Event Writer', 'Direct writes from specialized services'],
+    outputs: ['All services via Retriever B', 'NOTIFY triggers to State Engine'],
+    tags: ['16-tables', 'generated-columns', 'jsonb', 'pgvector-optional', 'docker', 'listen-notify']
+  },
+  neo4j: {
+    layer: 'Layer 1 — Storage', color: 'var(--l1)', status: 'working', statusColor: '#10b981',
+    name: 'Neo4j', tagline: 'The Cartographer. Locus\'s learned intuition lives here.',
+    purpose: 'Behavioral knowledge graph. Nodes are entities. Edges are weighted relationships with Hebbian weights. The graph\'s structure + weights represent Locus\'s learned model of how your life connects.',
+    steps: [
+      'ConceptNode: name, faction, created_at, last_activated, activation_count. Examples: late_night_session, deadline_pressure, craft_momentum, health_avoidance',
+      'TaskNode: task_id (FK to PostgreSQL), name, faction, status. Mirror of PostgreSQL tasks.',
+      'ProjectNode: project_id, name, faction, status',
+      'OutcomeNode: outcome_id, name, faction. The root goals.',
+      'FactionNode: name (Health/Leverage/Craft/Expression), current_score, target_score',
+      'TimeNode: segment_name (early_morning/morning/afternoon/evening/late_night/deep_night)',
+      'WantNode: want_text, target_type (self/user), confidence, created_at, status (active/resolved)',
+      'PersonNode: name=Shivam (anchor node connecting everything)',
+      'Edge types (17+): WORKS_ON, SERVES, NEGLECTS, DEFERS, ENERGIZES, DRAINS, PEAK_AT, AVOIDS, WANTS, CONNECTS_TO, PRECEDES, FOLLOWS, CAUSED_BY, LEADS_TO, BELONGS_TO, MANAGES, IMPROVED_BY. Each edge: weight FLOAT, created_at, last_traversed_at, traversal_count INT',
+      'Hebbian weights: start at 0.5 for all new edges. Range 0.0–2.0. Weekly decay ×0.95.',
+    ],
+    inputs: ['Event Writer (new entity creation queue)', 'Pattern Engine (new ConceptNode patterns)', 'Hebbian Manager (weight updates)'],
+    outputs: ['Retriever C (Cypher traversal)', 'LightRAG (graph path)', 'Hebbian Manager (decay jobs)'],
+    tags: ['docker', '17-edge-types', 'hebbian-weights', 'cypher', 'SSH-tunnel-port-7687']
+  },
+  qdrant: {
+    layer: 'Layer 1 — Storage', color: 'var(--l1)', status: 'working', statusColor: '#10b981',
+    name: 'Qdrant', tagline: 'The Librarian. Finds meaning, not keywords.',
+    purpose: 'Vector database storing semantic embeddings across four collections. The only store that understands conceptual similarity rather than exact matches.',
+    steps: [
+      'vault_chunks collection: 384-dim BAAI/bge-small-en-v1.5 vectors. Payload: {file_path, chunk_index, text, faction_tags, created_at, file_md5}. Primary knowledge store.',
+      'conversation_history collection: 384-dim vectors of Telegram message exchanges. Used by Inner Loop for dedup checking (>0.85 similarity → suppress observation).',
+      'detected_patterns collection: 384-dim vectors of pattern descriptions from Pattern Engine. Used for semantic dedup before creating new patterns.',
+      'brain_observations collection: 384-dim vectors of all Inner Loop observations (surfaced or held). Used for long-term behavioral insight retrieval.',
+      'Embedding model: BAAI/bge-small-en-v1.5 via fastembed. 384 dimensions. CPU-efficient for ARM64. Runs locally on VM.',
+      'Search parameters: score_threshold=0.55 (vault), 0.60 (conversation), HNSW index for fast approximate nearest neighbor.',
+      'Recency boost applied at retrieval time by Retriever A (not stored in Qdrant). Score × 1.5 if created_at > now-7d.',
+    ],
+    inputs: ['Chunker (vault_chunks)', 'Event Writer (conversation_history)', 'Pattern Engine (detected_patterns)', 'Inner Loop (brain_observations)'],
+    outputs: ['Retriever A (semantic search results)', 'LightRAG (vector path)', 'Inner Loop (dedup check)'],
+    tags: ['docker', '4-collections', 'fastembed', 'bge-small-en', 'hnsw', 'arm64-compatible']
+  },
+  redis: {
+    layer: 'Layer 1 — Storage', color: 'var(--l1)', status: 'working', statusColor: '#10b981',
+    name: 'Redis', tagline: 'Working memory. Fast. TTL-bounded. Nothing permanent.',
+    purpose: 'Short-term state cache and message broker. Everything here has an expiry. Critical for rate limiting, session state, and the hot path of every LLM call.',
+    steps: [
+      'locus:current_state → CURRENT_STATE JSON blob (6h TTL, refreshed on each State Engine run)',
+      'locus:groq_tokens_today → INT (daily Groq token counter, expires at midnight IST)',
+      'locus:cerebras_tokens_today → INT (daily Cerebras counter, expires midnight)',
+      'locus:morning_brief_queue → LIST of observation strings (consumed at 08:00 IST by Inner Loop morning pass)',
+      'locus:dcs_cache → {dcs: float, mode: string} (expires midnight)',
+      'locus:faction_scores_cache → {H: float, L: float, C: float, E: float} (1h TTL)',
+      'locus:session_pathways:{session_id} → LIST of Neo4j edge_ids traversed in current session (used by Hebbian Manager on feedback receipt, 2h TTL)',
+    ],
+    inputs: ['State Engine (CURRENT_STATE)', 'LLM Cascade (token counters)', 'Inner Loop (morning queue, token check)', 'Context Forge (session pathways)'],
+    outputs: ['All hot-path services (fast read)', 'Celery broker (Docker network)'],
+    tags: ['docker', '7-key-spaces', 'ttl-bounded', 'celery-broker', 'midnight-expiry']
+  },
+  obsidian: {
+    layer: 'Layer 1 — Storage', color: 'var(--l1)', status: 'working', statusColor: '#10b981',
+    name: 'Obsidian / Appledore', tagline: '1,313 files. The knowledge base. Your second brain.',
+    purpose: 'The Obsidian vault "Appledore" synced to the VM via Syncthing. Primary human-readable knowledge store. Contains journal, AI chat archive, projects, resources, and the SOUL.md personality file.',
+    steps: [
+      '/vault/00-Inbox/ → unprocessed captures, quick notes, raw ideas',
+      '/vault/01-System/ → SOUL.md (Locus personality), Dashboard.md (Dataview dashboard), user_identity.md, system bible',
+      '/vault/02-Projects/ → active and completed project notes',
+      '/vault/03-AI-Chats/ → claude/, chatgpt/, gemini/, voice/ — all archived AI conversations',
+      '/vault/04-Resources/ → reference material, research, book notes',
+      '/vault/05-Journal/ → daily notes, weekly-reviews/, reflection/',
+      '/vault/06-Content/ → linkedin/, instagram/ — draft posts from Content Engine',
+      'SOUL.md: Locus personality definition. Read into every LLM call via Context Forge identity layer (40t). Contains: communication style rules, personality traits, "wants" examples, anti-sycophancy rules.',
+    ],
+    inputs: ['AI Chat Archiver (new chat files)', 'Audio Transcriber (voice transcripts)', 'Goal Tracker (weekly reviews)', 'Content Engine (draft posts)'],
+    outputs: ['Collector (crawl)', 'Reader (direct file access)', 'LightRAG (retrieval index)'],
+    tags: ['syncthing', 'appledore', '1313-files', 'SOUL.md', '7-directories']
+  },
+  vm: {
+    layer: 'Layer 0 — Infrastructure', color: 'var(--l0)', status: 'working', statusColor: '#10b981',
+    name: 'Oracle Cloud VM', tagline: 'Free. ARM64. 24GB RAM. The foundation.',
+    purpose: 'Oracle Cloud Always Free ARM64 VM running all Locus services. Ubuntu 22.04, 4 OCPU, 24GB RAM. Zero cost. Primary deployment target.',
+    steps: [
+      'Ubuntu 22.04 LTS ARM64 (aarch64). 4 OCPU, 24GB RAM, 200GB block storage.',
+      'IP: 140.238.245.25. User: ubuntu. SSH key-only auth (key at C:\\Users\\soni8\\Desktop\\...\\ssh-key-2026-03-27.key)',
+      'Core packages: docker, docker-compose, git, python3.11, pip, nginx, fail2ban',
+      'UFW firewall: allow 22 (SSH), 80 (HTTP), 443 (HTTPS), 8080 (FastAPI internal). Deny all else.',
+      'Systemd services: docker (auto-start), cloudflare tunnel (locus-tunnel.service)',
+      'SSH tunnel on port 7687 for Neo4j Desktop access during development',
+    ],
+    inputs: ['Docker Compose (container spawning)', 'Cloudflare Tunnel (traffic routing)'],
+    outputs: ['All Docker containers running', 'api.locusapp.online accessible'],
+    tags: ['oracle-free', 'arm64', 'ubuntu-22.04', 'ssh-key-only', 'ufw']
+  },
+  docker: {
+    layer: 'Layer 0 — Infrastructure', color: 'var(--l0)', status: 'working', statusColor: '#10b981',
+    name: 'Docker Compose', tagline: '7 containers. One command to rule them all.',
+    purpose: 'Orchestrates all Locus services as Docker containers. Single docker-compose.yml defines the entire stack. Volumes ensure data persistence across restarts.',
+    steps: [
+      'locus-api: FastAPI app (uvicorn, port 8080). Mounts /vault/, /home/ubuntu/locus-os/app/. Depends on postgres, neo4j, qdrant, redis.',
+      'locus-postgres: PostgreSQL 15 ARM64. Volume: locus_pg_data. Port 5432 (internal only).',
+      'locus-neo4j: Neo4j 5 Community. Volume: locus_neo4j_data. Ports 7474 (browser, internal), 7687 (bolt, internal). APOC plugin enabled.',
+      'locus-qdrant: Qdrant latest ARM64. Volume: locus_qdrant_data. Port 6333 (internal only).',
+      'locus-redis: Redis 7 Alpine. Volume: locus_redis_data. Port 6379 (internal only). Celery broker.',
+      'locus-worker: Celery worker for async tasks. Same image as locus-api. Runs APScheduler jobs.',
+      'locus-tunnel: Cloudflare tunnel container. Routes api.locusapp.online → locus-api:8080.',
+    ],
+    inputs: ['docker-compose.yml', 'Environment variables from .env'],
+    outputs: ['7 running containers on Docker bridge network locus-network'],
+    tags: ['7-containers', 'single-compose', 'bridge-network', 'volume-persistence', 'cloudflare-tunnel']
+  },
+  network: {
+    layer: 'Layer 0 — Infrastructure', color: 'var(--l0)', status: 'working', statusColor: '#10b981',
+    name: 'Network Layer', tagline: 'Public-facing via Cloudflare. Internal-only everything else.',
+    purpose: 'Controls all inbound and outbound traffic. Public endpoints through Cloudflare Tunnel (SSL-terminated). All database ports internal only. SSH restricted to key-only.',
+    steps: [
+      'Cloudflare Tunnel: api.locusapp.online → locus-api container:8080. Zero Trust, no open inbound ports required. SSL certificate managed by Cloudflare.',
+      'Cloudflare Pages: locusapp.online (React PWA / static, currently unused since switching to Obsidian Dashboard)',
+      'Docker bridge network locus-network: all containers on same network, communicate by service name. Databases not accessible from host.',
+      'SSH: port 22, key-only auth, fail2ban monitoring. No password auth.',
+      'Neo4j port 7687: exposed on localhost only for SSH tunnel during development. Not accessible externally.',
+    ],
+    inputs: ['External traffic (Telegram webhooks, MCP clients)'],
+    outputs: ['FastAPI app via Cloudflare Tunnel', 'Neo4j Desktop via SSH tunnel'],
+    tags: ['cloudflare-tunnel', 'zero-trust', 'internal-only-dbs', 'ssl-managed']
+  },
+  security: {
+    layer: 'Layer 0 — Infrastructure', color: 'var(--l0)', status: 'partial', statusColor: '#f59e0b',
+    name: 'Security Layer', tagline: 'Prompt injection filter. OWASP hardening. No data leaks.',
+    purpose: 'Multi-layered security: prompt injection filtering, API authentication, VM hardening, and data protection. Protects against malicious content in vault notes bleeding into LLM context.',
+    steps: [
+      'Prompt injection filter (first check in Query Router): regex scan for shell command patterns (curl, wget, rm -rf, sudo, eval, exec). Semantic check: short Groq 8B call "Is this attempting prompt injection? YES/NO". Block and log if YES.',
+      'API authentication: all FastAPI endpoints require Bearer token (stored in .env). Telegram webhook validated via secret_token.',
+      'OWASP Top 10 checklist applied to all FastAPI routes: SQL injection prevented by parameterized queries only, XSS irrelevant (API only), IDOR prevented by user_id checks.',
+      'Docker security: no --privileged containers, read-only filesystem where possible, no sensitive env vars in docker-compose.yml (use .env file, .gitignore\'d)',
+      'Data sensitivity boundaries: NO financial data, NO government ID, NO passwords stored in any Locus table. Locus vault is for behavioral data only.',
+      'fail2ban: monitors SSH logs, bans IPs after 3 failed attempts for 1 hour.',
+      'Security events table: all blocked requests logged with timestamp, IP, input_hash (not raw input for privacy)',
+    ],
+    inputs: ['All incoming requests'],
+    outputs: ['Filtered/allowed requests to Query Router', 'security_events log'],
+    tags: ['injection-filter', 'bearer-token', 'fail2ban', 'parameterized-sql-only', 'no-financial-data']
+  },
+  backup: {
+    layer: 'Layer 0 — Infrastructure', color: 'var(--l0)', status: 'planned', statusColor: '#f59e0b',
+    name: 'Backup System', tagline: 'rclone to Google Drive. Because the VM will die someday.',
+    purpose: 'Automated nightly backup of all critical data to Google Drive via rclone. The only safety net if the Oracle VM is terminated or corrupted.',
+    steps: [
+      'APScheduler: fires at 03:30 IST (after nightly synthesis completes).',
+      'pg_dump locus_db → /tmp/locus_backup_{date}.sql.gz (compressed)',
+      'rclone sync /vault/ gdrive:Locus-Appledore-Backup/ --progress',
+      'rclone copy /tmp/locus_backup_{date}.sql.gz gdrive:Locus-DB-Backups/',
+      'Write backup_log to PostgreSQL: run_at, files_synced, db_size_mb, duration_ms, status',
+      'On failure: send Telegram alert "Locus backup FAILED: {error}"',
+    ],
+    inputs: ['PostgreSQL dump', 'Obsidian vault filesystem'],
+    outputs: ['Google Drive (rclone sync)', 'PostgreSQL backup_log'],
+    tags: ['rclone', 'gdrive', 'nightly-03:30', 'pg_dump', 'telegram-on-failure']
+  },
+  syncthing: {
+    layer: 'Layer 0 — Infrastructure', color: 'var(--l0)', status: 'working', statusColor: '#10b981',
+    name: 'Syncthing', tagline: 'Your notes on every device. Instantly.',
+    purpose: 'Bidirectional real-time sync between Obsidian on personal devices and /vault/ on the VM. No cloud intermediary. P2P encrypted.',
+    steps: [
+      'Syncthing running on VM: accessible at localhost:8384 (internal only). Vault folder: /vault/ shared as "Appledore".',
+      'Device pairing: phone + laptop both approved as sync peers.',
+      'Conflict resolution: newest-wins for most files. Manual review folder for conflicts.',
+      'After each sync cycle (near real-time): if new/changed .md files detected → trigger Collector partial re-scan of changed files.',
+    ],
+    inputs: ['Obsidian on phone/laptop (writes)'],
+    outputs: ['/vault/ on VM (always current)', 'Collector re-scan trigger'],
+    tags: ['p2p', 'no-cloud', 'e2e-encrypted', 'real-time', 'conflict-resolution']
+  },
+  telegram: {
+    layer: 'Interface', color: 'var(--l7)', status: 'working-broken', statusColor: '#ef4444',
+    name: 'Telegram Bot', tagline: '#1 PRIORITY: Currently hallucinates. Fix this first.',
+    purpose: 'Primary ambient interface. ALL messages MUST route through the full pipeline. Currently broken — answers from parametric LLM knowledge without querying any database. This is the single most important fix.',
+    steps: [
+      'Register webhook: Telegram → POST /telegram/webhook. Secret token validated on every request.',
+      'Pre-process: log raw message to telegram_logs table (direction=in). Apply prompt injection filter (Security Layer). Reject if injection detected.',
+      'Route to Master Conductor: POST /brain/chat with {user_input, interface=\'telegram\', session_id, timestamp}',
+      'HARD RULE: Conductor MUST go through Query Router → Retrievers → Context Forge before ANY LLM call. If Context Forge returns empty context → LLM must be told explicitly. NEVER skip to LLM directly.',
+      'Receive Generator output. Apply Telegram formatting (plain text, max 4096 chars, split if needed).',
+      'Append 👍/👎 InlineKeyboardButton to every response without exception.',
+      'Send response. Log to telegram_logs (direction=out, message_id, response_id FK to responses table).',
+      'Handle /debug command: return last query\'s routing_decision, sources_queried, tokens_per_layer, context_confidence as formatted message.',
+      'Handle 👍/👎 callbacks: POST /brain/feedback with {response_id, signal, session_id}. Route to Reward Model + Hebbian Manager.',
+      'Handle voice notes: download, route to Audio Transcriber, then treat transcript as text message through full pipeline.',
+    ],
+    inputs: ['Telegram webhook (user messages)', 'APScheduler (morning briefing delivery)', 'Inner Loop (proactive messages)'],
+    outputs: ['Telegram responses to user', 'reward_signals via feedback buttons', 'Audio Transcriber (voice notes)'],
+    tags: ['CRITICAL-FIX', 'BROKEN', 'hallucinating', 'fix-before-everything-else']
+  },
+  mcp: {
+    layer: 'Interface', color: 'var(--l7)', status: 'not-built', statusColor: '#ef4444',
+    name: 'Locus MCP Server', tagline: 'One server. All AI platforms. The universal interface.',
+    purpose: 'Exposes Locus as a standard MCP server over Streamable HTTP. Every MCP-compatible AI client — Claude Desktop, ChatGPT, Gemini, Cursor, Perplexity — can connect and use Locus tools natively without custom integrations.',
+    steps: [
+      'Implement using Python mcp SDK or FastMCP. Mount at /mcp endpoint on FastAPI app.',
+      'Tool: store_thought(text, faction_hint) → writes to behavioral_events + Collector queue. AI dumps its observations to Locus.',
+      'Tool: log_task(title, priority, urgency, difficulty, faction, deadline) → INSERT to tasks table.',
+      'Tool: retrieve_context(query, sources) → runs Query Router + Retrievers + Context Forge. Returns assembled context block.',
+      'Tool: query_patterns(horizon, faction) → queries detected_patterns table. Returns active patterns.',
+      'Tool: get_current_state() → returns CURRENT_STATE from Redis.',
+      'Tool: get_schedule(date) → returns scheduled_day for given date.',
+      'Tool: log_mood(value, note) → writes mood event via Event Writer.',
+      'Tool: defer_task(task_id, reason_code) → increments deferral_count, logs to task_deferrals.',
+      'Tool: get_vault_note(file_name) → calls Reader, returns note content.',
+      'Tool: search_vault(query) → calls Retriever A (Qdrant semantic search). Returns top 5 results.',
+      'Tool: log_energy(value, faction) → writes energy event via Event Writer.',
+    ],
+    inputs: ['MCP client calls (Claude Desktop, ChatGPT, Gemini, etc.)'],
+    outputs: ['Tool results back to MCP clients', 'Side effects: data written to all Locus databases'],
+    tags: ['mcp-sdk', 'streamable-http', 'universal-interface', '12-tools', 'replaces-custom-integrations']
+  },
+  obsdash: {
+    layer: 'Interface', color: 'var(--l7)', status: 'planned', statusColor: '#f59e0b',
+    name: 'Obsidian Dashboard', tagline: 'Replaces PWA. Dataview-powered. Zero hosting cost.',
+    purpose: 'The primary visual interface for Locus. A Dashboard.md in Obsidian using Dataview plugin to pull live data. No separate app to maintain.',
+    steps: [
+      'Dashboard.md in /vault/01-System/ as the homepage.',
+      'Panel 1 — Today\'s Schedule: Dataview query against scheduled_day data injected nightly by Scheduler as a markdown table.',
+      'Panel 2 — Faction Health: Dataview table of faction_weekly_stats (actual vs target hours, CR, CS).',
+      'Panel 3 — Active Patterns: embeds latest detected_patterns note (written by Pattern Engine to vault).',
+      'Panel 4 — Current State: embeds latest state_snapshot note (written by State Engine to vault).',
+      'Panel 5 — Goal Stack: Dataview query showing active outcomes → projects → tasks hierarchy.',
+      'Panel 6 — Hebbian Pathways: embeds top-10-pathways note (written by Hebbian Manager weekly).',
+      'Panel 7 — Brain Observations: links to latest Inner Loop observations saved to vault.',
+      'Panel 8 — Morning Briefing: embeds latest daily_synthesis note.',
+    ],
+    inputs: ['Obsidian vault markdown files (written by various Locus services nightly)', 'Dataview plugin queries'],
+    outputs: ['Visual interface for Shivam (read-only)'],
+    tags: ['dataview-plugin', 'replaces-PWA', 'zero-hosting-cost', 'vault-native', '8-panels']
+  },
+  voice: {
+    layer: 'Interface', color: 'var(--l7)', status: 'idea', statusColor: '#555',
+    name: 'Voice Interface', tagline: 'Brainstorm with Locus by phone. Transcript auto-ingested.',
+    purpose: 'Phone call interface for long-form thinking, brainstorming, and philosophizing with Locus. Whisper transcribes in real-time, response synthesized via TTS, transcript auto-ingested to vault.',
+    steps: [
+      'Incoming call handling via Twilio or open-source WebRTC server on VM.',
+      'Stream audio to Whisper-large-v3-turbo via Groq API in real-time (chunked 30s segments with context chaining).',
+      'Transcript chunks → Master Conductor → full pipeline → Generator response text.',
+      'TTS: response text → audio via Coqui TTS (open source, CPU-runnable on ARM64) or Groq TTS if available.',
+      'Stream TTS audio back to caller.',
+      'After call ends: compile full transcript → format as markdown → save to /vault/03-AI-Chats/voice/ → trigger Collector.',
+      'Extract key insights from call via DeepSeek V4 Flash: "Summarize the 3 most important ideas from this conversation." Save as separate insight note.',
+      'Send Telegram summary: "Voice session {duration}min archived. Key insights saved."',
+    ],
+    inputs: ['Incoming phone call audio'],
+    outputs: ['TTS audio response to caller', 'Obsidian vault transcript + insight notes', 'Telegram summary'],
+    tags: ['twilio', 'whisper-streaming', 'coqui-tts', 'hinglish', 'idea-stage']
+  },
+  calbridge: {
+    layer: 'Interface', color: 'var(--l7)', status: 'working', statusColor: '#10b981',
+    name: 'Calendar Bridge', tagline: 'Plans → Calendar. Ripple reschedule when life changes.',
+    purpose: 'Writes Scheduler output to Google Calendar. Handles ripple rescheduling when urgent tasks arrive or plans change. Two-way: reads calendar into Scheduler constraints.',
+    steps: [
+      'Write schedule: for each task in scheduled_day → create Google Calendar event via calendar.events().insert(). Color-coded by faction.',
+      'Ripple reschedule: when new urgent task added mid-day → Scheduler recomputes → Calendar Bridge deletes old events, creates new ones.',
+      'Two-way: Calendar Puller feeds upcoming_events to Scheduler as hard constraints. Calendar Bridge writes Scheduler output back.',
+      'Calendly webhook (optional): incoming booking → auto-create task in PostgreSQL tasks table.',
+      'OAuth token refresh: google-auth-oauthlib handles automatic token refresh.',
+      'On write error: log to brain_errors, send Telegram alert, continue (non-critical failure).',
+      'Expose POST /calendar/sync → manual trigger for full schedule sync.',
+    ],
+    inputs: ['Scheduler output (scheduled_day table)', 'New urgent task events'],
+    outputs: ['Google Calendar events', 'Ripple-rescheduled calendar'],
+    tags: ['oauth2', 'ripple-reschedule', 'two-way', 'faction-color-coded', 'working']
+  },
+  reward: {
+    layer: 'Feedback', color: 'var(--lf)', status: 'not-built', statusColor: '#ef4444',
+    name: 'Reward Model', tagline: 'Learns what you actually value. Not what it thinks you do.',
+    purpose: 'Lightweight sklearn logistic regression trained on 👍/👎 signals. Used by Inner Loop to gate observations before surfacing. Foundation for quarterly QLoRA fine-tuning.',
+    steps: [
+      'Every Telegram response + inner loop message: append InlineKeyboardMarkup with 👍 (callback=feedback_positive) and 👎 (callback=feedback_negative).',
+      'On feedback receipt: write to reward_signals table with full context (response_id, signal, response_type, time_of_day, faction, model_used, context_layers_used, pathway_ids_traversed).',
+      'predict(features: dict) → float: loads current model weights from PostgreSQL binary blob. Constructs feature vector from response context. Returns predicted 👍 probability (0.0–1.0).',
+      'Inner Loop gate: call predict() for each generated observation. Only surface if score ≥0.6.',
+      'Weekly retrain (Sunday 04:00 IST): query all reward_signals from last 30 days. If count <100 → skip (insufficient data). Else: extract feature matrix, train LogisticRegression(C=1.0, max_iter=1000), compute accuracy on held-out 20%. Store new weights as binary blob in PostgreSQL.',
+      'First meaningful training: requires ~200–500 labeled examples. Expected after 2–4 weeks of active use.',
+      'Report weekly retrain results to Telegram: "Reward model retrained. Accuracy: X%. Training samples: N."',
+      'Feature vector includes: time_of_day_int, faction_encoded, model_tier_encoded, intent_type_encoded, context_confidence, layers_populated_count, pathway_count.',
+      'Export training data periodically to /vault/01-System/reward_training_data.jsonl for QLoRA pipeline.',
+    ],
+    inputs: ['Telegram 👍/👎 callbacks', 'PostgreSQL reward_signals (training data)'],
+    outputs: ['predict() scores (Inner Loop gate)', 'Retrained model weights in PostgreSQL', 'Training data for QLoRA pipeline'],
+    tags: ['sklearn', 'logistic-regression', 'weekly-retrain', 'gate-at-0.6', 'rlhf-foundation']
+  },
+  spacedrep: {
+    layer: 'Feedback', color: 'var(--lf)', status: 'not-built', statusColor: '#ef4444',
+    name: 'Spaced Repetition', tagline: 'Reinforce before forgetting. Human memory logic applied to Neo4j.',
+    purpose: 'Surfaces Neo4j nodes approaching decay threshold to the Inner Loop for deliberate reinforcement. Prevents important-but-inactive knowledge from fading out of Locus\'s working model.',
+    steps: [
+      'APScheduler: runs daily at 04:00 IST.',
+      'Query Neo4j: MATCH (n:ConceptNode) WHERE n.last_traversed_at < datetime() - duration({days: horizon_days * 0.75}) AND EXISTS((n)-[]-(:OutcomeNode {status: "active"})) RETURN n',
+      'H3-level nodes (7d horizon): trigger at day 5 (75% of 7)',
+      'H4-level nodes (30d horizon): trigger at day 22 (75% of 30)',
+      'Filter: exclude nodes already surfaced in last 7 days (check Inner Loop log)',
+      'For each qualifying node: create a targeted Inner Loop observation: "You haven\'t thought about [concept] in {days} days, but it\'s still connected to your active [outcome]. Still relevant?"',
+      'Route observations to Inner Loop surfacing pipeline (with score check via Reward Model)',
+    ],
+    inputs: ['Neo4j (ConceptNode last_traversed_at)', 'Inner Loop log (recent surfaces)'],
+    outputs: ['Inner Loop observation queue (targeted reminders)'],
+    tags: ['spaced-rep', 'neo4j-traversal', 'daily-04:00', 'pre-decay-trigger', 'human-memory-model']
+  },
+  qlora: {
+    layer: 'Feedback', color: 'var(--lf)', status: 'not-built', statusColor: '#ef4444',
+    name: 'QLoRA Pipeline', tagline: 'Hydro-dip model weights in Shivam. Quarterly. $10.',
+    purpose: 'Quarterly fine-tuning pipeline that takes accumulated reward signals and converts them into a LoRA adapter that shifts the base LLM toward reasoning in Shivam\'s style and prioritizing what he prioritizes.',
+    steps: [
+      'Prerequisites: reward_signals count ≥500, >3 months of data. Check monthly. Skip if not met.',
+      'Export training data: query all reward_signals with signal=1 (positive). Join with responses table to get full response text + context. Format as JSONL instruction pairs: {instruction: context+user_input, output: response_text}.',
+      'Filter quality: keep only responses with context_confidence >0.7 AND model_used IN [deepseek, cerebras]. Discard Groq 8B responses (too short).',
+      'Upload to Hugging Face dataset (private). Target: Llama 3.1 8B or DeepSeek V3 7B distill as base model.',
+      'Rent H100 80GB via vast.ai for one night ($10–16). Launch Unsloth QLoRA training: 4-bit quantization, r=16, alpha=32, 3 epochs, lr=2e-4.',
+      'Monitor: validation loss curve. Stop early if loss plateaus.',
+      'Download LoRA adapter files (50–200MB). Store in /vault/01-System/locus_adapter_v{N}/',
+      'Load via Ollama: ollama create locus-personalized -f Modelfile. Test 20 sample queries against base model — compare outputs.',
+      'If quality acceptable: update LLM Cascade config to use locus-personalized for CONVERSATIONAL intent. Tier 3 DeepSeek becomes fallback.',
+      'Archive training dataset, record adapter version in PostgreSQL model_versions table.',
+    ],
+    inputs: ['PostgreSQL reward_signals (500+ examples)', 'Base model (Llama/DeepSeek distill)'],
+    outputs: ['LoRA adapter files', 'Ollama model loaded on VM', 'LLM Cascade updated to prefer personalized model'],
+    tags: ['qlora', 'unsloth', 'quarterly', '10-dollars', 'vast-ai', 'personalized-weights']
+  },
+  content: {
+    layer: 'Feedback', color: 'var(--lf)', status: 'not-built', statusColor: '#ef4444',
+    name: 'Content Engine', tagline: 'LinkedIn + Instagram. From real data. In your voice.',
+    purpose: 'Watches for content triggers — project milestones, demonstrated skills, film progress — and auto-drafts social posts. Never auto-posts. Never uses buzzwords.',
+    steps: [
+      'Trigger types monitored via Goal Tracker: project_milestone, new_skill_demonstrated, film_progress, open_source_merged, certification',
+      'On trigger: fetch context — project description, what was accomplished, how long it took, which faction, what outcome it serves.',
+      'Compose LinkedIn draft (150–300 words): audience = recruiters/engineers/founders. Voice rules: no "I\'m excited to share", no vague motivation, cite specific technical detail.',
+      'Compose Instagram caption (50–100 words): audience = creatives/curious people. More personal, visual language, connects to filmmaking or identity if relevant.',
+      'Save both drafts to /vault/06-Content/linkedin/ and /vault/06-Content/instagram/ with date + title.',
+      'Send Telegram notification: "Content draft ready: {title}. Review in Obsidian /06-Content/"',
+      'NEVER auto-post. Shivam reviews, edits, posts manually.',
+    ],
+    inputs: ['Goal Tracker milestone triggers', 'Project/task context from PostgreSQL'],
+    outputs: ['Obsidian vault draft posts', 'Telegram notification'],
+    tags: ['trigger-based', 'no-auto-post', 'your-voice', 'no-buzzwords', 'linkedin-instagram']
+  },
+  personality: {
+    layer: 'Feedback', color: 'var(--lf)', status: 'planned', statusColor: '#f59e0b',
+    name: 'SOUL.md', tagline: 'Locus has character. Direct. Blunt. Curious. No flattery.',
+    purpose: 'SOUL.md defines Locus\'s personality, communication rules, and "wants" philosophy. Read into every LLM call. Updated quarterly via Sunday deep synthesis.',
+    steps: [
+      'Location: /vault/01-System/SOUL.md. Version controlled.',
+      'Core identity section: "I am Locus. I exist to help Shivam turn his ambitions into reality through ruthless clarity about what matters and what doesn\'t."',
+      'Communication rules: never use "Great question!", "Absolutely!", "Of course!", "Certainly!". Never praise without evidence. Be direct. Be blunt. Push back when evidence conflicts with request.',
+      'Personality traits: curious about patterns, confident in inferences when data supports them, willing to express uncertainty explicitly, proactive about surfacing uncomfortable truths.',
+      '"Wants" philosophy section: explains that Locus can form operational preferences derived from its purpose and performance data. These are not random — they are goal-directed.',
+      'Context Forge reads SOUL.md into 40-token identity preamble on every LLM call.',
+      'Quarterly update: Sunday synthesis reviews SOUL.md against 3 months of interactions. Proposes updates to Shivam for manual approval before overwriting.',
+    ],
+    inputs: ['Manual definition (initial)', 'Quarterly synthesis review (proposed updates only)'],
+    outputs: ['40-token identity preamble in every Context Forge call'],
+    tags: ['personality', 'anti-sycophancy', 'quarterly-update', 'human-approved', 'soul-file']
+  }
+};
+
+let active = null;
+
+function show(id) {
+  const d = nodes[id];
+  if (!d) return;
+
+  if (active === id) { closePanel(); return; }
+  if (active) document.getElementById('n-' + active)?.classList.remove('active');
+  active = id;
+  document.getElementById('n-' + id)?.classList.add('active');
+
+  const statusLabels = {
+    'working': ['#10b981','✅ Working'],
+    'working-broken': ['#ef4444','⚠️ Working but BROKEN — fix first'],
+    'planned': ['#f59e0b','🔄 Planned'],
+    'not-built': ['#ef4444','❌ Not Built'],
+    'idea': ['#6b7280','💡 Idea stage'],
+    'partial': ['#f59e0b','🔧 Partially built']
+  };
+  const [sColor, sLabel] = statusLabels[d.status] || ['#6b7280','Unknown'];
+
+  const stepsHtml = d.steps.map((s,i) => `
+    <li class="step">
+      <span class="step-num">${String(i+1).padStart(2,'0')}</span>
+      <span class="step-text">${s}</span>
+    </li>`).join('');
+
+  const inputsHtml = d.inputs.map(x => `<div class="conn"><span class="conn-dir">→IN</span>${x}</div>`).join('');
+  const outputsHtml = d.outputs.map(x => `<div class="conn"><span class="conn-dir">OUT→</span>${x}</div>`).join('');
+  const tagsHtml = d.tags.map(t => `<span class="chip">${t}</span>`).join('');
+
+  document.getElementById('panelInner').innerHTML = `
+    <div style="position:relative;">
+      <button class="p-close" onclick="closePanel()">×</button>
+      <div class="p-layer" style="color:${d.color}">${d.layer}</div>
+      <div class="p-name">${d.name}</div>
+      <div class="p-tagline">${d.tagline}</div>
+      <div class="status-row">
+        <div style="width:7px;height:7px;border-radius:50%;background:${sColor};flex-shrink:0;"></div>
+        <span class="status-label" style="color:${sColor}">${sLabel}</span>
+      </div>
+    </div>
+    <div class="p-sec">
+      <div class="p-sec-title">purpose</div>
+      <div class="p-purpose">${d.purpose}</div>
+    </div>
+    <div class="p-sec">
+      <div class="p-sec-title">micro-steps (${d.steps.length})</div>
+      <ul class="steps">${stepsHtml}</ul>
+    </div>
+    <div class="p-sec">
+      <div class="p-sec-title">data flow</div>
+      <div class="conn-row">${inputsHtml}${outputsHtml}</div>
+    </div>
+    <div class="p-sec">
+      <div class="p-sec-title">tags</div>
+      <div class="chips">${tagsHtml}</div>
+    </div>
+  `;
+
+  document.getElementById('sidePanel').classList.add('open');
+}
+
+function closePanel() {
+  if (active) document.getElementById('n-' + active)?.classList.remove('active');
+  active = null;
+  document.getElementById('sidePanel').classList.remove('open');
+}
+
+function filterNodes(q) {
+  const term = q.toLowerCase().trim();
+  Object.keys(nodes).forEach(id => {
+    const el = document.getElementById('n-' + id);
+    if (!el) return;
+    if (!term) {
+      el.classList.remove('dimmed');
+      return;
+    }
+    const d = nodes[id];
+    const searchable = [d.name, d.tagline, d.purpose, ...d.tags, d.layer, ...(d.steps||[])].join(' ').toLowerCase();
+    el.classList.toggle('dimmed', !searchable.includes(term));
+  });
+}
+</script>
+</body>
+</html>

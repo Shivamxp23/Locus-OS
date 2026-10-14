@@ -1,0 +1,96 @@
+My Initial idea:
+Designing the system:
+The bigger I give a goal to ChatGPT the higher the chances that it will skip the small minor steps. That is why it is imperitive that while crafting a system for myself I make sure that all possible aspects are considered and thought of and the system builds from the bottom to top approach. Meaning if I wanted to make an app for example; I would first design the system architecture, cybersecurity centric design, have proper coding style thesaurus or constitution. All the little things considered and researched first. This will always be the first, unrushed part of ANY system. Dynamicity, scalability, reliability, integrity, security and research. 
+
+Remember, mechanisms work when emotions don't. The system needs to be designed in a very thoughtful manner. 
+
+Start by writing all your goals down. Then we create systems to make EACH A REALITY and a system to ensure what we should do when for example:
+Coding: 
+	- Coding style constitution system (Best coding practises)
+	- What project to work on when and how system (Depending on my current level of expertise and time available etc … multiple parameters)
+Filming:
+	- AI films system (Workflow etc..)
+	- How to carve out time to film system (for the entire pre-prod to post-prod process)
+Business:
+	- What meetings to go to system
+	- How to be better system
+
+And then one system to determine what to work on depending on:
+- Current tasks (studies, exam, events …)
+- Mood
+- Priority
+- Interest
+- Time of day (Day, Night, Evening, Lazy Afternoon)
+- Goals achieved/To achieve
+- Impulse/Planned
+- Single task/Multi-tasking
+This will help us set in motion what we must do.
+For how to achieve that specific task, we will either have an agentic AI or a system with similar flags that goes from bottom to top. Doing the smallest most meaningful, high priority and foundational task under thistask and then building on top of it. 
+
+Eg: Task: Cook Fried Rice:
+1. Determine all tasks:
+	- Boil Rice
+	- Cut Onions/Panner
+	- Defreeze Cheese
+2. Sort on basis of time taken and priority
+3. Figure out things that can be done parallelly
+4. Execute tasks
+
+The parent system will determine if we need to/can do another task alongside this or not based on factors like time remaining, tasks/goals to complete, priority of tasks, time sensitivity, mood, energy level and time of day.
+
+So everything will be fully deterministic and plug and play designed for me. 
+
+The system will be bottom-to-top approach and will be fully deterministic. All tasks will be fulfilled and achieved for the day. The system will be designed in such a way that goals are achieved in a guilt-free, regret-free way and hopefully in a way that tasks don't meaninglessly get pushed forward. 
+
+Quantize all big tasks into small daily tasks such that if it is easy to do and I can achieve my week's goals. But this will have to be dynamic because I can gain/loose tasks for a week and still achieve my set personal goal. Make factions like: { Personal (Reading, Branding), Professional (Coding, Business), Creative (AI Films, Sound Skits), Studies}
+
+These will again depend on my goals for the year.
+
+EVERYTHING WILL STEM FROM:
+1. Goals for what I wanna do
+2. Why do I wanna do it. Truly.
+
+Goals (Time sensitivity + priority based) + Purpose (Realistic + Quantizable)
+This should help me get in touch with myself, introspect and explore myself in a way that yields results and puts pen to paper and thoughts/ideas to practise/reality.
+
+THAT IS WHAT I WANT TO ACHIEVE. WITH THIS SYSTEM. IDEAS --> REALITY through small regular daily executable actions.
+
+Learn ML gets broken down into multiple achieveable tasks over days and eventually we learn ML in a way that I can share multiple projects, my LinkedIn gets stronger and I build my brand as well.
+
+A system that quantizes big tasks and achieves all goals through intersecting daily tasks that achieve multiple things by doing one. 
+
+Eg: Making an ADK agent on my own:
+- This helps me learn coding
+- Sharable on LinkedIn
+- Also getting the agent made
+3 birds, 1 stone. Peak efficiency.
+
+Remember: Whenever you get scope-paralysis from the various possibilities of tools or connections just go back to " What do I want to do?" & "What do I value while comparing A & B?" this will help ground you.
+
+What do I wish to achieve and what is my goal? Does this directly help it right now? If yes, implement; else put/stash it in the vault of usable tools (Make this, sounds useful. Cant paste everything into WhatsApp. Need a better system for that too)
+---
+
+Graph missed tasks, energy chart figure out at which points in the graph I get most things done. 
+Initially I was thinking of a mood/energy vs priority assigned graph.
+
+But if we create this graph then we can make it multi-dimensional and log done tasks, done earlier or later, mood, time of day, phone/laptop etc... to graph habits for peak efficiency. Need an algorithm to then re-assign calendar tasks based on this graph. Just an idea. 
+---
+
+The entire system is also responsible for breaking down big tasks into small manageable chunks on the basis of:
+- Workload
+- Well being
+- Lag/momentum/deadline/priority and urgency
+
+THAT is what the system is primarily for:
+
+(1) Break down tasks
+(2) Effectively distribute them around the calendar in best possible most realistic way. Keep it conversational.
+
+The system should also account for my sporadic, erratic and impulsive behaviour; it should help mitigate it psychologically to the best of it's abilities but life is unexpectable and emergencies may arise/plans maybe made. 
+
+Make it into an app ALTHOUGH it is a mappable system with scoring and tracking.
+
+Use test cases to see how it works.
+
+Logging stuff is a BIG part of what the app/operating system is.
+---
