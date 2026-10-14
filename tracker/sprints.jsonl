@@ -10,3 +10,4 @@
 {"event":"planned","sprint":"S3","start":"2026-10-16","end":"2026-10-29","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":4,"points":2,"stories":["US-06"],"date":"2026-10-16"}
 {"event":"accepted","story":"US-06","feature":"F-0125","level":4,"note":"Ran off, swap, health tests: all passed. Set dummy feature enabled key to false in config and called route: returned 503 and named locus.test.dummy.enabled.","date":"2026-10-15","commit":"ee1f9e70841f"}
 {"event":"closed","sprint":"S3","date":"2026-10-29","planned_points":2,"velocity":2,"done":["US-06"],"not_done":{}}
+{"event":"planned","sprint":"S4","start":"2026-10-30","end":"2026-11-12","goal":"A research job runs on the VM by itself and the owner hears about it on Telegram.","capacity":3,"points":3,"stories":["US-07"],"date":"2026-10-30"}
