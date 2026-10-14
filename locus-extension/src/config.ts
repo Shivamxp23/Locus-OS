@@ -81,3 +81,7 @@ export function is_enabled(dotPath: string, customPath?: string): boolean {
   }
   return false;
 }
+
+export const getConfig = get;
+export const isEnabled = is_enabled;
+
