@@ -1,31 +1,31 @@
 {
-  "generated_at": "2026-10-14T20:35:17+0530",
-  "commit": "e54c5e960764dba8ed8f84ed16a0dee43acd4c5c",
-  "dirty": false,
+  "generated_at": "2026-10-14T21:01:47+0530",
+  "commit": "a99b8d385189a68028f0a1bf29727b58d12361f1",
+  "dirty": true,
   "static": false,
   "guard": {
     "verdict": "FAIL",
     "counts": {
-      "FAIL": 5,
+      "FAIL": 4,
       "WARN": 12,
       "INFO": 0
     }
   },
   "summary": {
     "features": 125,
-    "verified_mean_pct": 10.7,
+    "verified_mean_pct": 11.2,
     "claimed_mean_pct": 71.4,
     "claimed_rows": 86,
     "by_label": {
       "FILES_PRESENT": 5,
       "INHERITED_OK": 12,
-      "NO_EVIDENCE": 107,
-      "UNIT_VERIFIED": 1
+      "NO_EVIDENCE": 106,
+      "UNIT_VERIFIED": 2
     },
     "integrated_or_better": 12,
     "proven": 0,
     "overclaims": 72,
-    "no_evidence": 107,
+    "no_evidence": 106,
     "spec_sections_total": 135,
     "spec_changed": 0
   },
@@ -1063,9 +1063,9 @@
         "OVERCLAIM"
       ],
       "reasons": [
-        "declared files missing: sidecar/cron_runner.py, sidecar/scheduler/"
+        "declared files missing: sidecar/scheduler/"
       ],
-      "next": "Files claimed but absent: sidecar/cron_runner.py, sidecar/scheduler/. Create them or correct the path.",
+      "next": "Files claimed but absent: sidecar/scheduler/. Create them or correct the path.",
       "checks": {}
     },
     "F-0059": {
@@ -1572,10 +1572,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "......                                                                   [100%]\n6 passed in 0.08s\n",
+            "tail": "......                                                                   [100%]\n6 passed in 0.03s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 1.6
           }
         ],
         "guard": [
@@ -1655,19 +1655,48 @@
       "id": "F-0087",
       "title": "ARCH-6 Pi bridge (sidecar -> Pi CLI, used by cron + Telegram + conductor)",
       "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 3,
+      "label": "UNIT_VERIFIED",
+      "pct": 65,
       "claimed_pct": null,
       "gap": null,
-      "flags": [
-        "CLAIMED_FILES_MISSING"
-      ],
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/pi_bridge.py, sidecar/cron_runner.py"
+        "no integration test declared"
       ],
-      "next": "Files claimed but absent: sidecar/pi_bridge.py, sidecar/cron_runner.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Add evidence.integration: a DIFFERENT test that crosses a boundary (sidecar<->Pi, extension<->Pi, service<->service).",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "python -m pytest tests/test_pi_bridge.py -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "......                                                                   [100%]\n6 passed in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 1.6
+          }
+        ],
+        "guard": [
+          {
+            "check": "must-define",
+            "ok": true,
+            "why": ""
+          },
+          {
+            "check": "pi-bridge-flags",
+            "ok": true,
+            "why": ""
+          }
+        ],
+        "integration": []
+      }
     },
     "F-0088": {
       "id": "F-0088",

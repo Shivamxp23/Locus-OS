@@ -3069,7 +3069,8 @@ features:
     guard:
     - must-define
     - pi-bridge-flags
-    unit: []
+    unit:
+    - python -m pytest tests/test_pi_bridge.py -q
     integration: []
   depends_on: []
 - id: F-0088
