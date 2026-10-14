@@ -155,7 +155,7 @@ This session executed a comprehensive architectural realignment, technical speci
       - "5984:5984"
     environment:
       - COUCHDB_USER=${COUCHDB_USER:-admin}
-      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD:-locus_admin_secret}
+      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD:?set it in .locus/.env}
     volumes:
       - ./data/couchdb:/opt/couchdb/data
       - ./data/couchdb/local.ini:/opt/couchdb/etc/local.d/local.ini

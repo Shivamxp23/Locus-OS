@@ -3037,9 +3037,20 @@ features:
   evidence:
     files:
     - docker-compose.yml
-    symbols: []
+    - data/couchdb/local.ini
+    symbols:
+    - file: docker-compose.yml
+      contains:
+      - locus-couchdb
+      - COUCHDB_PASSWORD
+      - 127.0.0.1:5984:5984
+    - file: data/couchdb/local.ini
+      contains:
+      - enable_cors
+      - app://obsidian.md
     guard: []
-    unit: []
+    unit:
+    - python -m pytest tests/test_docker_compose_and_couchdb.py -q
     integration: []
   depends_on: []
 - id: F-0087

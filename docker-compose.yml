@@ -1,0 +1,92 @@
+services:
+  locus-couchdb:
+    image: couchdb:3.3
+    container_name: locus-couchdb
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5984:5984"
+    environment:
+      - COUCHDB_USER=${COUCHDB_USER:-admin}
+      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD:?set it in .locus/.env}
+    volumes:
+      - ./data/couchdb:/opt/couchdb/data
+      - ./data/couchdb/local.ini:/opt/couchdb/etc/local.d/local.ini
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5984/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  locus-sidecar:
+    build:
+      context: .
+      dockerfile: sidecar/Dockerfile
+    container_name: locus-sidecar
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8420:8420"
+    environment:
+      - NEO4J_URI=bolt://locus-neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD:-locuspassword}
+      - REDIS_URL=redis://locus-redis:6379/0
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-locus}:${POSTGRES_PASSWORD:-locuspassword}@locus-postgres:5432/${POSTGRES_DB:-locus_db}
+      - COUCHDB_URL=http://${COUCHDB_USER:-admin}:${COUCHDB_PASSWORD:?set it in .locus/.env}@locus-couchdb:5984
+    volumes:
+      - ./vault:/root/.locus/vault
+      - ./data:/root/.locus
+    depends_on:
+      - locus-neo4j
+      - locus-postgres
+      - locus-redis
+      - locus-couchdb
+
+  locus-neo4j:
+    image: neo4j:5.26-community
+    container_name: locus-neo4j
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:7474:7474"
+      - "127.0.0.1:7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD:-locuspassword}
+      - NEO4J_PLUGINS=["apoc"]
+    volumes:
+      - neo4j_data:/data
+
+  locus-postgres:
+    image: pgvector/pgvector:pg16
+    container_name: locus-postgres
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-locus}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-locuspassword}
+      - POSTGRES_DB=${POSTGRES_DB:-locus_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U locus -d locus_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  locus-redis:
+    image: redis:7.2-alpine
+    container_name: locus-redis
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  neo4j_data:
+  postgres_data:
+  redis_data:
