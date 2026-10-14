@@ -3,3 +3,4 @@
 {"event":"accepted","story":"US-02","feature":"F-0087","level":3,"note":"Verified pi_bridge mandatory flags and cron runner delegation","date":"2026-10-14","commit":"6972cb2f29d9"}
 {"event":"accepted","story":"US-03","feature":"F-0086","level":3,"note":"Verified CouchDB env requirement and loopback 127.0.0.1 port bindings","date":"2026-10-14","commit":"6972cb2f29d9"}
 {"event":"closed","sprint":"S1","date":"2026-10-14","planned_points":4,"velocity":4,"done":["US-01","US-02","US-03"],"not_done":{}}
+{"event":"planned","sprint":"S2","start":"2026-10-15","end":"2026-10-28","goal":"One layout, no known security hole, the guard shows 0 FAIL and the hooks are on.","capacity":4,"points":4,"stories":["US-04","US-05"],"date":"2026-10-15"}
