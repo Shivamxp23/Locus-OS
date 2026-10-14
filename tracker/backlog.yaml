@@ -15,9 +15,9 @@
 schema: 1
 config:
   main_branch: main
-  first_sprint_start: 2026-10-16   # a Friday. Sprints are 14 days: planning in the first slot, refinement in the second-to-last, review + retro in the last.
+  first_sprint_start: 2026-10-14   # started today. Sprints are 14 days.
   sprint_days: 14
-  slot_days: [Mon, Tue, Fri]       # your Locus evenings (college days)
+  slot_days: [Mon, Tue, Wed, Thu, Fri]       # active work days
   slot_time: "19:30"
   capacity_points: 4               # used until 3 sprints have closed; then the average of the last 3 velocities (rounded down, 2 to 8)
   max_story_points: 3
