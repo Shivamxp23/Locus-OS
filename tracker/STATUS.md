@@ -1,10 +1,13 @@
 # Tracker status (computed, not written)
 
-- commit `34be4e617d` - 2026-10-15T23:51:09+0530 - with test runs
-- guard: PASS {'FAIL': 0, 'WARN': 10, 'INFO': 0}
-- features: 125 | verified average **19.6%** | old claimed average 71.4% over 86 rows
-- integrated or better: 21 | proven: 1 | overclaims (claimed >= verified + 25): 63 | no evidence: 89
-- by level: {'FILES_PRESENT': 10, 'INHERITED_OK': 12, 'INTEGRATED': 8, 'NO_EVIDENCE': 89, 'PROVEN': 1, 'UNIT_VERIFIED': 5}
+- commit `07c38be38a` (dirty working tree) - 2026-10-16T00:20:47+0530 - with test runs
+- guard: PASS {'FAIL': 0, 'WARN': 11, 'INFO': 0}
+- features: 125 | verified average **22.9%** | old claimed average 71.4% over 86 rows
+- integrated or better: 26 | proven: 0 | overclaims (claimed >= verified + 25): 63 | no evidence: 84
+- by level: {'FILES_PRESENT': 10, 'INHERITED_OK': 12, 'INTEGRATED': 14, 'NO_EVIDENCE': 84, 'UNIT_VERIFIED': 5}
+
+## REGRESSIONS since last run
+- F-0125 Modularity foundation: provider registry: 100% -> 85%
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -124,11 +127,11 @@
 | F-0089 | Memory Sync (Multi-Source Ingestion Pipeline | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0090 | Memory Queue (Async Job Pipeline) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0091 | Memory Diff (Snapshot-Based Change Tracking) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
-| F-0092 | Query Router / Intent Classifier (Stage 2) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
-| F-0093 | State Engine (Stage 3) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
-| F-0094 | Context Forge (Stage 6) — The 6-Layer Assemb | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
-| F-0095 | Anti-Hallucination Guard (Stage 10) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
-| F-0096 | Intelligent Model Routing + Quality-Based Fa | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0092 | Query Router / Intent Classifier (Stage 2) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0093 | State Engine (Stage 3) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0094 | Context Forge (Stage 6) — The 6-Layer Assemb | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0095 | Anti-Hallucination Guard (Stage 10) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0096 | Intelligent Model Routing + Quality-Based Fa | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0097 | Streaming (SSE) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0098 | Image Generation | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0099 | Git Tools | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
@@ -157,4 +160,4 @@
 | F-0122 | LOCUS_SHORTHAND 4× Text Compressor | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0123 | 3-Level Tag Hierarchy & Semantic Indexing | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0124 | Auxiliary LLM Client | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
-| F-0125 | Modularity foundation: provider registry + c | - | 100% | PROVEN |  |  |
+| F-0125 | Modularity foundation: provider registry + c | - | 85% | INTEGRATED | PROOF_STALE | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |

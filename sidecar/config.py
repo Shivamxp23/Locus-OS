@@ -48,6 +48,15 @@ def _load_config_data(custom_path: Optional[Path] = None) -> dict[str, Any]:
     if not cfg_file.is_file():
         return {}
 
+    # If a custom path is specified (e.g. in test isolation), read directly
+    if custom_path is not None:
+        try:
+            raw = cfg_file.read_text(encoding="utf-8")
+            loaded = yaml.safe_load(raw)
+            return loaded if isinstance(loaded, dict) else {}
+        except Exception:
+            return {}
+
     try:
         stat = cfg_file.stat()
         if stat.st_mtime != _cached_mtime or _cached_data is None:

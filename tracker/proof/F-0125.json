@@ -1,13 +1,12 @@
 {
   "id": "F-0125",
-  "commit": "ee1f9e70841f1c6e33a8197580d1d6fe82095846",
+  "commit": "07c38be38a4f0d7f58bb2fb6d0752bd45e24a39a",
   "dirty": true,
-  "ran_at": "2026-10-15T04:23:05+0530",
-  "files_sha256": "915acb16de5001ddbc0578cc137136234c0573249e8c2bfcb296388c5648b69d",
-  "cmd": null,
-  "manual": true,
+  "ran_at": "2026-10-16T00:21:23+0530",
+  "files_sha256": "7edba0bc6e2f15dc068acc3a032f73be417f7a402e91b7e052d98f39bfe7e174",
+  "cmd": "py -3 -m pytest tests/test_registry_integration.py -q",
   "exit": 0,
-  "note": "Ran off, swap, health tests: all passed. Live route answered 503 with locus.test.dummy.enabled.",
-  "artifact": "tracker/proof/F-0125-evidence.txt",
-  "artifact_sha256": "5baa365db605d4c39556a040f6d7f44840ff123200f707c2a6c30bf438caf79d"
+  "seconds": 3.4,
+  "output_sha256": "9f3ab38f467f9a8007eb8c2f84527dcda49465fb3139400098ddaf223fa8063c",
+  "output_tail": "..                                                                       [100%]\n2 passed in 1.19s\n"
 }

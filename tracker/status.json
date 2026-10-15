@@ -1,33 +1,32 @@
 {
-  "generated_at": "2026-10-15T23:51:09+0530",
-  "commit": "34be4e617d651728fbe3384491f3252344645101",
-  "dirty": false,
+  "generated_at": "2026-10-16T00:20:47+0530",
+  "commit": "07c38be38a4f0d7f58bb2fb6d0752bd45e24a39a",
+  "dirty": true,
   "static": false,
   "guard": {
     "verdict": "PASS",
     "counts": {
       "FAIL": 0,
-      "WARN": 10,
+      "WARN": 11,
       "INFO": 0
     }
   },
   "summary": {
     "features": 125,
-    "verified_mean_pct": 19.6,
+    "verified_mean_pct": 22.9,
     "claimed_mean_pct": 71.4,
     "claimed_rows": 86,
     "by_label": {
       "FILES_PRESENT": 10,
       "INHERITED_OK": 12,
-      "INTEGRATED": 8,
-      "NO_EVIDENCE": 89,
-      "PROVEN": 1,
+      "INTEGRATED": 14,
+      "NO_EVIDENCE": 84,
       "UNIT_VERIFIED": 5
     },
-    "integrated_or_better": 21,
-    "proven": 1,
+    "integrated_or_better": 26,
+    "proven": 0,
     "overclaims": 63,
-    "no_evidence": 89,
+    "no_evidence": 84,
     "spec_sections_total": 135,
     "spec_changed": 0
   },
@@ -372,10 +371,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "....                                                                     [100%]\n4 passed, 2 deselected in 0.07s\n",
+            "tail": "....                                                                     [100%]\n4 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -386,10 +385,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 6.83s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 6.40s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 8.8
+            "seconds": 8.6
           }
         ]
       }
@@ -873,10 +872,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".............                                                            [100%]\n13 passed in 1.09s\n",
+            "tail": ".............                                                            [100%]\n13 passed in 1.27s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.4
+            "seconds": 3.7
           }
         ],
         "guard": [],
@@ -887,10 +886,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed in 0.64s\n",
+            "tail": ".                                                                        [100%]\n1 passed in 0.63s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.9
+            "seconds": 2.7
           }
         ]
       }
@@ -959,10 +958,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.22s\n",
+            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.23s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.2
           }
         ],
         "guard": [],
@@ -973,10 +972,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.08s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.0
           }
         ]
       }
@@ -1007,10 +1006,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "......                                                                   [100%]\n6 passed, 1 deselected in 0.30s\n",
+            "tail": "......                                                                   [100%]\n6 passed, 1 deselected in 0.29s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -1021,10 +1020,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 6 deselected in 0.33s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 6 deselected in 0.25s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.0
+            "seconds": 2.3
           }
         ]
       }
@@ -1131,10 +1130,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.08s\n",
+            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.2
           }
         ],
         "guard": [],
@@ -1145,10 +1144,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.08s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.1
           }
         ]
       }
@@ -1218,10 +1217,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/test_service.py::test_service_lifecycle_and_health_endpoint\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n14 passed, 2 warnings in 2.33s\n",
+            "tail": "legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/test_service.py::test_service_lifecycle_and_health_endpoint\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n14 passed, 2 warnings in 1.64s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 4.6
+            "seconds": 3.8
           }
         ],
         "guard": [],
@@ -1232,10 +1231,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed in 0.40s\n",
+            "tail": ".                                                                        [100%]\n1 passed in 0.28s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.1
+            "seconds": 2.4
           }
         ]
       }
@@ -1285,10 +1284,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "....                                                                     [100%]\n4 passed, 1 deselected in 0.13s\n",
+            "tail": "....                                                                     [100%]\n4 passed, 1 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.5
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -1299,10 +1298,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 4 deselected in 0.64s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 4 deselected in 0.14s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.9
+            "seconds": 2.2
           }
         ]
       }
@@ -1734,10 +1733,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ". collected 6 items\n\ntests/test_installer.py::test_installer_launchers_exist_and_thin PASSED  [ 16%]\ntests/test_installer.py::test_init_locus_home_creates_canonical_structure PASSED [ 33%]\ntests/test_installer.py::test_installer_re_run_is_safe_and_preserves_config PASSED [ 50%]\ntests/test_installer.py::test_load_answers_json_and_yaml PASSED          [ 66%]\ntests/test_installer.py::test_run_installer_cli_non_interactive PASSED   [ 83%]\ntests/test_installer.py::test_run_installer_with_answers_file PASSED     [100%]\n\n============================== 6 passed in 0.37s ==============================\n",
+            "tail": ". collected 6 items\n\ntests/test_installer.py::test_installer_launchers_exist_and_thin PASSED  [ 16%]\ntests/test_installer.py::test_init_locus_home_creates_canonical_structure PASSED [ 33%]\ntests/test_installer.py::test_installer_re_run_is_safe_and_preserves_config PASSED [ 50%]\ntests/test_installer.py::test_load_answers_json_and_yaml PASSED          [ 66%]\ntests/test_installer.py::test_run_installer_cli_non_interactive PASSED   [ 83%]\ntests/test_installer.py::test_run_installer_with_answers_file PASSED     [100%]\n\n============================== 6 passed in 0.19s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.8
+            "seconds": 2.3
           },
           {
             "cmd": "py -3 -m pytest tests/test_setup_wizard.py -v",
@@ -1745,10 +1744,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "sts/test_setup_wizard.py::test_validate_key_with_custom_validator PASSED [ 16%]\ntests/test_setup_wizard.py::test_save_and_load_secret_env PASSED         [ 33%]\ntests/test_setup_wizard.py::test_update_config_mode_preserves_existing_keys PASSED [ 50%]\ntests/test_setup_wizard.py::test_setup_wizard_key_collection_stores_in_env_not_config PASSED [ 66%]\ntests/test_setup_wizard.py::test_setup_wizard_re_run_safety PASSED       [ 83%]\ntests/test_setup_wizard.py::test_setup_wizard_non_interactive_with_answers PASSED [100%]\n\n============================== 6 passed in 0.27s ==============================\n",
+            "tail": "sts/test_setup_wizard.py::test_validate_key_with_custom_validator PASSED [ 16%]\ntests/test_setup_wizard.py::test_save_and_load_secret_env PASSED         [ 33%]\ntests/test_setup_wizard.py::test_update_config_mode_preserves_existing_keys PASSED [ 50%]\ntests/test_setup_wizard.py::test_setup_wizard_key_collection_stores_in_env_not_config PASSED [ 66%]\ntests/test_setup_wizard.py::test_setup_wizard_re_run_safety PASSED       [ 83%]\ntests/test_setup_wizard.py::test_setup_wizard_non_interactive_with_answers PASSED [100%]\n\n============================== 6 passed in 0.17s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.2
           },
           {
             "cmd": "py -3 -m pytest tests/test_doctor.py -v",
@@ -1756,10 +1755,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": " PASSED                   [ 25%]\ntests/test_doctor.py::test_check_config_validity PASSED                  [ 37%]\ntests/test_doctor.py::test_check_vault_writable PASSED                   [ 50%]\ntests/test_doctor.py::test_check_couchdb_loopback_failure_remediation PASSED [ 62%]\ntests/test_doctor.py::test_check_sidecar_health_failure_remediation PASSED [ 75%]\ntests/test_doctor.py::test_doctor_runs_with_one_line_per_check PASSED    [ 87%]\ntests/test_doctor.py::test_pi_tui_runner_pass_through PASSED             [100%]\n\n============================== 8 passed in 8.46s ==============================\n",
+            "tail": " PASSED                   [ 25%]\ntests/test_doctor.py::test_check_config_validity PASSED                  [ 37%]\ntests/test_doctor.py::test_check_vault_writable PASSED                   [ 50%]\ntests/test_doctor.py::test_check_couchdb_loopback_failure_remediation PASSED [ 62%]\ntests/test_doctor.py::test_check_sidecar_health_failure_remediation PASSED [ 75%]\ntests/test_doctor.py::test_doctor_runs_with_one_line_per_check PASSED    [ 87%]\ntests/test_doctor.py::test_pi_tui_runner_pass_through PASSED             [100%]\n\n============================== 8 passed in 8.39s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 10.5
+            "seconds": 10.7
           }
         ],
         "guard": [
@@ -1800,10 +1799,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..........                                                               [100%]\n10 passed in 0.17s\n",
+            "tail": "..........                                                               [100%]\n10 passed in 0.14s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.5
+            "seconds": 2.3
           },
           {
             "cmd": "py -3 -m pytest tests/test_telegram_setup.py -q",
@@ -1811,10 +1810,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".......                                                                  [100%]\n7 passed in 0.17s\n",
+            "tail": ".......                                                                  [100%]\n7 passed in 0.12s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -1852,7 +1851,7 @@
             "tail": "......                                                                   [100%]\n6 passed in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ],
         "guard": [
@@ -1916,7 +1915,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.10s\n",
+            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.1
@@ -1930,10 +1929,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.62s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.8
+            "seconds": 2.4
           }
         ]
       }
@@ -1964,10 +1963,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed in 0.04s\n",
+            "tail": ".....                                                                    [100%]\n5 passed in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.7
           }
         ],
         "guard": [],
@@ -2000,10 +1999,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "......                                                                   [100%]\n6 passed in 0.06s\n",
+            "tail": "......                                                                   [100%]\n6 passed in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.6
           }
         ],
         "guard": [
@@ -2088,82 +2087,242 @@
     "F-0092": {
       "id": "F-0092",
       "title": "Query Router / Intent Classifier (Stage 2)",
-      "verdict": "UNKNOWN",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "LOCUS-NEW",
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "no recorded proof"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_router_classifier.py -k \"test_intent_classifier_protocol_conformance or test_confidence_gate_queries_all_sources or test_temporal_scope_resolution or test_classifier_modularity_disabled\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "....                                                                     [100%]\n4 passed, 2 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.3
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_router_classifier.py -k \"test_intent_categorization_and_sources or test_routing_manifest_serialization\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.2
+          }
+        ]
+      }
     },
     "F-0093": {
       "id": "F-0093",
       "title": "State Engine (Stage 3)",
-      "verdict": "UNKNOWN",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "LOCUS-NEW",
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "no recorded proof"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_state_engine.py -k \"test_state_engine_protocol_conformance or test_state_engine_one_day_staleness_penalty or test_state_engine_three_days_staleness_baseline or test_state_engine_modularity_disabled\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "....                                                                     [100%]\n4 passed, 3 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.5
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_state_engine.py -k \"test_state_engine_fresh_checkin or test_state_engine_survival_mode or test_current_state_serialization\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "...                                                                      [100%]\n3 passed, 4 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.3
+          }
+        ]
+      }
     },
     "F-0094": {
       "id": "F-0094",
       "title": "Context Forge (Stage 6) — The 6-Layer Assembler",
-      "verdict": "UNKNOWN",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "LOCUS-NEW",
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "no recorded proof"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_context_forge.py -k \"test_context_forge_protocol_conformance or test_context_forge_modularity_disabled\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.4
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_context_forge.py -k \"test_context_forge_assembly_under_budget or test_context_forge_protection_and_compression\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.4
+          }
+        ]
+      }
     },
     "F-0095": {
       "id": "F-0095",
       "title": "Anti-Hallucination Guard (Stage 10)",
-      "verdict": "UNKNOWN",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "LOCUS-NEW",
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "no recorded proof"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_anti_hallucination.py -k \"test_anti_hallucination_protocol_conformance or test_anti_hallucination_modularity_disabled\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.4
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_anti_hallucination.py -k \"test_grounded_response_passes_cleanly or test_ungrounded_response_warn_mode or test_ungrounded_response_strict_mode\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "...                                                                      [100%]\n3 passed, 2 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ]
+      }
     },
     "F-0096": {
       "id": "F-0096",
       "title": "Intelligent Model Routing + Quality-Based Fallback",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "no recorded proof"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_model_router.py -k \"test_model_router_protocol_conformance or test_model_classification or test_model_router_modularity_disabled\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "...                                                                      [100%]\n3 passed, 4 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_model_router.py -k \"test_privacy_mode_forces_local or test_tools_force_remote or test_unhealthy_local_falls_back_to_remote or test_quality_based_fallback_detection\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "....                                                                     [100%]\n4 passed, 3 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ]
+      }
     },
     "F-0097": {
       "id": "F-0097",
@@ -2617,14 +2776,18 @@
       "id": "F-0125",
       "title": "Modularity foundation: provider registry + config accessor (sidecar and TypeScript)",
       "verdict": "LOCUS-NEW",
-      "level": 5,
-      "label": "PROVEN",
-      "pct": 100,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": null,
       "gap": null,
-      "flags": [],
-      "reasons": [],
-      "next": "",
+      "flags": [
+        "PROOF_STALE"
+      ],
+      "reasons": [
+        "proof is STALE: evidence files changed since it was recorded"
+      ],
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
       "checks": {
         "symbols": {
           "ok": true,
@@ -2637,10 +2800,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "................                                                         [100%]\n16 passed in 1.64s\n",
+            "tail": "................                                                         [100%]\n16 passed in 1.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.8
+            "seconds": 3.1
           }
         ],
         "guard": [],
@@ -2651,14 +2814,16 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed in 1.17s\n",
+            "tail": "..                                                                       [100%]\n2 passed in 1.14s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.4
+            "seconds": 3.1
           }
         ]
       }
     }
   },
-  "regressions": []
+  "regressions": [
+    "F-0125 Modularity foundation: provider registry: 100% -> 85%"
+  ]
 }

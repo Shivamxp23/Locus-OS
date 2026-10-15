@@ -3361,11 +3361,11 @@ features:
   - '§2.1-2.3: Query Router / Intent Classifier (Stage 2)'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: UNKNOWN
-  source: null
-  provider: null
-  layer: unknown
+  category: Foundation
+  verdict: LOCUS-NEW
+  source: Locus Design
+  provider: IntentClassifierProvider
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -3375,11 +3375,25 @@ features:
   spec_sha:
     '§2.1-2.3: Query Router / Intent Classifier (Stage 2)': befca9e03d856062
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/router/classifier.py
+    - locus-extension/src/intent-classifier.ts
+    symbols:
+    - file: sidecar/router/classifier.py
+      name: IntentCategory
+    - file: sidecar/router/classifier.py
+      name: TemporalScope
+    - file: sidecar/router/classifier.py
+      name: RoutingManifest
+    - file: sidecar/router/classifier.py
+      name: IntentClassifierProvider
+    - file: sidecar/router/classifier.py
+      name: IntentClassifier
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_router_classifier.py -k "test_intent_classifier_protocol_conformance or test_confidence_gate_queries_all_sources or test_temporal_scope_resolution or test_classifier_modularity_disabled" -q
+    integration:
+    - py -3 -m pytest tests/test_router_classifier.py -k "test_intent_categorization_and_sources or test_routing_manifest_serialization" -q
   depends_on: []
 - id: F-0093
   title: State Engine (Stage 3)
@@ -3387,11 +3401,11 @@ features:
   - '§2.4: State Engine (Stage 3)'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: UNKNOWN
-  source: null
-  provider: null
-  layer: unknown
+  category: Foundation
+  verdict: LOCUS-NEW
+  source: Locus Design
+  provider: StateEngineProvider
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -3401,11 +3415,23 @@ features:
   spec_sha:
     '§2.4: State Engine (Stage 3)': 4558f8578b654dd9
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/state_engine.py
+    - locus-extension/src/state-engine.ts
+    symbols:
+    - file: sidecar/state_engine.py
+      name: CheckinRecord
+    - file: sidecar/state_engine.py
+      name: CurrentState
+    - file: sidecar/state_engine.py
+      name: StateEngineProvider
+    - file: sidecar/state_engine.py
+      name: StateEngine
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_state_engine.py -k "test_state_engine_protocol_conformance or test_state_engine_one_day_staleness_penalty or test_state_engine_three_days_staleness_baseline or test_state_engine_modularity_disabled" -q
+    integration:
+    - py -3 -m pytest tests/test_state_engine.py -k "test_state_engine_fresh_checkin or test_state_engine_survival_mode or test_current_state_serialization" -q
   depends_on: []
 - id: F-0094
   title: Context Forge (Stage 6) — The 6-Layer Assembler
@@ -3413,11 +3439,11 @@ features:
   - '§2.5: Context Forge (Stage 6) — The 6-Layer Assembler'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: UNKNOWN
-  source: null
-  provider: null
-  layer: unknown
+  category: Foundation
+  verdict: LOCUS-NEW
+  source: Locus Design
+  provider: ContextAssembler
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -3426,11 +3452,23 @@ features:
   spec_sha:
     '§2.5: Context Forge (Stage 6) — The 6-Layer Assembler': 01ab8fc70c3253de
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/context_forge.py
+    - locus-extension/src/context-forge.ts
+    symbols:
+    - file: sidecar/context_forge.py
+      name: ContextLayers
+    - file: sidecar/context_forge.py
+      name: AssembledContext
+    - file: sidecar/context_forge.py
+      name: ContextAssembler
+    - file: sidecar/context_forge.py
+      name: ContextForge
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_context_forge.py -k "test_context_forge_protocol_conformance or test_context_forge_modularity_disabled" -q
+    integration:
+    - py -3 -m pytest tests/test_context_forge.py -k "test_context_forge_assembly_under_budget or test_context_forge_protection_and_compression" -q
   depends_on: []
 - id: F-0095
   title: Anti-Hallucination Guard (Stage 10)
@@ -3438,11 +3476,11 @@ features:
   - '§2.6: Anti-Hallucination Guard (Stage 10)'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: UNKNOWN
-  source: null
-  provider: null
-  layer: unknown
+  category: Security
+  verdict: LOCUS-NEW
+  source: Locus Design
+  provider: AntiHallucinationProvider
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -3451,11 +3489,21 @@ features:
   spec_sha:
     '§2.6: Anti-Hallucination Guard (Stage 10)': a542ebcf7334ec6d
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/security/anti_hallucination.py
+    - locus-extension/src/anti-hallucination.ts
+    symbols:
+    - file: sidecar/security/anti_hallucination.py
+      name: VerificationResult
+    - file: sidecar/security/anti_hallucination.py
+      name: AntiHallucinationProvider
+    - file: sidecar/security/anti_hallucination.py
+      name: AntiHallucinationGuard
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_anti_hallucination.py -k "test_anti_hallucination_protocol_conformance or test_anti_hallucination_modularity_disabled" -q
+    integration:
+    - py -3 -m pytest tests/test_anti_hallucination.py -k "test_grounded_response_passes_cleanly or test_ungrounded_response_warn_mode or test_ungrounded_response_strict_mode" -q
   depends_on: []
 - id: F-0096
   title: Intelligent Model Routing + Quality-Based Fallback
@@ -3463,11 +3511,11 @@ features:
   - '§2.7-2.8: Intelligent Model Routing + Quality-Based Fallback'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: LLM Providers
   verdict: AUGMENT
-  source: null
-  provider: null
-  layer: unknown
+  source: OpenHuman routing/
+  provider: ModelRouterProvider
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -3476,11 +3524,27 @@ features:
   spec_sha:
     '§2.7-2.8: Intelligent Model Routing + Quality-Based Fallback': d6564ea8364220d5
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/routing/model_router.py
+    - locus-extension/src/routing/model-router.ts
+    symbols:
+    - file: sidecar/routing/model_router.py
+      name: TaskCategory
+    - file: sidecar/routing/model_router.py
+      name: RouteTarget
+    - file: sidecar/routing/model_router.py
+      name: RoutingHints
+    - file: sidecar/routing/model_router.py
+      name: RoutingRecord
+    - file: sidecar/routing/model_router.py
+      name: ModelRouterProvider
+    - file: sidecar/routing/model_router.py
+      name: ModelRouter
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_model_router.py -k "test_model_router_protocol_conformance or test_model_classification or test_model_router_modularity_disabled" -q
+    integration:
+    - py -3 -m pytest tests/test_model_router.py -k "test_privacy_mode_forces_local or test_tools_force_remote or test_unhealthy_local_falls_back_to_remote or test_quality_based_fallback_detection" -q
   depends_on: []
 - id: F-0097
   title: Streaming (SSE)
