@@ -34,3 +34,4 @@
 {"event":"planned","sprint":"S11","start":"2027-02-05","end":"2027-02-18","goal":"One command sets up local, VM or hybrid, with keys and Telegram pairing.","capacity":2,"points":2,"stories":["US-14"],"date":"2027-02-05"}
 {"event":"accepted","story":"US-14","feature":"F-0083","level":3,"note":"Verified Telegram setup pairing and secret-reference flow","date":"2027-02-18","commit":"8d60ab5aa4e9"}
 {"event":"closed","sprint":"S11","date":"2027-02-18","planned_points":2,"velocity":2,"done":["US-14"],"not_done":{}}
+{"event":"planned","sprint":"S12","start":"2027-02-19","end":"2027-03-04","goal":"One command sets up local, VM or hybrid, with keys and Telegram pairing.","capacity":2,"points":2,"stories":["US-15"],"date":"2027-02-19"}
