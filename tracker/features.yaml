@@ -1430,9 +1430,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Extensions
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Hermes copilot_acp_client.py
-  provider: null
+  provider: ACPServerTransport
   layer: sidecar
   inherited: false
   manual: false
@@ -1451,11 +1451,20 @@ features:
     '§9.4: Agent Communication Protocol (ACP Client & Transport)': d767157a54bafe07
   evidence:
     files:
-    - sidecar/acp_server.py
-    symbols: []
+    - sidecar/acp/server.py
+    - locus-extension/src/acp/client.ts
+    symbols:
+    - file: sidecar/acp/server.py
+      name: ACPMessage
+    - file: sidecar/acp/server.py
+      name: ACPServerTransport
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_subagents_acp_and_skills.py -k test_acp_transport_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_subagents_acp_and_skills.py -k test_acp_transport_integration
+      -q
   depends_on: []
 - id: F-0034
   title: Plugin LLM
@@ -1510,9 +1519,9 @@ features:
   mapping: grouped
   origin: legacy-tracker
   category: Learning
-  verdict: MULTI-PROVIDER
+  verdict: INTEGRATED
   source: Hermes + OpenHuman + Locus
-  provider: LearningProvider
+  provider: UserLearningEngine
   layer: sidecar
   inherited: false
   manual: false
@@ -1535,11 +1544,20 @@ features:
     '§10.6-10.7: Hebbian Learning & Pattern Engine': 05372a5b6111ac36
   evidence:
     files:
-    - sidecar/learning/
-    symbols: []
+    - sidecar/learning/profiler.py
+    - locus-extension/src/learning/profiler.ts
+    symbols:
+    - file: sidecar/learning/profiler.py
+      name: UserProfileSignal
+    - file: sidecar/learning/profiler.py
+      name: UserLearningEngine
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_subagents_acp_and_skills.py -k test_user_learning_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_subagents_acp_and_skills.py -k test_user_learning_integration
+      -q
   depends_on: []
 - id: F-0036
   title: Subagents / AutoResearch
@@ -1549,9 +1567,9 @@ features:
   mapping: grouped
   origin: legacy-tracker
   category: Subagents
-  verdict: AUGMENT
+  verdict: INTEGRATED
   source: Pi + OpenHuman + AutoResearch
-  provider: SubagentArchetype
+  provider: SubagentOrchestrator
   layer: sidecar
   inherited: false
   manual: false
@@ -1572,11 +1590,20 @@ features:
     '§11.1-11.5: Subagent Spawning, Archetypes, Depth Limiting': caa3928d95a201a2
   evidence:
     files:
-    - sidecar/delegation/
-    symbols: []
+    - sidecar/delegation/subagent_orchestrator.py
+    - locus-extension/src/delegation/subagent-orchestrator.ts
+    symbols:
+    - file: sidecar/delegation/subagent_orchestrator.py
+      name: SubagentTask
+    - file: sidecar/delegation/subagent_orchestrator.py
+      name: SubagentOrchestrator
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_subagents_acp_and_skills.py -k test_subagents_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_subagents_acp_and_skills.py -k test_subagents_integration
+      -q
   depends_on: []
 - id: F-0037
   title: Injection Filter
@@ -4936,10 +4963,10 @@ features:
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
   category: null
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: null
-  provider: null
-  layer: unknown
+  provider: SkillMarketplaceManager
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4948,11 +4975,21 @@ features:
   spec_sha:
     '§9.2: Skill System & Multi-Source Marketplace': ef174370c43422dc
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/skills/marketplace.py
+    - locus-extension/src/skills/marketplace.ts
+    symbols:
+    - file: sidecar/skills/marketplace.py
+      name: SkillManifest
+    - file: sidecar/skills/marketplace.py
+      name: SkillMarketplaceManager
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_subagents_acp_and_skills.py -k test_skill_marketplace_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_subagents_acp_and_skills.py -k test_skill_marketplace_integration
+      -q
   depends_on: []
 - id: F-0120
   title: Self-Evolving Architect Bot
@@ -4961,10 +4998,10 @@ features:
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
   category: null
-  verdict: UNKNOWN
+  verdict: INTEGRATED
   source: null
-  provider: null
-  layer: unknown
+  provider: SelfEvolvingArchitectBot
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4973,11 +5010,21 @@ features:
   spec_sha:
     '§10.8: Self-Evolving Architect Bot': 07ee48faf951cd68
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/architect/architect_bot.py
+    - locus-extension/src/architect/architect-bot.ts
+    symbols:
+    - file: sidecar/architect/architect_bot.py
+      name: ArchitectProposal
+    - file: sidecar/architect/architect_bot.py
+      name: SelfEvolvingArchitectBot
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_subagents_acp_and_skills.py -k test_architect_bot_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_subagents_acp_and_skills.py -k test_architect_bot_integration
+      -q
   depends_on: []
 - id: F-0121
   title: Agent Experience Tracking (Procedural Memory)
@@ -4986,10 +5033,10 @@ features:
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
   category: null
-  verdict: MULTI-PROVIDER
+  verdict: INTEGRATED
   source: null
-  provider: null
-  layer: unknown
+  provider: AgentExperienceTracker
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4999,11 +5046,21 @@ features:
   spec_sha:
     '§10.9: Agent Experience Tracking (Procedural Memory)': 1a8f6904e6270e82
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/experience/tracker.py
+    - locus-extension/src/experience/tracker.ts
+    symbols:
+    - file: sidecar/experience/tracker.py
+      name: ProceduralTrajectory
+    - file: sidecar/experience/tracker.py
+      name: AgentExperienceTracker
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_subagents_acp_and_skills.py -k test_experience_tracker_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_subagents_acp_and_skills.py -k test_experience_tracker_integration
+      -q
   depends_on: []
 - id: F-0122
   title: LOCUS_SHORTHAND 4× Text Compressor
