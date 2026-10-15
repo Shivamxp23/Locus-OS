@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `d46a85407c` - 2026-10-15T23:37:11+0530 - with test runs
+- commit `34be4e617d` - 2026-10-15T23:51:09+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 10, 'INFO': 0}
-- features: 125 | verified average **19.0%** | old claimed average 71.4% over 86 rows
-- integrated or better: 20 | proven: 1 | overclaims (claimed >= verified + 25): 64 | no evidence: 90
-- by level: {'FILES_PRESENT': 10, 'INHERITED_OK': 12, 'INTEGRATED': 7, 'NO_EVIDENCE': 90, 'PROVEN': 1, 'UNIT_VERIFIED': 5}
+- features: 125 | verified average **19.6%** | old claimed average 71.4% over 86 rows
+- integrated or better: 21 | proven: 1 | overclaims (claimed >= verified + 25): 63 | no evidence: 89
+- by level: {'FILES_PRESENT': 10, 'INHERITED_OK': 12, 'INTEGRATED': 8, 'NO_EVIDENCE': 89, 'PROVEN': 1, 'UNIT_VERIFIED': 5}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -52,7 +52,7 @@
 | F-0017 | Provider Registry | 100% | 100% | INHERITED_OK |  |  |
 | F-0018 | Model Selection | 100% | 100% | INHERITED_OK |  |  |
 | F-0019 | File/Shell/Search Tools | 100% | 100% | INHERITED_OK |  |  |
-| F-0020 | Harness Delegation | 65% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/inter_harness_bridge.py. Create them or correct the path |
+| F-0020 | Harness Delegation | 65% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0021 | Neo4j Agent Memory (POLE+O) | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/neo4j_memory.py. Create them or correct the path. |
 | F-0022 | Holographic HRR | 30% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/holographic/. Create them or correct the path. |
 | F-0023 | STDP Reinforcement | 40% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/patterns/hebbian.py. Create them or correct the path. |

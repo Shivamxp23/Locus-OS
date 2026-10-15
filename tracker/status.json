@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-15T23:37:11+0530",
-  "commit": "d46a85407c9d3369a55d31b82812e909a2a067f7",
+  "generated_at": "2026-10-15T23:51:09+0530",
+  "commit": "34be4e617d651728fbe3384491f3252344645101",
   "dirty": false,
   "static": false,
   "guard": {
@@ -13,21 +13,21 @@
   },
   "summary": {
     "features": 125,
-    "verified_mean_pct": 19.0,
+    "verified_mean_pct": 19.6,
     "claimed_mean_pct": 71.4,
     "claimed_rows": 86,
     "by_label": {
       "FILES_PRESENT": 10,
       "INHERITED_OK": 12,
-      "INTEGRATED": 7,
-      "NO_EVIDENCE": 90,
+      "INTEGRATED": 8,
+      "NO_EVIDENCE": 89,
       "PROVEN": 1,
       "UNIT_VERIFIED": 5
     },
-    "integrated_or_better": 20,
+    "integrated_or_better": 21,
     "proven": 1,
-    "overclaims": 64,
-    "no_evidence": 90,
+    "overclaims": 63,
+    "no_evidence": 89,
     "spec_sections_total": 135,
     "spec_changed": 0
   },
@@ -350,20 +350,49 @@
       "id": "F-0020",
       "title": "Harness Delegation",
       "verdict": "MULTI-PROVIDER",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 65.0,
-      "gap": 65.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": -20.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/inter_harness_bridge.py"
+        "no recorded proof"
       ],
-      "next": "Files claimed but absent: sidecar/inter_harness_bridge.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_harness.py -k \"test_security_rule_s3_forbids_dangerous_flags or test_harness_manager_protocol_conformance or test_harness_manager_modularity_disabled or test_harness_manager_build_command\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "....                                                                     [100%]\n4 passed, 2 deselected in 0.07s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_harness.py -k \"test_harness_manager_mock_delegation_in_scratch_worktree or test_inter_harness_bridge_delegation\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 6.83s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 8.8
+          }
+        ]
+      }
     },
     "F-0021": {
       "id": "F-0021",
@@ -844,10 +873,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".............                                                            [100%]\n13 passed in 1.42s\n",
+            "tail": ".............                                                            [100%]\n13 passed in 1.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.5
+            "seconds": 3.4
           }
         ],
         "guard": [],
@@ -858,10 +887,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed in 0.62s\n",
+            "tail": ".                                                                        [100%]\n1 passed in 0.64s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.5
+            "seconds": 2.9
           }
         ]
       }
@@ -933,7 +962,7 @@
             "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.22s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.4
           }
         ],
         "guard": [],
@@ -944,10 +973,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.10s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.4
           }
         ]
       }
@@ -978,10 +1007,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "......                                                                   [100%]\n6 passed, 1 deselected in 0.31s\n",
+            "tail": "......                                                                   [100%]\n6 passed, 1 deselected in 0.30s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.4
           }
         ],
         "guard": [],
@@ -992,10 +1021,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 6 deselected in 0.26s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 6 deselected in 0.33s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.5
+            "seconds": 3.0
           }
         ]
       }
@@ -1102,10 +1131,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.10s\n",
+            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -1116,10 +1145,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.06s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.2
           }
         ]
       }
@@ -1189,10 +1218,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/test_service.py::test_service_lifecycle_and_health_endpoint\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n14 passed, 2 warnings in 1.77s\n",
+            "tail": "legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/test_service.py::test_service_lifecycle_and_health_endpoint\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n14 passed, 2 warnings in 2.33s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.7
+            "seconds": 4.6
           }
         ],
         "guard": [],
@@ -1203,10 +1232,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed in 0.26s\n",
+            "tail": ".                                                                        [100%]\n1 passed in 0.40s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 3.1
           }
         ]
       }
@@ -1256,10 +1285,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "....                                                                     [100%]\n4 passed, 1 deselected in 0.09s\n",
+            "tail": "....                                                                     [100%]\n4 passed, 1 deselected in 0.13s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.5
           }
         ],
         "guard": [],
@@ -1270,10 +1299,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 4 deselected in 0.63s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 4 deselected in 0.64s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.6
+            "seconds": 2.9
           }
         ]
       }
@@ -1705,10 +1734,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ". collected 6 items\n\ntests/test_installer.py::test_installer_launchers_exist_and_thin PASSED  [ 16%]\ntests/test_installer.py::test_init_locus_home_creates_canonical_structure PASSED [ 33%]\ntests/test_installer.py::test_installer_re_run_is_safe_and_preserves_config PASSED [ 50%]\ntests/test_installer.py::test_load_answers_json_and_yaml PASSED          [ 66%]\ntests/test_installer.py::test_run_installer_cli_non_interactive PASSED   [ 83%]\ntests/test_installer.py::test_run_installer_with_answers_file PASSED     [100%]\n\n============================== 6 passed in 0.17s ==============================\n",
+            "tail": ". collected 6 items\n\ntests/test_installer.py::test_installer_launchers_exist_and_thin PASSED  [ 16%]\ntests/test_installer.py::test_init_locus_home_creates_canonical_structure PASSED [ 33%]\ntests/test_installer.py::test_installer_re_run_is_safe_and_preserves_config PASSED [ 50%]\ntests/test_installer.py::test_load_answers_json_and_yaml PASSED          [ 66%]\ntests/test_installer.py::test_run_installer_cli_non_interactive PASSED   [ 83%]\ntests/test_installer.py::test_run_installer_with_answers_file PASSED     [100%]\n\n============================== 6 passed in 0.37s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 3.8
           },
           {
             "cmd": "py -3 -m pytest tests/test_setup_wizard.py -v",
@@ -1716,10 +1745,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "sts/test_setup_wizard.py::test_validate_key_with_custom_validator PASSED [ 16%]\ntests/test_setup_wizard.py::test_save_and_load_secret_env PASSED         [ 33%]\ntests/test_setup_wizard.py::test_update_config_mode_preserves_existing_keys PASSED [ 50%]\ntests/test_setup_wizard.py::test_setup_wizard_key_collection_stores_in_env_not_config PASSED [ 66%]\ntests/test_setup_wizard.py::test_setup_wizard_re_run_safety PASSED       [ 83%]\ntests/test_setup_wizard.py::test_setup_wizard_non_interactive_with_answers PASSED [100%]\n\n============================== 6 passed in 0.20s ==============================\n",
+            "tail": "sts/test_setup_wizard.py::test_validate_key_with_custom_validator PASSED [ 16%]\ntests/test_setup_wizard.py::test_save_and_load_secret_env PASSED         [ 33%]\ntests/test_setup_wizard.py::test_update_config_mode_preserves_existing_keys PASSED [ 50%]\ntests/test_setup_wizard.py::test_setup_wizard_key_collection_stores_in_env_not_config PASSED [ 66%]\ntests/test_setup_wizard.py::test_setup_wizard_re_run_safety PASSED       [ 83%]\ntests/test_setup_wizard.py::test_setup_wizard_non_interactive_with_answers PASSED [100%]\n\n============================== 6 passed in 0.27s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.4
           },
           {
             "cmd": "py -3 -m pytest tests/test_doctor.py -v",
@@ -1727,10 +1756,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": " PASSED                   [ 25%]\ntests/test_doctor.py::test_check_config_validity PASSED                  [ 37%]\ntests/test_doctor.py::test_check_vault_writable PASSED                   [ 50%]\ntests/test_doctor.py::test_check_couchdb_loopback_failure_remediation PASSED [ 62%]\ntests/test_doctor.py::test_check_sidecar_health_failure_remediation PASSED [ 75%]\ntests/test_doctor.py::test_doctor_runs_with_one_line_per_check PASSED    [ 87%]\ntests/test_doctor.py::test_pi_tui_runner_pass_through PASSED             [100%]\n\n============================== 8 passed in 8.38s ==============================\n",
+            "tail": " PASSED                   [ 25%]\ntests/test_doctor.py::test_check_config_validity PASSED                  [ 37%]\ntests/test_doctor.py::test_check_vault_writable PASSED                   [ 50%]\ntests/test_doctor.py::test_check_couchdb_loopback_failure_remediation PASSED [ 62%]\ntests/test_doctor.py::test_check_sidecar_health_failure_remediation PASSED [ 75%]\ntests/test_doctor.py::test_doctor_runs_with_one_line_per_check PASSED    [ 87%]\ntests/test_doctor.py::test_pi_tui_runner_pass_through PASSED             [100%]\n\n============================== 8 passed in 8.46s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 10.3
+            "seconds": 10.5
           }
         ],
         "guard": [
@@ -1771,10 +1800,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..........                                                               [100%]\n10 passed in 0.11s\n",
+            "tail": "..........                                                               [100%]\n10 passed in 0.17s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.5
           },
           {
             "cmd": "py -3 -m pytest tests/test_telegram_setup.py -q",
@@ -1782,7 +1811,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".......                                                                  [100%]\n7 passed in 0.15s\n",
+            "tail": ".......                                                                  [100%]\n7 passed in 0.17s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.2
@@ -1823,7 +1852,7 @@
             "tail": "......                                                                   [100%]\n6 passed in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.1
           }
         ],
         "guard": [
@@ -1887,10 +1916,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.06s\n",
+            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.1
           }
         ],
         "guard": [],
@@ -1901,10 +1930,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.11s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.62s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.8
           }
         ]
       }
@@ -1938,7 +1967,7 @@
             "tail": ".....                                                                    [100%]\n5 passed in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.4
           }
         ],
         "guard": [],
@@ -1971,10 +2000,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "......                                                                   [100%]\n6 passed in 0.05s\n",
+            "tail": "......                                                                   [100%]\n6 passed in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.0
           }
         ],
         "guard": [
@@ -2608,10 +2637,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "................                                                         [100%]\n16 passed in 1.66s\n",
+            "tail": "................                                                         [100%]\n16 passed in 1.64s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 4.6
+            "seconds": 3.8
           }
         ],
         "guard": [],
@@ -2622,10 +2651,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed in 1.14s\n",
+            "tail": "..                                                                       [100%]\n2 passed in 1.17s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.7
+            "seconds": 3.4
           }
         ]
       }
