@@ -218,7 +218,7 @@ stories:
     feature: F-0082
     slug: installer-modes-keys
     title: "R2, R3, R8: mode question, key collection with one live check each, safe re-run"
-    points: 3
+    points: 2
     target_level: 3
     autopilot: false   # by hand: needs your real API keys
     addendum: [P4]
