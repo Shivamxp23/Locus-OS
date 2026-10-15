@@ -43,7 +43,7 @@ features:
   category: Foundation
   verdict: AUGMENT
   source: Pi system-prompt.ts
-  provider: null
+  provider: SystemPromptBuilder
   layer: extension
   inherited: false
   manual: false
@@ -62,11 +62,25 @@ features:
     '§1.2: System Prompt Construction': 5a83aa278c006d8d
   evidence:
     files:
+    - sidecar/prompt_builder.py
     - locus-extension/src/hooks/index.ts
-    symbols: []
+    - locus-extension/src/prompt-builder.ts
+    symbols:
+    - file: sidecar/prompt_builder.py
+      name: PromptContextFile
+    - file: sidecar/prompt_builder.py
+      name: PromptOptions
+    - file: sidecar/prompt_builder.py
+      name: SystemPromptBuilder
+    - file: sidecar/prompt_builder.py
+      name: build_system_prompt
+    unit:
+    - py -3 -m pytest tests/test_prompt_builder.py -k "test_default_prompt_contains_soul_and_cwd
+      or test_soul_override" -q
+    integration:
+    - py -3 -m pytest tests/test_prompt_builder.py -k "test_prompt_injection_with_context_forge_and_state"
+      -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0003
   title: Tool System (13 Canonical Tools)
@@ -77,7 +91,7 @@ features:
   category: Foundation
   verdict: AUGMENT
   source: Pi tools/index.ts + Locus
-  provider: AgentTool
+  provider: CanonicalToolRegistry
   layer: extension
   inherited: false
   manual: false
@@ -96,6 +110,7 @@ features:
   evidence:
     files:
     - locus-extension/src/tools/index.ts
+    - sidecar/tools/canonical.py
     symbols:
     - file: locus-extension/src/tools/index.ts
       contains:
@@ -112,9 +127,16 @@ features:
       - locus_diagram
       - locus_capture
       - locus_schedule
+    - file: sidecar/tools/canonical.py
+      name: ToolDefinition
+    - file: sidecar/tools/canonical.py
+      name: CanonicalToolRegistry
+    unit:
+    - py -3 -m pytest tests/test_canonical_tools.py -k "test_13_canonical_tools_registered
+      or test_missing_tool_raises_error" -q
+    integration:
+    - py -3 -m pytest tests/test_canonical_tools.py -k "test_tool_execution" -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0004
   title: Model Management & Escalation
@@ -125,7 +147,7 @@ features:
   category: Foundation
   verdict: AUGMENT
   source: Pi model-resolver.ts
-  provider: null
+  provider: ModelRouter
   layer: sidecar
   inherited: false
   manual: false
@@ -144,11 +166,31 @@ features:
     '§1.4: Model Management': 4d349b5dd0c333dd
   evidence:
     files:
-    - sidecar/life_os.py
-    symbols: []
+    - sidecar/routing/model_router.py
+    - locus-extension/src/routing/model-router.ts
+    - locus-extension/src/model-escalation.ts
+    symbols:
+    - file: sidecar/routing/model_router.py
+      name: TaskCategory
+    - file: sidecar/routing/model_router.py
+      name: RouteTarget
+    - file: sidecar/routing/model_router.py
+      name: RoutingHints
+    - file: sidecar/routing/model_router.py
+      name: RoutingRecord
+    - file: sidecar/routing/model_router.py
+      name: ModelRouterProvider
+    - file: sidecar/routing/model_router.py
+      name: ModelRouter
+    - file: sidecar/routing/model_router.py
+      name: route_request
+    unit:
+    - py -3 -m pytest tests/test_model_router.py -k "test_model_router_protocol_conformance
+      or test_model_classification" -q
+    integration:
+    - py -3 -m pytest tests/test_model_router.py -k "test_privacy_mode_forces_local
+      or test_unhealthy_local_falls_back_to_remote" -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0005
   title: Extension Lifecycle
@@ -159,7 +201,7 @@ features:
   category: Foundation
   verdict: KEEP-PI
   source: Pi agent-session.ts
-  provider: null
+  provider: LifecycleManager
   layer: extension
   inherited: false
   manual: false
@@ -180,10 +222,19 @@ features:
   evidence:
     files:
     - locus-extension/index.ts
-    symbols: []
+    - sidecar/lifecycle.py
+    symbols:
+    - file: sidecar/lifecycle.py
+      name: LifecycleEvent
+    - file: sidecar/lifecycle.py
+      name: LifecycleManager
+    unit:
+    - py -3 -m pytest tests/test_extension_lifecycle.py -k "test_25_events_supported
+      or test_invalid_event_subscription" -q
+    integration:
+    - py -3 -m pytest tests/test_extension_lifecycle.py -k "test_event_dispatch_and_history"
+      -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0006
   title: Context Window Management
@@ -194,7 +245,7 @@ features:
   category: Foundation
   verdict: AUGMENT
   source: Pi compaction/ + Headroom
-  provider: CompressionProvider
+  provider: HeadroomCompactionAdapter
   layer: sidecar
   inherited: false
   manual: false
@@ -213,10 +264,25 @@ features:
   evidence:
     files:
     - sidecar/context/headroom_adapter.py
-    symbols: []
+    - locus-extension/src/context-window.ts
+    symbols:
+    - file: sidecar/context/headroom_adapter.py
+      name: CompactionOptions
+    - file: sidecar/context/headroom_adapter.py
+      name: CompactionResult
+    - file: sidecar/context/headroom_adapter.py
+      name: estimate_context_tokens
+    - file: sidecar/context/headroom_adapter.py
+      name: should_compact
+    - file: sidecar/context/headroom_adapter.py
+      name: HeadroomCompactionAdapter
+    unit:
+    - py -3 -m pytest tests/test_context_window.py -k "test_estimate_and_threshold"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_context_window.py -k "test_headroom_compaction_adapter"
+      -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0007
   title: Post-Turn Review
@@ -227,7 +293,7 @@ features:
   category: Foundation
   verdict: AUGMENT
   source: Hermes background_review.py
-  provider: PostTurnProvider
+  provider: TurnReflector
   layer: sidecar
   inherited: false
   manual: false
@@ -247,10 +313,22 @@ features:
   evidence:
     files:
     - sidecar/learning/reflector.py
-    symbols: []
+    - locus-extension/src/providers/learning/post-turn-reviewer.ts
+    symbols:
+    - file: sidecar/learning/reflector.py
+      name: ReviewInsight
+    - file: sidecar/learning/reflector.py
+      name: ReviewResult
+    - file: sidecar/learning/reflector.py
+      name: TurnReflector
+    - file: sidecar/learning/reflector.py
+      name: spawn_background_review
+    unit:
+    - py -3 -m pytest tests/test_reflector.py -k "test_tool_whitelist_enforcement
+      or test_spawn_background_review" -q
+    integration:
+    - py -3 -m pytest tests/test_reflector.py -k "test_insight_extraction" -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0008
   title: Stream Diagnostics
@@ -294,7 +372,7 @@ features:
   category: Foundation
   verdict: AUGMENT
   source: Pi + Locus
-  provider: null
+  provider: RateLimitTracker
   layer: sidecar
   inherited: false
   manual: false
@@ -314,10 +392,21 @@ features:
   evidence:
     files:
     - sidecar/rate_limiter.py
-    symbols: []
+    - locus-extension/src/rate-limiter.ts
+    symbols:
+    - file: sidecar/rate_limiter.py
+      name: RateLimitBucket
+    - file: sidecar/rate_limiter.py
+      name: RateLimitState
+    - file: sidecar/rate_limiter.py
+      name: RateLimitTracker
+    unit:
+    - py -3 -m pytest tests/test_rate_limiter.py -k "test_bucket_properties or test_update_from_headers"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_rate_limiter.py -k "test_should_pause_when_exhausted"
+      -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0010
   title: Usage/Cost Tracking
@@ -328,7 +417,7 @@ features:
   category: Foundation
   verdict: AUGMENT
   source: Pi + Locus
-  provider: null
+  provider: CostTracker
   layer: sidecar
   inherited: false
   manual: false
@@ -349,10 +438,25 @@ features:
   evidence:
     files:
     - sidecar/cost_tracker.py
-    symbols: []
+    - locus-extension/src/cost-tracker.ts
+    symbols:
+    - file: sidecar/cost_tracker.py
+      name: CanonicalUsage
+    - file: sidecar/cost_tracker.py
+      name: PricingEntry
+    - file: sidecar/cost_tracker.py
+      name: CostResult
+    - file: sidecar/cost_tracker.py
+      name: calculate_request_cost
+    - file: sidecar/cost_tracker.py
+      name: CostTracker
+    unit:
+    - py -3 -m pytest tests/test_cost_tracker.py -k "test_canonical_usage_properties
+      or test_calculate_request_cost" -q
+    integration:
+    - py -3 -m pytest tests/test_cost_tracker.py -k "test_cost_tracker_aggregation"
+      -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0011
   title: Title Generation
@@ -363,7 +467,7 @@ features:
   category: Foundation
   verdict: AUGMENT
   source: Pi + Locus
-  provider: null
+  provider: TitleGenerator
   layer: sidecar
   inherited: false
   manual: false
@@ -383,10 +487,21 @@ features:
   evidence:
     files:
     - sidecar/title_generator.py
-    symbols: []
+    - locus-extension/src/title-generator.ts
+    symbols:
+    - file: sidecar/title_generator.py
+      name: clean_title
+    - file: sidecar/title_generator.py
+      name: fallback_title
+    - file: sidecar/title_generator.py
+      name: TitleGenerator
+    unit:
+    - py -3 -m pytest tests/test_title_generator.py -k "test_clean_title_removes_quotes_and_prefixes
+      or test_fallback_title" -q
+    integration:
+    - py -3 -m pytest tests/test_title_generator.py -k "test_title_generator_with_mock_llm
+      or test_title_generator_fallback_on_error" -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0012
   title: Onboarding Flow
@@ -397,7 +512,7 @@ features:
   category: Foundation
   verdict: AUGMENT
   source: Pi + Locus CLI
-  provider: null
+  provider: run_setup_wizard
   layer: sidecar
   inherited: false
   manual: false
@@ -416,10 +531,26 @@ features:
   evidence:
     files:
     - locus_cli/setup.py
-    symbols: []
+    symbols:
+    - file: locus_cli/setup.py
+      name: validate_key
+    - file: locus_cli/setup.py
+      name: load_secret_env
+    - file: locus_cli/setup.py
+      name: save_secret_env
+    - file: locus_cli/setup.py
+      name: update_config_mode
+    - file: locus_cli/setup.py
+      name: run_setup_wizard
+    - file: locus_cli/setup.py
+      name: main
+    unit:
+    - py -3 -m pytest tests/test_setup_wizard.py -k "test_validate_key_with_custom_validator
+      or test_save_and_load_secret_env" -q
+    integration:
+    - py -3 -m pytest tests/test_setup_wizard.py -k "test_setup_wizard_re_run_safety
+      or test_setup_wizard_non_interactive_with_answers" -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0013
   title: Agent Initialization
@@ -1049,7 +1180,7 @@ features:
   category: Sessions
   verdict: AUGMENT
   source: Pi session-manager.ts + Locus
-  provider: null
+  provider: SessionManager
   layer: sidecar
   inherited: false
   manual: false
@@ -1068,12 +1199,29 @@ features:
     '§5.1-5.8: Session Management & Telegram Bridge': c87e52a20fd82846
   evidence:
     files:
-    - sidecar/memory.py
+    - sidecar/session_manager.py
     - sidecar/session_export.py
-    symbols: []
+    - locus-extension/src/session-manager.ts
+    symbols:
+    - file: sidecar/session_manager.py
+      name: SessionEntryType
+    - file: sidecar/session_manager.py
+      name: SessionEntry
+    - file: sidecar/session_manager.py
+      name: SessionMetadata
+    - file: sidecar/session_manager.py
+      name: Session
+    - file: sidecar/session_manager.py
+      name: SessionManager
+    - file: sidecar/session_export.py
+      name: SessionExporter
+    unit:
+    - py -3 -m pytest tests/test_session_management.py -k "test_session_create_and_append"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_session_management.py -k "test_session_forking_branch
+      or test_session_export_markdown_and_jsonl" -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0028
   title: Context References
