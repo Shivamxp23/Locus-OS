@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-15T20:21:20+0530",
-  "commit": "d6bff12396e14c336a09eac3b1c4a3cc8ed61958",
-  "dirty": true,
+  "generated_at": "2026-10-15T20:24:34+0530",
+  "commit": "4897cd6514c1d6672f92ef5beb3aac5baa2f7270",
+  "dirty": false,
   "static": false,
   "guard": {
     "verdict": "FAIL",
@@ -847,10 +847,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "........                                                                 [100%]\n8 passed in 22.85s\n",
+            "tail": "........                                                                 [100%]\n8 passed in 0.69s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 25.0
+            "seconds": 2.9
           }
         ],
         "guard": [],
@@ -861,10 +861,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed in 0.62s\n",
+            "tail": ".                                                                        [100%]\n1 passed in 0.61s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.8
+            "seconds": 2.7
           }
         ]
       }
@@ -1106,10 +1106,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "...........                                                              [100%]\n11 passed in 0.44s\n",
+            "tail": "...........                                                              [100%]\n11 passed in 0.47s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.6
+            "seconds": 2.7
           }
         ],
         "guard": [],
@@ -1120,10 +1120,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed in 0.27s\n",
+            "tail": ".                                                                        [100%]\n1 passed in 0.29s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.5
           }
         ]
       }
@@ -1613,10 +1613,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..........                                                               [100%]\n10 passed in 0.08s\n",
+            "tail": "..........                                                               [100%]\n10 passed in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -1651,7 +1651,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "......                                                                   [100%]\n6 passed in 0.03s\n",
+            "tail": "......                                                                   [100%]\n6 passed in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.0
@@ -1773,10 +1773,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "......                                                                   [100%]\n6 passed in 0.05s\n",
+            "tail": "......                                                                   [100%]\n6 passed in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 1.9
           }
         ],
         "guard": [
@@ -2410,10 +2410,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "................                                                         [100%]\n16 passed in 1.05s\n",
+            "tail": "................                                                         [100%]\n16 passed in 1.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.0
+            "seconds": 2.9
           }
         ],
         "guard": [],
@@ -2424,10 +2424,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed in 1.11s\n",
+            "tail": "..                                                                       [100%]\n2 passed in 0.58s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.1
+            "seconds": 2.6
           }
         ]
       }
