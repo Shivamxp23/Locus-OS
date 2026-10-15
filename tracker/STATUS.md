@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `d4d48e5e4c` - 2026-10-15T22:53:00+0530 - with test runs
+- commit `3e522fc39c` - 2026-10-15T23:08:20+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 10, 'INFO': 0}
-- features: 125 | verified average **16.7%** | old claimed average 71.4% over 86 rows
-- integrated or better: 17 | proven: 1 | overclaims (claimed >= verified + 25): 67 | no evidence: 95
-- by level: {'FILES_PRESENT': 8, 'INHERITED_OK': 12, 'INTEGRATED': 4, 'NO_EVIDENCE': 95, 'PROVEN': 1, 'UNIT_VERIFIED': 5}
+- features: 125 | verified average **17.4%** | old claimed average 71.4% over 86 rows
+- integrated or better: 18 | proven: 1 | overclaims (claimed >= verified + 25): 66 | no evidence: 94
+- by level: {'FILES_PRESENT': 8, 'INHERITED_OK': 12, 'INTEGRATED': 5, 'NO_EVIDENCE': 94, 'PROVEN': 1, 'UNIT_VERIFIED': 5}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -81,7 +81,7 @@
 | F-0046 | Telegram Gateway | 90% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0047 | Graceful Restart | 50% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/. Create them or correct the path. |
 | F-0048 | MCP Server/Client | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/mcp_client.py. Create them or correct the path. |
-| F-0049 | Trajectory Recording | 40% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/learning/trajectory.py. Create them or correct the path. |
+| F-0049 | Trajectory Recording | 40% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0050 | AI Chat Archiver | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/chat_archiver.py, sidecar/crawlers/chat_crawle |
 | F-0051 | Computer Use / Screen | 40% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/screen/. Create them or correct the path. |
 | F-0052 | VNC Remote | 20% | 0% | NO_EVIDENCE | NO_FILES_NAMED | Name the files this feature lives in (evidence.files). |
