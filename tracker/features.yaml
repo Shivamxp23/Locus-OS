@@ -1464,10 +1464,10 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Extensions
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Hermes plugin_llm.py
-  provider: null
-  layer: unknown
+  provider: PluginLLMBridge
+  layer: sidecar
   inherited: false
   manual: false
   claimed:
@@ -1484,11 +1484,21 @@ features:
   spec_sha:
     '§9.9: Plugin LLM Sandboxing & Auxiliary Bridge': a0529db70a17ca0a
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/plugins/llm_bridge.py
+    - locus-extension/src/plugins/llm-bridge.ts
+    symbols:
+    - file: sidecar/plugins/llm_bridge.py
+      name: PluginQuotaPolicy
+    - file: sidecar/plugins/llm_bridge.py
+      name: PluginLLMBridge
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_voice_browser_and_clients.py -k test_plugin_llm_bridge_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_voice_browser_and_clients.py -k test_plugin_llm_bridge_integration
+      -q
   depends_on: []
 - id: F-0035
   title: Learning / Profiling / Reward Model
@@ -1851,9 +1861,9 @@ features:
   mapping: grouped
   origin: legacy-tracker
   category: Voice
-  verdict: MULTI-PROVIDER
+  verdict: INTEGRATED
   source: Hermes + Locus
-  provider: STTProvider, TTSProvider
+  provider: VoicePipeline
   layer: sidecar
   inherited: false
   manual: false
@@ -1872,11 +1882,20 @@ features:
     '§14.1-14.4: Voice Pipeline': 8a4b2db661c1b83b
   evidence:
     files:
-    - sidecar/voice/
-    symbols: []
+    - sidecar/voice/pipeline.py
+    - locus-extension/src/voice/pipeline.ts
+    symbols:
+    - file: sidecar/voice/pipeline.py
+      name: AudioTranscriber
+    - file: sidecar/voice/pipeline.py
+      name: VoicePipeline
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_voice_browser_and_clients.py -k test_voice_pipeline_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_voice_browser_and_clients.py -k test_voice_pipeline_integration
+      -q
   depends_on: []
 - id: F-0045
   title: Browser Automation
@@ -1885,9 +1904,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Browser
-  verdict: MULTI-PROVIDER
+  verdict: INTEGRATED
   source: OpenHuman + Pi
-  provider: BrowserProvider
+  provider: BrowserAutomationController
   layer: sidecar
   inherited: false
   manual: false
@@ -1906,11 +1925,20 @@ features:
     '§16.1-16.2 + §20.1-20.3: Browser Automation & Desktop Control': 834e3869ac84f0f5
   evidence:
     files:
-    - sidecar/browser/
-    symbols: []
+    - sidecar/browser/automation.py
+    - locus-extension/src/browser/automation.ts
+    symbols:
+    - file: sidecar/browser/automation.py
+      name: BrowserPageSession
+    - file: sidecar/browser/automation.py
+      name: BrowserAutomationController
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_voice_browser_and_clients.py -k test_browser_automation_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_voice_browser_and_clients.py -k test_browser_automation_integration
+      -q
   depends_on: []
 - id: F-0046
   title: Telegram Gateway
@@ -2584,9 +2612,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Retrieval
-  verdict: KEEP-PREBUILT
+  verdict: INTEGRATED
   source: VectifyAI/PageIndex
-  provider: RetrievalProvider
+  provider: PageIndexEngine
   layer: sidecar
   inherited: false
   manual: false
@@ -2607,10 +2635,19 @@ features:
   evidence:
     files:
     - sidecar/search/pageindex.py
-    symbols: []
+    - locus-extension/src/search/pageindex.ts
+    symbols:
+    - file: sidecar/search/pageindex.py
+      name: PageIndexEntry
+    - file: sidecar/search/pageindex.py
+      name: PageIndexEngine
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_voice_browser_and_clients.py -k test_pageindex_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_voice_browser_and_clients.py -k test_pageindex_integration
+      -q
   depends_on: []
 - id: F-0060
   title: Obsidian Self-Hosted LiveSync & CouchDB Real-Time Sync Engine
@@ -5046,10 +5083,10 @@ features:
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
   category: null
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: null
-  provider: null
-  layer: unknown
+  provider: AuxiliaryLLMClient
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -5058,11 +5095,21 @@ features:
   spec_sha:
     '§29.2: Auxiliary LLM Client': 9f48b55bdb49c40e
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/llm/auxiliary_client.py
+    - locus-extension/src/llm/auxiliary-client.ts
+    symbols:
+    - file: sidecar/llm/auxiliary_client.py
+      name: AuxiliaryLLMResponse
+    - file: sidecar/llm/auxiliary_client.py
+      name: AuxiliaryLLMClient
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_voice_browser_and_clients.py -k test_auxiliary_llm_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_voice_browser_and_clients.py -k test_auxiliary_llm_integration
+      -q
   depends_on: []
 - id: F-0125
   title: 'Modularity foundation: provider registry + config accessor (sidecar and
