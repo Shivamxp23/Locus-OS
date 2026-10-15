@@ -23,3 +23,5 @@
 {"event":"accepted","story":"US-10","feature":"F-0058","level":4,"note":"Verified service starts FastAPI and APScheduler, handles signals, and persists across restarts","date":"2026-12-24","commit":"2bbbc748946f"}
 {"event":"closed","sprint":"S7","date":"2026-12-24","planned_points":2,"velocity":2,"done":["US-10"],"not_done":{}}
 {"event":"planned","sprint":"S8","start":"2026-12-25","end":"2027-01-07","goal":"One command sets up local, VM or hybrid, with keys and Telegram pairing.","capacity":2,"points":2,"stories":["US-11"],"date":"2026-12-25"}
+{"event":"accepted","story":"US-11","feature":"F-0082","level":3,"note":"Verified thin launchers, locus_cli package, 8 canonical vault directories, and non-interactive installation","date":"2027-01-07","commit":"daf55f0252ab"}
+{"event":"closed","sprint":"S8","date":"2027-01-07","planned_points":2,"velocity":2,"done":["US-11"],"not_done":{}}
