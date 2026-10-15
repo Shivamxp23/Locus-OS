@@ -1971,10 +1971,32 @@ features:
   evidence:
     files:
     - sidecar/life_os.py
-    symbols: []
+    - sidecar/life_os/dcs.py
+    - sidecar/life_os/factions.py
+    - sidecar/life_os/modes.py
+    - sidecar/life_os/tws.py
+    - sidecar/task_scoring.py
+    - tests/test_task_scoring.py
+    symbols:
+    - file: sidecar/life_os/tws.py
+      name: calculate_base_tws
+    - file: sidecar/life_os/tws.py
+      name: calculate_tws
+    - file: sidecar/life_os/factions.py
+      name: calculate_faction_lag_bonus
+    - file: sidecar/life_os/dcs.py
+      name: calculate_dcs
+    - file: sidecar/life_os/modes.py
+      name: resolve_operating_mode
+    - file: sidecar/task_scoring.py
+      name: TaskPriorityScorer
+    - file: sidecar/task_scoring.py
+      name: TaskScorerProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_task_scoring.py -k "unit" -q
+    integration:
+    - py -3 -m pytest tests/test_task_scoring.py -k "integration" -q
   depends_on: []
 - id: F-0056
   title: Operating Modes / Scheduler
