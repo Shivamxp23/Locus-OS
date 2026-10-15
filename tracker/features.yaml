@@ -1603,12 +1603,21 @@ features:
     '§17.1-17.11: Channel Adapters & Platform Registry': 3dcb11d7cd5698ec
   evidence:
     files:
-    - sidecar/gateway/
-    - gateway/
-    symbols: []
+    - sidecar/channel_telegram.py
+    - tests/test_channel_telegram.py
+    - tests/test_channel_telegram_integration.py
+    symbols:
+    - file: sidecar/channel_telegram.py
+      name: TelegramChannelProvider
+    - file: sidecar/channel_telegram.py
+      name: ChannelProvider
+    - file: sidecar/channel_telegram.py
+      name: register_telegram_channel
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_channel_telegram.py -q
+    integration:
+    - py -3 -m pytest tests/test_channel_telegram_integration.py -q
   depends_on: []
 - id: F-0047
   title: Graceful Restart

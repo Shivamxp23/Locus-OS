@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `ee1f9e7084` (dirty working tree) - 2026-10-15T04:24:38+0530 - with test runs
-- guard: FAIL {'FAIL': 1, 'WARN': 14, 'INFO': 0}
-- features: 125 | verified average **13.1%** | old claimed average 71.4% over 86 rows
-- integrated or better: 13 | proven: 1 | overclaims (claimed >= verified + 25): 71 | no evidence: 103
-- by level: {'FILES_PRESENT': 5, 'INHERITED_OK': 12, 'NO_EVIDENCE': 103, 'PROVEN': 1, 'UNIT_VERIFIED': 4}
+- commit `374c4e91dd` (dirty working tree) - 2026-10-15T16:56:49+0530 - with test runs
+- guard: FAIL {'FAIL': 1, 'WARN': 12, 'INFO': 0}
+- features: 125 | verified average **13.8%** | old claimed average 71.4% over 86 rows
+- integrated or better: 14 | proven: 1 | overclaims (claimed >= verified + 25): 70 | no evidence: 102
+- by level: {'FILES_PRESENT': 5, 'INHERITED_OK': 12, 'INTEGRATED': 1, 'NO_EVIDENCE': 102, 'PROVEN': 1, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -17,7 +17,6 @@
 | F-0082 | Install Script (ALL platforms) | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: install.ps1, install.sh, install.bat, locus.bat .... Create them |
 | F-0085 | VM Backend Setup | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: HEADLESS_VM_AND_CRON_SETUP_GUIDE.md, install.sh, install.ps1. Cr |
 | F-0029 | Coding Context | 90% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
-| F-0046 | Telegram Gateway | 90% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/, gateway/. Create them or correct the path. |
 | F-0055 | DCS / TWS / Factions | 90% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/life_os.py. Create them or correct the path. |
 | F-0066 | Health Checks | 90% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus_cli/main.py. Create them or correct the path. |
 | F-0078 | Master Conductor | 90% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/conductor.py. Create them or correct the path. |
@@ -29,6 +28,7 @@
 | F-0064 | Dual Interface / Check-ins | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/. Create them or correct the path. |
 | F-0007 | Post-Turn Review | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/learning/reflector.py. Create them or correct the path. |
 | F-0009 | Rate Limit Tracking | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/rate_limiter.py. Create them or correct the path. |
+| F-0021 | Neo4j Agent Memory (POLE+O) | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/neo4j_memory.py. Create them or correct the path. |
 
 ## All features
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -78,7 +78,7 @@
 | F-0043 | Message Sanitization | 75% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0044 | STT / TTS Providers | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/voice/. Create them or correct the path. |
 | F-0045 | Browser Automation | 45% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/browser/. Create them or correct the path. |
-| F-0046 | Telegram Gateway | 90% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/, gateway/. Create them or correct the path. |
+| F-0046 | Telegram Gateway | 90% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0047 | Graceful Restart | 50% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/. Create them or correct the path. |
 | F-0048 | MCP Server/Client | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/mcp_client.py. Create them or correct the path. |
 | F-0049 | Trajectory Recording | 40% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/learning/trajectory.py. Create them or correct the path. |

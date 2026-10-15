@@ -1,32 +1,33 @@
 {
-  "generated_at": "2026-10-15T04:24:38+0530",
-  "commit": "ee1f9e70841f1c6e33a8197580d1d6fe82095846",
+  "generated_at": "2026-10-15T16:56:49+0530",
+  "commit": "374c4e91dd835bf37c593a78b7f7517f6793764d",
   "dirty": true,
   "static": false,
   "guard": {
     "verdict": "FAIL",
     "counts": {
       "FAIL": 1,
-      "WARN": 14,
+      "WARN": 12,
       "INFO": 0
     }
   },
   "summary": {
     "features": 125,
-    "verified_mean_pct": 13.1,
+    "verified_mean_pct": 13.8,
     "claimed_mean_pct": 71.4,
     "claimed_rows": 86,
     "by_label": {
       "FILES_PRESENT": 5,
       "INHERITED_OK": 12,
-      "NO_EVIDENCE": 103,
+      "INTEGRATED": 1,
+      "NO_EVIDENCE": 102,
       "PROVEN": 1,
       "UNIT_VERIFIED": 4
     },
-    "integrated_or_better": 13,
+    "integrated_or_better": 14,
     "proven": 1,
-    "overclaims": 71,
-    "no_evidence": 103,
+    "overclaims": 70,
+    "no_evidence": 102,
     "spec_sections_total": 135,
     "spec_changed": 0
   },
@@ -824,20 +825,49 @@
       "id": "F-0046",
       "title": "Telegram Gateway",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 90.0,
-      "gap": 90.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": 5.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/gateway/, gateway/"
+        "no recorded proof"
       ],
-      "next": "Files claimed but absent: sidecar/gateway/, gateway/. Create them or correct the path.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_channel_telegram.py -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "........                                                                 [100%]\n8 passed in 0.77s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 4.1
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_channel_telegram_integration.py -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".                                                                        [100%]\n1 passed in 0.69s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 3.9
+          }
+        ]
+      }
     },
     "F-0047": {
       "id": "F-0047",
@@ -1554,10 +1584,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..........                                                               [100%]\n10 passed in 0.30s\n",
+            "tail": "..........                                                               [100%]\n10 passed in 0.13s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 6.0
+            "seconds": 3.3
           }
         ],
         "guard": [],
@@ -1592,10 +1622,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "......                                                                   [100%]\n6 passed in 0.10s\n",
+            "tail": "......                                                                   [100%]\n6 passed in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 5.2
+            "seconds": 3.3
           }
         ],
         "guard": [
@@ -1678,10 +1708,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed in 0.10s\n",
+            "tail": ".....                                                                    [100%]\n5 passed in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 4.6
+            "seconds": 3.3
           }
         ],
         "guard": [],
@@ -1714,10 +1744,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "......                                                                   [100%]\n6 passed in 0.10s\n",
+            "tail": "......                                                                   [100%]\n6 passed in 0.13s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 4.9
+            "seconds": 4.3
           }
         ],
         "guard": [
@@ -2351,10 +2381,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "................                                                         [100%]\n16 passed in 3.22s\n",
+            "tail": "................                                                         [100%]\n16 passed in 5.26s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 7.9
+            "seconds": 10.3
           }
         ],
         "guard": [],
@@ -2365,10 +2395,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed in 2.26s\n",
+            "tail": "..                                                                       [100%]\n2 passed in 5.03s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 7.6
+            "seconds": 12.4
           }
         ]
       }
