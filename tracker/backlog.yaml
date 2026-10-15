@@ -176,6 +176,12 @@ stories:
     points: 2
     target_level: 4
     depends_on: [US-07, US-08]
+    accept:
+      - "When a research job finishes, sidecar/cron_runner.py checks if notify is enabled and dispatches output to the registered ChannelProvider."
+      - "The notification delivered to the paired owner includes the job title, execution status, timestamp, and the research text body."
+      - "If the formatted output exceeds 4096 characters, chunk_message splits the payload so the entire result is sent across sequential Telegram messages without truncation."
+      - "If channel delivery encounters an error or if no channel is configured, the error is recorded in the run log and the scheduler continues running unaffected."
+    demo: 'With a test Telegram token and paired chat ID: run a research job configured with notify: true. Verify the paired owner chat receives the research summary and completion status. Verify messages exceeding 4096 chars arrive as ordered chunks. Verify cron_executions logs delivery status.'
 
   - id: US-10
     epic: E3
@@ -185,6 +191,11 @@ stories:
     points: 3
     target_level: 4
     depends_on: [US-08]
+    accept:
+      - "sidecar/service.py defines a unified service lifecycle that boots the sidecar API daemon and the APScheduler background runner."
+      - "Clean signal handling for SIGINT and SIGTERM stops the scheduler and waits for in-flight jobs to complete or abort safely."
+      - "The job store and execution history persist across process restarts, and jobs scheduled via crontab continue firing on schedule after a service reboot."
+    demo: 'Start sidecar daemon service via python -m sidecar.service in background. Probe http://127.0.0.1:8420/health: both sidecar API and scheduler report ok. Kill the service with SIGTERM: it shuts down gracefully. Restart the service: all scheduled research jobs reload from LOCUS_HOME/jobs/ and fire on time.'
 
   # ------------------------------------------------------------------ E4 Installer (coarse)
   - id: US-11
@@ -196,6 +207,11 @@ stories:
     target_level: 3
     addendum: [P4]
     depends_on: [US-05]
+    accept:
+      - "The locus_cli package is created at repository root containing Python installer modules, satisfying guard check layout-required with 0 FAIL."
+      - "install.ps1 and install.sh are thin launchers under 50 lines that verify Python 3.11+, bootstrap the virtualenv, and invoke locus_cli.main."
+      - "Non-interactive installation supports --yes and --answers flags, creating ~/.locus/config.yaml, jobs/, and the 8 canonical vault folders."
+    demo: 'Run py -3 tools/guard/check.py --full: layout-required passes with 0 FAIL. In a temporary directory, run py -3 -m locus_cli.main --yes: it initializes ~/.locus without prompting, creates the config file and canonical vault directory hierarchy, and exits with code 0.'
 
   - id: US-12
     epic: E4
@@ -207,6 +223,11 @@ stories:
     autopilot: false   # by hand: needs your real API keys
     addendum: [P4]
     depends_on: [US-11]
+    accept:
+      - "Installer setup prompts the user to select topology mode (local, vm, or hybrid) and writes the selection to locus.mode in config.yaml."
+      - "Collects LLM API keys (Anthropic, OpenAI, etc.), performs a lightweight live authentication check for each provided key, and saves valid keys to ~/.locus/.env."
+      - "Secrets in ~/.locus/.env are written with 0600 permissions and never written to config.yaml, git history, or terminal logs."
+    demo: 'Run python -m locus_cli.setup: select local mode, input a test key, verify live key validation succeeds, and verify ~/.locus/.env contains the secret while ~/.locus/config.yaml contains no secrets. Re-run setup: existing values are safely preserved.'
 
   - id: US-13
     epic: E4
@@ -217,6 +238,12 @@ stories:
     target_level: 3
     addendum: [P4]
     depends_on: [US-12]
+    accept:
+      - "locus_cli/doctor.py implements diagnostic checks for Python, Node.js, CouchDB loopback connectivity, config validity, and provider health."
+      - "Prints exactly one line per diagnostic check with [PASS] or [FAIL] indicator and exits 0 only when all essential checks pass."
+      - "Pi Agent TUI invocation remains functional and passes through to upstream packages/coding-agent without breaking upstream flags."
+    demo: 'Run python -m locus_cli.doctor: see one green [PASS] or red [FAIL] line per prerequisite. Run locus doctor with CouchDB down: CouchDB prints [FAIL] with clear fix guidance.'
+
 
   - id: US-14
     epic: E4
