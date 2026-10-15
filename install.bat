@@ -1,2 +1,2 @@
 @echo off
-py -3 -m locus_cli.main %*
+py -3 -m locus_cli.main install %*

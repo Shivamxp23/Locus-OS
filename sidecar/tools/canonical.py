@@ -1,6 +1,6 @@
 """Canonical 13 Locus Tools (§1.3).
 
-Python tool registry and dispatcher corresponding to Pi Agent's 13 canonical tools:
+Python tool registry and dispatcher corresponding to Locus Agent's 13 canonical tools:
 locus_checkin, locus_life, locus_goals, locus_memory, locus_vault, locus_brain,
 locus_research, locus_delegate_code, locus_doctor, locus_pageindex, locus_diagram,
 locus_capture, locus_schedule.

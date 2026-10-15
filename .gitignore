@@ -8,3 +8,4 @@ __pycache__/
 tracker/.cache/
 .keysndocs/*
 !.keysndocs/Documentation/
+graphify-out/

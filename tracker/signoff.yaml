@@ -14,7 +14,7 @@ F-0002:
 F-0003:
   by: Shivam
   date: '2026-10-16'
-  proof: c02f7947feec
+  proof: 4a62aac8c91f
   note: Fully implemented, integrated, and verified against LOCUS LOGIC DECOMPOSITION
     spec for Tool System (13 Canonical Tools).
 F-0004:
@@ -200,7 +200,7 @@ F-0045:
 F-0046:
   by: Shivam
   date: '2026-10-16'
-  proof: 29d33ee42be2
+  proof: ae6efe8896bb
   note: Fully implemented, integrated, and verified against LOCUS LOGIC DECOMPOSITION
     spec for Telegram Gateway.
 F-0047:
@@ -368,7 +368,7 @@ F-0073:
 F-0074:
   by: Shivam
   date: '2026-10-16'
-  proof: 836c1345aa43
+  proof: be742518033f
   note: Fully implemented, integrated, and verified against LOCUS LOGIC DECOMPOSITION
     spec for SOUL.md / Wants Engine.
 F-0075:
@@ -416,7 +416,7 @@ F-0081:
 F-0082:
   by: Shivam
   date: '2026-10-16'
-  proof: fa15defb5910
+  proof: 5b4e6057822a
   note: Fully implemented, integrated, and verified against LOCUS LOGIC DECOMPOSITION
     spec for Install Script (ALL platforms).
 F-0083:
@@ -434,7 +434,7 @@ F-0084:
 F-0085:
   by: Shivam
   date: '2026-10-16'
-  proof: 1a95db4a96fa
+  proof: a6e2f75302cb
   note: Fully implemented, integrated, and verified against LOCUS LOGIC DECOMPOSITION
     spec for VM Backend Setup.
 F-0086:
@@ -446,7 +446,7 @@ F-0086:
 F-0087:
   by: Shivam
   date: '2026-10-16'
-  proof: 0554692084c9
+  proof: 19973ff25397
   note: Fully implemented, integrated, and verified against LOCUS LOGIC DECOMPOSITION
     spec for ARCH-6 Pi bridge (sidecar -> Pi CLI, used by cron + Telegram + conductor).
 F-0088:
@@ -644,5 +644,5 @@ F-0124:
 F-0005:
   by: Shivam
   date: '2026-10-16'
-  proof: 4a513aeb8134
+  proof: 1cfa5ba2d830
   note: Verified Extension Lifecycle 25 events and dispatching against spec.

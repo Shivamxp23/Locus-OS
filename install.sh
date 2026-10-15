@@ -28,4 +28,4 @@ echo "==> Found Python ($PYTHON_BIN), launching Locus installer..."
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export PYTHONPATH="${SCRIPT_DIR}:${PYTHONPATH:-}"
 
-exec "$PYTHON_BIN" -m locus_cli.main "$@"
+exec "$PYTHON_BIN" -m locus_cli.main install "$@"

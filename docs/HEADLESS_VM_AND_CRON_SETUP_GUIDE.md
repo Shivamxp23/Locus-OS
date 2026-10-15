@@ -8,7 +8,7 @@ This guide describes deploying Locus OS on a headless remote VM (e.g., Ubuntu 22
 
 In **Hybrid Mode** (`locus.mode: hybrid`):
 - **Backend Services**: The FastAPI sidecar daemon (:8420), CouchDB database (:5984), and APScheduler background cron runner execute on the remote VM.
-- **Frontend / CLI**: The Pi Agent interactive TUI and developer commands run on the owner's local computer.
+- **Frontend / CLI**: The Locus Agent interactive TUI and developer commands run on the owner's local computer.
 - **Transport (D-13)**: The local machine communicates with the VM backend exclusively through an **SSH loopback tunnel**:
   ```bash
   ssh -N -L 8420:127.0.0.1:8420 ubuntu@<VM_IP_OR_HOST>

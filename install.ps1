@@ -28,8 +28,8 @@ $repoRoot = $PSScriptRoot
 $env:PYTHONPATH = "$repoRoot;$env:PYTHONPATH"
 
 if ($pythonExe -eq "py -3") {
-    & py -3 -m locus_cli.main @args
+    & py -3 -m locus_cli.main install @args
 } else {
-    & python -m locus_cli.main @args
+    & python -m locus_cli.main install @args
 }
 exit $LASTEXITCODE

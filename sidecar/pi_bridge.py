@@ -1,4 +1,4 @@
-"""Pi Agent Bridge — subprocess execution of upstream Pi CLI with mandatory security flags.
+"""Locus Agent Bridge — subprocess execution of agent engine with mandatory security flags.
 
 Enforces AGENTS.md Law 7 and S-3:
 - Always passes `--approve --no-context-files`
@@ -58,7 +58,7 @@ def run_pi_turn(
     timeout: int = 300,
     extra_args: Sequence[str] | None = None,
 ) -> PiTurnResult:
-    """Execute a single turn of upstream Pi Agent CLI.
+    """Execute a single turn of Locus Agent execution engine.
 
     Guarantees:
     - Passes `--approve` so project extensions load headlessly

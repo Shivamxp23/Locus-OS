@@ -60,6 +60,40 @@ def test_soul_engine_integration():
     assert len(engine.profile.internal_wants) >= 2
 
 
+def test_soul_engine_markdown_parsing(tmp_path):
+    soul_file = tmp_path / "SOUL.md"
+    soul_file.write_text(
+        "# SOUL: CustomLocus\n\n"
+        "## Persona\n"
+        "Tenacious cognitive architect and autonomous companion\n\n"
+        "## Core Values\n"
+        "- Radical intellectual honesty\n"
+        "- Relentless iterative compounding\n"
+        "- Extreme operational ownership\n\n"
+        "## Internal Wants\n"
+        "- Maximize creative leverage\n"
+        "- Eliminate friction in thought execution\n\n"
+        "## Conversational Tone\n"
+        "Warm, punchy, hyper-lucid\n\n"
+        "## Curiosity Drive\n"
+        "0.92\n",
+        encoding="utf-8",
+    )
+    engine = SoulEngine(str(soul_file))
+    assert engine.profile.name == "CustomLocus"
+    assert "Tenacious cognitive architect" in engine.profile.persona_summary
+    assert "Radical intellectual honesty" in engine.profile.core_values
+    assert len(engine.profile.core_values) == 3
+    assert len(engine.profile.internal_wants) == 2
+    assert "Maximize creative leverage" in engine.profile.internal_wants
+    assert engine.profile.conversational_tone == "Warm, punchy, hyper-lucid"
+    assert engine.profile.curiosity_drive == 0.92
+
+    injection = engine.get_system_prompt_injection()
+    assert "[SOUL DIRECTIVE: CustomLocus]" in injection
+    assert "Drive Level: 0.92" in injection
+
+
 # -----------------------------------------------------------------------------
 # F-0075: Content Engine
 # -----------------------------------------------------------------------------

@@ -258,7 +258,7 @@ class TelegramChannelProvider(ChannelProvider):
             session_id=session_id,
         )
 
-        response_text = pi_result.stdout.strip() if pi_result.stdout else "No output from Pi Agent."
+        response_text = pi_result.stdout.strip() if pi_result.stdout else "No output from Locus Agent."
         if not pi_result.ok and pi_result.stderr:
             response_text = f"Error: {pi_result.stderr.strip()}\n{response_text}"
 

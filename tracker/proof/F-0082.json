@@ -1,12 +1,12 @@
 {
   "id": "F-0082",
-  "commit": "303937ab92f491d976d521858a1afc6dca36b6a1",
-  "dirty": false,
-  "ran_at": "2026-10-16T02:15:19+0530",
-  "files_sha256": "fa15defb5910c9a6aec7be03f8962683690f2c1ca13bbcc3041c91bf06b8113d",
+  "commit": "9faf47b2451361783ad1018d77bdb5a9c73fedc2",
+  "dirty": true,
+  "ran_at": "2026-10-16T03:56:18+0530",
+  "files_sha256": "5b4e6057822a6dfed060197cd2e201fa7f8c12d4bcf3c45adc38d1cd91e95711",
   "cmd": "py -3 -m pytest tests/test_installer.py -k test_init_locus_home_creates_canonical_structure -q",
   "exit": 0,
-  "seconds": 0.5,
-  "output_sha256": "2f9acb02faa121bb2a3621951f57b4c690655337edee2e5ac350be2b3be88ea8",
-  "output_tail": "Verified F-0082: All tests passed with 100% assertion success.\n"
+  "seconds": 4.9,
+  "output_sha256": "c9008f25871d6e8f8fad04d317272aa8d078e10316d8e412b871f660f0c34b1f",
+  "output_tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.17s\n"
 }

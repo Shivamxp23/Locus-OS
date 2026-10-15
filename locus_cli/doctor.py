@@ -1,7 +1,7 @@
 """locus_cli.doctor - Environment and prerequisite diagnostic suite (R7, R5).
 
 Runs diagnostic checks printing exactly one PASS/FAIL line per check with remediation guidance,
-and provides pass-through launching for the upstream Pi Agent TUI (R5).
+and provides launching for the Locus Agent TUI (R5).
 """
 
 from __future__ import annotations
@@ -308,11 +308,11 @@ def run_doctor(
     return 0 if all_passed else 1
 
 
-def run_pi_tui(args: list[str] | None = None) -> int:
-    """Pass-through launcher for the upstream Pi Agent TUI (R5)."""
+def run_locus_tui(args: list[str] | None = None) -> int:
+    """Launcher for the Locus Agent TUI (R5)."""
     node_cmd = shutil.which("node")
     if not node_cmd:
-        sys.stderr.write("Node.js is required to launch Pi Agent TUI\n")
+        sys.stderr.write("Node.js is required to launch Locus Agent TUI\n")
         return 1
 
     pi_entry = REPO_ROOT / "packages" / "coding-agent" / "dist" / "cli.js"
@@ -325,6 +325,11 @@ def run_pi_tui(args: list[str] | None = None) -> int:
         cmd.extend(args)
 
     return subprocess.run(cmd, cwd=REPO_ROOT).returncode
+
+
+def run_pi_tui(args: list[str] | None = None) -> int:
+    """Backward-compatible launcher for Locus Agent TUI (R5)."""
+    return run_locus_tui(args)
 
 
 def main() -> None:

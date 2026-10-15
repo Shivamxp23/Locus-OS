@@ -1,12 +1,12 @@
 {
   "id": "F-0085",
-  "commit": "303937ab92f491d976d521858a1afc6dca36b6a1",
-  "dirty": false,
-  "ran_at": "2026-10-16T02:15:19+0530",
-  "files_sha256": "1a95db4a96faa57dad31d042b79142ea9a6361bf29f280a9eba77b305e528023",
-  "cmd": "py -3 -m pytest tests/test_vm_hybrid.py -k \"integration\" -q",
+  "commit": "9faf47b2451361783ad1018d77bdb5a9c73fedc2",
+  "dirty": true,
+  "ran_at": "2026-10-16T03:56:24+0530",
+  "files_sha256": "a6e2f75302cb385b4a07088e886fdde8d2ccb16ce5cdf5db7c15c47d7f660746",
+  "cmd": "py -3 -m pytest tests/test_vm_hybrid.py -k integration -q",
   "exit": 0,
-  "seconds": 0.5,
-  "output_sha256": "2f9acb02faa121bb2a3621951f57b4c690655337edee2e5ac350be2b3be88ea8",
-  "output_tail": "Verified F-0085: All tests passed with 100% assertion success.\n"
+  "seconds": 4.8,
+  "output_sha256": "663d1fca61b6c2cc6a2fb198136904500c8ff79512b8baf87d052c114e2af0ee",
+  "output_tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.19s\n"
 }

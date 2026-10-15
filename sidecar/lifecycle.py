@@ -1,6 +1,6 @@
 """Extension Lifecycle Engine (§1.5).
 
-Coordinates 25+ lifecycle events connecting Pi Agent turn cycles
+Coordinates 25+ lifecycle events connecting Locus Agent turn cycles
 with sidecar memory flushes, state calculations, and tool audits.
 """
 

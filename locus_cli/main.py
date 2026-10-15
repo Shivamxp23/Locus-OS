@@ -300,9 +300,131 @@ def run_installer(argv: list[str] | None = None) -> int:
     return 0
 
 
-def main() -> None:
-    """CLI entry point."""
-    sys.exit(run_installer(sys.argv[1:]))
+def is_installed(locus_home: Path | None = None) -> bool:
+    """Check if Locus OS has been installed (config.yaml exists in LOCUS_HOME)."""
+    if locus_home is None:
+        if "LOCUS_HOME" in os.environ and os.environ["LOCUS_HOME"].strip():
+            locus_home = Path(os.environ["LOCUS_HOME"]).expanduser().resolve()
+        else:
+            locus_home = Path.home() / ".locus"
+    else:
+        locus_home = Path(locus_home).expanduser().resolve()
+    return (locus_home / "config.yaml").is_file()
+
+
+def print_cli_help() -> None:
+    """Print top-level Locus CLI help."""
+    print("""Locus OS - Autonomous Agent Operating System
+
+Usage:
+  locus [command] [options]
+
+Commands:
+  (no command)      Launch interactive Locus TUI (runs installer if not yet installed)
+  tui               Launch interactive Locus TUI session
+  install           Run Locus OS installer / bootstrapper
+  setup             Run interactive configuration wizard (modes, API keys)
+  doctor            Run diagnostic checks on environment and dependencies
+  dashboard         Display real-time terminal status dashboard
+  version           Display Locus OS version
+
+Options:
+  --print, -p TEXT  Execute a single turn in batch mode and exit
+  --help, -h        Show this help message
+  --version, -v     Show version information
+
+Installer Options (with 'locus install' or direct flags):
+  -y, --yes         Non-interactive installation accepting defaults
+  --answers PATH    Path to JSON/YAML answers file for unattended installation
+  --locus-home PATH Target LOCUS_HOME directory (default: ~/.locus)
+  --vault-root PATH Target vault root directory (default: <LOCUS_HOME>/vault)
+  --mode MODE       Installation mode (local, vm, hybrid)
+""")
+
+
+def main(argv: list[str] | None = None) -> None:
+    """CLI entry point for Locus OS."""
+    if argv is None:
+        argv = sys.argv[1:]
+
+    # Resolve home path for install check
+    if "LOCUS_HOME" in os.environ and os.environ["LOCUS_HOME"].strip():
+        home_path = Path(os.environ["LOCUS_HOME"]).expanduser().resolve()
+    else:
+        home_path = Path.home() / ".locus"
+
+    # If no arguments provided:
+    if not argv:
+        if is_installed(home_path):
+            from locus_cli.tui import run_tui
+
+            sys.exit(run_tui(locus_home=home_path))
+        else:
+            print(f"Locus OS is not yet installed in {home_path}.")
+            print("Starting installation process...\n")
+            exit_code = run_installer([])
+            if exit_code == 0:
+                print("\nInstallation complete! Launching Locus TUI...\n")
+                from locus_cli.tui import run_tui
+
+                sys.exit(run_tui(locus_home=home_path))
+            sys.exit(exit_code)
+
+    subcommand = argv[0].lower()
+
+    if subcommand == "install":
+        sys.exit(run_installer(argv[1:]))
+
+    if subcommand == "tui":
+        from locus_cli.tui import run_tui
+
+        sys.exit(run_tui(locus_home=home_path))
+
+    if subcommand in ("--print", "-p"):
+        from locus_cli.tui import run_tui
+
+        query = " ".join(argv[1:]) if len(argv) > 1 else ""
+        sys.exit(run_tui(locus_home=home_path, query=query))
+
+    if subcommand in ("doctor", "--doctor"):
+        from locus_cli.doctor import run_doctor
+
+        sys.exit(run_doctor(locus_home=home_path))
+
+    if subcommand in ("dashboard", "dash", "status"):
+        from sidecar.display.dashboard import LocusTUIDashboard
+
+        dash = LocusTUIDashboard()
+        print(dash.render_status_screen())
+        sys.exit(0)
+
+    if subcommand in ("--help", "-h", "help"):
+        print_cli_help()
+        sys.exit(0)
+
+    if subcommand in ("--version", "-v", "version"):
+        print("Locus OS v0.1.0 (Autonomous Agent Operating System)")
+        sys.exit(0)
+
+    # If any installer flag is passed directly (e.g. -y, --yes, --answers, etc.)
+    installer_flags = {
+        "-y",
+        "--yes",
+        "--answers",
+        "--locus-home",
+        "--vault-root",
+        "--mode",
+        "--setup",
+        "--setup-telegram",
+        "--telegram-setup",
+        "--systemd",
+        "--generate-systemd",
+    }
+    if any(arg.split("=")[0] in installer_flags for arg in argv):
+        sys.exit(run_installer(argv))
+
+    # Fallback to run_installer if unknown flag or options
+    sys.exit(run_installer(argv))
 
 
 if __name__ == "__main__":
