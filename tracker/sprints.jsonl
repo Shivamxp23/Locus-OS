@@ -49,3 +49,4 @@
 {"event":"planned","sprint":"S16","start":"2027-04-16","end":"2027-04-29","goal":"Every task at every scale gets a priority score; Locus drives other harnesses.","capacity":2,"points":2,"stories":["US-19"],"date":"2027-04-16"}
 {"event":"accepted","story":"US-19","feature":"F-0055","level":4,"note":"Verified TWS formula, faction lag bonuses, and Three-Layer Goal Stack multi-scale roll-up","date":"2027-04-29","commit":"53d15a18f9c0"}
 {"event":"closed","sprint":"S16","date":"2027-04-29","planned_points":2,"velocity":2,"done":["US-19"],"not_done":{}}
+{"event":"planned","sprint":"S17","start":"2027-04-30","end":"2027-05-13","goal":"Every task at every scale gets a priority score; Locus drives other harnesses.","capacity":2,"points":2,"stories":["US-20"],"date":"2027-04-30"}
