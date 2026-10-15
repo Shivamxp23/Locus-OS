@@ -202,6 +202,13 @@ def run_installer(argv: list[str] | None = None) -> int:
         dest="setup_telegram",
         help="Run Telegram pairing setup wizard (R6, S-1)",
     )
+    parser.add_argument(
+        "--systemd",
+        "--generate-systemd",
+        action="store_true",
+        dest="generate_systemd",
+        help="Generate systemd service unit file for VM daemon (US-15)",
+    )
 
     args = parser.parse_args(argv)
 
@@ -222,6 +229,17 @@ def run_installer(argv: list[str] | None = None) -> int:
         home_path = Path.home() / ".locus"
 
     vault_path = args.vault_root
+
+    if getattr(args, "generate_systemd", False):
+        from locus_cli.systemd import generate_systemd_unit
+
+        try:
+            content = generate_systemd_unit(locus_home=home_path)
+            print(content)
+            return 0
+        except Exception as e:
+            sys.stderr.write(f"Failed to generate systemd unit: {e}\n")
+            return 1
 
     if getattr(args, "setup_telegram", False):
         from locus_cli.telegram_setup import run_telegram_setup

@@ -3077,14 +3077,27 @@ features:
   spec_sha: {}
   evidence:
     files:
-    - HEADLESS_VM_AND_CRON_SETUP_GUIDE.md
+    - docs/HEADLESS_VM_AND_CRON_SETUP_GUIDE.md
+    - locus_cli/systemd.py
+    - sidecar/hybrid.py
     - install.sh
     - install.ps1
     - docker-compose.yml
-    symbols: []
+    - tests/test_vm_hybrid.py
+    symbols:
+    - file: locus_cli/systemd.py
+      name: generate_systemd_unit
+    - file: locus_cli/systemd.py
+      name: install_systemd_unit
+    - file: sidecar/hybrid.py
+      name: SSHTunnelManager
+    - file: sidecar/hybrid.py
+      name: SSHTunnelConfig
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_vm_hybrid.py -k "unit" -q
+    integration:
+    - py -3 -m pytest tests/test_vm_hybrid.py -k "integration" -q
   depends_on: []
 - id: F-0086
   title: Deployment (systemd/Docker)
