@@ -1723,11 +1723,27 @@ features:
     '§19.2: Trajectory Recording': 0529d368ebc89f69
   evidence:
     files:
-    - sidecar/learning/trajectory.py
-    symbols: []
+    - sidecar/trajectory.py
+    - locus-extension/src/trajectory.ts
+    - tests/test_trajectory.py
+    symbols:
+    - file: sidecar/trajectory.py
+      name: TrajectoryTurn
+    - file: sidecar/trajectory.py
+      name: sanitize_turn
+    - file: sidecar/trajectory.py
+      name: JsonlTrajectoryRecorder
+    - file: sidecar/trajectory.py
+      name: SQLiteTrajectoryRecorder
+    - file: sidecar/trajectory.py
+      name: capture_pi_turn
+    - file: locus-extension/src/trajectory.ts
+      name: TrajectoryManager
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_trajectory.py -k "unit" -q
+    integration:
+    - py -3 -m pytest tests/test_trajectory.py -k "integration" -q
   depends_on: []
 - id: F-0050
   title: AI Chat Archiver

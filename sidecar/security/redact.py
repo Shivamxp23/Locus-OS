@@ -58,3 +58,13 @@ class DataRedactor:
             return self.redact_text(obj)
         else:
             return obj
+
+
+_DEFAULT_REDACTOR = DataRedactor()
+
+
+def redact_patterns(text_or_obj: Any) -> Any:
+    """Sanitize secrets from strings or nested data structures per S-0 and Spec §19.2."""
+    if isinstance(text_or_obj, str):
+        return _DEFAULT_REDACTOR.redact_text(text_or_obj)
+    return _DEFAULT_REDACTOR.redact_structure(text_or_obj)
