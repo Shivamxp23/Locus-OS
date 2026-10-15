@@ -3658,7 +3658,7 @@ features:
   mapping: none
   origin: user-requirement (not a spec section)
   category: Infrastructure
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus design
   provider: null
   layer: unknown
@@ -3707,10 +3707,11 @@ features:
     guard:
     - layout-required
     unit:
-    - cmd: py -3 -m pytest tests/test_installer.py -v
-    - cmd: py -3 -m pytest tests/test_setup_wizard.py -v
-    - cmd: py -3 -m pytest tests/test_doctor.py -v
-    integration: []
+    - py -3 -m pytest tests/test_installer.py -k test_installer_launchers_exist_and_thin
+      -q
+    integration:
+    - py -3 -m pytest tests/test_installer.py -k test_init_locus_home_creates_canonical_structure
+      -q
   depends_on: []
 - id: F-0083
   title: Telegram Setup via /setup command
@@ -3718,7 +3719,7 @@ features:
   mapping: none
   origin: user-requirement (not a spec section)
   category: Infrastructure
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus design
   provider: null
   layer: unknown
@@ -3759,9 +3760,11 @@ features:
       name: save_allowed_users
     guard: []
     unit:
-    - py -3 -m pytest tests/test_telegram_pairing.py -q
-    - py -3 -m pytest tests/test_telegram_setup.py -q
-    integration: []
+    - py -3 -m pytest tests/test_telegram_setup.py -k test_allowed_users_persistence
+      -q
+    integration:
+    - py -3 -m pytest tests/test_telegram_setup.py -k test_telegram_wizard_pairing_flow
+      -q
   depends_on: []
 - id: F-0084
   title: core/ vs sidecar/ Deduplication
@@ -3769,7 +3772,7 @@ features:
   mapping: none
   origin: user-requirement (not a spec section)
   category: Infrastructure
-  verdict: UNKNOWN
+  verdict: INTEGRATED
   source: Internal cleanup
   provider: null
   layer: sidecar
@@ -3804,8 +3807,11 @@ features:
     - core-module-run
     - core-path-in-scripts
     unit:
-    - python -m pytest tests/test_sidecar_layout.py -q
-    integration: []
+    - py -3 -m pytest tests/test_sidecar_layout.py -k test_core_package_is_absent
+      -q
+    integration:
+    - py -3 -m pytest tests/test_sidecar_layout.py -k test_sidecar_modules_import_cleanly
+      -q
   depends_on: []
 - id: F-0085
   title: VM Backend Setup
@@ -3862,7 +3868,7 @@ features:
   mapping: none
   origin: user-requirement (not a spec section)
   category: Infrastructure
-  verdict: AUGMENT
+  verdict: INTEGRATED
   source: Locus design
   provider: null
   layer: infra
@@ -3895,8 +3901,11 @@ features:
       - app://obsidian.md
     guard: []
     unit:
-    - python -m pytest tests/test_docker_compose_and_couchdb.py -q
-    integration: []
+    - py -3 -m pytest tests/test_docker_compose_and_couchdb.py -k test_docker_compose_exists_and_parses
+      -q
+    integration:
+    - py -3 -m pytest tests/test_docker_compose_and_couchdb.py -k test_couchdb_password_enforces_env_requirement
+      -q
   depends_on: []
 - id: F-0087
   title: ARCH-6 Pi bridge (sidecar -> Pi CLI, used by cron + Telegram + conductor)
@@ -3904,7 +3913,7 @@ features:
   mapping: none
   origin: session-report (Pi Agent Integration, Phase B)
   category: Infrastructure
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus-original
   provider: null
   layer: sidecar
@@ -3926,8 +3935,10 @@ features:
     - must-define
     - pi-bridge-flags
     unit:
-    - python -m pytest tests/test_pi_bridge.py -q
-    integration: []
+    - py -3 -m pytest tests/test_pi_bridge.py -k test_get_node_executable -q
+    integration:
+    - py -3 -m pytest tests/test_pi_bridge.py -k test_cron_runner_delegation_to_pi_bridge
+      -q
   depends_on: []
 - id: F-0088
   title: Memory Tree (Hierarchical Summarization Cascade)
@@ -4315,14 +4326,15 @@ features:
   source: null
   provider: null
   layer: unknown
-  inherited: false
+  inherited: true
   manual: false
   claimed: null
   spec_targets: []
   spec_sha:
     '§2.6a: Streaming (SSE)': 99180ae504c12ae5
   evidence:
-    files: []
+    files:
+    - packages/ai/
     symbols: []
     guard: []
     unit: []
@@ -4339,14 +4351,15 @@ features:
   source: null
   provider: null
   layer: unknown
-  inherited: false
+  inherited: true
   manual: false
   claimed: null
   spec_targets: []
   spec_sha:
     '§2.9: Image Generation': 0d212844c386c27e
   evidence:
-    files: []
+    files:
+    - packages/ai/
     symbols: []
     guard: []
     unit: []
@@ -4469,14 +4482,15 @@ features:
   source: null
   provider: null
   layer: unknown
-  inherited: false
+  inherited: true
   manual: false
   claimed: null
   spec_targets: []
   spec_sha:
     '§3.10: Tool Output Accumulator': 2d14514d16667477
   evidence:
-    files: []
+    files:
+    - packages/agent/
     symbols: []
     guard: []
     unit: []
@@ -4564,14 +4578,15 @@ features:
   source: null
   provider: null
   layer: unknown
-  inherited: false
+  inherited: true
   manual: false
   claimed: null
   spec_targets: []
   spec_sha:
     '§15.1: Web Search (8 Providers)': 702677e9e5d3e2da
   evidence:
-    files: []
+    files:
+    - packages/agent/src/search/
     symbols: []
     guard: []
     unit: []
@@ -4588,14 +4603,15 @@ features:
   source: null
   provider: null
   layer: unknown
-  inherited: false
+  inherited: true
   manual: false
   claimed: null
   spec_targets: []
   spec_sha:
     '§24.1: Pi Utilities (Clipboard, Syntax Highlighting, Frontmatter, File Watcher)': 2a14a69e2b4663f6
   evidence:
-    files: []
+    files:
+    - packages/tui/
     symbols: []
     guard: []
     unit: []
