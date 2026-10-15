@@ -1,18 +1,18 @@
 # Tracker status (computed, not written)
 
-- commit `303937ab92` (dirty working tree) - 2026-10-16T02:23:58+0530 - with test runs
+- commit `72050824c5` - 2026-10-16T02:33:29+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 10, 'INFO': 0}
-- features: 125 | verified average **99.9%** | old claimed average 71.4% over 86 rows
-- integrated or better: 125 | proven: 107 | overclaims (claimed >= verified + 25): 0 | no evidence: 0
-- by level: {'INHERITED_OK': 17, 'INTEGRATED': 1, 'PROVEN': 107}
+- features: 125 | verified average **100.0%** | old claimed average 71.4% over 86 rows
+- integrated or better: 125 | proven: 108 | overclaims (claimed >= verified + 25): 0 | no evidence: 0
+- by level: {'INHERITED_OK': 17, 'PROVEN': 108}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
 |---|---|---:|---:|---|---|---|
-| F-0005 | Extension Lifecycle | 100% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0001 | Pi Agent Loop | 100% | 100% | INHERITED_OK |  |  |
 | F-0002 | System Prompt Construction | 100% | 100% | PROVEN |  |  |
 | F-0003 | Tool System (13 Canonical Tools) | 100% | 100% | PROVEN |  |  |
+| F-0005 | Extension Lifecycle | 100% | 100% | PROVEN |  |  |
 | F-0008 | Stream Diagnostics | 100% | 100% | INHERITED_OK |  |  |
 | F-0012 | Onboarding Flow | 100% | 100% | PROVEN |  |  |
 | F-0013 | Agent Initialization | 100% | 100% | INHERITED_OK |  |  |
@@ -37,7 +37,7 @@
 | F-0002 | System Prompt Construction | 100% | 100% | PROVEN |  |  |
 | F-0003 | Tool System (13 Canonical Tools) | 100% | 100% | PROVEN |  |  |
 | F-0004 | Model Management & Escalation | 85% | 100% | PROVEN |  |  |
-| F-0005 | Extension Lifecycle | 100% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0005 | Extension Lifecycle | 100% | 100% | PROVEN |  |  |
 | F-0006 | Context Window Management | 70% | 100% | PROVEN |  |  |
 | F-0007 | Post-Turn Review | 80% | 100% | PROVEN |  |  |
 | F-0008 | Stream Diagnostics | 100% | 100% | INHERITED_OK |  |  |
