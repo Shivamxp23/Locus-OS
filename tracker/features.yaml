@@ -2812,10 +2812,10 @@ features:
   mapping: grouped
   origin: legacy-tracker
   category: Interface
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus design spec
-  provider: null
-  layer: mixed
+  provider: DualInterfaceBridge
+  layer: sidecar
   inherited: false
   manual: false
   claimed:
@@ -2832,12 +2832,20 @@ features:
     '§28.1-28.6: Dual-Interface, Check-ins, Voice, Cost Model': 7ead669cd8430646
   evidence:
     files:
-    - sidecar/gateway/
-    - locus-extension/
-    symbols: []
+    - sidecar/interface/dual_interface.py
+    - locus-extension/src/interface/dual-interface.ts
+    symbols:
+    - file: sidecar/interface/dual_interface.py
+      name: CheckInSchedule
+    - file: sidecar/interface/dual_interface.py
+      name: DualInterfaceBridge
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_observability_and_diagnostics.py -k test_dual_interface_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_observability_and_diagnostics.py -k test_dual_interface_integration
+      -q
   depends_on: []
 - id: F-0065
   title: Error Classifier
@@ -2846,9 +2854,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Observability
-  verdict: AUGMENT
+  verdict: INTEGRATED
   source: Hermes error_classifier.py
-  provider: null
+  provider: ErrorClassifier
   layer: sidecar
   inherited: false
   manual: false
@@ -2868,10 +2876,19 @@ features:
   evidence:
     files:
     - sidecar/diagnostics/error_classifier.py
-    symbols: []
+    - locus-extension/src/diagnostics/error-classifier.ts
+    symbols:
+    - file: sidecar/diagnostics/error_classifier.py
+      name: ClassifiedError
+    - file: sidecar/diagnostics/error_classifier.py
+      name: ErrorClassifier
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_observability_and_diagnostics.py -k test_error_classifier_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_observability_and_diagnostics.py -k test_error_classifier_integration
+      -q
   depends_on: []
 - id: F-0066
   title: Health Checks
@@ -2925,9 +2942,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Observability
-  verdict: AUGMENT
+  verdict: INTEGRATED
   source: Locus
-  provider: null
+  provider: NotificationDispatcher
   layer: sidecar
   inherited: false
   manual: false
@@ -2946,11 +2963,20 @@ features:
     '§29.4: Notifications': 9cb87d20a10c9c63
   evidence:
     files:
-    - sidecar/gateway/
-    symbols: []
+    - sidecar/gateway/notifications.py
+    - locus-extension/src/gateway/notifications.ts
+    symbols:
+    - file: sidecar/gateway/notifications.py
+      name: NotificationPayload
+    - file: sidecar/gateway/notifications.py
+      name: NotificationDispatcher
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_observability_and_diagnostics.py -k test_notifications_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_observability_and_diagnostics.py -k test_notifications_integration
+      -q
   depends_on: []
 - id: F-0068
   title: Connectivity Check
@@ -3002,10 +3028,10 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Observability
-  verdict: AUGMENT
+  verdict: INTEGRATED
   source: Locus
-  provider: null
-  layer: infra
+  provider: CodeDependencyGraph
+  layer: sidecar
   inherited: false
   manual: false
   claimed:
@@ -3023,11 +3049,20 @@ features:
     '§29.6: Code Graph Analysis': 31eaaa728660618a
   evidence:
     files:
-    - .graphifyignore
-    symbols: []
+    - sidecar/codegraph/graph.py
+    - locus-extension/src/codegraph/graph.ts
+    symbols:
+    - file: sidecar/codegraph/graph.py
+      name: CodeSymbolNode
+    - file: sidecar/codegraph/graph.py
+      name: CodeDependencyGraph
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_observability_and_diagnostics.py -k test_codegraph_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_observability_and_diagnostics.py -k test_codegraph_integration
+      -q
   depends_on: []
 - id: F-0070
   title: Subconscious
@@ -3036,9 +3071,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Observability
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus design spec
-  provider: null
+  provider: SubconsciousEngine
   layer: sidecar
   inherited: false
   manual: false
@@ -3058,11 +3093,20 @@ features:
     '§29.7: Subconscious Background Processing': 5cc1da1216579fdf
   evidence:
     files:
-    - sidecar/heartbeat/
-    symbols: []
+    - sidecar/subconscious/subconscious_engine.py
+    - locus-extension/src/subconscious/subconscious-engine.ts
+    symbols:
+    - file: sidecar/subconscious/subconscious_engine.py
+      name: SubconsciousTask
+    - file: sidecar/subconscious/subconscious_engine.py
+      name: SubconsciousEngine
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_observability_and_diagnostics.py -k test_subconscious_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_observability_and_diagnostics.py -k test_subconscious_integration
+      -q
   depends_on: []
 - id: F-0071
   title: Workflows
@@ -3071,9 +3115,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Observability
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus design spec
-  provider: null
+  provider: WorkflowEngine
   layer: sidecar
   inherited: false
   manual: false
@@ -3093,11 +3137,20 @@ features:
     '§29.8: Workflows': 1a50f8cc72c0ffe6
   evidence:
     files:
-    - sidecar/scheduler/workflow.py
-    symbols: []
+    - sidecar/workflows/workflow.py
+    - locus-extension/src/workflows/workflow.ts
+    symbols:
+    - file: sidecar/workflows/workflow.py
+      name: WorkflowStep
+    - file: sidecar/workflows/workflow.py
+      name: WorkflowEngine
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_observability_and_diagnostics.py -k test_workflows_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_observability_and_diagnostics.py -k test_workflows_integration
+      -q
   depends_on: []
 - id: F-0072
   title: Collector + Chunker

@@ -1,31 +1,31 @@
 {
-  "generated_at": "2026-10-16T01:24:35+0530",
-  "commit": "e047b36267ceffe0b2aa0e17ec2d41b21776dbfd",
-  "dirty": true,
+  "generated_at": "2026-10-16T01:55:17+0530",
+  "commit": "51ed763485ba8553158b975a7660e694adab67c6",
+  "dirty": false,
   "static": true,
   "guard": {
     "verdict": "PASS",
     "counts": {
       "FAIL": 0,
-      "WARN": 11,
+      "WARN": 10,
       "INFO": 0
     }
   },
   "summary": {
     "features": 125,
-    "verified_mean_pct": 25.8,
+    "verified_mean_pct": 36.5,
     "claimed_mean_pct": 71.4,
     "claimed_rows": 86,
     "by_label": {
-      "FILES_PRESENT": 4,
-      "IMPLEMENTED": 49,
+      "FILES_PRESENT": 3,
+      "IMPLEMENTED": 83,
       "INHERITED_OK": 12,
-      "NO_EVIDENCE": 60
+      "NO_EVIDENCE": 27
     },
     "integrated_or_better": 12,
     "proven": 0,
-    "overclaims": 65,
-    "no_evidence": 60,
+    "overclaims": 56,
+    "no_evidence": 27,
     "spec_sections_total": 135,
     "spec_changed": 0
   },
@@ -815,40 +815,74 @@
     "F-0028": {
       "id": "F-0028",
       "title": "Context References",
-      "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 40.0,
-      "gap": 40.0,
-      "flags": [
-        "NO_FILES_NAMED",
-        "OVERCLAIM"
-      ],
+      "gap": 0.0,
+      "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_vault_and_ingestion.py -k \"test_context_references\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0029": {
       "id": "F-0029",
       "title": "Coding Context",
-      "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 90.0,
-      "gap": 90.0,
+      "gap": 50.0,
       "flags": [
-        "NO_FILES_NAMED",
         "OVERCLAIM"
       ],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_vault_and_ingestion.py -k \"test_coding_context\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0030": {
       "id": "F-0030",
@@ -872,20 +906,39 @@
     "F-0031": {
       "id": "F-0031",
       "title": "CLI / Doctor Diagnostics",
-      "verdict": "AUGMENT",
-      "level": 1,
-      "label": "FILES_PRESENT",
-      "pct": 15,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 85.0,
-      "gap": 70.0,
+      "gap": 45.0,
       "flags": [
         "OVERCLAIM"
       ],
       "reasons": [
-        "no symbols declared: file existence alone proves nothing"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Declare evidence.symbols that prove the implementation exists.",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_tools_and_diagnostics.py -k \"test_doctor_diagnostics\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0032": {
       "id": "F-0032",
@@ -1266,40 +1319,72 @@
     "F-0047": {
       "id": "F-0047",
       "title": "Graceful Restart",
-      "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 50.0,
-      "gap": 50.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": 10.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/gateway/"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Files claimed but absent: sidecar/gateway/. Create them or correct the path.",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_vault_and_ingestion.py -k \"test_gateway_lifecycle and not integration\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0048": {
       "id": "F-0048",
       "title": "MCP Server/Client",
-      "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 55.0,
-      "gap": 55.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": 15.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/mcp_client.py"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Files claimed but absent: sidecar/mcp_client.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_vault_and_ingestion.py -k \"test_mcp_server_and_client\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0049": {
       "id": "F-0049",
@@ -1374,78 +1459,146 @@
     "F-0051": {
       "id": "F-0051",
       "title": "Computer Use / Screen",
-      "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 40.0,
-      "gap": 40.0,
+      "gap": 0.0,
       "flags": [
-        "CLAIMED_FILES_MISSING",
-        "LOW_CONFIDENCE_MAPPING",
-        "OVERCLAIM"
+        "LOW_CONFIDENCE_MAPPING"
       ],
       "reasons": [
-        "declared files missing: sidecar/screen/"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Files claimed but absent: sidecar/screen/. Create them or correct the path.",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_tools_and_diagnostics.py -k \"test_computer_use_actions\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0052": {
       "id": "F-0052",
       "title": "VNC Remote",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 20.0,
-      "gap": 20.0,
-      "flags": [
-        "NO_FILES_NAMED"
-      ],
+      "gap": -20.0,
+      "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_tools_and_diagnostics.py -k \"test_vnc_client_lifecycle\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0053": {
       "id": "F-0053",
       "title": "Google Calendar",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 35.0,
-      "gap": 35.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": -5.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/integrations/calendar_sync.py"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Files claimed but absent: sidecar/integrations/calendar_sync.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_tools_and_diagnostics.py -k \"test_calendar_sync_bridge\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0054": {
       "id": "F-0054",
       "title": "CI/CD / Docker",
-      "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 65.0,
-      "gap": 65.0,
+      "gap": 25.0,
       "flags": [
-        "CLAIMED_FILES_MISSING",
         "OVERCLAIM"
       ],
       "reasons": [
-        "declared files missing: sidecar/deployment/"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Files claimed but absent: sidecar/deployment/. Create them or correct the path.",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_tools_and_diagnostics.py -k \"test_docker_ci_diagnostics\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0055": {
       "id": "F-0055",
@@ -1488,40 +1641,77 @@
       "id": "F-0056",
       "title": "Operating Modes / Scheduler",
       "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 85.0,
-      "gap": 85.0,
+      "gap": 45.0,
       "flags": [
-        "CLAIMED_FILES_MISSING",
         "LOW_CONFIDENCE_MAPPING",
         "OVERCLAIM"
       ],
       "reasons": [
-        "declared files missing: sidecar/scheduler/"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Files claimed but absent: sidecar/scheduler/. Create them or correct the path.",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_life_os_advanced.py -k \"test_goal_stack_ancestry_and_orphans or test_action_gap_tracking\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0057": {
       "id": "F-0057",
       "title": "Goal Tracker (3-Layer Stack)",
-      "verdict": "LOCUS-NEW",
-      "level": 1,
-      "label": "FILES_PRESENT",
-      "pct": 15,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 85.0,
-      "gap": 70.0,
+      "gap": 45.0,
       "flags": [
         "LOW_CONFIDENCE_MAPPING",
         "OVERCLAIM"
       ],
       "reasons": [
-        "no symbols declared: file existence alone proves nothing"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Declare evidence.symbols that prove the implementation exists.",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_life_os_advanced.py -k \"test_six_step_scheduler_and_provider\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0058": {
       "id": "F-0058",
@@ -1619,77 +1809,130 @@
     "F-0061": {
       "id": "F-0061",
       "title": "Rough Note Parser",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 75.0,
-      "gap": 75.0,
+      "gap": 35.0,
       "flags": [
-        "CLAIMED_FILES_MISSING",
         "OVERCLAIM"
       ],
       "reasons": [
-        "declared files missing: sidecar/ingestion/rough_note_parser.py"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Files claimed but absent: sidecar/ingestion/rough_note_parser.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_vault_and_ingestion.py -k test_rough_note_parser -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0062": {
       "id": "F-0062",
       "title": "Link Dump Logger",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 75.0,
-      "gap": 75.0,
+      "gap": 35.0,
       "flags": [
-        "CLAIMED_FILES_MISSING",
         "OVERCLAIM"
       ],
       "reasons": [
-        "declared files missing: sidecar/ingestion/link_logger.py"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Files claimed but absent: sidecar/ingestion/link_logger.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_vault_and_ingestion.py -k test_link_dump_logger -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0063": {
       "id": "F-0063",
       "title": "Excalidraw MCP Skill",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 70.0,
-      "gap": 70.0,
+      "gap": 30.0,
       "flags": [
-        "CLAIMED_FILES_MISSING",
         "OVERCLAIM"
       ],
       "reasons": [
-        "declared files missing: sidecar/display/excalidraw_builder.py"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Files claimed but absent: sidecar/display/excalidraw_builder.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_vault_and_ingestion.py -k test_excalidraw_builder -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0064": {
       "id": "F-0064",
       "title": "Dual Interface / Check-ins",
       "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 1,
+      "label": "FILES_PRESENT",
+      "pct": 15,
       "claimed_pct": 85.0,
-      "gap": 85.0,
+      "gap": 70.0,
       "flags": [
-        "CLAIMED_FILES_MISSING",
         "OVERCLAIM"
       ],
       "reasons": [
-        "declared files missing: sidecar/gateway/"
+        "no symbols declared: file existence alone proves nothing"
       ],
-      "next": "Files claimed but absent: sidecar/gateway/. Create them or correct the path.",
+      "next": "Declare evidence.symbols that prove the implementation exists.",
       "checks": {}
     },
     "F-0065": {
@@ -1714,12 +1957,49 @@
     "F-0066": {
       "id": "F-0066",
       "title": "Health Checks",
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
+      "claimed_pct": 90.0,
+      "gap": 50.0,
+      "flags": [
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "1 unit command(s) declared but not run (--static)"
+      ],
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_tools_and_diagnostics.py -k \"test_health_probes\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
+    },
+    "F-0067": {
+      "id": "F-0067",
+      "title": "Notifications",
       "verdict": "AUGMENT",
       "level": 1,
       "label": "FILES_PRESENT",
       "pct": 15,
-      "claimed_pct": 90.0,
-      "gap": 75.0,
+      "claimed_pct": 65.0,
+      "gap": 50.0,
       "flags": [
         "OVERCLAIM"
       ],
@@ -1729,43 +2009,40 @@
       "next": "Declare evidence.symbols that prove the implementation exists.",
       "checks": {}
     },
-    "F-0067": {
-      "id": "F-0067",
-      "title": "Notifications",
-      "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
-      "claimed_pct": 65.0,
-      "gap": 65.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
-      "reasons": [
-        "declared files missing: sidecar/gateway/"
-      ],
-      "next": "Files claimed but absent: sidecar/gateway/. Create them or correct the path.",
-      "checks": {}
-    },
     "F-0068": {
       "id": "F-0068",
       "title": "Connectivity Check",
-      "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 60.0,
-      "gap": 60.0,
-      "flags": [
-        "NO_FILES_NAMED",
-        "OVERCLAIM"
-      ],
+      "gap": 20.0,
+      "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_tools_and_diagnostics.py -k \"test_connectivity_probes\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0069": {
       "id": "F-0069",
@@ -1827,21 +2104,37 @@
     "F-0072": {
       "id": "F-0072",
       "title": "Collector + Chunker",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 60.0,
-      "gap": 60.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": 20.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/ingestion/collector.py"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Files claimed but absent: sidecar/ingestion/collector.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_vault_and_ingestion.py -k test_document_chunker -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0073": {
       "id": "F-0073",
@@ -1980,40 +2273,72 @@
     "F-0080": {
       "id": "F-0080",
       "title": "Redis Integration",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 55.0,
-      "gap": 55.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": 15.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/redis_state.py"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Files claimed but absent: sidecar/redis_state.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_vault_and_ingestion.py -k test_redis_state_manager -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0081": {
       "id": "F-0081",
       "title": "Obsidian/LightRAG Bridge",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": 45.0,
-      "gap": 45.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": 5.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/vault/lightrag_bridge.py"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Files claimed but absent: sidecar/vault/lightrag_bridge.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_vault_and_ingestion.py -k test_lightrag_bridge -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0082": {
       "id": "F-0082",
@@ -2666,50 +2991,107 @@
     "F-0099": {
       "id": "F-0099",
       "title": "Git Tools",
-      "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_tools_and_diagnostics.py -k \"test_git_tools_operations\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0100": {
       "id": "F-0100",
       "title": "Tool Call Validation",
-      "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_tools_and_diagnostics.py -k \"test_tool_validation_rules\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0101": {
       "id": "F-0101",
       "title": "Tool Result Classification",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_tools_and_diagnostics.py -k \"test_tool_classifier_outcomes\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0102": {
       "id": "F-0102",
@@ -2730,34 +3112,72 @@
     "F-0103": {
       "id": "F-0103",
       "title": "Tool Timeout / Budget",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_tools_and_diagnostics.py -k \"test_tool_budget_limits\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0104": {
       "id": "F-0104",
       "title": "Custom Locus Tools",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_tools_and_diagnostics.py -k \"test_custom_tool_registry\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0105": {
       "id": "F-0105",
@@ -2794,18 +3214,37 @@
     "F-0107": {
       "id": "F-0107",
       "title": "File Safety",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_tools_and_diagnostics.py -k \"test_file_safety_policy\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0108": {
       "id": "F-0108",
@@ -2915,114 +3354,247 @@
     "F-0111": {
       "id": "F-0111",
       "title": "Emergency Task Injection",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_life_os_advanced.py -k \"test_emergency_task_injection\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0112": {
       "id": "F-0112",
       "title": "Exhaustion Predictor",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_life_os_advanced.py -k \"test_exhaustion_predictor\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0113": {
       "id": "F-0113",
       "title": "Weekly Faction Rebalance",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_life_os_advanced.py -k \"test_weekly_faction_rebalance\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0114": {
       "id": "F-0114",
       "title": "Review Cadence System",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_life_os_advanced.py -k \"test_review_cadence_system\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0115": {
       "id": "F-0115",
       "title": "Goal Stack Enforcement",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_life_os_advanced.py -k \"test_goal_stack_enforcement\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0116": {
       "id": "F-0116",
       "title": "Cross-Faction Efficiency",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_life_os_advanced.py -k \"test_cross_faction_allocator\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0117": {
       "id": "F-0117",
       "title": "Four-Level Emergency Protocol",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_life_os_advanced.py -k \"test_emergency_protocol_levels\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0118": {
       "id": "F-0118",
@@ -3110,34 +3682,72 @@
     "F-0122": {
       "id": "F-0122",
       "title": "LOCUS_SHORTHAND 4× Text Compressor",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_vault_and_ingestion.py -k test_shorthand_compression -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0123": {
       "id": "F-0123",
       "title": "3-Level Tag Hierarchy & Semantic Indexing",
-      "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "INTEGRATED",
+      "level": 2,
+      "label": "IMPLEMENTED",
+      "pct": 40,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "1 unit command(s) declared but not run (--static)"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with real assertions) or evidence.guard checks.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_life_os_advanced.py -k \"test_tag_manager_hierarchy\" -q",
+            "runner": "pytest",
+            "ran": false,
+            "ok": null,
+            "exit": null,
+            "tail": "",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 0.0
+          }
+        ],
+        "guard": []
+      }
     },
     "F-0124": {
       "id": "F-0124",
