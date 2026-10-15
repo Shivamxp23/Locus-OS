@@ -1317,9 +1317,9 @@ features:
   mapping: grouped
   origin: legacy-tracker
   category: Interface
-  verdict: AUGMENT
+  verdict: INTEGRATED
   source: Pi TUI + Locus dashboard
-  provider: null
+  provider: LocusTUIDashboard
   layer: sidecar
   inherited: false
   manual: false
@@ -1338,12 +1338,20 @@ features:
     '§7.1-7.9: Terminal Interface & Footer Widget': fff228a89d6ea4b8
   evidence:
     files:
-    - locus_cli/curses_ui.py
     - sidecar/display/dashboard.py
-    symbols: []
+    - locus-extension/src/display/dashboard.ts
+    symbols:
+    - file: sidecar/display/dashboard.py
+      name: DashboardState
+    - file: sidecar/display/dashboard.py
+      name: LocusTUIDashboard
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_microsystems_and_conductor.py -k test_tui_dashboard_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_microsystems_and_conductor.py -k test_tui_dashboard_integration
+      -q
   depends_on: []
 - id: F-0031
   title: CLI / Doctor Diagnostics
@@ -3264,9 +3272,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Microsystems
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus comprehensive_design.html
-  provider: null
+  provider: CauseChainEngine
   layer: sidecar
   inherited: false
   manual: false
@@ -3284,11 +3292,20 @@ features:
     '§30.2: Cause Chain Engine (Inferred Causation)': 164d469c03011814
   evidence:
     files:
-    - sidecar/cause_chain.py
-    symbols: []
+    - sidecar/causality/cause_chain.py
+    - locus-extension/src/causality/cause-chain.ts
+    symbols:
+    - file: sidecar/causality/cause_chain.py
+      name: CausalLink
+    - file: sidecar/causality/cause_chain.py
+      name: CauseChainEngine
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_microsystems_and_conductor.py -k test_cause_chain_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_microsystems_and_conductor.py -k test_cause_chain_integration
+      -q
   depends_on: []
 - id: F-0074
   title: SOUL.md / Wants Engine
@@ -3297,9 +3314,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Microsystems
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus comprehensive_design.html
-  provider: null
+  provider: SoulEngine
   layer: sidecar
   inherited: false
   manual: false
@@ -3317,11 +3334,20 @@ features:
     '§30.3: SOUL.md / Wants Engine (Personality Layer)': 51f8e15a9b2d3d1a
   evidence:
     files:
-    - sidecar/soul.py
-    symbols: []
+    - sidecar/personality/soul_engine.py
+    - locus-extension/src/personality/soul-engine.ts
+    symbols:
+    - file: sidecar/personality/soul_engine.py
+      name: SoulProfile
+    - file: sidecar/personality/soul_engine.py
+      name: SoulEngine
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_microsystems_and_conductor.py -k test_soul_engine_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_microsystems_and_conductor.py -k test_soul_engine_integration
+      -q
   depends_on: []
 - id: F-0075
   title: Content Engine
@@ -3330,9 +3356,9 @@ features:
   mapping: low-confidence
   origin: legacy-tracker
   category: Microsystems
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus microsystems.html
-  provider: null
+  provider: ContentEngine
   layer: sidecar
   inherited: false
   manual: false
@@ -3353,10 +3379,19 @@ features:
   evidence:
     files:
     - sidecar/content/engine.py
-    symbols: []
+    - locus-extension/src/content/content-engine.ts
+    symbols:
+    - file: sidecar/content/engine.py
+      name: DraftContent
+    - file: sidecar/content/engine.py
+      name: ContentEngine
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_microsystems_and_conductor.py -k test_content_engine_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_microsystems_and_conductor.py -k test_content_engine_integration
+      -q
   depends_on: []
 - id: F-0076
   title: Spaced Repetition
@@ -3365,9 +3400,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Microsystems
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus microsystems.html
-  provider: null
+  provider: SpacedRepetitionEngine
   layer: sidecar
   inherited: false
   manual: false
@@ -3385,11 +3420,20 @@ features:
     '§30.5: Spaced Repetition Engine': 628f83ddbe3544ce
   evidence:
     files:
-    - sidecar/spaced_rep.py
-    symbols: []
+    - sidecar/learning/spaced_rep.py
+    - locus-extension/src/learning/spaced-rep.ts
+    symbols:
+    - file: sidecar/learning/spaced_rep.py
+      name: SpacedRepetitionCard
+    - file: sidecar/learning/spaced_rep.py
+      name: SpacedRepetitionEngine
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_microsystems_and_conductor.py -k test_spaced_repetition_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_microsystems_and_conductor.py -k test_spaced_repetition_integration
+      -q
   depends_on: []
 - id: F-0077
   title: QLoRA Pipeline
@@ -3398,9 +3442,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Microsystems
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus pyramid.html
-  provider: null
+  provider: QLoRADatasetCurator
   layer: sidecar
   inherited: false
   manual: false
@@ -3419,10 +3463,19 @@ features:
   evidence:
     files:
     - sidecar/evolution/dataset_curator.py
-    symbols: []
+    - locus-extension/src/evolution/dataset-curator.ts
+    symbols:
+    - file: sidecar/evolution/dataset_curator.py
+      name: TrainingSample
+    - file: sidecar/evolution/dataset_curator.py
+      name: QLoRADatasetCurator
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_microsystems_and_conductor.py -k test_qlora_dataset_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_microsystems_and_conductor.py -k test_qlora_dataset_integration
+      -q
   depends_on: []
 - id: F-0078
   title: Master Conductor
@@ -3431,9 +3484,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Microsystems
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus microsystems.html
-  provider: null
+  provider: MasterConductor
   layer: sidecar
   inherited: false
   manual: false
@@ -3453,11 +3506,20 @@ features:
     '§30.7: Master Conductor (11-Step Ingress-to-Egress Pipeline)': e370d5231a58114a
   evidence:
     files:
-    - sidecar/conductor.py
-    symbols: []
+    - sidecar/conductor/master_conductor.py
+    - locus-extension/src/conductor/master-conductor.ts
+    symbols:
+    - file: sidecar/conductor/master_conductor.py
+      name: ConductorContext
+    - file: sidecar/conductor/master_conductor.py
+      name: MasterConductor
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_microsystems_and_conductor.py -k test_master_conductor_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_microsystems_and_conductor.py -k test_master_conductor_integration
+      -q
   depends_on: []
 - id: F-0079
   title: Dashboard/TUI Spec
@@ -3466,9 +3528,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Microsystems
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus microsystems.html
-  provider: null
+  provider: LocusTUIDashboard
   layer: sidecar
   inherited: false
   manual: false
@@ -3488,11 +3550,20 @@ features:
     '§30.8: Real-Time Dashboard & TUI Specification (6-Step Architecture)': ff4101ea48120989
   evidence:
     files:
-    - locus_cli/curses_ui.py
-    symbols: []
+    - sidecar/display/dashboard.py
+    - locus-extension/src/display/dashboard.ts
+    symbols:
+    - file: sidecar/display/dashboard.py
+      name: DashboardState
+    - file: sidecar/display/dashboard.py
+      name: LocusTUIDashboard
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_microsystems_and_conductor.py -k test_tui_dashboard_unit
+      -q
+    integration:
+    - py -3 -m pytest tests/test_microsystems_and_conductor.py -k test_tui_dashboard_integration
+      -q
   depends_on: []
 - id: F-0080
   title: Redis Integration
