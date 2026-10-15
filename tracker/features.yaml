@@ -1545,7 +1545,7 @@ features:
   category: Security
   verdict: AUGMENT
   source: Pi + Hermes + Locus
-  provider: null
+  provider: PromptInjectionFilter
   layer: sidecar
   inherited: false
   manual: false
@@ -1565,10 +1565,17 @@ features:
   evidence:
     files:
     - sidecar/security/injection_filter.py
-    symbols: []
+    - locus-extension/src/security/injection-filter.ts
+    symbols:
+    - file: sidecar/security/injection_filter.py
+      name: PromptInjectionFilter
+    unit:
+    - py -3 -m pytest tests/test_injection_filter.py -k "test_benign_prompt_allows
+      or test_audit_logging" -q
+    integration:
+    - py -3 -m pytest tests/test_injection_filter.py -k "test_ignore_previous_instructions_blocks
+      or test_obfuscated_spaced_override" -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0038
   title: Shell Sandbox
@@ -1646,7 +1653,7 @@ features:
   category: Security
   verdict: AUGMENT
   source: Pi + Locus
-  provider: null
+  provider: ShellBlocklist
   layer: sidecar
   inherited: false
   manual: false
@@ -1665,11 +1672,18 @@ features:
     '§13.7: Shell Blocklist': a63a698dca5c38c4
   evidence:
     files:
-    - sidecar/security/
-    symbols: []
+    - sidecar/security/shell_blocklist.py
+    - locus-extension/src/security/shell-policy.ts
+    symbols:
+    - file: sidecar/security/shell_blocklist.py
+      name: ShellBlocklist
+    unit:
+    - py -3 -m pytest tests/test_shell_blocklist.py -k "test_dangerous_shell_command_blocking
+      or test_evaluate_command" -q
+    integration:
+    - py -3 -m pytest tests/test_shell_blocklist.py -k "test_sensitive_path_blocking"
+      -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0041
   title: Data Redaction
@@ -1680,7 +1694,7 @@ features:
   category: Security
   verdict: AUGMENT
   source: Pi + Locus
-  provider: null
+  provider: DataRedactor
   layer: sidecar
   inherited: false
   manual: false
@@ -1700,10 +1714,19 @@ features:
   evidence:
     files:
     - sidecar/security/redact.py
-    symbols: []
+    - locus-extension/src/security/redact.ts
+    symbols:
+    - file: sidecar/security/redact.py
+      name: DataRedactor
+    - file: sidecar/security/redact.py
+      name: redact_patterns
+    unit:
+    - py -3 -m pytest tests/test_data_redaction.py -k "test_mask_token_length or test_redact_text_vendor_api_keys"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_data_redaction.py -k "test_redact_structure_dict_and_list"
+      -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0042
   title: Think Token Scrubbing
@@ -1714,7 +1737,7 @@ features:
   category: Security
   verdict: AUGMENT
   source: Pi + Locus
-  provider: null
+  provider: ThinkTokenScrubber
   layer: sidecar
   inherited: false
   manual: false
@@ -1734,10 +1757,19 @@ features:
   evidence:
     files:
     - sidecar/security/think_scrubber.py
-    symbols: []
+    - locus-extension/src/security/think-scrubber.ts
+    symbols:
+    - file: sidecar/security/think_scrubber.py
+      name: ScrubState
+    - file: sidecar/security/think_scrubber.py
+      name: ThinkTokenScrubber
+    unit:
+    - py -3 -m pytest tests/test_think_scrubber.py -k "test_scrubber_removes_think_block
+      or test_scrubber_unclosed_block_at_end" -q
+    integration:
+    - py -3 -m pytest tests/test_think_scrubber.py -k "test_scrubber_removes_reasoning_and_scratchpad"
+      -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0043
   title: Message Sanitization
@@ -1748,7 +1780,7 @@ features:
   category: Security
   verdict: AUGMENT
   source: Pi + Locus
-  provider: null
+  provider: MessageSanitizer
   layer: sidecar
   inherited: false
   manual: false
@@ -1768,10 +1800,17 @@ features:
   evidence:
     files:
     - sidecar/security/sanitizer.py
-    symbols: []
+    - locus-extension/src/security/sanitizer.ts
+    symbols:
+    - file: sidecar/security/sanitizer.py
+      name: MessageSanitizer
+    unit:
+    - py -3 -m pytest tests/test_message_sanitizer.py -k "test_sanitize_clean_text_unchanged
+      or test_sanitize_surrogate_replacement" -q
+    integration:
+    - py -3 -m pytest tests/test_message_sanitizer.py -k "test_sanitize_messages_recursive"
+      -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0044
   title: STT / TTS Providers
@@ -4157,11 +4196,11 @@ features:
   - '§13.4: Autonomy Tiers'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Security
   verdict: LOCUS-NEW
-  source: null
-  provider: null
-  layer: unknown
+  source: OpenHuman autonomy tier system
+  provider: AutonomyManager
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4170,11 +4209,21 @@ features:
   spec_sha:
     '§13.4: Autonomy Tiers': 6a1ade1216592cf0
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/security/autonomy_tiers.py
+    - locus-extension/src/security/autonomy-tiers.ts
+    symbols:
+    - file: sidecar/security/autonomy_tiers.py
+      name: AutonomyTier
+    - file: sidecar/security/autonomy_tiers.py
+      name: AutonomyManager
+    unit:
+    - py -3 -m pytest tests/test_autonomy_tiers.py -k "test_readonly_tier_blocks_mutating_tools
+      or test_full_tier_allows_everything_without_approval" -q
+    integration:
+    - py -3 -m pytest tests/test_autonomy_tiers.py -k "test_supervised_tier_requires_approval_for_mutating"
+      -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0109
   title: Approval Gate
@@ -4182,11 +4231,11 @@ features:
   - '§13.5: Approval Gate'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: LOCUS-NEW
-  source: null
-  provider: null
-  layer: unknown
+  category: Security
+  verdict: INTEGRATED
+  source: Locus Approval Gate
+  provider: ApprovalGate
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4196,11 +4245,23 @@ features:
   spec_sha:
     '§13.5: Approval Gate': b3813471e5ae7785
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/security/approval_gate.py
+    - locus-extension/src/security/approval-gate.ts
+    symbols:
+    - file: sidecar/security/approval_gate.py
+      name: ApprovalStatus
+    - file: sidecar/security/approval_gate.py
+      name: ApprovalRequest
+    - file: sidecar/security/approval_gate.py
+      name: ApprovalGate
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_approval_gate.py -k "test_queue_and_approve or test_queue_and_reject"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_approval_gate.py -k "test_ttl_expiration_auto_reject"
+      -q
   depends_on: []
 - id: F-0110
   title: Context Compression

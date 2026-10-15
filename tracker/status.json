@@ -1,33 +1,33 @@
 {
-  "generated_at": "2026-10-16T00:48:59+0530",
-  "commit": "f9a2f0475e12bc71cada9d8e59263eb7007684c9",
-  "dirty": true,
+  "generated_at": "2026-10-16T01:11:45+0530",
+  "commit": "6295966f71c1ba108881d7da4a7b14eb132bae6c",
+  "dirty": false,
   "static": false,
   "guard": {
     "verdict": "PASS",
     "counts": {
       "FAIL": 0,
-      "WARN": 11,
+      "WARN": 10,
       "INFO": 0
     }
   },
   "summary": {
     "features": 125,
-    "verified_mean_pct": 31.2,
+    "verified_mean_pct": 38.6,
     "claimed_mean_pct": 71.4,
     "claimed_rows": 86,
     "by_label": {
-      "FILES_PRESENT": 10,
+      "FILES_PRESENT": 9,
       "INHERITED_OK": 12,
-      "INTEGRATED": 25,
-      "NO_EVIDENCE": 72,
+      "INTEGRATED": 36,
+      "NO_EVIDENCE": 62,
       "PROVEN": 1,
       "UNIT_VERIFIED": 5
     },
-    "integrated_or_better": 38,
+    "integrated_or_better": 49,
     "proven": 1,
-    "overclaims": 57,
-    "no_evidence": 72,
+    "overclaims": 46,
+    "no_evidence": 62,
     "spec_sections_total": 135,
     "spec_changed": 0
   },
@@ -50,114 +50,289 @@
       "id": "F-0002",
       "title": "System Prompt Construction",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 100.0,
-      "gap": 100.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": 15.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: locus-extension/src/hooks/index.ts"
+        "no recorded proof"
       ],
-      "next": "Files claimed but absent: locus-extension/src/hooks/index.ts. Create them or correct the path.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_prompt_builder.py -k \"test_default_prompt_contains_soul_and_cwd or test_soul_override\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 1.9
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_prompt_builder.py -k \"test_prompt_injection_with_context_forge_and_state\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ]
+      }
     },
     "F-0003": {
       "id": "F-0003",
       "title": "Tool System (13 Canonical Tools)",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 100.0,
-      "gap": 100.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": 15.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: locus-extension/src/tools/index.ts"
+        "no recorded proof"
       ],
-      "next": "Files claimed but absent: locus-extension/src/tools/index.ts. Create them or correct the path.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_canonical_tools.py -k \"test_13_canonical_tools_registered or test_missing_tool_raises_error\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_canonical_tools.py -k \"test_tool_execution\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.1
+          }
+        ]
+      }
     },
     "F-0004": {
       "id": "F-0004",
       "title": "Model Management & Escalation",
       "verdict": "AUGMENT",
-      "level": 1,
-      "label": "FILES_PRESENT",
-      "pct": 15,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 85.0,
-      "gap": 70.0,
-      "flags": [
-        "OVERCLAIM"
-      ],
+      "gap": 0.0,
+      "flags": [],
       "reasons": [
-        "no symbols declared: file existence alone proves nothing"
+        "no recorded proof"
       ],
-      "next": "Declare evidence.symbols that prove the implementation exists.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_model_router.py -k \"test_model_router_protocol_conformance or test_model_classification\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 5 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_model_router.py -k \"test_privacy_mode_forces_local or test_unhealthy_local_falls_back_to_remote\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 5 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ]
+      }
     },
     "F-0005": {
       "id": "F-0005",
       "title": "Extension Lifecycle",
       "verdict": "KEEP-PI",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 100.0,
-      "gap": 100.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": 15.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: locus-extension/index.ts"
+        "no recorded proof"
       ],
-      "next": "Files claimed but absent: locus-extension/index.ts. Create them or correct the path.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_extension_lifecycle.py -k \"test_25_events_supported or test_invalid_event_subscription\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_extension_lifecycle.py -k \"test_event_dispatch_and_history\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ]
+      }
     },
     "F-0006": {
       "id": "F-0006",
       "title": "Context Window Management",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 70.0,
-      "gap": 70.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": -15.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/context/headroom_adapter.py"
+        "no recorded proof"
       ],
-      "next": "Files claimed but absent: sidecar/context/headroom_adapter.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_context_window.py -k \"test_estimate_and_threshold\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".                                                                        [100%]\n1 passed, 1 deselected in 0.05s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.2
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_context_window.py -k \"test_headroom_compaction_adapter\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".                                                                        [100%]\n1 passed, 1 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ]
+      }
     },
     "F-0007": {
       "id": "F-0007",
       "title": "Post-Turn Review",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 80.0,
-      "gap": 80.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": -5.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/learning/reflector.py"
+        "no recorded proof"
       ],
-      "next": "Files claimed but absent: sidecar/learning/reflector.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_reflector.py -k \"test_tool_whitelist_enforcement or test_spawn_background_review\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 1.9
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_reflector.py -k \"test_insight_extraction\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 1.9
+          }
+        ]
+      }
     },
     "F-0008": {
       "id": "F-0008",
@@ -177,76 +352,193 @@
       "id": "F-0009",
       "title": "Rate Limit Tracking",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 80.0,
-      "gap": 80.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": -5.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/rate_limiter.py"
+        "no recorded proof"
       ],
-      "next": "Files claimed but absent: sidecar/rate_limiter.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_rate_limiter.py -k \"test_bucket_properties or test_update_from_headers\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.1
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_rate_limiter.py -k \"test_should_pause_when_exhausted\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ]
+      }
     },
     "F-0010": {
       "id": "F-0010",
       "title": "Usage/Cost Tracking",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 75.0,
-      "gap": 75.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": -10.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/cost_tracker.py"
+        "no recorded proof"
       ],
-      "next": "Files claimed but absent: sidecar/cost_tracker.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_cost_tracker.py -k \"test_canonical_usage_properties or test_calculate_request_cost\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_cost_tracker.py -k \"test_cost_tracker_aggregation\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ]
+      }
     },
     "F-0011": {
       "id": "F-0011",
       "title": "Title Generation",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 75.0,
-      "gap": 75.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": -10.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/title_generator.py"
+        "no recorded proof"
       ],
-      "next": "Files claimed but absent: sidecar/title_generator.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_title_generator.py -k \"test_clean_title_removes_quotes_and_prefixes or test_fallback_title\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.1
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_title_generator.py -k \"test_title_generator_with_mock_llm or test_title_generator_fallback_on_error\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ]
+      }
     },
     "F-0012": {
       "id": "F-0012",
       "title": "Onboarding Flow",
       "verdict": "AUGMENT",
-      "level": 1,
-      "label": "FILES_PRESENT",
-      "pct": 15,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 100.0,
-      "gap": 85.0,
-      "flags": [
-        "OVERCLAIM"
-      ],
+      "gap": 15.0,
+      "flags": [],
       "reasons": [
-        "no symbols declared: file existence alone proves nothing"
+        "no recorded proof"
       ],
-      "next": "Declare evidence.symbols that prove the implementation exists.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_setup_wizard.py -k \"test_validate_key_with_custom_validator or test_save_and_load_secret_env\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 0.05s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_setup_wizard.py -k \"test_setup_wizard_re_run_safety or test_setup_wizard_non_interactive_with_answers\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 0.13s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.1
+          }
+        ]
+      }
     },
     "F-0013": {
       "id": "F-0013",
@@ -375,7 +667,7 @@
             "tail": "....                                                                     [100%]\n4 passed, 2 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 1.9
           }
         ],
         "guard": [],
@@ -386,7 +678,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 6.19s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 6.20s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 8.2
@@ -423,7 +715,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.1
           }
         ],
         "guard": [],
@@ -437,7 +729,7 @@
             "tail": "....                                                                     [100%]\n4 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ]
       }
@@ -468,10 +760,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.18s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.19s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.2
           }
         ],
         "guard": [],
@@ -482,10 +774,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.20s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.19s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.2
           }
         ]
       }
@@ -519,7 +811,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.03s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 1.9
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -564,7 +856,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.03s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.0
@@ -578,7 +870,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.03s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.0
@@ -660,7 +952,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "...                                                                      [100%]\n3 passed, 1 deselected in 0.03s\n",
+            "tail": "...                                                                      [100%]\n3 passed, 1 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 1.9
@@ -674,7 +966,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 3 deselected in 0.03s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 3 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.0
@@ -686,20 +978,49 @@
       "id": "F-0027",
       "title": "Session Management",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 80.0,
-      "gap": 80.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": -5.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/memory.py, sidecar/session_export.py"
+        "no recorded proof"
       ],
-      "next": "Files claimed but absent: sidecar/memory.py, sidecar/session_export.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_session_management.py -k \"test_session_create_and_append\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_session_management.py -k \"test_session_forking_branch or test_session_export_markdown_and_jsonl\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 1.9
+          }
+        ]
+      }
     },
     "F-0028": {
       "id": "F-0028",
@@ -831,19 +1152,18 @@
       "id": "F-0035",
       "title": "Learning / Profiling / Reward Model",
       "verdict": "MULTI-PROVIDER",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 1,
+      "label": "FILES_PRESENT",
+      "pct": 15,
       "claimed_pct": 70.0,
-      "gap": 70.0,
+      "gap": 55.0,
       "flags": [
-        "CLAIMED_FILES_MISSING",
         "OVERCLAIM"
       ],
       "reasons": [
-        "declared files missing: sidecar/learning/"
+        "no symbols declared: file existence alone proves nothing"
       ],
-      "next": "Files claimed but absent: sidecar/learning/. Create them or correct the path.",
+      "next": "Declare evidence.symbols that prove the implementation exists.",
       "checks": {}
     },
     "F-0036": {
@@ -1047,10 +1367,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".............                                                            [100%]\n13 passed in 0.96s\n",
+            "tail": ".............                                                            [100%]\n13 passed in 15.89s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.0
+            "seconds": 17.8
           }
         ],
         "guard": [],
@@ -1061,10 +1381,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed in 0.62s\n",
+            "tail": ".                                                                        [100%]\n1 passed in 0.67s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.7
+            "seconds": 2.8
           }
         ]
       }
@@ -1133,7 +1453,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.21s\n",
+            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.24s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.3
@@ -1147,7 +1467,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.13s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.1
@@ -1181,7 +1501,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "......                                                                   [100%]\n6 passed, 1 deselected in 0.29s\n",
+            "tail": "......                                                                   [100%]\n6 passed, 1 deselected in 0.28s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.3
@@ -1305,10 +1625,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.06s\n",
+            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.1
           }
         ],
         "guard": [],
@@ -1319,7 +1639,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.0
@@ -1392,10 +1712,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/test_service.py::test_service_lifecycle_and_health_endpoint\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n14 passed, 2 warnings in 1.71s\n",
+            "tail": "legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/test_service.py::test_service_lifecycle_and_health_endpoint\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n14 passed, 2 warnings in 1.68s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.7
+            "seconds": 3.6
           }
         ],
         "guard": [],
@@ -1409,7 +1729,7 @@
             "tail": ".                                                                        [100%]\n1 passed in 0.27s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.3
           }
         ]
       }
@@ -1459,7 +1779,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "....                                                                     [100%]\n4 passed, 1 deselected in 0.09s\n",
+            "tail": "....                                                                     [100%]\n4 passed, 1 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.1
@@ -1473,7 +1793,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 4 deselected in 0.63s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 4 deselected in 0.65s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.6
@@ -1911,7 +2231,7 @@
             "tail": ". collected 6 items\n\ntests/test_installer.py::test_installer_launchers_exist_and_thin PASSED  [ 16%]\ntests/test_installer.py::test_init_locus_home_creates_canonical_structure PASSED [ 33%]\ntests/test_installer.py::test_installer_re_run_is_safe_and_preserves_config PASSED [ 50%]\ntests/test_installer.py::test_load_answers_json_and_yaml PASSED          [ 66%]\ntests/test_installer.py::test_run_installer_cli_non_interactive PASSED   [ 83%]\ntests/test_installer.py::test_run_installer_with_answers_file PASSED     [100%]\n\n============================== 6 passed in 0.19s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.2
           },
           {
             "cmd": "py -3 -m pytest tests/test_setup_wizard.py -v",
@@ -1919,10 +2239,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "sts/test_setup_wizard.py::test_validate_key_with_custom_validator PASSED [ 16%]\ntests/test_setup_wizard.py::test_save_and_load_secret_env PASSED         [ 33%]\ntests/test_setup_wizard.py::test_update_config_mode_preserves_existing_keys PASSED [ 50%]\ntests/test_setup_wizard.py::test_setup_wizard_key_collection_stores_in_env_not_config PASSED [ 66%]\ntests/test_setup_wizard.py::test_setup_wizard_re_run_safety PASSED       [ 83%]\ntests/test_setup_wizard.py::test_setup_wizard_non_interactive_with_answers PASSED [100%]\n\n============================== 6 passed in 0.21s ==============================\n",
+            "tail": "sts/test_setup_wizard.py::test_validate_key_with_custom_validator PASSED [ 16%]\ntests/test_setup_wizard.py::test_save_and_load_secret_env PASSED         [ 33%]\ntests/test_setup_wizard.py::test_update_config_mode_preserves_existing_keys PASSED [ 50%]\ntests/test_setup_wizard.py::test_setup_wizard_key_collection_stores_in_env_not_config PASSED [ 66%]\ntests/test_setup_wizard.py::test_setup_wizard_re_run_safety PASSED       [ 83%]\ntests/test_setup_wizard.py::test_setup_wizard_non_interactive_with_answers PASSED [100%]\n\n============================== 6 passed in 0.22s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.2
           },
           {
             "cmd": "py -3 -m pytest tests/test_doctor.py -v",
@@ -1930,10 +2250,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": " PASSED                   [ 25%]\ntests/test_doctor.py::test_check_config_validity PASSED                  [ 37%]\ntests/test_doctor.py::test_check_vault_writable PASSED                   [ 50%]\ntests/test_doctor.py::test_check_couchdb_loopback_failure_remediation PASSED [ 62%]\ntests/test_doctor.py::test_check_sidecar_health_failure_remediation PASSED [ 75%]\ntests/test_doctor.py::test_doctor_runs_with_one_line_per_check PASSED    [ 87%]\ntests/test_doctor.py::test_pi_tui_runner_pass_through PASSED             [100%]\n\n============================== 8 passed in 8.44s ==============================\n",
+            "tail": " PASSED                   [ 25%]\ntests/test_doctor.py::test_check_config_validity PASSED                  [ 37%]\ntests/test_doctor.py::test_check_vault_writable PASSED                   [ 50%]\ntests/test_doctor.py::test_check_couchdb_loopback_failure_remediation PASSED [ 62%]\ntests/test_doctor.py::test_check_sidecar_health_failure_remediation PASSED [ 75%]\ntests/test_doctor.py::test_doctor_runs_with_one_line_per_check PASSED    [ 87%]\ntests/test_doctor.py::test_pi_tui_runner_pass_through PASSED             [100%]\n\n============================== 8 passed in 8.43s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 10.4
+            "seconds": 10.3
           }
         ],
         "guard": [
@@ -1985,10 +2305,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".......                                                                  [100%]\n7 passed in 0.17s\n",
+            "tail": ".......                                                                  [100%]\n7 passed in 0.12s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.1
           }
         ],
         "guard": [],
@@ -2026,7 +2346,7 @@
             "tail": "......                                                                   [100%]\n6 passed in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 1.9
           }
         ],
         "guard": [
@@ -2093,7 +2413,7 @@
             "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -2104,7 +2424,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.62s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.60s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.6
@@ -2141,7 +2461,7 @@
             "tail": ".....                                                                    [100%]\n5 passed in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 1.9
           }
         ],
         "guard": [],
@@ -2174,10 +2494,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "......                                                                   [100%]\n6 passed in 0.05s\n",
+            "tail": "......                                                                   [100%]\n6 passed in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 1.9
+            "seconds": 2.0
           }
         ],
         "guard": [
@@ -2235,7 +2555,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.03s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.0
@@ -2283,7 +2603,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.08s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.1
@@ -2320,7 +2640,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -2334,7 +2654,7 @@
             "tail": "...                                                                      [100%]\n3 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ]
       }
@@ -2365,7 +2685,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.03s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.0
@@ -2379,10 +2699,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.03s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 1.9
+            "seconds": 2.1
           }
         ]
       }
@@ -2416,7 +2736,7 @@
             "tail": "....                                                                     [100%]\n4 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 1.9
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -2464,7 +2784,7 @@
             "tail": "....                                                                     [100%]\n4 passed, 3 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 1.9
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -2475,10 +2795,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "...                                                                      [100%]\n3 passed, 4 deselected in 0.05s\n",
+            "tail": "...                                                                      [100%]\n3 passed, 4 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 1.9
+            "seconds": 2.0
           }
         ]
       }
@@ -2509,7 +2829,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.03s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.0
@@ -2523,7 +2843,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.03s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.0
@@ -2557,10 +2877,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.04s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 1.9
           }
         ],
         "guard": [],
@@ -2571,7 +2891,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "...                                                                      [100%]\n3 passed, 2 deselected in 0.04s\n",
+            "tail": "...                                                                      [100%]\n3 passed, 2 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.0
@@ -2608,7 +2928,7 @@
             "tail": "...                                                                      [100%]\n3 passed, 4 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 1.9
           }
         ],
         "guard": [],
@@ -2619,10 +2939,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "....                                                                     [100%]\n4 passed, 3 deselected in 0.03s\n",
+            "tail": "....                                                                     [100%]\n4 passed, 3 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 1.9
           }
         ]
       }
@@ -2878,7 +3198,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.03s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 1.9
+            "seconds": 2.0
           }
         ]
       }
@@ -3024,7 +3344,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 1.9
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -3163,7 +3483,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "................                                                         [100%]\n16 passed in 1.18s\n",
+            "tail": "................                                                         [100%]\n16 passed in 1.11s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 3.1
@@ -3180,7 +3500,7 @@
             "tail": "..                                                                       [100%]\n2 passed in 1.12s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.2
+            "seconds": 3.1
           }
         ]
       }

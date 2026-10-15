@@ -1,50 +1,50 @@
 # Tracker status (computed, not written)
 
-- commit `f9a2f0475e` (dirty working tree) - 2026-10-16T00:48:59+0530 - with test runs
-- guard: PASS {'FAIL': 0, 'WARN': 11, 'INFO': 0}
-- features: 125 | verified average **31.2%** | old claimed average 71.4% over 86 rows
-- integrated or better: 38 | proven: 1 | overclaims (claimed >= verified + 25): 57 | no evidence: 72
-- by level: {'FILES_PRESENT': 10, 'INHERITED_OK': 12, 'INTEGRATED': 25, 'NO_EVIDENCE': 72, 'PROVEN': 1, 'UNIT_VERIFIED': 5}
+- commit `6295966f71` - 2026-10-16T01:11:45+0530 - with test runs
+- guard: PASS {'FAIL': 0, 'WARN': 10, 'INFO': 0}
+- features: 125 | verified average **38.6%** | old claimed average 71.4% over 86 rows
+- integrated or better: 49 | proven: 1 | overclaims (claimed >= verified + 25): 46 | no evidence: 62
+- by level: {'FILES_PRESENT': 9, 'INHERITED_OK': 12, 'INTEGRATED': 36, 'NO_EVIDENCE': 62, 'PROVEN': 1, 'UNIT_VERIFIED': 5}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
 |---|---|---:|---:|---|---|---|
-| F-0002 | System Prompt Construction | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus-extension/src/hooks/index.ts. Create them or correct the p |
-| F-0003 | Tool System (13 Canonical Tools) | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus-extension/src/tools/index.ts. Create them or correct the p |
-| F-0005 | Extension Lifecycle | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus-extension/index.ts. Create them or correct the path. |
 | F-0029 | Coding Context | 90% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
 | F-0078 | Master Conductor | 90% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/conductor.py. Create them or correct the path. |
-| F-0012 | Onboarding Flow | 100% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0056 | Operating Modes / Scheduler | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/scheduler/. Create them or correct the path. |
 | F-0059 | PageIndex Retrieval | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/search/pageindex.py. Create them or correct the path. |
 | F-0064 | Dual Interface / Check-ins | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/. Create them or correct the path. |
-| F-0007 | Post-Turn Review | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/learning/reflector.py. Create them or correct the path. |
-| F-0009 | Rate Limit Tracking | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/rate_limiter.py. Create them or correct the path. |
-| F-0027 | Session Management | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/memory.py, sidecar/session_export.py. Create them or cor |
-| F-0010 | Usage/Cost Tracking | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/cost_tracker.py. Create them or correct the path. |
-| F-0011 | Title Generation | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/title_generator.py. Create them or correct the path. |
 | F-0061 | Rough Note Parser | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/rough_note_parser.py. Create them or correct t |
 | F-0062 | Link Dump Logger | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/link_logger.py. Create them or correct the pat |
 | F-0066 | Health Checks | 90% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
-| F-0004 | Model Management & Escalation | 85% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
-| F-0006 | Context Window Management | 70% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/context/headroom_adapter.py. Create them or correct the  |
 | F-0031 | CLI / Doctor Diagnostics | 85% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
+| F-0057 | Goal Tracker (3-Layer Stack) | 85% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
+| F-0063 | Excalidraw MCP Skill | 70% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/display/excalidraw_builder.py. Create them or correct th |
+| F-0037 | Injection Filter | 80% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
+| F-0054 | CI/CD / Docker | 65% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/deployment/. Create them or correct the path. |
+| F-0067 | Notifications | 65% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/. Create them or correct the path. |
+| F-0036 | Subagents / AutoResearch | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/delegation/. Create them or correct the path. |
+| F-0041 | Data Redaction | 75% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
+| F-0042 | Think Token Scrubbing | 75% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
+| F-0043 | Message Sanitization | 75% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
+| F-0044 | STT / TTS Providers | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/voice/. Create them or correct the path. |
+| F-0068 | Connectivity Check | 60% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
 
 ## All features
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
 |---|---|---:|---:|---|---|---|
 | F-0001 | Pi Agent Loop | 100% | 100% | INHERITED_OK |  |  |
-| F-0002 | System Prompt Construction | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus-extension/src/hooks/index.ts. Create them or correct the p |
-| F-0003 | Tool System (13 Canonical Tools) | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus-extension/src/tools/index.ts. Create them or correct the p |
-| F-0004 | Model Management & Escalation | 85% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
-| F-0005 | Extension Lifecycle | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus-extension/index.ts. Create them or correct the path. |
-| F-0006 | Context Window Management | 70% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/context/headroom_adapter.py. Create them or correct the  |
-| F-0007 | Post-Turn Review | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/learning/reflector.py. Create them or correct the path. |
+| F-0002 | System Prompt Construction | 100% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0003 | Tool System (13 Canonical Tools) | 100% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0004 | Model Management & Escalation | 85% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0005 | Extension Lifecycle | 100% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0006 | Context Window Management | 70% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0007 | Post-Turn Review | 80% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0008 | Stream Diagnostics | 100% | 100% | INHERITED_OK |  |  |
-| F-0009 | Rate Limit Tracking | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/rate_limiter.py. Create them or correct the path. |
-| F-0010 | Usage/Cost Tracking | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/cost_tracker.py. Create them or correct the path. |
-| F-0011 | Title Generation | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/title_generator.py. Create them or correct the path. |
-| F-0012 | Onboarding Flow | 100% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
+| F-0009 | Rate Limit Tracking | 80% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0010 | Usage/Cost Tracking | 75% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0011 | Title Generation | 75% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0012 | Onboarding Flow | 100% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0013 | Agent Initialization | 100% | 100% | INHERITED_OK |  |  |
 | F-0014 | 30+ LLM Providers | 100% | 100% | INHERITED_OK |  |  |
 | F-0015 | OAuth Flows | 100% | 100% | INHERITED_OK |  |  |
@@ -59,7 +59,7 @@
 | F-0024 | Spaced Repetition | 60% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0025 | Project Memory Decay | 25% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0026 | Headroom CCR | 50% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0027 | Session Management | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/memory.py, sidecar/session_export.py. Create them or cor |
+| F-0027 | Session Management | 80% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0028 | Context References | 40% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
 | F-0029 | Coding Context | 90% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
 | F-0030 | TUI / Dashboard | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus_cli/curses_ui.py, sidecar/display/dashboard.py. Create the |
@@ -67,7 +67,7 @@
 | F-0032 | Extension System | 100% | 100% | INHERITED_OK |  |  |
 | F-0033 | ACP Protocol | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/acp_server.py. Create them or correct the path. |
 | F-0034 | Plugin LLM | 10% | 0% | NO_EVIDENCE | NO_FILES_NAMED | Name the files this feature lives in (evidence.files). |
-| F-0035 | Learning / Profiling / Reward Model | 70% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/learning/. Create them or correct the path. |
+| F-0035 | Learning / Profiling / Reward Model | 70% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0036 | Subagents / AutoResearch | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/delegation/. Create them or correct the path. |
 | F-0037 | Injection Filter | 80% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0038 | Shell Sandbox | 100% | 100% | INHERITED_OK |  |  |
