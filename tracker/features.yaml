@@ -1230,10 +1230,10 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Context
-  verdict: AUGMENT
+  verdict: INTEGRATED
   source: Pi context-references.ts
-  provider: null
-  layer: unknown
+  provider: ContextReferenceResolver
+  layer: sidecar
   inherited: false
   manual: false
   claimed:
@@ -1250,11 +1250,21 @@ features:
   spec_sha:
     '§6.2: Dynamic Context References (@file, @symbol, @git, @diff)': 7fdc99d63dce7d1d
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/context/references.py
+    - locus-extension/src/context/references.ts
+    symbols:
+    - file: sidecar/context/references.py
+      name: ResolvedReference
+    - file: sidecar/context/references.py
+      name: ContextReferenceResolver
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k "test_context_references"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k "test_context_references_integration"
+      -q
   depends_on: []
 - id: F-0029
   title: Coding Context
@@ -1263,10 +1273,10 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Context
-  verdict: AUGMENT
+  verdict: INTEGRATED
   source: Pi coding-context.ts
-  provider: null
-  layer: unknown
+  provider: CodingContextEngine
+  layer: sidecar
   inherited: false
   manual: false
   claimed:
@@ -1283,11 +1293,22 @@ features:
   spec_sha:
     '§6.3: Coding Context Engine (Repo Map, AST Index, Active Diff)': e75dbc1f029134ac
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/context/coding_context.py
+    - locus-extension/src/context/coding-context.ts
+    symbols:
+    - file: sidecar/context/coding_context.py
+      name: SymbolSignature
+    - file: sidecar/context/coding_context.py
+      name: FileContextSummary
+    - file: sidecar/context/coding_context.py
+      name: CodingContextEngine
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k "test_coding_context" -q
+    integration:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k "test_coding_context_integration"
+      -q
   depends_on: []
 - id: F-0030
   title: TUI / Dashboard
@@ -1945,9 +1966,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Gateway
-  verdict: AUGMENT
+  verdict: INTEGRATED
   source: Hermes + Locus
-  provider: null
+  provider: GatewayLifecycleManager
   layer: sidecar
   inherited: false
   manual: false
@@ -1967,11 +1988,20 @@ features:
     '§17.10: Graceful Gateway Restart & State Snapshotting': ac1dbd8e3a4e96cc
   evidence:
     files:
-    - sidecar/gateway/
-    symbols: []
+    - sidecar/gateway/lifecycle.py
+    - locus-extension/src/gateway/lifecycle.ts
+    symbols:
+    - file: sidecar/gateway/lifecycle.py
+      name: GatewayStateSnapshot
+    - file: sidecar/gateway/lifecycle.py
+      name: GatewayLifecycleManager
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k "test_gateway_lifecycle
+      and not integration" -q
+    integration:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k "test_gateway_lifecycle_integration"
+      -q
   depends_on: []
 - id: F-0048
   title: MCP Server/Client
@@ -1981,9 +2011,9 @@ features:
   mapping: grouped
   origin: legacy-tracker
   category: MCP
-  verdict: AUGMENT
+  verdict: INTEGRATED
   source: OpenHuman + Locus
-  provider: null
+  provider: MCPServer
   layer: sidecar
   inherited: false
   manual: false
@@ -2007,11 +2037,23 @@ features:
     '§18.5: Obsidian MCP (Vault Bridge)': d136113d50bb1ae7
   evidence:
     files:
-    - sidecar/mcp_client.py
-    symbols: []
+    - sidecar/mcp/server.py
+    - sidecar/mcp/client.py
+    - locus-extension/src/mcp/client.ts
+    symbols:
+    - file: sidecar/mcp/server.py
+      name: MCPTool
+    - file: sidecar/mcp/server.py
+      name: MCPServer
+    - file: sidecar/mcp/client.py
+      name: MCPClient
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k "test_mcp_server_and_client"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k "test_mcp_integration"
+      -q
   depends_on: []
 - id: F-0049
   title: Trajectory Recording
@@ -2410,11 +2452,11 @@ features:
       name: calculate_lag_score
     guard: []
     unit:
-    - py -3 -m pytest tests/test_life_os_advanced.py -k "test_goal_stack_ancestry_and_orphans or test_action_gap_tracking"
-      -q
+    - py -3 -m pytest tests/test_life_os_advanced.py -k "test_goal_stack_ancestry_and_orphans
+      or test_action_gap_tracking" -q
     integration:
-    - py -3 -m pytest tests/test_life_os_advanced.py -k "test_deferral_thresholds_3_5_8 or test_faction_lag_and_tws_bonus"
-      -q
+    - py -3 -m pytest tests/test_life_os_advanced.py -k "test_deferral_thresholds_3_5_8
+      or test_faction_lag_and_tws_bonus" -q
   depends_on: []
 - id: F-0057
   title: Goal Tracker (3-Layer Stack)
@@ -2640,9 +2682,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Retrieval
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus design spec
-  provider: null
+  provider: RoughNoteParser
   layer: sidecar
   inherited: false
   manual: false
@@ -2662,10 +2704,19 @@ features:
   evidence:
     files:
     - sidecar/ingestion/rough_note_parser.py
-    symbols: []
+    - locus-extension/src/ingestion/rough-note-parser.ts
+    symbols:
+    - file: sidecar/ingestion/rough_note_parser.py
+      name: ParsedIdea
+    - file: sidecar/ingestion/rough_note_parser.py
+      name: RoughNoteParser
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k test_rough_note_parser
+      -q
+    integration:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k test_rough_note_integration
+      -q
   depends_on: []
 - id: F-0062
   title: Link Dump Logger
@@ -2674,9 +2725,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Retrieval
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus design spec
-  provider: null
+  provider: LinkDumpLogger
   layer: sidecar
   inherited: false
   manual: false
@@ -2696,10 +2747,18 @@ features:
   evidence:
     files:
     - sidecar/ingestion/link_logger.py
-    symbols: []
+    - locus-extension/src/ingestion/link-logger.ts
+    symbols:
+    - file: sidecar/ingestion/link_logger.py
+      name: LoggedResource
+    - file: sidecar/ingestion/link_logger.py
+      name: LinkDumpLogger
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k test_link_dump_logger -q
+    integration:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k test_link_dump_integration
+      -q
   depends_on: []
 - id: F-0063
   title: Excalidraw MCP Skill
@@ -2708,9 +2767,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Retrieval
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus design spec
-  provider: null
+  provider: ExcalidrawDiagramBuilder
   layer: sidecar
   inherited: false
   manual: false
@@ -2731,11 +2790,20 @@ features:
     '§27.7: Excalidraw MCP Skill (Visual Architecture Diagrams)': 1f8c0f9b253f9fcb
   evidence:
     files:
-    - sidecar/display/excalidraw_builder.py
-    symbols: []
+    - sidecar/tools/excalidraw_builder.py
+    - locus-extension/src/tools/excalidraw.ts
+    symbols:
+    - file: sidecar/tools/excalidraw_builder.py
+      name: ExcalidrawElement
+    - file: sidecar/tools/excalidraw_builder.py
+      name: ExcalidrawDiagramBuilder
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k test_excalidraw_builder
+      -q
+    integration:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k test_excalidraw_integration
+      -q
   depends_on: []
 - id: F-0064
   title: Dual Interface / Check-ins
@@ -3038,9 +3106,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Microsystems
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus microsystems.html
-  provider: null
+  provider: DocumentChunker
   layer: sidecar
   inherited: false
   manual: false
@@ -3058,11 +3126,19 @@ features:
     '§30.1: Collector + Chunker (Ingestion Pipeline)': 4066a978cf8a5364
   evidence:
     files:
-    - sidecar/ingestion/collector.py
-    symbols: []
+    - sidecar/crawlers/chunker.py
+    - locus-extension/src/crawlers/chunker.ts
+    symbols:
+    - file: sidecar/crawlers/chunker.py
+      name: DocumentChunk
+    - file: sidecar/crawlers/chunker.py
+      name: DocumentChunker
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k test_document_chunker -q
+    integration:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k test_document_chunker_integration
+      -q
   depends_on: []
 - id: F-0073
   title: Cause Chain Engine
@@ -3308,9 +3384,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Microsystems
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus microsystems.html
-  provider: null
+  provider: RedisStateManager
   layer: sidecar
   inherited: false
   manual: false
@@ -3330,11 +3406,20 @@ features:
     '§30.9: Redis High-Performance State & Pub/Sub Integration': 9158344c9d2fbc57
   evidence:
     files:
-    - sidecar/redis_state.py
-    symbols: []
+    - sidecar/state/redis_manager.py
+    - locus-extension/src/state/redis-client.ts
+    symbols:
+    - file: sidecar/state/redis_manager.py
+      name: CacheEntry
+    - file: sidecar/state/redis_manager.py
+      name: RedisStateManager
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k test_redis_state_manager
+      -q
+    integration:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k test_redis_integration
+      -q
   depends_on: []
 - id: F-0081
   title: Obsidian/LightRAG Bridge
@@ -3343,9 +3428,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Microsystems
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus microsystems.html
-  provider: null
+  provider: LightRAGBridge
   layer: sidecar
   inherited: false
   manual: false
@@ -3366,10 +3451,18 @@ features:
   evidence:
     files:
     - sidecar/vault/lightrag_bridge.py
-    symbols: []
+    - locus-extension/src/vault/lightrag-bridge.ts
+    symbols:
+    - file: sidecar/vault/lightrag_bridge.py
+      name: RetrievalResult
+    - file: sidecar/vault/lightrag_bridge.py
+      name: LightRAGBridge
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k test_lightrag_bridge -q
+    integration:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k test_lightrag_integration
+      -q
   depends_on: []
 - id: F-0082
   title: Install Script (ALL platforms)
@@ -4828,11 +4921,11 @@ features:
   - '§27.3: LOCUS_SHORTHAND 4× Text Compressor'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: LOCUS-NEW
+  category: Compression
+  verdict: INTEGRATED
   source: null
-  provider: null
-  layer: unknown
+  provider: LocusShorthandCompressor
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4841,11 +4934,21 @@ features:
   spec_sha:
     '§27.3: LOCUS_SHORTHAND 4× Text Compressor': a01c1c483a7a134f
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/compression/shorthand.py
+    - locus-extension/src/compression/shorthand.ts
+    symbols:
+    - file: sidecar/compression/shorthand.py
+      name: CompressionStats
+    - file: sidecar/compression/shorthand.py
+      name: LocusShorthandCompressor
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k test_shorthand_compression
+      -q
+    integration:
+    - py -3 -m pytest tests/test_vault_and_ingestion.py -k test_shorthand_integration
+      -q
   depends_on: []
 - id: F-0123
   title: 3-Level Tag Hierarchy & Semantic Indexing
