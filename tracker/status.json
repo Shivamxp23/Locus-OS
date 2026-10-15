@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-10-15T21:06:22+0530",
-  "commit": "bd7c87e0bdec2c93bd51f18291b9ede391c4bb3b",
-  "dirty": true,
+  "generated_at": "2026-10-15T21:09:33+0530",
+  "commit": "64f4ca6aec3afffd5e4b51377ec7bb738ffe3a60",
+  "dirty": false,
   "static": false,
   "guard": {
     "verdict": "PASS",
     "counts": {
       "FAIL": 0,
-      "WARN": 11,
+      "WARN": 10,
       "INFO": 0
     }
   },
@@ -846,10 +846,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".............                                                            [100%]\n13 passed in 1.12s\n",
+            "tail": ".............                                                            [100%]\n13 passed in 0.87s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.3
+            "seconds": 3.1
           }
         ],
         "guard": [],
@@ -860,10 +860,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed in 0.12s\n",
+            "tail": ".                                                                        [100%]\n1 passed in 0.63s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 3.0
           }
         ]
       }
@@ -1105,10 +1105,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "egacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/test_service.py::test_service_lifecycle_and_health_endpoint\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n14 passed, 2 warnings in 23.62s\n",
+            "tail": "legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/test_service.py::test_service_lifecycle_and_health_endpoint\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n14 passed, 2 warnings in 1.80s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 26.0
+            "seconds": 4.1
           }
         ],
         "guard": [],
@@ -1119,7 +1119,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed in 0.28s\n",
+            "tail": ".                                                                        [100%]\n1 passed in 0.29s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.4
@@ -1592,10 +1592,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ". collected 6 items\n\ntests/test_installer.py::test_installer_launchers_exist_and_thin PASSED  [ 16%]\ntests/test_installer.py::test_init_locus_home_creates_canonical_structure PASSED [ 33%]\ntests/test_installer.py::test_installer_re_run_is_safe_and_preserves_config PASSED [ 50%]\ntests/test_installer.py::test_load_answers_json_and_yaml PASSED          [ 66%]\ntests/test_installer.py::test_run_installer_cli_non_interactive PASSED   [ 83%]\ntests/test_installer.py::test_run_installer_with_answers_file PASSED     [100%]\n\n============================== 6 passed in 0.17s ==============================\n",
+            "tail": ". collected 6 items\n\ntests/test_installer.py::test_installer_launchers_exist_and_thin PASSED  [ 16%]\ntests/test_installer.py::test_init_locus_home_creates_canonical_structure PASSED [ 33%]\ntests/test_installer.py::test_installer_re_run_is_safe_and_preserves_config PASSED [ 50%]\ntests/test_installer.py::test_load_answers_json_and_yaml PASSED          [ 66%]\ntests/test_installer.py::test_run_installer_cli_non_interactive PASSED   [ 83%]\ntests/test_installer.py::test_run_installer_with_answers_file PASSED     [100%]\n\n============================== 6 passed in 0.21s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.3
           }
         ],
         "guard": [
@@ -1639,7 +1639,7 @@
             "tail": "..........                                                               [100%]\n10 passed in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.1
           }
         ],
         "guard": [],
@@ -1677,7 +1677,7 @@
             "tail": "......                                                                   [100%]\n6 passed in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.1
           }
         ],
         "guard": [
@@ -1760,10 +1760,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed in 0.04s\n",
+            "tail": ".....                                                                    [100%]\n5 passed in 0.03s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.1
           }
         ],
         "guard": [],
@@ -1799,7 +1799,7 @@
             "tail": "......                                                                   [100%]\n6 passed in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ],
         "guard": [
@@ -2433,10 +2433,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "................                                                         [100%]\n16 passed in 1.19s\n",
+            "tail": "................                                                         [100%]\n16 passed in 1.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.3
+            "seconds": 3.1
           }
         ],
         "guard": [],
@@ -2447,10 +2447,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed in 1.14s\n",
+            "tail": "..                                                                       [100%]\n2 passed in 1.11s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.3
+            "seconds": 3.2
           }
         ]
       }
