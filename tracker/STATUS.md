@@ -1,13 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `07c38be38a` (dirty working tree) - 2026-10-16T00:20:47+0530 - with test runs
+- commit `f9a2f0475e` (dirty working tree) - 2026-10-16T00:48:59+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 11, 'INFO': 0}
-- features: 125 | verified average **22.9%** | old claimed average 71.4% over 86 rows
-- integrated or better: 26 | proven: 0 | overclaims (claimed >= verified + 25): 63 | no evidence: 84
-- by level: {'FILES_PRESENT': 10, 'INHERITED_OK': 12, 'INTEGRATED': 14, 'NO_EVIDENCE': 84, 'UNIT_VERIFIED': 5}
-
-## REGRESSIONS since last run
-- F-0125 Modularity foundation: provider registry: 100% -> 85%
+- features: 125 | verified average **31.2%** | old claimed average 71.4% over 86 rows
+- integrated or better: 38 | proven: 1 | overclaims (claimed >= verified + 25): 57 | no evidence: 72
+- by level: {'FILES_PRESENT': 10, 'INHERITED_OK': 12, 'INTEGRATED': 25, 'NO_EVIDENCE': 72, 'PROVEN': 1, 'UNIT_VERIFIED': 5}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -23,7 +20,6 @@
 | F-0064 | Dual Interface / Check-ins | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/. Create them or correct the path. |
 | F-0007 | Post-Turn Review | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/learning/reflector.py. Create them or correct the path. |
 | F-0009 | Rate Limit Tracking | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/rate_limiter.py. Create them or correct the path. |
-| F-0021 | Neo4j Agent Memory (POLE+O) | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/neo4j_memory.py. Create them or correct the path. |
 | F-0027 | Session Management | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/memory.py, sidecar/session_export.py. Create them or cor |
 | F-0010 | Usage/Cost Tracking | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/cost_tracker.py. Create them or correct the path. |
 | F-0011 | Title Generation | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/title_generator.py. Create them or correct the path. |
@@ -32,6 +28,7 @@
 | F-0066 | Health Checks | 90% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0004 | Model Management & Escalation | 85% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0006 | Context Window Management | 70% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/context/headroom_adapter.py. Create them or correct the  |
+| F-0031 | CLI / Doctor Diagnostics | 85% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 
 ## All features
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -56,12 +53,12 @@
 | F-0018 | Model Selection | 100% | 100% | INHERITED_OK |  |  |
 | F-0019 | File/Shell/Search Tools | 100% | 100% | INHERITED_OK |  |  |
 | F-0020 | Harness Delegation | 65% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0021 | Neo4j Agent Memory (POLE+O) | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/neo4j_memory.py. Create them or correct the path. |
-| F-0022 | Holographic HRR | 30% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/holographic/. Create them or correct the path. |
-| F-0023 | STDP Reinforcement | 40% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/patterns/hebbian.py. Create them or correct the path. |
-| F-0024 | Spaced Repetition | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/spaced_rep.py. Create them or correct the path. |
-| F-0025 | Project Memory Decay | 25% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
-| F-0026 | Headroom CCR | 50% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/context/headroom_adapter.py. Create them or correct the  |
+| F-0021 | Neo4j Agent Memory (POLE+O) | 80% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0022 | Holographic HRR | 30% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0023 | STDP Reinforcement | 40% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0024 | Spaced Repetition | 60% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0025 | Project Memory Decay | 25% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0026 | Headroom CCR | 50% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0027 | Session Management | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/memory.py, sidecar/session_export.py. Create them or cor |
 | F-0028 | Context References | 40% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
 | F-0029 | Coding Context | 90% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
@@ -123,10 +120,10 @@
 | F-0085 | VM Backend Setup | 100% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0086 | Deployment (systemd/Docker) | 65% | 65% | UNIT_VERIFIED |  | Add evidence.integration: a DIFFERENT test that crosses a boundary (sidecar<->Pi, extensio |
 | F-0087 | ARCH-6 Pi bridge (sidecar -> Pi CLI, used by | - | 65% | UNIT_VERIFIED |  | Add evidence.integration: a DIFFERENT test that crosses a boundary (sidecar<->Pi, extensio |
-| F-0088 | Memory Tree (Hierarchical Summarization Casc | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
-| F-0089 | Memory Sync (Multi-Source Ingestion Pipeline | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
-| F-0090 | Memory Queue (Async Job Pipeline) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
-| F-0091 | Memory Diff (Snapshot-Based Change Tracking) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0088 | Memory Tree (Hierarchical Summarization Casc | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0089 | Memory Sync (Multi-Source Ingestion Pipeline | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0090 | Memory Queue (Async Job Pipeline) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0091 | Memory Diff (Snapshot-Based Change Tracking) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0092 | Query Router / Intent Classifier (Stage 2) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0093 | State Engine (Stage 3) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0094 | Context Forge (Stage 6) — The 6-Layer Assemb | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
@@ -145,7 +142,7 @@
 | F-0107 | File Safety | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0108 | Autonomy Tiers | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0109 | Approval Gate | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
-| F-0110 | Context Compression | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0110 | Context Compression | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0111 | Emergency Task Injection | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0112 | Exhaustion Predictor | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0113 | Weekly Faction Rebalance | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
@@ -153,11 +150,11 @@
 | F-0115 | Goal Stack Enforcement | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0116 | Cross-Faction Efficiency | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0117 | Four-Level Emergency Protocol | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
-| F-0118 | Memory Provider Interface | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0118 | Memory Provider Interface | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0119 | Skill System & Multi-Source Marketplace | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0120 | Self-Evolving Architect Bot | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0121 | Agent Experience Tracking (Procedural Memory | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0122 | LOCUS_SHORTHAND 4× Text Compressor | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0123 | 3-Level Tag Hierarchy & Semantic Indexing | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0124 | Auxiliary LLM Client | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
-| F-0125 | Modularity foundation: provider registry + c | - | 85% | INTEGRATED | PROOF_STALE | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0125 | Modularity foundation: provider registry + c | - | 100% | PROVEN |  |  |

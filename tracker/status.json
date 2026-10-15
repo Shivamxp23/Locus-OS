@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-16T00:20:47+0530",
-  "commit": "07c38be38a4f0d7f58bb2fb6d0752bd45e24a39a",
+  "generated_at": "2026-10-16T00:48:59+0530",
+  "commit": "f9a2f0475e12bc71cada9d8e59263eb7007684c9",
   "dirty": true,
   "static": false,
   "guard": {
@@ -13,20 +13,21 @@
   },
   "summary": {
     "features": 125,
-    "verified_mean_pct": 22.9,
+    "verified_mean_pct": 31.2,
     "claimed_mean_pct": 71.4,
     "claimed_rows": 86,
     "by_label": {
       "FILES_PRESENT": 10,
       "INHERITED_OK": 12,
-      "INTEGRATED": 14,
-      "NO_EVIDENCE": 84,
+      "INTEGRATED": 25,
+      "NO_EVIDENCE": 72,
+      "PROVEN": 1,
       "UNIT_VERIFIED": 5
     },
-    "integrated_or_better": 26,
-    "proven": 0,
-    "overclaims": 63,
-    "no_evidence": 84,
+    "integrated_or_better": 38,
+    "proven": 1,
+    "overclaims": 57,
+    "no_evidence": 72,
     "spec_sections_total": 135,
     "spec_changed": 0
   },
@@ -371,10 +372,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "....                                                                     [100%]\n4 passed, 2 deselected in 0.04s\n",
+            "tail": "....                                                                     [100%]\n4 passed, 2 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -385,10 +386,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 6.40s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 6.19s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 8.6
+            "seconds": 8.2
           }
         ]
       }
@@ -397,115 +398,289 @@
       "id": "F-0021",
       "title": "Neo4j Agent Memory (POLE+O)",
       "verdict": "KEEP-PREBUILT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 80.0,
-      "gap": 80.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": -5.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/neo4j_memory.py"
+        "no recorded proof"
       ],
-      "next": "Files claimed but absent: sidecar/neo4j_memory.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_neo4j_memory.py -k \"test_memory_client_protocol_conformance or test_memory_client_modularity_disabled\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.3
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_neo4j_memory.py -k \"test_pole_plus_o_entity_deduplication or test_relationship_writing_and_pathway_traversal or test_context_forge_layer4_formatting or test_short_term_and_reasoning_traces\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "....                                                                     [100%]\n4 passed, 2 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.1
+          }
+        ]
+      }
     },
     "F-0022": {
       "id": "F-0022",
       "title": "Holographic HRR",
       "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 30.0,
-      "gap": 30.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": -55.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/holographic/"
+        "no recorded proof"
       ],
-      "next": "Files claimed but absent: sidecar/holographic/. Create them or correct the path.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_hrr.py -k \"test_codebook_and_normalization or test_cosine_similarity_edge_cases\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.18s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.1
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_hrr.py -k \"test_circular_convolution_bind_unbind_exact or test_ephemeral_state_encoding_and_decoding\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.20s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.1
+          }
+        ]
+      }
     },
     "F-0023": {
       "id": "F-0023",
       "title": "STDP Reinforcement",
       "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 40.0,
-      "gap": 40.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": -45.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/patterns/hebbian.py"
+        "no recorded proof"
       ],
-      "next": "Files claimed but absent: sidecar/patterns/hebbian.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_stdp.py -k \"test_clamp_boundaries or test_causality_violation_ignored\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 1.9
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_stdp.py -k \"test_stdp_potentiation_on_success or test_stdp_depression_on_failure or test_stdp_manager_turn_processing_and_pruning\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "...                                                                      [100%]\n3 passed, 2 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ]
+      }
     },
     "F-0024": {
       "id": "F-0024",
       "title": "Spaced Repetition",
       "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 60.0,
-      "gap": 60.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": -25.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/spaced_rep.py"
+        "no recorded proof"
       ],
-      "next": "Files claimed but absent: sidecar/spaced_rep.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_spaced_repetition.py -k \"test_initial_review_pass or test_failed_recall_resets_ladder\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_spaced_repetition.py -k \"test_second_review_ladder or test_memory_scheduler_due_querying\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ]
+      }
     },
     "F-0025": {
       "id": "F-0025",
       "title": "Project Memory Decay",
       "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 25.0,
-      "gap": 25.0,
-      "flags": [
-        "NO_FILES_NAMED",
-        "OVERCLAIM"
-      ],
+      "gap": -60.0,
+      "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "no recorded proof"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_project_decay.py -k \"test_half_life_exact_calculations\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_project_decay.py -k \"test_project_decay_manager_sweep_and_cold_storage or test_touch_project_restores_from_cold_storage\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ]
+      }
     },
     "F-0026": {
       "id": "F-0026",
       "title": "Headroom CCR",
       "verdict": "KEEP-PREBUILT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 50.0,
-      "gap": 50.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": -35.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/context/headroom_adapter.py"
+        "no recorded proof"
       ],
-      "next": "Files claimed but absent: sidecar/context/headroom_adapter.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_headroom_ccr.py -k \"test_smart_crusher_json or test_code_compressor_redundant_newlines or test_ccr_cache_and_reversible_retrieval\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "...                                                                      [100%]\n3 passed, 1 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 1.9
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_headroom_ccr.py -k \"test_headroom_compressor_pipeline\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".                                                                        [100%]\n1 passed, 3 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ]
+      }
     },
     "F-0027": {
       "id": "F-0027",
@@ -872,10 +1047,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".............                                                            [100%]\n13 passed in 1.27s\n",
+            "tail": ".............                                                            [100%]\n13 passed in 0.96s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.7
+            "seconds": 3.0
           }
         ],
         "guard": [],
@@ -886,7 +1061,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed in 0.63s\n",
+            "tail": ".                                                                        [100%]\n1 passed in 0.62s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.7
@@ -958,10 +1133,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.23s\n",
+            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.21s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -972,10 +1147,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.10s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.13s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.1
           }
         ]
       }
@@ -1020,10 +1195,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 6 deselected in 0.25s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 6 deselected in 0.26s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.2
           }
         ]
       }
@@ -1133,7 +1308,7 @@
             "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -1144,10 +1319,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.06s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ]
       }
@@ -1217,10 +1392,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/test_service.py::test_service_lifecycle_and_health_endpoint\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n14 passed, 2 warnings in 1.64s\n",
+            "tail": "legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/test_service.py::test_service_lifecycle_and_health_endpoint\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n14 passed, 2 warnings in 1.71s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.8
+            "seconds": 3.7
           }
         ],
         "guard": [],
@@ -1231,10 +1406,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed in 0.28s\n",
+            "tail": ".                                                                        [100%]\n1 passed in 0.27s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.2
           }
         ]
       }
@@ -1284,10 +1459,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "....                                                                     [100%]\n4 passed, 1 deselected in 0.08s\n",
+            "tail": "....                                                                     [100%]\n4 passed, 1 deselected in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.1
           }
         ],
         "guard": [],
@@ -1298,10 +1473,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 4 deselected in 0.14s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 4 deselected in 0.63s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.6
           }
         ]
       }
@@ -1736,7 +1911,7 @@
             "tail": ". collected 6 items\n\ntests/test_installer.py::test_installer_launchers_exist_and_thin PASSED  [ 16%]\ntests/test_installer.py::test_init_locus_home_creates_canonical_structure PASSED [ 33%]\ntests/test_installer.py::test_installer_re_run_is_safe_and_preserves_config PASSED [ 50%]\ntests/test_installer.py::test_load_answers_json_and_yaml PASSED          [ 66%]\ntests/test_installer.py::test_run_installer_cli_non_interactive PASSED   [ 83%]\ntests/test_installer.py::test_run_installer_with_answers_file PASSED     [100%]\n\n============================== 6 passed in 0.19s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.1
           },
           {
             "cmd": "py -3 -m pytest tests/test_setup_wizard.py -v",
@@ -1744,10 +1919,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "sts/test_setup_wizard.py::test_validate_key_with_custom_validator PASSED [ 16%]\ntests/test_setup_wizard.py::test_save_and_load_secret_env PASSED         [ 33%]\ntests/test_setup_wizard.py::test_update_config_mode_preserves_existing_keys PASSED [ 50%]\ntests/test_setup_wizard.py::test_setup_wizard_key_collection_stores_in_env_not_config PASSED [ 66%]\ntests/test_setup_wizard.py::test_setup_wizard_re_run_safety PASSED       [ 83%]\ntests/test_setup_wizard.py::test_setup_wizard_non_interactive_with_answers PASSED [100%]\n\n============================== 6 passed in 0.17s ==============================\n",
+            "tail": "sts/test_setup_wizard.py::test_validate_key_with_custom_validator PASSED [ 16%]\ntests/test_setup_wizard.py::test_save_and_load_secret_env PASSED         [ 33%]\ntests/test_setup_wizard.py::test_update_config_mode_preserves_existing_keys PASSED [ 50%]\ntests/test_setup_wizard.py::test_setup_wizard_key_collection_stores_in_env_not_config PASSED [ 66%]\ntests/test_setup_wizard.py::test_setup_wizard_re_run_safety PASSED       [ 83%]\ntests/test_setup_wizard.py::test_setup_wizard_non_interactive_with_answers PASSED [100%]\n\n============================== 6 passed in 0.21s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.1
           },
           {
             "cmd": "py -3 -m pytest tests/test_doctor.py -v",
@@ -1755,10 +1930,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": " PASSED                   [ 25%]\ntests/test_doctor.py::test_check_config_validity PASSED                  [ 37%]\ntests/test_doctor.py::test_check_vault_writable PASSED                   [ 50%]\ntests/test_doctor.py::test_check_couchdb_loopback_failure_remediation PASSED [ 62%]\ntests/test_doctor.py::test_check_sidecar_health_failure_remediation PASSED [ 75%]\ntests/test_doctor.py::test_doctor_runs_with_one_line_per_check PASSED    [ 87%]\ntests/test_doctor.py::test_pi_tui_runner_pass_through PASSED             [100%]\n\n============================== 8 passed in 8.39s ==============================\n",
+            "tail": " PASSED                   [ 25%]\ntests/test_doctor.py::test_check_config_validity PASSED                  [ 37%]\ntests/test_doctor.py::test_check_vault_writable PASSED                   [ 50%]\ntests/test_doctor.py::test_check_couchdb_loopback_failure_remediation PASSED [ 62%]\ntests/test_doctor.py::test_check_sidecar_health_failure_remediation PASSED [ 75%]\ntests/test_doctor.py::test_doctor_runs_with_one_line_per_check PASSED    [ 87%]\ntests/test_doctor.py::test_pi_tui_runner_pass_through PASSED             [100%]\n\n============================== 8 passed in 8.44s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 10.7
+            "seconds": 10.4
           }
         ],
         "guard": [
@@ -1799,10 +1974,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..........                                                               [100%]\n10 passed in 0.14s\n",
+            "tail": "..........                                                               [100%]\n10 passed in 0.11s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.1
           },
           {
             "cmd": "py -3 -m pytest tests/test_telegram_setup.py -q",
@@ -1810,10 +1985,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".......                                                                  [100%]\n7 passed in 0.12s\n",
+            "tail": ".......                                                                  [100%]\n7 passed in 0.17s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.2
           }
         ],
         "guard": [],
@@ -1848,7 +2023,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "......                                                                   [100%]\n6 passed in 0.04s\n",
+            "tail": "......                                                                   [100%]\n6 passed in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.0
@@ -1929,10 +2104,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.10s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.62s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.6
           }
         ]
       }
@@ -1963,10 +2138,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed in 0.10s\n",
+            "tail": ".....                                                                    [100%]\n5 passed in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.7
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -2002,7 +2177,7 @@
             "tail": "......                                                                   [100%]\n6 passed in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.6
+            "seconds": 1.9
           }
         ],
         "guard": [
@@ -2024,65 +2199,193 @@
       "id": "F-0088",
       "title": "Memory Tree (Hierarchical Summarization Cascade)",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "no recorded proof"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_tree.py -k \"test_memory_tree_protocol_conformance or test_topic_routing or test_memory_tree_modularity_disabled\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "...                                                                      [100%]\n3 passed, 2 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 1.9
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_tree.py -k \"test_append_leaf_and_auto_seal_cascade or test_hierarchical_search_ranks_summaries\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ]
+      }
     },
     "F-0089": {
       "id": "F-0089",
       "title": "Memory Sync (Multi-Source Ingestion Pipelines)",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "no recorded proof"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_sync.py -k \"test_sync_pipeline_protocol_conformance or test_sync_pipeline_modularity_disabled\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.07s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_sync.py -k \"test_workspace_sync_incremental_tick or test_self_healing_uncovered_files_check\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.08s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.1
+          }
+        ]
+      }
     },
     "F-0090": {
       "id": "F-0090",
       "title": "Memory Queue (Async Job Pipeline)",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "no recorded proof"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_queue.py -k \"test_memory_queue_protocol_conformance or test_queue_modularity_disabled\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.1
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_queue.py -k \"test_enqueue_deduplication or test_claim_and_token_settlement or test_stale_lock_recovery\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "...                                                                      [100%]\n3 passed, 2 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.1
+          }
+        ]
+      }
     },
     "F-0091": {
       "id": "F-0091",
       "title": "Memory Diff (Snapshot-Based Change Tracking)",
       "verdict": "LOCUS-NEW",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "no recorded proof"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_diff.py -k test_take_snapshot_and_hash -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_diff.py -k \"test_diff_snapshots_add_remove_modify or test_memory_diff_manager_checkpoint\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 1.9
+          }
+        ]
+      }
     },
     "F-0092": {
       "id": "F-0092",
@@ -2113,7 +2416,7 @@
             "tail": "....                                                                     [100%]\n4 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 1.9
           }
         ],
         "guard": [],
@@ -2127,7 +2430,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 0.03s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.0
           }
         ]
       }
@@ -2161,7 +2464,7 @@
             "tail": "....                                                                     [100%]\n4 passed, 3 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.5
+            "seconds": 1.9
           }
         ],
         "guard": [],
@@ -2172,10 +2475,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "...                                                                      [100%]\n3 passed, 4 deselected in 0.04s\n",
+            "tail": "...                                                                      [100%]\n3 passed, 4 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 1.9
           }
         ]
       }
@@ -2209,7 +2512,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.03s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -2223,7 +2526,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.03s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.0
           }
         ]
       }
@@ -2257,7 +2560,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -2302,7 +2605,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "...                                                                      [100%]\n3 passed, 4 deselected in 0.03s\n",
+            "tail": "...                                                                      [100%]\n3 passed, 4 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.0
@@ -2316,10 +2619,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "....                                                                     [100%]\n4 passed, 3 deselected in 0.04s\n",
+            "tail": "....                                                                     [100%]\n4 passed, 3 deselected in 0.03s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.1
           }
         ]
       }
@@ -2536,17 +2839,49 @@
       "id": "F-0110",
       "title": "Context Compression",
       "verdict": "UNKNOWN",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "no recorded proof"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_context_compressor.py -k \"test_should_compress_threshold or test_short_messages_not_compressed\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 1.9
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_context_compressor.py -k \"test_middle_compaction_with_preserved_boundaries\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 1.9
+          }
+        ]
+      }
     },
     "F-0111": {
       "id": "F-0111",
@@ -2663,18 +2998,50 @@
     "F-0118": {
       "id": "F-0118",
       "title": "Memory Provider Interface",
-      "verdict": "UNKNOWN",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "verdict": "KEEP-HERMES",
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": null,
       "gap": null,
       "flags": [],
       "reasons": [
-        "no evidence files declared"
+        "no recorded proof"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_interface.py -k \"test_memory_interface_models or test_memory_manager_modularity_disabled\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.04s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 1.9
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/test_memory_interface.py -k \"test_memory_manager_stackable_providers\" -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.03s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.0
+          }
+        ]
+      }
     },
     "F-0119": {
       "id": "F-0119",
@@ -2776,18 +3143,14 @@
       "id": "F-0125",
       "title": "Modularity foundation: provider registry + config accessor (sidecar and TypeScript)",
       "verdict": "LOCUS-NEW",
-      "level": 4,
-      "label": "INTEGRATED",
-      "pct": 85,
+      "level": 5,
+      "label": "PROVEN",
+      "pct": 100,
       "claimed_pct": null,
       "gap": null,
-      "flags": [
-        "PROOF_STALE"
-      ],
-      "reasons": [
-        "proof is STALE: evidence files changed since it was recorded"
-      ],
-      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "flags": [],
+      "reasons": [],
+      "next": "",
       "checks": {
         "symbols": {
           "ok": true,
@@ -2800,7 +3163,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "................                                                         [100%]\n16 passed in 1.06s\n",
+            "tail": "................                                                         [100%]\n16 passed in 1.18s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 3.1
@@ -2814,16 +3177,14 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed in 1.14s\n",
+            "tail": "..                                                                       [100%]\n2 passed in 1.12s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.1
+            "seconds": 3.2
           }
         ]
       }
     }
   },
-  "regressions": [
-    "F-0125 Modularity foundation: provider registry: 100% -> 85%"
-  ]
+  "regressions": []
 }

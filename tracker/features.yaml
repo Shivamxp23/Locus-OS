@@ -1,11 +1,3 @@
-# tracker/features.yaml -- SOURCE OF TRUTH for WHAT must exist and HOW to prove it.
-#
-#   * Status is COMPUTED by tools/tracker/verify.py from `evidence`. It is never written here.
-#     Keys like status / pct / complete are rejected by the guard.
-#   * `claimed` is what the old LLM-maintained workbook said. It is kept for comparison only.
-#   * To advance a feature, add evidence: files -> symbols -> unit (L3) -> integration (L4) -> proof + signoff (L5).
-#   * Do not read this whole file (thousands of lines). Use: python tools/tracker/show.py F-0007
-#   * Agents may ADD evidence for the feature they are working on. They may not delete or weaken existing evidence.
 schema: 1
 spec_file: .keysndocs/Documentation/Implementation Plans/LOCUS_FEATURE_LOGIC_DECOMPOSITION.md
 features:
@@ -718,9 +710,12 @@ features:
       name: delegate_coding_task
     guard: []
     unit:
-    - py -3 -m pytest tests/test_harness.py -k "test_security_rule_s3_forbids_dangerous_flags or test_harness_manager_protocol_conformance or test_harness_manager_modularity_disabled or test_harness_manager_build_command" -q
+    - py -3 -m pytest tests/test_harness.py -k "test_security_rule_s3_forbids_dangerous_flags
+      or test_harness_manager_protocol_conformance or test_harness_manager_modularity_disabled
+      or test_harness_manager_build_command" -q
     integration:
-    - py -3 -m pytest tests/test_harness.py -k "test_harness_manager_mock_delegation_in_scratch_worktree or test_inter_harness_bridge_delegation" -q
+    - py -3 -m pytest tests/test_harness.py -k "test_harness_manager_mock_delegation_in_scratch_worktree
+      or test_inter_harness_bridge_delegation" -q
   depends_on: []
 - id: F-0021
   title: Neo4j Agent Memory (POLE+O)
@@ -751,10 +746,32 @@ features:
   evidence:
     files:
     - sidecar/neo4j_memory.py
-    symbols: []
+    - sidecar/memory/interface.py
+    - locus-extension/src/providers/memory/neo4j-agent-memory.ts
+    - locus-extension/src/providers/memory/interface.ts
+    symbols:
+    - file: sidecar/neo4j_memory.py
+      name: ShortTermMemory
+    - file: sidecar/neo4j_memory.py
+      name: ReasoningTraceMemory
+    - file: sidecar/neo4j_memory.py
+      name: Neo4jMemoryClient
+    - file: sidecar/memory/interface.py
+      name: EntityType
+    - file: sidecar/memory/interface.py
+      name: MemoryEntry
+    - file: sidecar/memory/interface.py
+      name: Pathway
+    - file: sidecar/memory/interface.py
+      name: MemoryProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_neo4j_memory.py -k "test_memory_client_protocol_conformance
+      or test_memory_client_modularity_disabled" -q
+    integration:
+    - py -3 -m pytest tests/test_neo4j_memory.py -k "test_pole_plus_o_entity_deduplication
+      or test_relationship_writing_and_pathway_traversal or test_context_forge_layer4_formatting
+      or test_short_term_and_reasoning_traces" -q
   depends_on: []
 - id: F-0022
   title: Holographic HRR
@@ -765,7 +782,7 @@ features:
   category: Memory
   verdict: LOCUS-NEW
   source: Locus design spec
-  provider: null
+  provider: HolographicMemory
   layer: sidecar
   inherited: false
   manual: false
@@ -789,11 +806,34 @@ features:
     '§4.10: Holographic Reduced Representations (HRR Memory Binding)': 47cf02cb2a5441f6
   evidence:
     files:
-    - sidecar/holographic/
-    symbols: []
+    - sidecar/memory/hrr.py
+    - locus-extension/src/providers/memory/hrr.ts
+    symbols:
+    - file: sidecar/memory/hrr.py
+      name: HRRVector
+    - file: sidecar/memory/hrr.py
+      name: Codebook
+    - file: sidecar/memory/hrr.py
+      name: bind
+    - file: sidecar/memory/hrr.py
+      name: unbind
+    - file: sidecar/memory/hrr.py
+      name: bundle
+    - file: sidecar/memory/hrr.py
+      name: cleanup
+    - file: sidecar/memory/hrr.py
+      name: encode_ephemeral_state
+    - file: sidecar/memory/hrr.py
+      name: decode_ephemeral_state
+    - file: sidecar/memory/hrr.py
+      name: HolographicMemory
+    unit:
+    - py -3 -m pytest tests/test_memory_hrr.py -k "test_codebook_and_normalization
+      or test_cosine_similarity_edge_cases" -q
+    integration:
+    - py -3 -m pytest tests/test_memory_hrr.py -k "test_circular_convolution_bind_unbind_exact
+      or test_ephemeral_state_encoding_and_decoding" -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0023
   title: STDP Reinforcement
@@ -804,7 +844,7 @@ features:
   category: Memory
   verdict: LOCUS-NEW
   source: Locus design spec
-  provider: null
+  provider: STDPManager
   layer: sidecar
   inherited: false
   manual: false
@@ -826,11 +866,29 @@ features:
     '§4.12: STDP Reinforcement (Spike-Timing-Dependent Plasticity)': 47739408cc3c9631
   evidence:
     files:
-    - sidecar/patterns/hebbian.py
-    symbols: []
+    - sidecar/memory/stdp.py
+    - locus-extension/src/providers/memory/stdp.ts
+    symbols:
+    - file: sidecar/memory/stdp.py
+      name: RetrievalEvent
+    - file: sidecar/memory/stdp.py
+      name: OutcomeEvent
+    - file: sidecar/memory/stdp.py
+      name: TurnAuditLog
+    - file: sidecar/memory/stdp.py
+      name: clamp_weight
+    - file: sidecar/memory/stdp.py
+      name: apply_stdp_update
+    - file: sidecar/memory/stdp.py
+      name: STDPManager
+    unit:
+    - py -3 -m pytest tests/test_memory_stdp.py -k "test_clamp_boundaries or test_causality_violation_ignored"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_memory_stdp.py -k "test_stdp_potentiation_on_success
+      or test_stdp_depression_on_failure or test_stdp_manager_turn_processing_and_pruning"
+      -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0024
   title: Spaced Repetition
@@ -841,7 +899,7 @@ features:
   category: Memory
   verdict: LOCUS-NEW
   source: Locus design spec
-  provider: null
+  provider: MemoryScheduler
   layer: sidecar
   inherited: false
   manual: false
@@ -863,11 +921,22 @@ features:
     '§4.13: Spaced Repetition Memory Consolidation (FSRS / SM-2)': 4b11f2c205d13174
   evidence:
     files:
-    - sidecar/spaced_rep.py
-    symbols: []
+    - sidecar/memory/spaced_repetition.py
+    - locus-extension/src/providers/memory/spaced-repetition.ts
+    symbols:
+    - file: sidecar/memory/spaced_repetition.py
+      name: MemoryNodeState
+    - file: sidecar/memory/spaced_repetition.py
+      name: calculate_next_review
+    - file: sidecar/memory/spaced_repetition.py
+      name: MemoryScheduler
+    unit:
+    - py -3 -m pytest tests/test_memory_spaced_repetition.py -k "test_initial_review_pass
+      or test_failed_recall_resets_ladder" -q
+    integration:
+    - py -3 -m pytest tests/test_memory_spaced_repetition.py -k "test_second_review_ladder
+      or test_memory_scheduler_due_querying" -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0025
   title: Project Memory Decay
@@ -878,8 +947,8 @@ features:
   category: Memory
   verdict: LOCUS-NEW
   source: Locus design spec
-  provider: null
-  layer: unknown
+  provider: ProjectDecayManager
+  layer: sidecar
   inherited: false
   manual: false
   claimed:
@@ -899,11 +968,23 @@ features:
   spec_sha:
     '§4.14: Project-Specific Memory Decay Engine': e40cf51381a79282
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/memory/project_decay.py
+    - locus-extension/src/providers/memory/project-decay.ts
+    symbols:
+    - file: sidecar/memory/project_decay.py
+      name: calculate_retention_strength
+    - file: sidecar/memory/project_decay.py
+      name: ProjectMemoryCluster
+    - file: sidecar/memory/project_decay.py
+      name: ProjectDecayManager
+    unit:
+    - py -3 -m pytest tests/test_memory_project_decay.py -k "test_half_life_exact_calculations"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_memory_project_decay.py -k "test_project_decay_manager_sweep_and_cold_storage
+      or test_touch_project_restores_from_cold_storage" -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0026
   title: Headroom CCR
@@ -914,7 +995,7 @@ features:
   category: Memory
   verdict: KEEP-PREBUILT
   source: headroomlabs-ai/headroom
-  provider: CompressionProvider
+  provider: HeadroomCompressor
   layer: sidecar
   inherited: false
   manual: false
@@ -933,11 +1014,31 @@ features:
     '§4.17: Token Compression (Headroom CCR)': 71814da0512a3235
   evidence:
     files:
-    - sidecar/context/headroom_adapter.py
-    symbols: []
+    - sidecar/memory/headroom_ccr.py
+    - locus-extension/src/providers/memory/headroom-ccr.ts
+    symbols:
+    - file: sidecar/memory/headroom_ccr.py
+      name: CompressConfig
+    - file: sidecar/memory/headroom_ccr.py
+      name: CompressResult
+    - file: sidecar/memory/headroom_ccr.py
+      name: CCRCache
+    - file: sidecar/memory/headroom_ccr.py
+      name: SmartCrusher
+    - file: sidecar/memory/headroom_ccr.py
+      name: CodeCompressor
+    - file: sidecar/memory/headroom_ccr.py
+      name: HeadroomCompressor
+    - file: sidecar/memory/headroom_ccr.py
+      name: compress
+    unit:
+    - py -3 -m pytest tests/test_memory_headroom_ccr.py -k "test_smart_crusher_json
+      or test_code_compressor_redundant_newlines or test_ccr_cache_and_reversible_retrieval"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_memory_headroom_ccr.py -k "test_headroom_compressor_pipeline"
+      -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0027
   title: Session Management
@@ -1634,7 +1735,8 @@ features:
       name: register_telegram_channel
     guard: []
     unit:
-    - py -3 -m pytest tests/test_channel_telegram.py tests/test_deliver_result.py -q
+    - py -3 -m pytest tests/test_channel_telegram.py tests/test_deliver_result.py
+      -q
     integration:
     - py -3 -m pytest tests/test_channel_telegram_integration.py -q
   depends_on: []
@@ -1783,8 +1885,9 @@ features:
     sidecar_status: ✅ Done
     pct: 55
     remaining: Wire to nightly cron (23:45 IST); auto-replicate to CouchDB LiveSync
-    notes: Parses ChatGPT, Claude, Cursor, Pi, Telegram dumps into Obsidian vault (/vault/04-Captures/AI Chats/)
-      and Neo4j POLE+O entities, automatically replicated via CouchDB LiveSync
+    notes: Parses ChatGPT, Claude, Cursor, Pi, Telegram dumps into Obsidian vault
+      (/vault/04-Captures/AI Chats/) and Neo4j POLE+O entities, automatically replicated
+      via CouchDB LiveSync
     key_files_raw: sidecar/ingestion/chat_archiver.py, sidecar/crawlers/chat_crawler.py
   spec_targets:
   - locus-os/sidecar/crawlers/chat_crawler.py
@@ -2162,7 +2265,8 @@ features:
       name: create_app
     guard: []
     unit:
-    - py -3 -m pytest tests/test_scheduler.py tests/test_scheduler_modular.py tests/test_service.py -q
+    - py -3 -m pytest tests/test_scheduler.py tests/test_scheduler_modular.py tests/test_service.py
+      -q
     integration:
     - py -3 -m pytest tests/test_scheduler_integration.py -q
   depends_on: []
@@ -2220,12 +2324,14 @@ features:
     pi_status: ✅ IMPLEMENTED
     sidecar_status: ✅ Done
     pct: 100
-    remaining: None (CouchDB LiveSync container :5984, CORS local.ini, 8-folder standard hierarchy, and Pi Agent
-      locus_vault extension configured)
-    notes: Self-hosted CouchDB Docker container (:5984) with CORS + Obsidian LiveSync real-time sync with mobile/desktop,
-      bypassing iOS background execution limitations and eliminating Git merge conflict bloat; integrated with Pi
-      Agent locus_vault extension tool and sidecar event bus.
-    key_files_raw: sidecar/vault/livesync_bridge.py, src/extensions/locus-extension.ts, docker-compose.yml, data/couchdb/local.ini
+    remaining: None (CouchDB LiveSync container :5984, CORS local.ini, 8-folder standard
+      hierarchy, and Pi Agent locus_vault extension configured)
+    notes: Self-hosted CouchDB Docker container (:5984) with CORS + Obsidian LiveSync
+      real-time sync with mobile/desktop, bypassing iOS background execution limitations
+      and eliminating Git merge conflict bloat; integrated with Pi Agent locus_vault
+      extension tool and sidecar event bus.
+    key_files_raw: sidecar/vault/livesync_bridge.py, src/extensions/locus-extension.ts,
+      docker-compose.yml, data/couchdb/local.ini
   spec_targets:
   - locus-os/data/couchdb/
   - locus-os/data/couchdb/local.ini
@@ -2964,8 +3070,8 @@ features:
     sidecar_status: ⚠️ Partial
     pct: 45
     remaining: Test MCP bridge; wire vault sync
-    notes: Dual-level entity & theme indexing bridging Obsidian vault notes with LightRAG and Neo4j agent memory;
-      consumes CouchDB changes feed
+    notes: Dual-level entity & theme indexing bridging Obsidian vault notes with LightRAG
+      and Neo4j agent memory; consumes CouchDB changes feed
     key_files_raw: sidecar/vault/lightrag_bridge.py
   spec_targets:
   - locus-os/sidecar/vault/lightrag_bridge.py
@@ -2997,7 +3103,8 @@ features:
     pi_status: ✅ IMPLEMENTED
     sidecar_status: ✅ Done
     pct: 100
-    remaining: None (install.ps1, install.sh, install.bat created with interactive wizard)
+    remaining: None (install.ps1, install.sh, install.bat created with interactive
+      wizard)
     notes: 'CRITICAL: No install scripts exist!'
     key_files_raw: null
   spec_targets: []
@@ -3056,7 +3163,8 @@ features:
     pi_status: ✅ IMPLEMENTED
     sidecar_status: ✅ Done
     pct: 100
-    remaining: None (20-category Telegram /setup wizard + First-Touch Auto-Pairing verified)
+    remaining: None (20-category Telegram /setup wizard + First-Touch Auto-Pairing
+      verified)
     notes: User requested Telegram-based setup
     key_files_raw: null
   spec_targets: []
@@ -3106,9 +3214,10 @@ features:
     pi_status: ✅ IMPLEMENTED
     sidecar_status: ✅ Done
     pct: 100
-    remaining: None (462 imports migrated to sidecar.*, junction deleted, sys.modules shim)
-    notes: 'COMPLETE: core/ NTFS junction deleted; 462 imports migrated to sidecar.*; sys.modules runtime fallback
-      shim active in sidecar/__init__.py'
+    remaining: None (462 imports migrated to sidecar.*, junction deleted, sys.modules
+      shim)
+    notes: 'COMPLETE: core/ NTFS junction deleted; 462 imports migrated to sidecar.*;
+      sys.modules runtime fallback shim active in sidecar/__init__.py'
     key_files_raw: sidecar/
   spec_targets: []
   spec_sha: {}
@@ -3150,8 +3259,9 @@ features:
     sidecar_status: ✅ Done
     pct: 100
     remaining: None (Hybrid mode RPC & CouchDB LiveSync docker-compose configured)
-    notes: 'COMPLETE: Automated installers (install.ps1/install.sh) configure Local, VM, and Hybrid modes with CouchDB
-      LiveSync (:5984), Neo4j, Redis, and Pi Agent systemd/background services'
+    notes: 'COMPLETE: Automated installers (install.ps1/install.sh) configure Local,
+      VM, and Hybrid modes with CouchDB LiveSync (:5984), Neo4j, Redis, and Pi Agent
+      systemd/background services'
     key_files_raw: HEADLESS_VM_AND_CRON_SETUP_GUIDE.md, install.sh, install.ps1, docker-compose.yml
   spec_targets: []
   spec_sha: {}
@@ -3258,11 +3368,11 @@ features:
   - '§4.5: Memory Tree (Hierarchical Summarization Cascade)'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Memory
   verdict: AUGMENT
-  source: null
-  provider: null
-  layer: unknown
+  source: OpenHuman memory_tree/
+  provider: MemoryTreeProvider
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -3272,11 +3382,23 @@ features:
   spec_sha:
     '§4.5: Memory Tree (Hierarchical Summarization Cascade)': 5c641f6ae93c3fd9
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/memory/tree_ops.py
+    - locus-extension/src/providers/memory/tree.ts
+    symbols:
+    - file: sidecar/memory/tree_ops.py
+      name: TreeNode
+    - file: sidecar/memory/tree_ops.py
+      name: MemoryTreeProvider
+    - file: sidecar/memory/tree_ops.py
+      name: MemoryTreeManager
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_memory_tree.py -k "test_memory_tree_protocol_conformance
+      or test_topic_routing or test_memory_tree_modularity_disabled" -q
+    integration:
+    - py -3 -m pytest tests/test_memory_tree.py -k "test_append_leaf_and_auto_seal_cascade
+      or test_hierarchical_search_ranks_summaries" -q
   depends_on: []
 - id: F-0089
   title: Memory Sync (Multi-Source Ingestion Pipelines)
@@ -3284,11 +3406,11 @@ features:
   - '§4.7: Memory Sync (Multi-Source Ingestion Pipelines)'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Memory
   verdict: AUGMENT
-  source: null
-  provider: null
-  layer: unknown
+  source: OpenHuman memory_sync/
+  provider: SyncPipeline
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -3297,11 +3419,25 @@ features:
   spec_sha:
     '§4.7: Memory Sync (Multi-Source Ingestion Pipelines)': 285830d927f1d5bc
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/memory/sync_pipeline.py
+    - locus-extension/src/providers/memory/sync/workspace-sync.ts
+    symbols:
+    - file: sidecar/memory/sync_pipeline.py
+      name: SyncPipelineKind
+    - file: sidecar/memory/sync_pipeline.py
+      name: SyncOutcome
+    - file: sidecar/memory/sync_pipeline.py
+      name: SyncPipeline
+    - file: sidecar/memory/sync_pipeline.py
+      name: WorkspaceSyncPipeline
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_memory_sync.py -k "test_sync_pipeline_protocol_conformance
+      or test_sync_pipeline_modularity_disabled" -q
+    integration:
+    - py -3 -m pytest tests/test_memory_sync.py -k "test_workspace_sync_incremental_tick
+      or test_self_healing_uncovered_files_check" -q
   depends_on: []
 - id: F-0090
   title: Memory Queue (Async Job Pipeline)
@@ -3309,11 +3445,11 @@ features:
   - '§4.8: Memory Queue (Async Job Pipeline)'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Memory
   verdict: AUGMENT
-  source: null
-  provider: null
-  layer: unknown
+  source: OpenHuman memory_queue/
+  provider: MemoryQueueProvider
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -3323,11 +3459,27 @@ features:
   spec_sha:
     '§4.8: Memory Queue (Async Job Pipeline)': a44808a7a3e91430
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/memory/queue_worker.py
+    - locus-extension/src/providers/memory/queue.ts
+    symbols:
+    - file: sidecar/memory/queue_worker.py
+      name: JobKind
+    - file: sidecar/memory/queue_worker.py
+      name: JobStatus
+    - file: sidecar/memory/queue_worker.py
+      name: MemoryJob
+    - file: sidecar/memory/queue_worker.py
+      name: MemoryQueueProvider
+    - file: sidecar/memory/queue_worker.py
+      name: MemoryQueueManager
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_memory_queue.py -k "test_memory_queue_protocol_conformance
+      or test_queue_modularity_disabled" -q
+    integration:
+    - py -3 -m pytest tests/test_memory_queue.py -k "test_enqueue_deduplication or
+      test_claim_and_token_settlement or test_stale_lock_recovery" -q
   depends_on: []
 - id: F-0091
   title: Memory Diff (Snapshot-Based Change Tracking)
@@ -3335,11 +3487,11 @@ features:
   - '§4.9: Memory Diff (Snapshot-Based Change Tracking)'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Memory
   verdict: LOCUS-NEW
-  source: null
-  provider: null
-  layer: unknown
+  source: OpenHuman memory_diff/
+  provider: MemoryDiffManager
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -3349,11 +3501,36 @@ features:
   spec_sha:
     '§4.9: Memory Diff (Snapshot-Based Change Tracking)': e2860eb0c2bb961b
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/memory/diff_ops.py
+    - locus-extension/src/providers/memory/diff.ts
+    symbols:
+    - file: sidecar/memory/diff_ops.py
+      name: SnapshotTrigger
+    - file: sidecar/memory/diff_ops.py
+      name: ChangeKind
+    - file: sidecar/memory/diff_ops.py
+      name: SnapshotItem
+    - file: sidecar/memory/diff_ops.py
+      name: Snapshot
+    - file: sidecar/memory/diff_ops.py
+      name: ItemChange
+    - file: sidecar/memory/diff_ops.py
+      name: DiffSummary
+    - file: sidecar/memory/diff_ops.py
+      name: DiffResult
+    - file: sidecar/memory/diff_ops.py
+      name: take_snapshot
+    - file: sidecar/memory/diff_ops.py
+      name: diff_snapshots
+    - file: sidecar/memory/diff_ops.py
+      name: MemoryDiffManager
+    unit:
+    - py -3 -m pytest tests/test_memory_diff.py -k test_take_snapshot_and_hash -q
+    integration:
+    - py -3 -m pytest tests/test_memory_diff.py -k "test_diff_snapshots_add_remove_modify
+      or test_memory_diff_manager_checkpoint" -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0092
   title: Query Router / Intent Classifier (Stage 2)
@@ -3391,9 +3568,12 @@ features:
       name: IntentClassifier
     guard: []
     unit:
-    - py -3 -m pytest tests/test_router_classifier.py -k "test_intent_classifier_protocol_conformance or test_confidence_gate_queries_all_sources or test_temporal_scope_resolution or test_classifier_modularity_disabled" -q
+    - py -3 -m pytest tests/test_router_classifier.py -k "test_intent_classifier_protocol_conformance
+      or test_confidence_gate_queries_all_sources or test_temporal_scope_resolution
+      or test_classifier_modularity_disabled" -q
     integration:
-    - py -3 -m pytest tests/test_router_classifier.py -k "test_intent_categorization_and_sources or test_routing_manifest_serialization" -q
+    - py -3 -m pytest tests/test_router_classifier.py -k "test_intent_categorization_and_sources
+      or test_routing_manifest_serialization" -q
   depends_on: []
 - id: F-0093
   title: State Engine (Stage 3)
@@ -3429,9 +3609,12 @@ features:
       name: StateEngine
     guard: []
     unit:
-    - py -3 -m pytest tests/test_state_engine.py -k "test_state_engine_protocol_conformance or test_state_engine_one_day_staleness_penalty or test_state_engine_three_days_staleness_baseline or test_state_engine_modularity_disabled" -q
+    - py -3 -m pytest tests/test_state_engine.py -k "test_state_engine_protocol_conformance
+      or test_state_engine_one_day_staleness_penalty or test_state_engine_three_days_staleness_baseline
+      or test_state_engine_modularity_disabled" -q
     integration:
-    - py -3 -m pytest tests/test_state_engine.py -k "test_state_engine_fresh_checkin or test_state_engine_survival_mode or test_current_state_serialization" -q
+    - py -3 -m pytest tests/test_state_engine.py -k "test_state_engine_fresh_checkin
+      or test_state_engine_survival_mode or test_current_state_serialization" -q
   depends_on: []
 - id: F-0094
   title: Context Forge (Stage 6) — The 6-Layer Assembler
@@ -3466,9 +3649,11 @@ features:
       name: ContextForge
     guard: []
     unit:
-    - py -3 -m pytest tests/test_context_forge.py -k "test_context_forge_protocol_conformance or test_context_forge_modularity_disabled" -q
+    - py -3 -m pytest tests/test_context_forge.py -k "test_context_forge_protocol_conformance
+      or test_context_forge_modularity_disabled" -q
     integration:
-    - py -3 -m pytest tests/test_context_forge.py -k "test_context_forge_assembly_under_budget or test_context_forge_protection_and_compression" -q
+    - py -3 -m pytest tests/test_context_forge.py -k "test_context_forge_assembly_under_budget
+      or test_context_forge_protection_and_compression" -q
   depends_on: []
 - id: F-0095
   title: Anti-Hallucination Guard (Stage 10)
@@ -3501,9 +3686,12 @@ features:
       name: AntiHallucinationGuard
     guard: []
     unit:
-    - py -3 -m pytest tests/test_anti_hallucination.py -k "test_anti_hallucination_protocol_conformance or test_anti_hallucination_modularity_disabled" -q
+    - py -3 -m pytest tests/test_anti_hallucination.py -k "test_anti_hallucination_protocol_conformance
+      or test_anti_hallucination_modularity_disabled" -q
     integration:
-    - py -3 -m pytest tests/test_anti_hallucination.py -k "test_grounded_response_passes_cleanly or test_ungrounded_response_warn_mode or test_ungrounded_response_strict_mode" -q
+    - py -3 -m pytest tests/test_anti_hallucination.py -k "test_grounded_response_passes_cleanly
+      or test_ungrounded_response_warn_mode or test_ungrounded_response_strict_mode"
+      -q
   depends_on: []
 - id: F-0096
   title: Intelligent Model Routing + Quality-Based Fallback
@@ -3542,9 +3730,12 @@ features:
       name: ModelRouter
     guard: []
     unit:
-    - py -3 -m pytest tests/test_model_router.py -k "test_model_router_protocol_conformance or test_model_classification or test_model_router_modularity_disabled" -q
+    - py -3 -m pytest tests/test_model_router.py -k "test_model_router_protocol_conformance
+      or test_model_classification or test_model_router_modularity_disabled" -q
     integration:
-    - py -3 -m pytest tests/test_model_router.py -k "test_privacy_mode_forces_local or test_tools_force_remote or test_unhealthy_local_falls_back_to_remote or test_quality_based_fallback_detection" -q
+    - py -3 -m pytest tests/test_model_router.py -k "test_privacy_mode_forces_local
+      or test_tools_force_remote or test_unhealthy_local_falls_back_to_remote or test_quality_based_fallback_detection"
+      -q
   depends_on: []
 - id: F-0097
   title: Streaming (SSE)
@@ -3869,11 +4060,11 @@ features:
   - '§4.16: Context Compression'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Context
   verdict: UNKNOWN
-  source: null
-  provider: null
-  layer: unknown
+  source: Hermes context_engine.py
+  provider: ContextEngine
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -3882,11 +4073,23 @@ features:
   spec_sha:
     '§4.16: Context Compression': 4db85e910e34f80c
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/context_compressor.py
+    - locus-extension/src/context-compressor.ts
+    symbols:
+    - file: sidecar/context_compressor.py
+      name: UsageMetrics
+    - file: sidecar/context_compressor.py
+      name: ContextEngine
+    - file: sidecar/context_compressor.py
+      name: compress_context
+    unit:
+    - py -3 -m pytest tests/test_context_compressor.py -k "test_should_compress_threshold
+      or test_short_messages_not_compressed" -q
+    integration:
+    - py -3 -m pytest tests/test_context_compressor.py -k "test_middle_compaction_with_preserved_boundaries"
+      -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0111
   title: Emergency Task Injection
@@ -4069,11 +4272,11 @@ features:
   - '§4.18: Memory Provider Interface'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: UNKNOWN
-  source: null
-  provider: null
-  layer: unknown
+  category: Memory
+  verdict: KEEP-HERMES
+  source: Hermes agent/memory_provider.py
+  provider: MemoryProvider
+  layer: mixed
   inherited: false
   manual: false
   claimed: null
@@ -4082,11 +4285,29 @@ features:
   spec_sha:
     '§4.18: Memory Provider Interface': c25ef100889b096f
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/memory/interface.py
+    - locus-extension/src/providers/memory/interface.ts
+    symbols:
+    - file: sidecar/memory/interface.py
+      name: EntityType
+    - file: sidecar/memory/interface.py
+      name: MemoryEntry
+    - file: sidecar/memory/interface.py
+      name: Pathway
+    - file: sidecar/memory/interface.py
+      name: MemoryQueryResult
+    - file: sidecar/memory/interface.py
+      name: MemoryProvider
+    - file: sidecar/memory/interface.py
+      name: MemoryManager
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_memory_interface.py -k "test_memory_interface_models
+      or test_memory_manager_modularity_disabled" -q
+    integration:
+    - py -3 -m pytest tests/test_memory_interface.py -k "test_memory_manager_stackable_providers"
+      -q
   depends_on: []
 - id: F-0119
   title: Skill System & Multi-Source Marketplace
@@ -4240,10 +4461,12 @@ features:
     integration: []
   depends_on: []
 - id: F-0125
-  title: 'Modularity foundation: provider registry + config accessor (sidecar and TypeScript)'
+  title: 'Modularity foundation: provider registry + config accessor (sidecar and
+    TypeScript)'
   spec_refs: []
   mapping: none
-  origin: 'user-requirement (not a spec section): LITERALLY EVERYTHING modular, switch off or swap'
+  origin: 'user-requirement (not a spec section): LITERALLY EVERYTHING modular, switch
+    off or swap'
   category: Infrastructure
   verdict: LOCUS-NEW
   source: Locus-original
@@ -4278,8 +4501,8 @@ features:
       name: get_registry
     guard: []
     unit:
-    - py -3 -m pytest tests/test_config_accessor.py tests/test_provider_registry.py -q
+    - py -3 -m pytest tests/test_config_accessor.py tests/test_provider_registry.py
+      -q
     integration:
     - py -3 -m pytest tests/test_registry_integration.py -q
   depends_on: []
-
