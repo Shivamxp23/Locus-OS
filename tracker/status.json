@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-15T21:19:04+0530",
-  "commit": "a2817fe8aa92a68645f1ddf2624b9cd5a51fc740",
-  "dirty": false,
+  "generated_at": "2026-10-15T21:26:55+0530",
+  "commit": "be811c5946c2f8357f93856b63c3af3403661e74",
+  "dirty": true,
   "static": false,
   "guard": {
     "verdict": "PASS",
@@ -859,10 +859,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed in 0.65s\n",
+            "tail": ".                                                                        [100%]\n1 passed in 0.13s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.0
+            "seconds": 2.5
           }
         ]
       }
@@ -1104,10 +1104,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/test_service.py::test_service_lifecycle_and_health_endpoint\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n14 passed, 2 warnings in 1.80s\n",
+            "tail": "legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/test_service.py::test_service_lifecycle_and_health_endpoint\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n14 passed, 2 warnings in 1.72s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 4.0
+            "seconds": 3.8
           }
         ],
         "guard": [],
@@ -1118,7 +1118,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed in 0.30s\n",
+            "tail": ".                                                                        [100%]\n1 passed in 0.27s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.4
@@ -1591,7 +1591,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ". collected 6 items\n\ntests/test_installer.py::test_installer_launchers_exist_and_thin PASSED  [ 16%]\ntests/test_installer.py::test_init_locus_home_creates_canonical_structure PASSED [ 33%]\ntests/test_installer.py::test_installer_re_run_is_safe_and_preserves_config PASSED [ 50%]\ntests/test_installer.py::test_load_answers_json_and_yaml PASSED          [ 66%]\ntests/test_installer.py::test_run_installer_cli_non_interactive PASSED   [ 83%]\ntests/test_installer.py::test_run_installer_with_answers_file PASSED     [100%]\n\n============================== 6 passed in 0.15s ==============================\n",
+            "tail": ". collected 6 items\n\ntests/test_installer.py::test_installer_launchers_exist_and_thin PASSED  [ 16%]\ntests/test_installer.py::test_init_locus_home_creates_canonical_structure PASSED [ 33%]\ntests/test_installer.py::test_installer_re_run_is_safe_and_preserves_config PASSED [ 50%]\ntests/test_installer.py::test_load_answers_json_and_yaml PASSED          [ 66%]\ntests/test_installer.py::test_run_installer_cli_non_interactive PASSED   [ 83%]\ntests/test_installer.py::test_run_installer_with_answers_file PASSED     [100%]\n\n============================== 6 passed in 0.16s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.3
@@ -1602,10 +1602,21 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "sts/test_setup_wizard.py::test_validate_key_with_custom_validator PASSED [ 16%]\ntests/test_setup_wizard.py::test_save_and_load_secret_env PASSED         [ 33%]\ntests/test_setup_wizard.py::test_update_config_mode_preserves_existing_keys PASSED [ 50%]\ntests/test_setup_wizard.py::test_setup_wizard_key_collection_stores_in_env_not_config PASSED [ 66%]\ntests/test_setup_wizard.py::test_setup_wizard_re_run_safety PASSED       [ 83%]\ntests/test_setup_wizard.py::test_setup_wizard_non_interactive_with_answers PASSED [100%]\n\n============================== 6 passed in 0.21s ==============================\n",
+            "tail": "sts/test_setup_wizard.py::test_validate_key_with_custom_validator PASSED [ 16%]\ntests/test_setup_wizard.py::test_save_and_load_secret_env PASSED         [ 33%]\ntests/test_setup_wizard.py::test_update_config_mode_preserves_existing_keys PASSED [ 50%]\ntests/test_setup_wizard.py::test_setup_wizard_key_collection_stores_in_env_not_config PASSED [ 66%]\ntests/test_setup_wizard.py::test_setup_wizard_re_run_safety PASSED       [ 83%]\ntests/test_setup_wizard.py::test_setup_wizard_non_interactive_with_answers PASSED [100%]\n\n============================== 6 passed in 0.15s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.2
+          },
+          {
+            "cmd": "py -3 -m pytest tests/test_doctor.py -v",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": " PASSED                   [ 25%]\ntests/test_doctor.py::test_check_config_validity PASSED                  [ 37%]\ntests/test_doctor.py::test_check_vault_writable PASSED                   [ 50%]\ntests/test_doctor.py::test_check_couchdb_loopback_failure_remediation PASSED [ 62%]\ntests/test_doctor.py::test_check_sidecar_health_failure_remediation PASSED [ 75%]\ntests/test_doctor.py::test_doctor_runs_with_one_line_per_check PASSED    [ 87%]\ntests/test_doctor.py::test_pi_tui_runner_pass_through PASSED             [100%]\n\n============================== 8 passed in 8.39s ==============================\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 10.5
           }
         ],
         "guard": [
@@ -1646,10 +1657,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..........                                                               [100%]\n10 passed in 0.11s\n",
+            "tail": "..........                                                               [100%]\n10 passed in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.2
           }
         ],
         "guard": [],
@@ -1809,7 +1820,7 @@
             "tail": "......                                                                   [100%]\n6 passed in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ],
         "guard": [
@@ -2443,10 +2454,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "................                                                         [100%]\n16 passed in 1.13s\n",
+            "tail": "................                                                         [100%]\n16 passed in 1.21s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.1
+            "seconds": 3.3
           }
         ],
         "guard": [],
@@ -2457,7 +2468,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed in 1.12s\n",
+            "tail": "..                                                                       [100%]\n2 passed in 1.06s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 3.2

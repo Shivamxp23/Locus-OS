@@ -190,6 +190,11 @@ def run_installer(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Run interactive or answers-driven setup wizard (modes and API keys)",
     )
+    parser.add_argument(
+        "--doctor",
+        action="store_true",
+        help="Run diagnostic checks on environment and dependencies (R7)",
+    )
 
     args = parser.parse_args(argv)
 
@@ -210,6 +215,11 @@ def run_installer(argv: list[str] | None = None) -> int:
         home_path = Path.home() / ".locus"
 
     vault_path = args.vault_root
+
+    if args.doctor:
+        from locus_cli.doctor import run_doctor
+
+        return run_doctor(locus_home=home_path, vault_root=vault_path)
 
     if args.setup:
         from locus_cli.setup import run_setup_wizard

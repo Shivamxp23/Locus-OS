@@ -2932,6 +2932,7 @@ features:
     - locus_cli/__init__.py
     - locus_cli/main.py
     - locus_cli/setup.py
+    - locus_cli/doctor.py
     symbols:
     - name: run_installer
       file: locus_cli/main.py
@@ -2943,11 +2944,18 @@ features:
       file: locus_cli/setup.py
     - name: save_secret_env
       file: locus_cli/setup.py
+    - name: run_doctor
+      file: locus_cli/doctor.py
+    - name: run_pi_tui
+      file: locus_cli/doctor.py
+    - name: check_couchdb_loopback
+      file: locus_cli/doctor.py
     guard:
     - layout-required
     unit:
     - cmd: py -3 -m pytest tests/test_installer.py -v
     - cmd: py -3 -m pytest tests/test_setup_wizard.py -v
+    - cmd: py -3 -m pytest tests/test_doctor.py -v
     integration: []
   depends_on: []
 - id: F-0083
