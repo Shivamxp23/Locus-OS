@@ -1775,12 +1775,24 @@ features:
     '§19.3: Daily AI Chat Archiver (Multi-Platform Ingestion)': 646c6938ddf44632
   evidence:
     files:
+    - sidecar/chat_archiver.py
     - sidecar/ingestion/chat_archiver.py
     - sidecar/crawlers/chat_crawler.py
-    symbols: []
+    - tests/test_chat_archiver.py
+    symbols:
+    - file: sidecar/chat_archiver.py
+      name: ChatArchiverProvider
+    - file: sidecar/chat_archiver.py
+      name: ChatArchiver
+    - file: sidecar/chat_archiver.py
+      name: schedule_nightly_archival_job
+    - file: sidecar/crawlers/chat_crawler.py
+      name: ChatCrawler
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_chat_archiver.py -k "unit" -q
+    integration:
+    - py -3 -m pytest tests/test_chat_archiver.py -k "integration" -q
   depends_on: []
 - id: F-0051
   title: Computer Use / Screen
