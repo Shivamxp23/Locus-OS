@@ -234,7 +234,7 @@ stories:
     feature: F-0082
     slug: doctor-and-pi-setup
     title: "R7, R5: locus doctor with one PASS/FAIL line per check; Pi's own TUI setup keeps working"
-    points: 3
+    points: 2
     target_level: 3
     addendum: [P4]
     depends_on: [US-12]
@@ -243,7 +243,6 @@ stories:
       - "Prints exactly one line per diagnostic check with [PASS] or [FAIL] indicator and exits 0 only when all essential checks pass."
       - "Pi Agent TUI invocation remains functional and passes through to upstream packages/coding-agent without breaking upstream flags."
     demo: 'Run python -m locus_cli.doctor: see one green [PASS] or red [FAIL] line per prerequisite. Run locus doctor with CouchDB down: CouchDB prints [FAIL] with clear fix guidance.'
-
 
   - id: US-14
     epic: E4
@@ -255,6 +254,11 @@ stories:
     autopilot: false   # by hand: needs your real Telegram bot
     addendum: [P4]
     depends_on: [US-04, US-12]
+    accept:
+      - "locus_cli/telegram_setup.py implements secure pairing verification (S-1) using a 10-minute one-time code shown in terminal and entered in Telegram."
+      - "The pairing code pairs the owner chat ID once, persisting allowed IDs to LOCUS_HOME/allowed_users.json; strangers are ignored."
+      - "Supports /setup secret-reference flow (R4) allowing the owner to transmit sensitive configuration tokens via short-lived opaque refs."
+    demo: "Start telegram setup wizard; receive a 6-digit one-time code valid for 10 minutes. Send code from test bot: pairing succeeds and owner id is stored. Re-running with existing pairing reports already paired."
 
   - id: US-15
     epic: E4
@@ -267,6 +271,10 @@ stories:
     addendum: [P4]
     requires_decisions: [D-13]
     depends_on: [US-10, US-12]
+    accept:
+      - "Configuring mode: hybrid enables sidecar and cron runner to target VM endpoints via SSH tunnel to loopback :8420 (D-13)."
+      - "locus_cli provides systemd service unit generator or command line launcher for VM background daemon execution."
+    demo: "Run locus setup --mode hybrid: verify config.yaml contains mode: hybrid. Test SSH tunnel runner establishes loopback connection to mock remote endpoint."
 
   # ------------------------------------------------------------------ E5 Memory, vault, audit (coarse)
   - id: US-16
