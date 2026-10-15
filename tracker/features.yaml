@@ -1331,9 +1331,9 @@ features:
   mapping: grouped
   origin: legacy-tracker
   category: CLI
-  verdict: AUGMENT
+  verdict: INTEGRATED
   source: Pi CLI + Locus CLI
-  provider: null
+  provider: LocusDoctor
   layer: sidecar
   inherited: false
   manual: false
@@ -1351,11 +1351,22 @@ features:
     '§8.1-8.10: CLI Commands': 68fee6a2a53a040a
   evidence:
     files:
-    - locus_cli/main.py
-    symbols: []
+    - sidecar/diagnostics/doctor.py
+    - locus-extension/src/tools/doctor.ts
+    symbols:
+    - file: sidecar/diagnostics/doctor.py
+      name: DiagnosticCheck
+    - file: sidecar/diagnostics/doctor.py
+      name: DoctorReport
+    - file: sidecar/diagnostics/doctor.py
+      name: LocusDoctor
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_doctor_diagnostics"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_doctor_integration"
+      -q
   depends_on: []
 - id: F-0032
   title: Extension System
@@ -2109,9 +2120,9 @@ features:
   mapping: low-confidence
   origin: legacy-tracker
   category: Desktop
-  verdict: AUGMENT
+  verdict: INTEGRATED
   source: OpenHuman + Pi
-  provider: null
+  provider: ComputerUseEngine
   layer: sidecar
   inherited: false
   manual: false
@@ -2130,11 +2141,22 @@ features:
     '§16.1-16.2 + §20.1-20.3: Browser Automation & Desktop Control': 834e3869ac84f0f5
   evidence:
     files:
-    - sidecar/screen/
-    symbols: []
+    - sidecar/desktop/computer_use.py
+    - locus-extension/src/tools/computer-use.ts
+    symbols:
+    - file: sidecar/desktop/computer_use.py
+      name: MouseButton
+    - file: sidecar/desktop/computer_use.py
+      name: ScreenBounds
+    - file: sidecar/desktop/computer_use.py
+      name: ComputerUseEngine
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_computer_use_actions"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_computer_use_integration"
+      -q
   depends_on: []
 - id: F-0052
   title: VNC Remote
@@ -2143,10 +2165,10 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Desktop
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus design spec
-  provider: null
-  layer: unknown
+  provider: VNCClient
+  layer: sidecar
   inherited: false
   manual: false
   claimed:
@@ -2165,11 +2187,23 @@ features:
   spec_sha:
     '§20.3: VNC / Remote Desktop Protocol Control': f8a5707589bbf271
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/desktop/vnc_client.py
+    - locus-extension/src/tools/desktop-vnc.ts
+    symbols:
+    - file: sidecar/desktop/vnc_client.py
+      name: VNCConnectionState
+    - file: sidecar/desktop/vnc_client.py
+      name: VNCFrameBuffer
+    - file: sidecar/desktop/vnc_client.py
+      name: VNCClient
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_vnc_client_lifecycle"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_vnc_client_integration"
+      -q
   depends_on: []
 - id: F-0053
   title: Google Calendar
@@ -2178,9 +2212,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Integrations
-  verdict: LOCUS-NEW
+  verdict: INTEGRATED
   source: Locus design spec
-  provider: IntegrationProvider
+  provider: CalendarSyncBridge
   layer: sidecar
   inherited: false
   manual: false
@@ -2200,10 +2234,19 @@ features:
   evidence:
     files:
     - sidecar/integrations/calendar_sync.py
-    symbols: []
+    - locus-extension/src/tools/calendar-sync.ts
+    symbols:
+    - file: sidecar/integrations/calendar_sync.py
+      name: CalendarEvent
+    - file: sidecar/integrations/calendar_sync.py
+      name: CalendarSyncBridge
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_calendar_sync_bridge"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_calendar_sync_integration"
+      -q
   depends_on: []
 - id: F-0054
   title: CI/CD / Docker
@@ -2212,9 +2255,9 @@ features:
   mapping: grouped
   origin: legacy-tracker
   category: Deployment
-  verdict: AUGMENT
+  verdict: INTEGRATED
   source: Pi + Locus
-  provider: null
+  provider: DockerCIDiagnostics
   layer: mixed
   inherited: false
   manual: false
@@ -2234,12 +2277,20 @@ features:
     '§23.1-23.5: Tests, Docker, Batch Runner': df6d32c51734c79d
   evidence:
     files:
-    - docker-compose.yml
-    - sidecar/deployment/
-    symbols: []
+    - sidecar/diagnostics/docker_ci.py
+    - locus-extension/src/tools/docker-ci.ts
+    symbols:
+    - file: sidecar/diagnostics/docker_ci.py
+      name: ContainerHealth
+    - file: sidecar/diagnostics/docker_ci.py
+      name: DockerCIDiagnostics
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_docker_ci_diagnostics"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_docker_ci_integration"
+      -q
   depends_on: []
 - id: F-0055
   title: DCS / TWS / Factions
@@ -2761,9 +2812,9 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Observability
-  verdict: AUGMENT
+  verdict: INTEGRATED
   source: Hermes + OpenHuman
-  provider: null
+  provider: HealthMonitor
   layer: sidecar
   inherited: false
   manual: false
@@ -2782,11 +2833,22 @@ features:
     '§29.3: Health Checks': 90e74c316b160aa9
   evidence:
     files:
-    - locus_cli/main.py
-    symbols: []
+    - sidecar/health.py
+    - locus-extension/src/health.ts
+    symbols:
+    - file: sidecar/health.py
+      name: HealthStatus
+    - file: sidecar/health.py
+      name: ComponentHealth
+    - file: sidecar/health.py
+      name: HealthMonitor
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_health_probes"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_health_integration"
+      -q
   depends_on: []
 - id: F-0067
   title: Notifications
@@ -2829,10 +2891,10 @@ features:
   mapping: exact
   origin: legacy-tracker
   category: Observability
-  verdict: AUGMENT
+  verdict: INTEGRATED
   source: Locus
-  provider: null
-  layer: unknown
+  provider: ConnectivityChecker
+  layer: sidecar
   inherited: false
   manual: false
   claimed:
@@ -2849,11 +2911,21 @@ features:
   spec_sha:
     '§29.5: Connectivity Check': d771bc096021533a
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/connectivity.py
+    - locus-extension/src/connectivity.ts
+    symbols:
+    - file: sidecar/connectivity.py
+      name: ConnectivityProbeResult
+    - file: sidecar/connectivity.py
+      name: ConnectivityChecker
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_connectivity_probes"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_connectivity_integration"
+      -q
   depends_on: []
 - id: F-0069
   title: Code Graph
@@ -4005,11 +4077,11 @@ features:
   - '§3.7a: Git Tools'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: AUGMENT
-  source: null
-  provider: null
-  layer: unknown
+  category: Tools
+  verdict: INTEGRATED
+  source: Locus Git Tools
+  provider: GitToolSuite
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4017,11 +4089,21 @@ features:
   spec_sha:
     '§3.7a: Git Tools': 5cfef52a9397edf2
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/tools/git_tools.py
+    - locus-extension/src/tools/git-tools.ts
+    symbols:
+    - file: sidecar/tools/git_tools.py
+      name: GitResult
+    - file: sidecar/tools/git_tools.py
+      name: GitToolSuite
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_git_tools_operations"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_git_tools_integration"
+      -q
   depends_on: []
 - id: F-0100
   title: Tool Call Validation
@@ -4029,11 +4111,11 @@ features:
   - '§3.8: Tool Call Validation'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: AUGMENT
-  source: null
-  provider: null
-  layer: unknown
+  category: Tools
+  verdict: INTEGRATED
+  source: Locus Tool Validation
+  provider: ToolCallValidator
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4041,11 +4123,23 @@ features:
   spec_sha:
     '§3.8: Tool Call Validation': 201989bf91de614f
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/tools/validation.py
+    - locus-extension/src/tools/validation.ts
+    symbols:
+    - file: sidecar/tools/validation.py
+      name: ValidationRule
+    - file: sidecar/tools/validation.py
+      name: ValidationResult
+    - file: sidecar/tools/validation.py
+      name: ToolCallValidator
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_tool_validation_rules"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_tool_validation_integration"
+      -q
   depends_on: []
 - id: F-0101
   title: Tool Result Classification
@@ -4053,11 +4147,11 @@ features:
   - '§3.9: Tool Result Classification'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: LOCUS-NEW
-  source: null
-  provider: null
-  layer: unknown
+  category: Tools
+  verdict: INTEGRATED
+  source: Locus Tool Result Classifier
+  provider: ToolResultClassifier
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4065,11 +4159,23 @@ features:
   spec_sha:
     '§3.9: Tool Result Classification': f36faf9c7c05c0d2
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/tools/classifier.py
+    - locus-extension/src/tools/classifier.ts
+    symbols:
+    - file: sidecar/tools/classifier.py
+      name: ToolResultClass
+    - file: sidecar/tools/classifier.py
+      name: ClassifiedResult
+    - file: sidecar/tools/classifier.py
+      name: ToolResultClassifier
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_tool_classifier_outcomes"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_tool_classifier_integration"
+      -q
   depends_on: []
 - id: F-0102
   title: Tool Output Accumulator
@@ -4101,11 +4207,11 @@ features:
   - '§3.11: Tool Timeout / Budget'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: LOCUS-NEW
-  source: null
-  provider: null
-  layer: unknown
+  category: Tools
+  verdict: INTEGRATED
+  source: Locus Tool Budget
+  provider: ToolBudgetManager
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4113,11 +4219,23 @@ features:
   spec_sha:
     '§3.11: Tool Timeout / Budget': 1e96cc2f9058ed64
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/tools/budget.py
+    - locus-extension/src/tools/budget.ts
+    symbols:
+    - file: sidecar/tools/budget.py
+      name: ToolBudgetLimits
+    - file: sidecar/tools/budget.py
+      name: BudgetUsage
+    - file: sidecar/tools/budget.py
+      name: ToolBudgetManager
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_tool_budget_limits"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_tool_budget_integration"
+      -q
   depends_on: []
 - id: F-0104
   title: Custom Locus Tools
@@ -4125,11 +4243,11 @@ features:
   - '§3.12: Custom Locus Tools'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: LOCUS-NEW
-  source: null
-  provider: null
-  layer: unknown
+  category: Tools
+  verdict: INTEGRATED
+  source: Locus Custom Tools
+  provider: CustomToolRegistry
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4138,11 +4256,21 @@ features:
   spec_sha:
     '§3.12: Custom Locus Tools': 11453ad8cc43104d
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/tools/custom_tools.py
+    - locus-extension/src/tools/custom-tools.ts
+    symbols:
+    - file: sidecar/tools/custom_tools.py
+      name: CustomToolSpec
+    - file: sidecar/tools/custom_tools.py
+      name: CustomToolRegistry
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_custom_tool_registry"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_custom_tool_integration"
+      -q
   depends_on: []
 - id: F-0105
   title: Web Search (8 Providers)
@@ -4198,11 +4326,11 @@ features:
   - '§13.2: File Safety'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: LOCUS-NEW
-  source: null
-  provider: null
-  layer: unknown
+  category: Security
+  verdict: INTEGRATED
+  source: Locus File Safety
+  provider: FileSafetyPolicy
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4211,11 +4339,21 @@ features:
   spec_sha:
     '§13.2: File Safety': 9a92d07f68eff7ee
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/security/file_safety.py
+    - locus-extension/src/security/file-safety.ts
+    symbols:
+    - file: sidecar/security/file_safety.py
+      name: PathSafetyResult
+    - file: sidecar/security/file_safety.py
+      name: FileSafetyPolicy
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_file_safety_policy"
+      -q
+    integration:
+    - py -3 -m pytest tests/test_tools_and_diagnostics.py -k "test_file_safety_integration"
+      -q
   depends_on: []
 - id: F-0108
   title: Autonomy Tiers
