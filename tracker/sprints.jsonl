@@ -40,3 +40,4 @@
 {"event":"planned","sprint":"S13","start":"2027-03-05","end":"2027-03-18","goal":"Everything is recorded and backed up to the vault; Neo4j Agent Memory is the memory layer.","capacity":2,"points":2,"stories":["US-16"],"date":"2027-03-05"}
 {"event":"accepted","story":"US-16","feature":"F-0060","level":4,"note":"Obsidian LiveSync CouchDB bridge verified with loopback binding and transport security","date":"2027-03-18","commit":"c45cbbf3470d"}
 {"event":"closed","sprint":"S13","date":"2027-03-18","planned_points":2,"velocity":2,"done":["US-16"],"not_done":{}}
+{"event":"planned","sprint":"S14","start":"2027-03-19","end":"2027-04-01","goal":"Everything is recorded and backed up to the vault; Neo4j Agent Memory is the memory layer.","capacity":2,"points":2,"stories":["US-17"],"date":"2027-03-19"}
