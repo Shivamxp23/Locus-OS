@@ -2174,13 +2174,25 @@ features:
   evidence:
     files:
     - sidecar/vault/livesync_bridge.py
-    - src/extensions/locus-extension.ts
+    - locus-extension/src/vault-tools.ts
     - docker-compose.yml
     - data/couchdb/local.ini
-    symbols: []
+    symbols:
+    - file: sidecar/vault/livesync_bridge.py
+      name: VaultSyncProvider
+    - file: sidecar/vault/livesync_bridge.py
+      name: LiveSyncBridge
+    - file: sidecar/vault/livesync_bridge.py
+      name: validate_transport_security
+    - file: sidecar/vault/livesync_bridge.py
+      name: resolve_concurrent_conflict
+    - file: locus-extension/src/vault-tools.ts
+      name: VaultToolManager
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_livesync_bridge.py -k "unit" -q
+    integration:
+    - py -3 -m pytest tests/test_livesync_bridge.py -k "integration" -q
   depends_on: []
 - id: F-0061
   title: Rough Note Parser
