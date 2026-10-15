@@ -265,7 +265,7 @@ stories:
     feature: F-0085
     slug: vm-and-hybrid
     title: "VM backend and hybrid mode: services on the VM, TUI on this computer"
-    points: 3
+    points: 2
     target_level: 4
     autopilot: false   # by hand: needs your real VM over ssh
     addendum: [P4]
@@ -282,9 +282,14 @@ stories:
     feature: F-0060
     slug: livesync
     title: "Obsidian LiveSync through CouchDB reaches the vault only over loopback, HTTPS or a private network"
-    points: 3
+    points: 2
     target_level: 3
     depends_on: [US-03]
+    accept:
+      - "docker-compose.yml binds CouchDB strictly to loopback: 127.0.0.1:5984:5984 with COUCHDB_PASSWORD loaded from ~/.locus/.env (S-2)."
+      - "CouchDB configuration in data/couchdb/local.ini restricts origins to app://obsidian.md, capacitor://localhost, and http://localhost."
+      - "Remote LiveSync access is permitted only over HTTPS reverse proxy or private overlay networks (Tailscale/WireGuard), never unencrypted public HTTP (S-2)."
+    demo: "Run docker compose config with test .env: verify port 5984 binds strictly to 127.0.0.1. Run curl on external IP or unencrypted host: connection is refused. Verify local loopback connection succeeds."
 
   - id: US-17
     epic: E5
@@ -294,16 +299,26 @@ stories:
     points: 2
     target_level: 3
     depends_on: [US-06]
+    accept:
+      - "sidecar/trajectory.py captures turns from run_pi_turn containing prompt, tools called, response, token counts, and duration."
+      - "Every record is sanitized using security.redact_patterns before persisting, preventing secrets from leaking into stored logs (S-0, spec 19.2)."
+      - "Recorded trajectories are stored in JSONL or SQLite and can be retrieved by session_id."
+    demo: "Execute a Pi turn with sensitive dummy credentials: verify the generated trajectory record redacts the sensitive value and accurately records tool invocations and turn metrics."
 
   - id: US-18
     epic: E5
     feature: F-0050
     slug: chat-archiver
     title: "Nightly AI chat archiver (spec 19.3) writes into the vault"
-    points: 3
+    points: 2
     target_level: 3
     requires_decisions: [D-4]
     depends_on: [US-06]
+    accept:
+      - "sidecar/chat_archiver.py scans external chat exports and local session transcripts, extracting user prompts and assistant completions (spec 19.3)."
+      - "Per D-4, generates daily markdown archives at vault/05-Daily/Logs/audit-YYYY-MM-DD.md with redacted content."
+      - "Integrates with APScheduler as a nightly cron job scheduled at 03:00 local time."
+    demo: "Run python -m sidecar.chat_archiver --dry-run: verify archive extracts recent chat logs, applies redaction, and writes a valid markdown note under vault/05-Daily/Logs/."
 
   # ------------------------------------------------------------------ E6 Priority and meta-harness (coarse)
   - id: US-19
@@ -311,18 +326,28 @@ stories:
     feature: F-0055
     slug: task-priority-score
     title: "Task priority score (TWS) computed for a task at any scale"
-    points: 3
+    points: 2
     target_level: 3
     requires_decisions: [D-1, D-3]
     depends_on: [US-06]
+    accept:
+      - "sidecar/task_scoring.py implements the D-1 formula: TWS = Priority*0.4 + Urgency*0.4 + Difficulty*0.2 + FactionLagBonus."
+      - "Calculates FactionLagBonus against targets (Health 25%, Leverage 25%, Craft 30%, Expression 20%): +2 if lag >3h, +4 if >6h, -1 if ahead."
+      - "Supports multi-scale roll-up across Three-Layer Goal Stack (D-3: vision, milestone, daily) where parent scores combine intrinsic and child averages."
+    demo: "Run python -m sidecar.task_scoring on a task suite: verify computed TWS matches Appendix C formula and lag bonus accurately reflects faction time deltas."
 
   - id: US-20
     epic: E6
     feature: F-0020
     slug: harness-delegation
     title: "Coding harness delegation (spec 3.7 and 11.5) in a scratch worktree"
-    points: 3
+    points: 2
     target_level: 3
     autopilot: false   # by hand: it starts other coding agents and git worktrees
     requires_decisions: [D-5]
     depends_on: [US-02, US-06]
+    accept:
+      - "sidecar/harness.py implements HarnessProvider delegating coding subtasks to subprocess agents (Pi, Claude Code, OpenCode) in an isolated git worktree."
+      - "Strictly enforces security rule S-3: never passes --dangerously-skip-permissions to Claude Code; scratch worktrees are cleaned up post-execution."
+      - "Returns structured execution results (exit code, diff, output logs) to the caller."
+    demo: "Invoke harness delegate with a test task: verify it spawns in a temporary git worktree without touching the main tree, runs without forbidden permissions flags, and returns the result."
