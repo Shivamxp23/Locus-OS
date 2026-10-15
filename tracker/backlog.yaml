@@ -203,7 +203,7 @@ stories:
     feature: F-0082
     slug: installer-launchers
     title: "R1, R9, R10: install.ps1 and install.sh are thin launchers; one Python installer; non-interactive --yes --answers"
-    points: 3
+    points: 2
     target_level: 3
     addendum: [P4]
     depends_on: [US-05]
