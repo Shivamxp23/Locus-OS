@@ -2929,9 +2929,17 @@ features:
     - install.bat
     - locus.bat
     - locus.cmd
-    symbols: []
-    guard: []
-    unit: []
+    - locus_cli/__init__.py
+    - locus_cli/main.py
+    symbols:
+    - name: run_installer
+      file: locus_cli/main.py
+    - name: init_locus_home
+      file: locus_cli/main.py
+    guard:
+    - layout-required
+    unit:
+    - cmd: py -3 -m pytest tests/test_installer.py -v
     integration: []
   depends_on: []
 - id: F-0083
