@@ -1,17 +1,18 @@
-"""Locus Cron Runner — executes scheduled tasks via pi_bridge.run_pi_turn.
-
-Enforces that cron executions start Pi ONLY through run_pi_turn with session_id='cron_<job_id>'.
-"""
-
 from __future__ import annotations
 
 import logging
-from datetime import datetime
+import sqlite3
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
+from sidecar.config import get as config_get, get_env, is_enabled
 from sidecar.pi_bridge import PiTurnResult, run_pi_turn
 
 logger = logging.getLogger("sidecar.cron_runner")
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_DB_FILE = "cron.db"
 
 
 def match_field(val: int, expr: str, is_day_of_week: bool = False) -> bool:
@@ -72,3 +73,182 @@ def execute_cron_job(job_id: str, prompt: str, timeout: int = 300) -> PiTurnResu
     session_id = f"cron_{job_id}"
     logger.info("Starting cron job %s (session %s)", job_id, session_id)
     return run_pi_turn(prompt=prompt, session_id=session_id, timeout=timeout)
+
+
+def ensure_cron_db(db_path: Path) -> None:
+    """Initialize SQLite database for cron execution logs."""
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    with sqlite3.connect(str(db_path)) as conn:
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS cron_executions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp TEXT NOT NULL,
+                job_id TEXT NOT NULL,
+                status TEXT NOT NULL,
+                returncode INTEGER,
+                token_usage INTEGER DEFAULT 0,
+                output_path TEXT,
+                error TEXT
+            )
+            """
+        )
+        conn.commit()
+
+
+def record_cron_execution(
+    db_path: Path,
+    job_id: str,
+    status: str,
+    returncode: int | None,
+    token_usage: int = 0,
+    output_path: str | None = None,
+    error: str | None = None,
+) -> int:
+    """Record execution details into cron_executions table."""
+    ensure_cron_db(db_path)
+    now_iso = datetime.now(timezone.utc).isoformat()
+    with sqlite3.connect(str(db_path)) as conn:
+        cur = conn.cursor()
+        cur.execute(
+            """
+            INSERT INTO cron_executions (timestamp, job_id, status, returncode, token_usage, output_path, error)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (now_iso, job_id, status, returncode, token_usage, output_path, error),
+        )
+        conn.commit()
+        return cur.lastrowid or 0
+
+
+def get_execution_logs(db_path: Path, limit: int = 50) -> list[dict[str, Any]]:
+    """Retrieve recent execution logs from the database."""
+    if not db_path.exists():
+        return []
+    with sqlite3.connect(str(db_path)) as conn:
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT * FROM cron_executions ORDER BY id DESC LIMIT ?",
+            (limit,),
+        )
+        rows = cur.fetchall()
+        return [dict(row) for row in rows]
+
+
+def resolve_vault_destination(destination_template: str, job_id: str, vault_root: Path) -> Path:
+    """Resolve vault output path replacing tokens like YYYY-MM-DD and <name>."""
+    dest = destination_template.strip()
+    # Normalize vault prefix
+    if dest.startswith("vault/") or dest.startswith("vault\\"):
+        dest = dest[6:]
+    elif dest.startswith("/vault/") or dest.startswith("\\vault\\"):
+        dest = dest[7:]
+
+    now = datetime.now()
+    dest = dest.replace("YYYY-MM-DD", now.strftime("%Y-%m-%d"))
+    dest = dest.replace("<name>", job_id)
+    return (vault_root / dest).resolve()
+
+
+def format_vault_markdown(
+    title: str,
+    content: str,
+    job_id: str,
+    tags: list[str] | None = None,
+) -> str:
+    """Format markdown note with required YAML frontmatter."""
+    tags_list = tags or ["research", "automated"]
+    tags_formatted = "\n".join(f"  - {t}" for t in tags_list)
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    return (
+        f"---\n"
+        f"title: \"{title}\"\n"
+        f"date: \"{date_str}\"\n"
+        f"source: locus-scheduler\n"
+        f"job_id: \"{job_id}\"\n"
+        f"tags:\n{tags_formatted}\n"
+        f"---\n\n"
+        f"{content}\n"
+    )
+
+
+def run_research_job(
+    job: Any,
+    vault_root: Path | None = None,
+    db_path: Path | None = None,
+    custom_config_path: Path | None = None,
+    timeout: int = 300,
+) -> dict[str, Any]:
+    """Execute a research job according to errata D-15.
+    
+    1. Checks if locus.scheduler.enabled is true.
+    2. Runs Pi turn with session_id='cron_<job_id>'.
+    3. Writes markdown output to vault destination with frontmatter.
+    4. Records execution log in SQLite table.
+    """
+    val = config_get("locus.scheduler.enabled", default=True, custom_path=custom_config_path)
+    if isinstance(val, bool):
+        is_on = val
+    elif isinstance(val, str):
+        is_on = val.strip().lower() in ("true", "1", "yes", "on")
+    elif isinstance(val, (int, float)):
+        is_on = val != 0
+    else:
+        is_on = True
+
+    if not is_on:
+        logger.info("Scheduler disabled by config; skipping job %s", getattr(job, "id", str(job)))
+        return {
+            "job_id": getattr(job, "id", str(job)),
+            "status": "disabled",
+            "returncode": None,
+            "output_path": None,
+            "error": "scheduler disabled by config",
+        }
+
+    job_id = getattr(job, "id", str(job))
+    job_name = getattr(job, "name", job_id)
+    prompt = getattr(job, "prompt", "")
+    destination = getattr(job, "destination", "vault/05-Daily/Research/YYYY-MM-DD-<name>.md")
+
+    # Resolve paths
+    v_root = vault_root or (REPO_ROOT / "vault")
+    locus_home = Path(get_env("LOCUS_HOME", default=str(Path.home() / ".locus")))
+    d_path = db_path or (locus_home / DEFAULT_DB_FILE)
+
+    res = execute_cron_job(job_id=job_id, prompt=prompt, timeout=timeout)
+
+    output_path_str: str | None = None
+    if res.ok:
+        status = "success"
+        error_msg = None
+        target_path = resolve_vault_destination(destination, job_id, v_root)
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        markdown = format_vault_markdown(title=job_name, content=res.stdout, job_id=job_id)
+        target_path.write_text(markdown, encoding="utf-8")
+        output_path_str = str(target_path)
+        logger.info("Research job %s succeeded, output written to %s", job_id, output_path_str)
+    else:
+        status = "failed"
+        error_msg = res.stderr or f"Process exited with code {res.returncode}"
+        logger.warning("Research job %s failed: %s", job_id, error_msg)
+
+    record_cron_execution(
+        db_path=d_path,
+        job_id=job_id,
+        status=status,
+        returncode=res.returncode,
+        token_usage=0,
+        output_path=output_path_str,
+        error=error_msg,
+    )
+
+    return {
+        "job_id": job_id,
+        "status": status,
+        "returncode": res.returncode,
+        "output_path": output_path_str,
+        "error": error_msg,
+    }
+

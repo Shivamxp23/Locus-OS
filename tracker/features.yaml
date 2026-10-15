@@ -2069,12 +2069,27 @@ features:
     '§26.7: Weekly Full Vault Synthesis': f6d004b735c578e5
   evidence:
     files:
+    - sidecar/scheduler.py
     - sidecar/cron_runner.py
-    - sidecar/scheduler/
-    symbols: []
+    - tests/test_scheduler.py
+    - tests/test_scheduler_modular.py
+    - tests/test_scheduler_integration.py
+    symbols:
+    - file: sidecar/scheduler.py
+      name: ResearchJob
+    - file: sidecar/scheduler.py
+      name: SchedulerProvider
+    - file: sidecar/scheduler.py
+      name: APSchedulerProvider
+    - file: sidecar/cron_runner.py
+      name: run_research_job
+    - file: sidecar/cron_runner.py
+      name: execute_cron_job
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_scheduler.py tests/test_scheduler_modular.py -q
+    integration:
+    - py -3 -m pytest tests/test_scheduler_integration.py -q
   depends_on: []
 - id: F-0059
   title: PageIndex Retrieval
