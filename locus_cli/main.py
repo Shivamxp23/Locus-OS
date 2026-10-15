@@ -185,6 +185,11 @@ def run_installer(argv: list[str] | None = None) -> int:
         default="local",
         help="Installation topology mode (R2)",
     )
+    parser.add_argument(
+        "--setup",
+        action="store_true",
+        help="Run interactive or answers-driven setup wizard (modes and API keys)",
+    )
 
     args = parser.parse_args(argv)
 
@@ -205,6 +210,21 @@ def run_installer(argv: list[str] | None = None) -> int:
         home_path = Path.home() / ".locus"
 
     vault_path = args.vault_root
+
+    if args.setup:
+        from locus_cli.setup import run_setup_wizard
+
+        try:
+            run_setup_wizard(
+                locus_home=home_path,
+                vault_root=vault_path,
+                non_interactive=args.yes,
+                answers=answers,
+            )
+            return 0
+        except Exception as e:
+            sys.stderr.write(f"Setup failed: {e}\n")
+            return 1
 
     # Execute initialization
     try:

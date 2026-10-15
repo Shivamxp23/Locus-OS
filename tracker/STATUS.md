@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `64f4ca6aec` - 2026-10-15T21:09:33+0530 - with test runs
+- commit `ffe227e73f` (dirty working tree) - 2026-10-15T21:16:20+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 10, 'INFO': 0}
-- features: 125 | verified average **15.2%** | old claimed average 71.4% over 86 rows
-- integrated or better: 15 | proven: 1 | overclaims (claimed >= verified + 25): 69 | no evidence: 98
-- by level: {'FILES_PRESENT': 7, 'INHERITED_OK': 12, 'INTEGRATED': 2, 'NO_EVIDENCE': 98, 'PROVEN': 1, 'UNIT_VERIFIED': 5}
+- features: 125 | verified average **15.3%** | old claimed average 71.4% over 86 rows
+- integrated or better: 15 | proven: 1 | overclaims (claimed >= verified + 25): 69 | no evidence: 97
+- by level: {'FILES_PRESENT': 8, 'INHERITED_OK': 12, 'INTEGRATED': 2, 'NO_EVIDENCE': 97, 'PROVEN': 1, 'UNIT_VERIFIED': 5}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -12,13 +12,13 @@
 | F-0002 | System Prompt Construction | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus-extension/src/hooks/index.ts. Create them or correct the p |
 | F-0003 | Tool System (13 Canonical Tools) | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus-extension/src/tools/index.ts. Create them or correct the p |
 | F-0005 | Extension Lifecycle | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus-extension/index.ts. Create them or correct the path. |
-| F-0012 | Onboarding Flow | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus_cli/setup.py. Create them or correct the path. |
 | F-0060 | Obsidian Self-Hosted LiveSync & CouchDB Real | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/vault/livesync_bridge.py, src/extensions/locus-extension |
 | F-0085 | VM Backend Setup | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: HEADLESS_VM_AND_CRON_SETUP_GUIDE.md. Create them or correct the  |
 | F-0029 | Coding Context | 90% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
 | F-0055 | DCS / TWS / Factions | 90% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/life_os.py. Create them or correct the path. |
 | F-0078 | Master Conductor | 90% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/conductor.py. Create them or correct the path. |
 | F-0004 | Model Management & Escalation | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/life_os.py. Create them or correct the path. |
+| F-0012 | Onboarding Flow | 100% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0056 | Operating Modes / Scheduler | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/life_os.py, sidecar/scheduler/. Create them or correct t |
 | F-0057 | Goal Tracker (3-Layer Stack) | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/life_os.py. Create them or correct the path. |
 | F-0059 | PageIndex Retrieval | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/search/pageindex.py. Create them or correct the path. |
@@ -44,7 +44,7 @@
 | F-0009 | Rate Limit Tracking | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/rate_limiter.py. Create them or correct the path. |
 | F-0010 | Usage/Cost Tracking | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/cost_tracker.py. Create them or correct the path. |
 | F-0011 | Title Generation | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/title_generator.py. Create them or correct the path. |
-| F-0012 | Onboarding Flow | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus_cli/setup.py. Create them or correct the path. |
+| F-0012 | Onboarding Flow | 100% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0013 | Agent Initialization | 100% | 100% | INHERITED_OK |  |  |
 | F-0014 | 30+ LLM Providers | 100% | 100% | INHERITED_OK |  |  |
 | F-0015 | OAuth Flows | 100% | 100% | INHERITED_OK |  |  |

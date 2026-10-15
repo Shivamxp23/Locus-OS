@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-15T21:09:33+0530",
-  "commit": "64f4ca6aec3afffd5e4b51377ec7bb738ffe3a60",
-  "dirty": false,
+  "generated_at": "2026-10-15T21:16:20+0530",
+  "commit": "ffe227e73f6182a6e4a707cce77a326386f08204",
+  "dirty": true,
   "static": false,
   "guard": {
     "verdict": "PASS",
@@ -13,21 +13,21 @@
   },
   "summary": {
     "features": 125,
-    "verified_mean_pct": 15.2,
+    "verified_mean_pct": 15.3,
     "claimed_mean_pct": 71.4,
     "claimed_rows": 86,
     "by_label": {
-      "FILES_PRESENT": 7,
+      "FILES_PRESENT": 8,
       "INHERITED_OK": 12,
       "INTEGRATED": 2,
-      "NO_EVIDENCE": 98,
+      "NO_EVIDENCE": 97,
       "PROVEN": 1,
       "UNIT_VERIFIED": 5
     },
     "integrated_or_better": 15,
     "proven": 1,
     "overclaims": 69,
-    "no_evidence": 98,
+    "no_evidence": 97,
     "spec_sections_total": 135,
     "spec_changed": 0
   },
@@ -235,19 +235,18 @@
       "id": "F-0012",
       "title": "Onboarding Flow",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 1,
+      "label": "FILES_PRESENT",
+      "pct": 15,
       "claimed_pct": 100.0,
-      "gap": 100.0,
+      "gap": 85.0,
       "flags": [
-        "CLAIMED_FILES_MISSING",
         "OVERCLAIM"
       ],
       "reasons": [
-        "declared files missing: locus_cli/setup.py"
+        "no symbols declared: file existence alone proves nothing"
       ],
-      "next": "Files claimed but absent: locus_cli/setup.py. Create them or correct the path.",
+      "next": "Declare evidence.symbols that prove the implementation exists.",
       "checks": {}
     },
     "F-0013": {
@@ -846,7 +845,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".............                                                            [100%]\n13 passed in 0.87s\n",
+            "tail": ".............                                                            [100%]\n13 passed in 0.88s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 3.1
@@ -860,10 +859,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed in 0.63s\n",
+            "tail": ".                                                                        [100%]\n1 passed in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.0
+            "seconds": 2.5
           }
         ]
       }
@@ -1105,10 +1104,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/test_service.py::test_service_lifecycle_and_health_endpoint\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n14 passed, 2 warnings in 1.80s\n",
+            "tail": "legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/test_service.py::test_service_lifecycle_and_health_endpoint\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n14 passed, 2 warnings in 1.57s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 4.1
+            "seconds": 4.0
           }
         ],
         "guard": [],
@@ -1119,7 +1118,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed in 0.29s\n",
+            "tail": ".                                                                        [100%]\n1 passed in 0.26s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.4
@@ -1592,10 +1591,21 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ". collected 6 items\n\ntests/test_installer.py::test_installer_launchers_exist_and_thin PASSED  [ 16%]\ntests/test_installer.py::test_init_locus_home_creates_canonical_structure PASSED [ 33%]\ntests/test_installer.py::test_installer_re_run_is_safe_and_preserves_config PASSED [ 50%]\ntests/test_installer.py::test_load_answers_json_and_yaml PASSED          [ 66%]\ntests/test_installer.py::test_run_installer_cli_non_interactive PASSED   [ 83%]\ntests/test_installer.py::test_run_installer_with_answers_file PASSED     [100%]\n\n============================== 6 passed in 0.21s ==============================\n",
+            "tail": ". collected 6 items\n\ntests/test_installer.py::test_installer_launchers_exist_and_thin PASSED  [ 16%]\ntests/test_installer.py::test_init_locus_home_creates_canonical_structure PASSED [ 33%]\ntests/test_installer.py::test_installer_re_run_is_safe_and_preserves_config PASSED [ 50%]\ntests/test_installer.py::test_load_answers_json_and_yaml PASSED          [ 66%]\ntests/test_installer.py::test_run_installer_cli_non_interactive PASSED   [ 83%]\ntests/test_installer.py::test_run_installer_with_answers_file PASSED     [100%]\n\n============================== 6 passed in 0.19s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.3
+          },
+          {
+            "cmd": "py -3 -m pytest tests/test_setup_wizard.py -v",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "sts/test_setup_wizard.py::test_validate_key_with_custom_validator PASSED [ 16%]\ntests/test_setup_wizard.py::test_save_and_load_secret_env PASSED         [ 33%]\ntests/test_setup_wizard.py::test_update_config_mode_preserves_existing_keys PASSED [ 50%]\ntests/test_setup_wizard.py::test_setup_wizard_key_collection_stores_in_env_not_config PASSED [ 66%]\ntests/test_setup_wizard.py::test_setup_wizard_re_run_safety PASSED       [ 83%]\ntests/test_setup_wizard.py::test_setup_wizard_non_interactive_with_answers PASSED [100%]\n\n============================== 6 passed in 0.18s ==============================\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.2
           }
         ],
         "guard": [
@@ -1639,7 +1649,7 @@
             "tail": "..........                                                               [100%]\n10 passed in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.2
           }
         ],
         "guard": [],
@@ -1760,7 +1770,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed in 0.03s\n",
+            "tail": ".....                                                                    [100%]\n5 passed in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.1
@@ -2433,10 +2443,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "................                                                         [100%]\n16 passed in 1.10s\n",
+            "tail": "................                                                         [100%]\n16 passed in 1.17s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.1
+            "seconds": 3.2
           }
         ],
         "guard": [],
@@ -2447,10 +2457,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed in 1.11s\n",
+            "tail": "..                                                                       [100%]\n2 passed in 1.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.2
+            "seconds": 3.1
           }
         ]
       }
