@@ -188,7 +188,7 @@ stories:
     feature: F-0058
     slug: headless-service
     title: "Sidecar, Pi bridge and scheduler start from a service; a restart keeps the job store and the job still fires"
-    points: 3
+    points: 2
     target_level: 4
     depends_on: [US-08]
     accept:
