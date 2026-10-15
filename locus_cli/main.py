@@ -195,6 +195,13 @@ def run_installer(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Run diagnostic checks on environment and dependencies (R7)",
     )
+    parser.add_argument(
+        "--setup-telegram",
+        "--telegram-setup",
+        action="store_true",
+        dest="setup_telegram",
+        help="Run Telegram pairing setup wizard (R6, S-1)",
+    )
 
     args = parser.parse_args(argv)
 
@@ -215,6 +222,16 @@ def run_installer(argv: list[str] | None = None) -> int:
         home_path = Path.home() / ".locus"
 
     vault_path = args.vault_root
+
+    if getattr(args, "setup_telegram", False):
+        from locus_cli.telegram_setup import run_telegram_setup
+
+        try:
+            run_telegram_setup(locus_home=home_path)
+            return 0
+        except Exception as e:
+            sys.stderr.write(f"Telegram setup failed: {e}\n")
+            return 1
 
     if args.doctor:
         from locus_cli.doctor import run_doctor

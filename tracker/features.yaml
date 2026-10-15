@@ -2984,7 +2984,9 @@ features:
   evidence:
     files:
     - sidecar/telegram_pairing.py
+    - locus_cli/telegram_setup.py
     - tests/test_telegram_pairing.py
+    - tests/test_telegram_setup.py
     symbols:
     - file: sidecar/telegram_pairing.py
       name: TelegramPairingManager
@@ -2992,9 +2994,18 @@ features:
       name: generate_pairing_code
     - file: sidecar/telegram_pairing.py
       name: validate_webhook_config
+    - file: locus_cli/telegram_setup.py
+      name: TelegramSetupWizard
+    - file: locus_cli/telegram_setup.py
+      name: SecretReferenceManager
+    - file: locus_cli/telegram_setup.py
+      name: run_telegram_setup
+    - file: locus_cli/telegram_setup.py
+      name: save_allowed_users
     guard: []
     unit:
     - py -3 -m pytest tests/test_telegram_pairing.py -q
+    - py -3 -m pytest tests/test_telegram_setup.py -q
     integration: []
   depends_on: []
 - id: F-0084

@@ -85,11 +85,15 @@ class TelegramPairingManager:
     ):
         if config_path is not None:
             self.config_path = Path(config_path)
+            self.locus_home = self.config_path.parent
         elif locus_home is not None:
-            self.config_path = Path(locus_home) / "config.yaml"
+            self.locus_home = Path(locus_home)
+            self.config_path = self.locus_home / "config.yaml"
         else:
             self.config_path = get_default_config_path()
+            self.locus_home = self.config_path.parent
 
+        self.allowed_users_path = self.locus_home / "allowed_users.json"
         self.code_expiry = code_expiry
         self.lockout_duration = lockout_duration
         self.max_attempts = max_attempts
@@ -122,7 +126,12 @@ class TelegramPairingManager:
             return False
         return (current - self._code_created_at) <= self.code_expiry
 
-    def start_pairing(self, length: int = DEFAULT_CODE_LENGTH, now: Optional[float] = None) -> str:
+    def start_pairing(
+        self,
+        length: int = DEFAULT_CODE_LENGTH,
+        now: Optional[float] = None,
+        code: Optional[str] = None,
+    ) -> str:
         """
         Create a one-time pairing code and arm the pairing session.
         Shows the code on the host machine only; only the hash is retained.
@@ -132,11 +141,17 @@ class TelegramPairingManager:
             remaining = int(self._locked_until - current)
             raise PermissionError(f"Pairing is locked due to too many failed attempts. Try again in {remaining}s")
 
-        code = generate_pairing_code(length)
-        self._pairing_hash = hash_pairing_code(code)
+        if code is not None:
+            if len(code) < 6:
+                raise ValueError("Pairing code length must be at least 6 characters")
+            pairing_code = code
+        else:
+            pairing_code = generate_pairing_code(length)
+
+        self._pairing_hash = hash_pairing_code(pairing_code)
         self._code_created_at = current
         self._wrong_attempts = 0
-        return code
+        return pairing_code
 
     def cancel_pairing(self) -> None:
         """Destroy active pairing code and reset pairing session."""
@@ -149,6 +164,17 @@ class TelegramPairingManager:
         Raises PairingStorageError if the file exists but cannot be parsed or read.
         """
         if not self.config_path.is_file():
+            if self.allowed_users_path.is_file():
+                try:
+                    import json
+                    raw_json = json.loads(self.allowed_users_path.read_text(encoding="utf-8"))
+                    if isinstance(raw_json, list):
+                        return [int(x) for x in raw_json if str(x).isdigit() or isinstance(x, int)]
+                    if isinstance(raw_json, dict):
+                        uids = raw_json.get("allowed_user_ids") or raw_json.get("allowed_users") or []
+                        return [int(x) for x in uids if str(x).isdigit() or isinstance(x, int)]
+                except Exception as err:
+                    raise PairingStorageError(f"Failed to read allowed_users.json: {err}") from err
             return []
 
         try:
@@ -237,6 +263,16 @@ class TelegramPairingManager:
             tmp_path = self.config_path.with_suffix(".tmp")
             tmp_path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
             tmp_path.replace(self.config_path)
+
+            # Atomic write to allowed_users.json
+            try:
+                import json
+                allowed_tmp = self.allowed_users_path.with_suffix(".tmp")
+                allowed_data = {"allowed_user_ids": norm_ids, "allowed_users": norm_ids}
+                allowed_tmp.write_text(json.dumps(allowed_data, indent=2), encoding="utf-8")
+                allowed_tmp.replace(self.allowed_users_path)
+            except Exception:
+                pass
         except Exception as e:
             if isinstance(e, PairingStorageError):
                 raise
