@@ -7,11 +7,11 @@ agent that touches it STOPS and asks; prompt P3 settles OPEN rows with the owner
 ## A. Index
 | ID | Status | Topic | Blocks |
 |---|---|---|---|
-| D-1 | OPEN | Which task-priority formula (TWS) is real | F-0055, F-0056, every task-scoring feature |
+| D-1 | DECIDED | Which task-priority formula (TWS) is real | - |
 | D-2 | DECIDED | Vault has 8 canonical folders | - |
-| D-3 | OPEN | What "scale" means for per-task priority | with D-1 |
-| D-4 | OPEN | How far auditability goes | any audit/backup work beyond spec 19.2 and 19.3 |
-| D-5 | OPEN | What "meta-harness" means in code | F-0020 beyond coding delegation |
+| D-3 | DECIDED | What "scale" means for per-task priority | - |
+| D-4 | DECIDED | How far auditability goes | - |
+| D-5 | DECIDED | What "meta-harness" means in code | - |
 | D-6 | DECIDED | Spec TypeScript paths map into `locus-extension/src/` | - |
 | D-7 | DEFAULT | Redis: sixth container | state engine, inner loop, approval gate |
 | D-8 | DECIDED | The "85 features" claim is wrong | - |
@@ -27,38 +27,24 @@ Security items S-1 to S-3 are in 10-security.md; they are not optional.
 
 ## B. The decisions
 
-**D-1 Task priority formula (OPEN).** The spec states three things. 25.4 (line 4464): `TWS = P*0.4 + U*0.4 + D*0.2` (Priority, Urgency,
-Difficulty) plus a faction lag bonus (+2 if lag over 3 h, +4 over 6 h, -1 if ahead). 25.12 (line 4656): `TWS = D*0.35 + L*0.25 + U*0.20 + C*0.20
-+ LagBonus`, with `LagBonus = min(2.5, 0.5 * deferral_count)`. Appendix C (line 8205) repeats the 25.4 formula and says "this table wins".
-The faction weekly split conflicts too: Appendix C Health 25 / Leverage 25 / Craft 30 / Expression 20; 25.12 (lines 4675-4678) Craft 40 / Health 25 /
-Leverage 20 / Expression 15. Both claim `LOCUS_SYSTEM_v1.md` as the source, and that file was not provided, so nobody can check it.
-Options: **A** Appendix C / 25.4 (3 factors, faction lag bonus; the spec's own precedence rule selects it). **B** 25.12 (4 factors, deferral bonus;
-richer, fits "multi-factor" better, contradicts Appendix C). **C** the owner writes the formula in the grill.
-Recommendation: A with Appendix C's faction split, until the owner opens `LOCUS_SYSTEM_v1.md` sections 3.2 and 10 and says otherwise.
-(An earlier note of mine leaned to B; the spec's own precedence rule says A, so A is the recommendation.)
+**D-1 Task priority formula (DECIDED 2026-10-15).** The spec states three things: 25.4 (line 4464) `TWS = P*0.4 + U*0.4 + D*0.2` plus a faction lag bonus; 25.12 (line 4656) with 4 factors; Appendix C (line 8205) repeats 25.4 and specifies "this table wins".
+Decision: "Appendix C / 25.4 formula: `TWS = Priority*0.4 + Urgency*0.4 + Difficulty*0.2` + faction lag bonus (+2 if lag >3h, +4 if >6h, -1 if ahead), with Appendix C faction split (Health 25 / Leverage 25 / Craft 30 / Expression 20)."
+Rule: Tasks are scored using `TWS = P*0.4 + U*0.4 + D*0.2 + FactionLagBonus`. Faction targets follow Appendix C (Health: 25%, Leverage: 25%, Craft: 30%, Expression: 20%). The faction lag bonus adds +2 if a faction is behind by >3 hours, +4 if >6 hours, and -1 if ahead of schedule.
 
 **D-2 Vault (DECIDED).** `00-System 01-Projects 02-Areas 03-Resources 04-Captures 05-Daily 06-Content 07-Archives`. Old names map by the
 alias table in `tools/guard/guard.toml` (06-vault-memory-audit.md).
 
-**D-3 "Scale" (OPEN).** The words multi-scale, task scale, scale-aware, "varying scale" appear 0 times in the spec. Nearest ideas: the Three-Layer
-Goal Stack (25.5; schema `goal_stack.level` = vision / milestone / daily) and the five pattern horizons H1-H5 (6 h to all-time).
-Options: **a** scale = goal-stack level, every goal and task at any level gets its own score from the D-1 formula, with a roll-up rule between
-levels. **b** scale = effort size (minutes to months) as a new input. **c** scale = time horizon to deadline.
-Recommendation: a, because the level already exists in the spec and the schema. The grill must settle the roll-up rule (does a vision's score
-derive from its children, or stand alone?).
+**D-3 "Scale" (DECIDED 2026-10-15).** Nearest ideas in spec: Three-Layer Goal Stack (25.5; schema `goal_stack.level` = vision / milestone / daily).
+Decision: "Scale = Three-Layer Goal Stack level (vision, milestone, daily); each level is scored using the D-1 formula with roll-up derived from active child tasks."
+Rule: Task and goal scale corresponds to `goal_stack.level` (`vision`, `milestone`, `daily`). Each item is scored with the D-1 formula. A parent goal's priority score rolls up as the weighted average of its active child tasks' scores combined with its own intrinsic priority.
 
-**D-4 Auditability (OPEN).** See 06-vault-memory-audit.md. Options: **a** only 19.2 + 19.3 as written (trajectories; nightly archiver of EXTERNAL
-AI chats). **b** (a) plus one append-only audit trail for every channel message, tool call, approval, cron run, and inner-loop thought, redacted
-first, exported nightly to `05-Daily/Logs/audit-YYYY-MM-DD.md` and carried by LiveSync. **c** (b) plus a hash chain and an owner-facing viewer.
-Recommendation: b now, c later. Questions for the grill: does "all chats" include Locus's own Telegram and TUI sessions (the spec archiver mostly
-imports external ones), retention, what is redacted.
+**D-4 Auditability (DECIDED 2026-10-15).** See 06-vault-memory-audit.md.
+Decision: "Spec 19.2 & 19.3 plus an append-only audit trail (redacted tool calls, channel messages, approvals, cron runs) exported nightly to vault/05-Daily/Logs/audit-YYYY-MM-DD.md."
+Rule: Trajectory recording (spec 19.2) and external AI chat archiving (spec 19.3) are implemented as specified. In addition, an append-only audit log records channel messages, tool executions, approval decisions, cron runs, and inner-loop transitions; all records are redacted through `security.redact_patterns` and written nightly to markdown files under `vault/05-Daily/Logs/audit-YYYY-MM-DD.md`.
 
-**D-5 Meta-harness (OPEN).** The word appears 0 times. What exists: `HarnessProvider` in the 25-interface table (default "Pi (fallback)"), spec
-3.7 + 11.5 "Coding Harness Delegation" (line 2556: Antigravity, Claude Code, OpenCode, Pi as subprocesses), and master-conductor Stage 8 routing
-"coding -> harness, research -> autoresearch". So the idea exists for coding only. Options: **a** coding delegation as the spec says. **b** generalize
-`HarnessProvider` to any task type (research, ops, writing) with a registry and a result contract. **c** (b) plus Locus acting as an MCP/ACP client
-and server toward other harnesses. Recommendation: a first (F-0020), b after the owner names the harnesses and task types. The spec's
-`--dangerously-skip-permissions` example for Claude Code is not accepted (10-security.md S-3).
+**D-5 Meta-harness (DECIDED 2026-10-15).** Spec 3.7 + 11.5 describes coding delegation to subprocesses (Antigravity, Claude Code, OpenCode, Pi).
+Decision: "Coding delegation first (spec 3.7 / 11.5: delegating coding subtasks to Pi, Claude Code, or external coding agents in isolated scratch worktrees, never using --dangerously-skip-permissions per S-3)."
+Rule: `HarnessProvider` implements coding task delegation across subagents. Delegated jobs execute in isolated scratch worktrees (never in the primary repository or vault). All invocations respect security law S-3 (no `--dangerously-skip-permissions`).
 
 **D-6 Paths (DECIDED).** Python: `locus-os/sidecar/x.py` means `sidecar/x.py` (the leading `locus-os/` is the repo root). TypeScript: strip the leading
 `locus-os/`, `locus/`, `src/`, `core/`, `extensions/` segments and put the rest under `locus-extension/src/`. Examples: `locus/core/channel-registry.ts`
