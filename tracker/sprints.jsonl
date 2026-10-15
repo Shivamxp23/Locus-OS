@@ -16,3 +16,4 @@
 {"event":"planned","sprint":"S5","start":"2026-11-13","end":"2026-11-26","goal":"A research job runs on the VM by itself and the owner hears about it on Telegram.","capacity":3,"points":3,"stories":["US-08"],"date":"2026-11-13"}
 {"event":"accepted","story":"US-08","feature":"F-0058","level":4,"note":"Verified scheduler loads test_research.yaml, fires via run_pi_turn, writes test.md to vault with frontmatter, and logs to SQLite","date":"2026-11-26","commit":"4101f82fa01e"}
 {"event":"closed","sprint":"S5","date":"2026-11-26","planned_points":3,"velocity":3,"done":["US-08"],"not_done":{}}
+{"event":"planned","sprint":"S6","start":"2026-11-27","end":"2026-12-10","goal":"A research job runs on the VM by itself and the owner hears about it on Telegram.","capacity":2,"points":2,"stories":["US-09"],"date":"2026-11-27"}
