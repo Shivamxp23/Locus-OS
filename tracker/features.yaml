@@ -1606,6 +1606,7 @@ features:
     - sidecar/channel_telegram.py
     - tests/test_channel_telegram.py
     - tests/test_channel_telegram_integration.py
+    - tests/test_deliver_result.py
     symbols:
     - file: sidecar/channel_telegram.py
       name: TelegramChannelProvider
@@ -1615,7 +1616,7 @@ features:
       name: register_telegram_channel
     guard: []
     unit:
-    - py -3 -m pytest tests/test_channel_telegram.py -q
+    - py -3 -m pytest tests/test_channel_telegram.py tests/test_deliver_result.py -q
     integration:
     - py -3 -m pytest tests/test_channel_telegram_integration.py -q
   depends_on: []
