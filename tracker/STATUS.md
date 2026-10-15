@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `6994be7b5e` - 2026-10-15T21:49:00+0530 - with test runs
+- commit `c4c09ea36c` - 2026-10-15T22:41:17+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 10, 'INFO': 0}
-- features: 125 | verified average **15.3%** | old claimed average 71.4% over 86 rows
-- integrated or better: 15 | proven: 1 | overclaims (claimed >= verified + 25): 69 | no evidence: 97
-- by level: {'FILES_PRESENT': 8, 'INHERITED_OK': 12, 'INTEGRATED': 2, 'NO_EVIDENCE': 97, 'PROVEN': 1, 'UNIT_VERIFIED': 5}
+- features: 125 | verified average **16.0%** | old claimed average 71.4% over 86 rows
+- integrated or better: 16 | proven: 1 | overclaims (claimed >= verified + 25): 68 | no evidence: 96
+- by level: {'FILES_PRESENT': 8, 'INHERITED_OK': 12, 'INTEGRATED': 3, 'NO_EVIDENCE': 96, 'PROVEN': 1, 'UNIT_VERIFIED': 5}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -13,7 +13,6 @@
 | F-0003 | Tool System (13 Canonical Tools) | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus-extension/src/tools/index.ts. Create them or correct the p |
 | F-0005 | Extension Lifecycle | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus-extension/index.ts. Create them or correct the path. |
 | F-0060 | Obsidian Self-Hosted LiveSync & CouchDB Real | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/vault/livesync_bridge.py, src/extensions/locus-extension |
-| F-0085 | VM Backend Setup | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: HEADLESS_VM_AND_CRON_SETUP_GUIDE.md. Create them or correct the  |
 | F-0029 | Coding Context | 90% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
 | F-0055 | DCS / TWS / Factions | 90% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/life_os.py. Create them or correct the path. |
 | F-0078 | Master Conductor | 90% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/conductor.py. Create them or correct the path. |
@@ -29,6 +28,7 @@
 | F-0027 | Session Management | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/memory.py, sidecar/session_export.py. Create them or cor |
 | F-0010 | Usage/Cost Tracking | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/cost_tracker.py. Create them or correct the path. |
 | F-0011 | Title Generation | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/title_generator.py. Create them or correct the path. |
+| F-0061 | Rough Note Parser | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/rough_note_parser.py. Create them or correct t |
 
 ## All features
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -117,7 +117,7 @@
 | F-0082 | Install Script (ALL platforms) | 100% | 65% | UNIT_VERIFIED | OVERCLAIM | Add evidence.integration: a DIFFERENT test that crosses a boundary (sidecar<->Pi, extensio |
 | F-0083 | Telegram Setup via /setup command | 100% | 65% | UNIT_VERIFIED | OVERCLAIM | Add evidence.integration: a DIFFERENT test that crosses a boundary (sidecar<->Pi, extensio |
 | F-0084 | core/ vs sidecar/ Deduplication | 100% | 65% | UNIT_VERIFIED | OVERCLAIM | Add evidence.integration: a DIFFERENT test that crosses a boundary (sidecar<->Pi, extensio |
-| F-0085 | VM Backend Setup | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: HEADLESS_VM_AND_CRON_SETUP_GUIDE.md. Create them or correct the  |
+| F-0085 | VM Backend Setup | 100% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0086 | Deployment (systemd/Docker) | 65% | 65% | UNIT_VERIFIED |  | Add evidence.integration: a DIFFERENT test that crosses a boundary (sidecar<->Pi, extensio |
 | F-0087 | ARCH-6 Pi bridge (sidecar -> Pi CLI, used by | - | 65% | UNIT_VERIFIED |  | Add evidence.integration: a DIFFERENT test that crosses a boundary (sidecar<->Pi, extensio |
 | F-0088 | Memory Tree (Hierarchical Summarization Casc | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
