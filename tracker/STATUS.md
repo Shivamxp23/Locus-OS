@@ -1,6 +1,6 @@
 # Tracker status (computed, not written)
 
-- commit `ffe227e73f` (dirty working tree) - 2026-10-15T21:16:20+0530 - with test runs
+- commit `a2817fe8aa` - 2026-10-15T21:19:04+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 10, 'INFO': 0}
 - features: 125 | verified average **15.3%** | old claimed average 71.4% over 86 rows
 - integrated or better: 15 | proven: 1 | overclaims (claimed >= verified + 25): 69 | no evidence: 97
