@@ -26,3 +26,5 @@
 {"event":"accepted","story":"US-11","feature":"F-0082","level":3,"note":"Verified thin launchers, locus_cli package, 8 canonical vault directories, and non-interactive installation","date":"2027-01-07","commit":"daf55f0252ab"}
 {"event":"closed","sprint":"S8","date":"2027-01-07","planned_points":2,"velocity":2,"done":["US-11"],"not_done":{}}
 {"event":"planned","sprint":"S9","start":"2027-01-08","end":"2027-01-21","goal":"One command sets up local, VM or hybrid, with keys and Telegram pairing.","capacity":2,"points":2,"stories":["US-12"],"date":"2027-01-08"}
+{"event":"accepted","story":"US-12","feature":"F-0082","level":3,"note":"Verified interactive and answers-based topology mode and API key collection with .env 0600 isolation and safe re-run","date":"2027-01-21","commit":"1c9fa374c649"}
+{"event":"closed","sprint":"S9","date":"2027-01-21","planned_points":2,"velocity":2,"done":["US-12"],"not_done":{}}
