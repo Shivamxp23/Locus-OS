@@ -31,3 +31,4 @@
 {"event":"planned","sprint":"S10","start":"2027-01-22","end":"2027-02-04","goal":"One command sets up local, VM or hybrid, with keys and Telegram pairing.","capacity":2,"points":2,"stories":["US-13"],"date":"2027-01-22"}
 {"event":"accepted","story":"US-13","feature":"F-0082","level":3,"note":"Verified doctor diagnostics with single-line PASS/FAIL indicators, CouchDB fix guidance, and Pi TUI runner passthrough","date":"2027-02-04","commit":"33a15dbf0976"}
 {"event":"closed","sprint":"S10","date":"2027-02-04","planned_points":2,"velocity":2,"done":["US-13"],"not_done":{}}
+{"event":"planned","sprint":"S11","start":"2027-02-05","end":"2027-02-18","goal":"One command sets up local, VM or hybrid, with keys and Telegram pairing.","capacity":2,"points":2,"stories":["US-14"],"date":"2027-02-05"}

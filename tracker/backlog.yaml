@@ -249,7 +249,7 @@ stories:
     feature: F-0083
     slug: telegram-setup
     title: "R6, R4: Telegram setup in the installer and /setup with the secret-reference flow"
-    points: 3
+    points: 2
     target_level: 3
     autopilot: false   # by hand: needs your real Telegram bot
     addendum: [P4]
