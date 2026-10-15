@@ -698,11 +698,29 @@ features:
     '§3.7 + §11.5: Coding Harness Delegation': 965dfbc6844c5e75
   evidence:
     files:
+    - sidecar/harness.py
     - sidecar/inter_harness_bridge.py
-    symbols: []
+    - locus-extension/src/providers/harness/harness-provider.ts
+    symbols:
+    - file: sidecar/harness.py
+      name: CodingTask
+    - file: sidecar/harness.py
+      name: DelegationResult
+    - file: sidecar/harness.py
+      name: HarnessProvider
+    - file: sidecar/harness.py
+      name: validate_security_flags
+    - file: sidecar/harness.py
+      name: ScratchWorktreeManager
+    - file: sidecar/harness.py
+      name: HarnessManager
+    - file: sidecar/inter_harness_bridge.py
+      name: delegate_coding_task
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/test_harness.py -k "test_security_rule_s3_forbids_dangerous_flags or test_harness_manager_protocol_conformance or test_harness_manager_modularity_disabled or test_harness_manager_build_command" -q
+    integration:
+    - py -3 -m pytest tests/test_harness.py -k "test_harness_manager_mock_delegation_in_scratch_worktree or test_inter_harness_bridge_delegation" -q
   depends_on: []
 - id: F-0021
   title: Neo4j Agent Memory (POLE+O)
