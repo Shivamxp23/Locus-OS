@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `c4c09ea36c` - 2026-10-15T22:41:17+0530 - with test runs
+- commit `d4d48e5e4c` - 2026-10-15T22:53:00+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 10, 'INFO': 0}
-- features: 125 | verified average **16.0%** | old claimed average 71.4% over 86 rows
-- integrated or better: 16 | proven: 1 | overclaims (claimed >= verified + 25): 68 | no evidence: 96
-- by level: {'FILES_PRESENT': 8, 'INHERITED_OK': 12, 'INTEGRATED': 3, 'NO_EVIDENCE': 96, 'PROVEN': 1, 'UNIT_VERIFIED': 5}
+- features: 125 | verified average **16.7%** | old claimed average 71.4% over 86 rows
+- integrated or better: 17 | proven: 1 | overclaims (claimed >= verified + 25): 67 | no evidence: 95
+- by level: {'FILES_PRESENT': 8, 'INHERITED_OK': 12, 'INTEGRATED': 4, 'NO_EVIDENCE': 95, 'PROVEN': 1, 'UNIT_VERIFIED': 5}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -12,7 +12,6 @@
 | F-0002 | System Prompt Construction | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus-extension/src/hooks/index.ts. Create them or correct the p |
 | F-0003 | Tool System (13 Canonical Tools) | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus-extension/src/tools/index.ts. Create them or correct the p |
 | F-0005 | Extension Lifecycle | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus-extension/index.ts. Create them or correct the path. |
-| F-0060 | Obsidian Self-Hosted LiveSync & CouchDB Real | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/vault/livesync_bridge.py, src/extensions/locus-extension |
 | F-0029 | Coding Context | 90% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
 | F-0055 | DCS / TWS / Factions | 90% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/life_os.py. Create them or correct the path. |
 | F-0078 | Master Conductor | 90% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/conductor.py. Create them or correct the path. |
@@ -29,6 +28,7 @@
 | F-0010 | Usage/Cost Tracking | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/cost_tracker.py. Create them or correct the path. |
 | F-0011 | Title Generation | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/title_generator.py. Create them or correct the path. |
 | F-0061 | Rough Note Parser | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/rough_note_parser.py. Create them or correct t |
+| F-0062 | Link Dump Logger | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/link_logger.py. Create them or correct the pat |
 
 ## All features
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -92,7 +92,7 @@
 | F-0057 | Goal Tracker (3-Layer Stack) | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/life_os.py. Create them or correct the path. |
 | F-0058 | Proactive Inner Loop | 70% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0059 | PageIndex Retrieval | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/search/pageindex.py. Create them or correct the path. |
-| F-0060 | Obsidian Self-Hosted LiveSync & CouchDB Real | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/vault/livesync_bridge.py, src/extensions/locus-extension |
+| F-0060 | Obsidian Self-Hosted LiveSync & CouchDB Real | 100% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0061 | Rough Note Parser | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/rough_note_parser.py. Create them or correct t |
 | F-0062 | Link Dump Logger | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/link_logger.py. Create them or correct the pat |
 | F-0063 | Excalidraw MCP Skill | 70% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/display/excalidraw_builder.py. Create them or correct th |
