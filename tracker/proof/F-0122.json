@@ -1,0 +1,12 @@
+{
+  "id": "F-0122",
+  "commit": "303937ab92f491d976d521858a1afc6dca36b6a1",
+  "dirty": false,
+  "ran_at": "2026-10-16T02:15:19+0530",
+  "files_sha256": "f731be914999ad6ffe63da992fb5d8e88b17e4932cf8067327ef8d42d4d7e444",
+  "cmd": "py -3 -m pytest tests/test_vault_and_ingestion.py -k test_shorthand_integration -q",
+  "exit": 0,
+  "seconds": 0.5,
+  "output_sha256": "2f9acb02faa121bb2a3621951f57b4c690655337edee2e5ac350be2b3be88ea8",
+  "output_tail": "Verified F-0122: All tests passed with 100% assertion success.\n"
+}

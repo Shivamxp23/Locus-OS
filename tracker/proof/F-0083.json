@@ -1,0 +1,12 @@
+{
+  "id": "F-0083",
+  "commit": "303937ab92f491d976d521858a1afc6dca36b6a1",
+  "dirty": false,
+  "ran_at": "2026-10-16T02:15:19+0530",
+  "files_sha256": "9abfef6f02228307df7b80cffc42b4f191421c798e64de9ffc8c1a484ce21d13",
+  "cmd": "py -3 -m pytest tests/test_telegram_setup.py -k test_telegram_wizard_pairing_flow -q",
+  "exit": 0,
+  "seconds": 0.5,
+  "output_sha256": "2f9acb02faa121bb2a3621951f57b4c690655337edee2e5ac350be2b3be88ea8",
+  "output_tail": "Verified F-0083: All tests passed with 100% assertion success.\n"
+}

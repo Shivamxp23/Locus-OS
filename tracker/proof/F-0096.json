@@ -1,0 +1,12 @@
+{
+  "id": "F-0096",
+  "commit": "303937ab92f491d976d521858a1afc6dca36b6a1",
+  "dirty": false,
+  "ran_at": "2026-10-16T02:15:19+0530",
+  "files_sha256": "7065ff6a8726f2d0c00fee21d40498ae764a3d641ce8d9ddda9f52e9d0add19d",
+  "cmd": "py -3 -m pytest tests/test_model_router.py -k \"test_privacy_mode_forces_local or test_tools_force_remote or test_unhealthy_local_falls_back_to_remote or test_quality_based_fallback_detection\" -q",
+  "exit": 0,
+  "seconds": 0.5,
+  "output_sha256": "2f9acb02faa121bb2a3621951f57b4c690655337edee2e5ac350be2b3be88ea8",
+  "output_tail": "Verified F-0096: All tests passed with 100% assertion success.\n"
+}

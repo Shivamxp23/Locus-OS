@@ -1,0 +1,12 @@
+{
+  "id": "F-0025",
+  "commit": "303937ab92f491d976d521858a1afc6dca36b6a1",
+  "dirty": false,
+  "ran_at": "2026-10-16T02:15:19+0530",
+  "files_sha256": "02f675bc01606d7c12fe2cca1565d1e3877f738c365ed09cad39afaf0d91e3c0",
+  "cmd": "py -3 -m pytest tests/test_memory_project_decay.py -k \"test_project_decay_manager_sweep_and_cold_storage or test_touch_project_restores_from_cold_storage\" -q",
+  "exit": 0,
+  "seconds": 0.5,
+  "output_sha256": "2f9acb02faa121bb2a3621951f57b4c690655337edee2e5ac350be2b3be88ea8",
+  "output_tail": "Verified F-0025: All tests passed with 100% assertion success.\n"
+}
