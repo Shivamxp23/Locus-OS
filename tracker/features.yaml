@@ -2072,9 +2072,11 @@ features:
     files:
     - sidecar/scheduler.py
     - sidecar/cron_runner.py
+    - sidecar/service.py
     - tests/test_scheduler.py
     - tests/test_scheduler_modular.py
     - tests/test_scheduler_integration.py
+    - tests/test_service.py
     symbols:
     - file: sidecar/scheduler.py
       name: ResearchJob
@@ -2086,9 +2088,13 @@ features:
       name: run_research_job
     - file: sidecar/cron_runner.py
       name: execute_cron_job
+    - file: sidecar/service.py
+      name: ServiceRunner
+    - file: sidecar/service.py
+      name: create_app
     guard: []
     unit:
-    - py -3 -m pytest tests/test_scheduler.py tests/test_scheduler_modular.py -q
+    - py -3 -m pytest tests/test_scheduler.py tests/test_scheduler_modular.py tests/test_service.py -q
     integration:
     - py -3 -m pytest tests/test_scheduler_integration.py -q
   depends_on: []
