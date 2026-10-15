@@ -342,8 +342,19 @@ Installer Options (with 'locus install' or direct flags):
 """)
 
 
+def _configure_utf8_io() -> None:
+    """Ensure standard IO streams use UTF-8 with replacement on Windows."""
+    for stream in (sys.stdin, sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
+
+
 def main(argv: list[str] | None = None) -> None:
     """CLI entry point for Locus OS."""
+    _configure_utf8_io()
     if argv is None:
         argv = sys.argv[1:]
 

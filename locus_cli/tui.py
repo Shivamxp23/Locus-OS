@@ -56,6 +56,17 @@ class LocusTUI:
         self.stdin = stdin or sys.stdin
         self.stdout = stdout or sys.stdout
 
+        if hasattr(self.stdout, "reconfigure"):
+            try:
+                self.stdout.reconfigure(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
+        if hasattr(self.stdin, "reconfigure"):
+            try:
+                self.stdin.reconfigure(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
+
         if locus_home is not None:
             self.locus_home = Path(locus_home).expanduser().resolve()
         elif "LOCUS_HOME" in os.environ and os.environ["LOCUS_HOME"].strip():
@@ -84,7 +95,11 @@ class LocusTUI:
         return SoulEngine()
 
     def print_line(self, text: str = "") -> None:
-        self.stdout.write(f"{text}\n")
+        try:
+            self.stdout.write(f"{text}\n")
+        except UnicodeEncodeError:
+            safe_text = text.encode("ascii", errors="replace").decode("ascii")
+            self.stdout.write(f"{safe_text}\n")
         self.stdout.flush()
 
     def clear_screen(self) -> None:

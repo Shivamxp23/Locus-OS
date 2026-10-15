@@ -1,9 +1,9 @@
 {
   "id": "F-0082",
-  "commit": "9faf47b2451361783ad1018d77bdb5a9c73fedc2",
+  "commit": "efcadb0670979399ee1cd9760c3f52d0978fd740",
   "dirty": true,
-  "ran_at": "2026-10-16T03:56:18+0530",
-  "files_sha256": "5b4e6057822a6dfed060197cd2e201fa7f8c12d4bcf3c45adc38d1cd91e95711",
+  "ran_at": "2026-10-16T04:10:01+0530",
+  "files_sha256": "023c129a6e8f376ae87df89453e2b5553839bca266a05bd3dd3ce76b2af9606c",
   "cmd": "py -3 -m pytest tests/test_installer.py -k test_init_locus_home_creates_canonical_structure -q",
   "exit": 0,
   "seconds": 4.9,
