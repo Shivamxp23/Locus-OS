@@ -1,12 +1,12 @@
 {
   "id": "F-0084",
-  "commit": "303937ab92f491d976d521858a1afc6dca36b6a1",
+  "commit": "768bb3efa915f5d3e7dc1c924bce2fe722d93d50",
   "dirty": false,
-  "ran_at": "2026-10-16T02:15:19+0530",
-  "files_sha256": "3d93276f0cd1088889c42840d893bcc649eeef5d0f9a7bf16185bba050de93db",
-  "cmd": "py -3 -m pytest tests/test_sidecar_layout.py -k test_sidecar_modules_import_cleanly -q",
+  "ran_at": "2026-10-16T13:51:22+0530",
+  "files_sha256": "6b559424f7631d6e40bef23e3143d531d2e997c24cec942be7f79b4e08310882",
+  "cmd": "py -3 -m pytest tests/test_sidecar_layout.py -q",
   "exit": 0,
-  "seconds": 0.5,
-  "output_sha256": "2f9acb02faa121bb2a3621951f57b4c690655337edee2e5ac350be2b3be88ea8",
-  "output_tail": "Verified F-0084: All tests passed with 100% assertion success.\n"
+  "seconds": 3.1,
+  "output_sha256": "fac8aaadc73a18f429accef33900b10cfd78bd95c7687ad6e7c91bc437aa1b8d",
+  "output_tail": "......                                                                   [100%]\n6 passed in 0.08s\n"
 }

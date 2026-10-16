@@ -1,28 +1,27 @@
 {
-  "generated_at": "2026-10-16T13:20:19+0530",
-  "commit": "2bb7449b1b6677a67ea113f80cbb48954db5f32d",
+  "generated_at": "2026-10-16T14:05:57+0530",
+  "commit": "768bb3efa915f5d3e7dc1c924bce2fe722d93d50",
   "dirty": true,
   "static": false,
   "guard": {
     "verdict": "PASS",
     "counts": {
       "FAIL": 0,
-      "WARN": 11,
+      "WARN": 12,
       "INFO": 0
     }
   },
   "summary": {
     "features": 125,
-    "verified_mean_pct": 99.9,
+    "verified_mean_pct": 100.0,
     "claimed_mean_pct": 71.4,
     "claimed_rows": 86,
     "by_label": {
       "INHERITED_OK": 17,
-      "INTEGRATED": 1,
-      "PROVEN": 107
+      "PROVEN": 108
     },
     "integrated_or_better": 125,
-    "proven": 107,
+    "proven": 108,
     "overclaims": 0,
     "no_evidence": 0,
     "spec_sections_total": 135,
@@ -67,10 +66,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.04s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 3.3
           }
         ],
         "guard": [],
@@ -81,10 +80,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.04s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 3.1
           }
         ]
       }
@@ -113,10 +112,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.04s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 3.1
           }
         ],
         "guard": [],
@@ -130,7 +129,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.9
           }
         ]
       }
@@ -159,10 +158,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 5 deselected in 0.05s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 5 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.7
           }
         ],
         "guard": [],
@@ -176,7 +175,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 5 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.6
+            "seconds": 2.2
           }
         ]
       }
@@ -205,10 +204,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.04s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.7
           }
         ],
         "guard": [],
@@ -219,10 +218,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.04s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 3.3
           }
         ]
       }
@@ -251,10 +250,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 1 deselected in 0.04s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 1 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -265,10 +264,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 1 deselected in 0.06s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 1 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.4
           }
         ]
       }
@@ -297,10 +296,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.04s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.5
           }
         ],
         "guard": [],
@@ -314,7 +313,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.5
           }
         ]
       }
@@ -360,7 +359,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -371,10 +370,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.05s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ]
       }
@@ -406,7 +405,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.6
           }
         ],
         "guard": [],
@@ -449,10 +448,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.04s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.5
           }
         ],
         "guard": [],
@@ -463,10 +462,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.04s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.4
           }
         ]
       }
@@ -495,10 +494,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 0.08s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.5
           }
         ],
         "guard": [],
@@ -509,10 +508,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 0.11s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.5
           }
         ]
       }
@@ -639,10 +638,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "....                                                                     [100%]\n4 passed, 2 deselected in 0.06s\n",
+            "tail": "....                                                                     [100%]\n4 passed, 2 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.6
           }
         ],
         "guard": [],
@@ -653,10 +652,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 7.05s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 7.94s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 9.1
+            "seconds": 10.3
           }
         ]
       }
@@ -688,7 +687,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.6
           }
         ],
         "guard": [],
@@ -702,7 +701,7 @@
             "tail": "....                                                                     [100%]\n4 passed, 2 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.5
           }
         ]
       }
@@ -731,7 +730,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.22s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.30s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.4
@@ -748,7 +747,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.22s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.6
           }
         ]
       }
@@ -777,10 +776,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.04s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.2
           }
         ],
         "guard": [],
@@ -826,7 +825,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -837,10 +836,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.04s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.1
           }
         ]
       }
@@ -869,10 +868,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.04s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.2
           }
         ],
         "guard": [],
@@ -886,7 +885,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.3
           }
         ]
       }
@@ -915,10 +914,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "...                                                                      [100%]\n3 passed, 1 deselected in 0.04s\n",
+            "tail": "...                                                                      [100%]\n3 passed, 1 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -929,7 +928,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 3 deselected in 0.04s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 3 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.1
@@ -961,10 +960,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.04s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.1
           }
         ],
         "guard": [],
@@ -975,7 +974,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.05s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.1
@@ -1010,7 +1009,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 20 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.2
           }
         ],
         "guard": [],
@@ -1021,10 +1020,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.09s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.3
           }
         ]
       }
@@ -1053,10 +1052,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 20 deselected in 0.10s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 20 deselected in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.5
+            "seconds": 2.2
           }
         ],
         "guard": [],
@@ -1067,10 +1066,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.09s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.6
           }
         ]
       }
@@ -1099,10 +1098,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.21s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.5
+            "seconds": 2.4
           }
         ],
         "guard": [],
@@ -1113,10 +1112,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.10s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.14s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.4
+            "seconds": 2.8
           }
         ]
       }
@@ -1145,10 +1144,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.10s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.11s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.9
+            "seconds": 2.6
           }
         ],
         "guard": [],
@@ -1159,10 +1158,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.11s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.21s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.8
+            "seconds": 3.6
           }
         ]
       }
@@ -1205,10 +1204,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.16s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 3.6
           }
         ],
         "guard": [],
@@ -1219,10 +1218,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.7
+            "seconds": 2.8
           }
         ]
       }
@@ -1254,7 +1253,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 9 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.2
+            "seconds": 3.1
           }
         ],
         "guard": [],
@@ -1265,10 +1264,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 9 deselected in 0.08s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 9 deselected in 0.13s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.7
+            "seconds": 3.6
           }
         ]
       }
@@ -1297,10 +1296,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.06s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.5
+            "seconds": 3.1
           }
         ],
         "guard": [],
@@ -1311,10 +1310,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.06s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.7
+            "seconds": 2.8
           }
         ]
       }
@@ -1343,10 +1342,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.06s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.12s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.7
+            "seconds": 3.0
           }
         ],
         "guard": [],
@@ -1360,7 +1359,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.9
+            "seconds": 3.4
           }
         ]
       }
@@ -1389,10 +1388,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.05s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.5
+            "seconds": 3.1
           }
         ],
         "guard": [],
@@ -1406,7 +1405,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.6
+            "seconds": 2.3
           }
         ]
       }
@@ -1463,10 +1462,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.07s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.7
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -1509,10 +1508,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.05s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.6
+            "seconds": 2.5
           }
         ],
         "guard": [],
@@ -1523,7 +1522,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.05s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.5
@@ -1555,10 +1554,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.05s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.9
           }
         ],
         "guard": [],
@@ -1572,7 +1571,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.2
           }
         ]
       }
@@ -1601,10 +1600,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.05s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.1
           }
         ],
         "guard": [],
@@ -1615,7 +1614,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.04s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.3
@@ -1647,10 +1646,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 9 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 9 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.5
           }
         ],
         "guard": [],
@@ -1661,10 +1660,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 9 deselected in 0.06s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 9 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.5
+            "seconds": 2.4
           }
         ]
       }
@@ -1693,10 +1692,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 9 deselected in 0.06s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 9 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.1
           }
         ],
         "guard": [],
@@ -1707,10 +1706,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 9 deselected in 0.05s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 9 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.1
           }
         ]
       }
@@ -1739,7 +1738,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".............                                                            [100%]\n13 passed in 1.00s\n",
+            "tail": ".............                                                            [100%]\n13 passed in 1.11s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 3.5
@@ -1753,10 +1752,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed in 73.09s (0:01:13)\n",
+            "tail": ".                                                                        [100%]\n1 passed in 0.66s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 75.3
+            "seconds": 3.0
           }
         ]
       }
@@ -1785,10 +1784,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.13s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.11s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.1
+            "seconds": 2.5
           }
         ],
         "guard": [],
@@ -1799,10 +1798,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.13s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.12s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.4
+            "seconds": 2.5
           }
         ]
       }
@@ -1831,10 +1830,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.22s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 4.0
+            "seconds": 2.4
           }
         ],
         "guard": [],
@@ -1845,10 +1844,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.19s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.5
+            "seconds": 2.6
           }
         ]
       }
@@ -1877,10 +1876,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.32s\n",
+            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.23s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.5
+            "seconds": 2.6
           }
         ],
         "guard": [],
@@ -1891,10 +1890,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.19s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.12s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.5
+            "seconds": 2.5
           }
         ]
       }
@@ -1923,10 +1922,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "......                                                                   [100%]\n6 passed, 1 deselected in 0.31s\n",
+            "tail": "......                                                                   [100%]\n6 passed, 1 deselected in 0.32s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.9
+            "seconds": 2.6
           }
         ],
         "guard": [],
@@ -1937,10 +1936,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 6 deselected in 0.25s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 6 deselected in 0.27s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.6
+            "seconds": 2.5
           }
         ]
       }
@@ -1971,7 +1970,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.09s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.6
@@ -1985,10 +1984,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.15s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.6
+            "seconds": 2.1
           }
         ]
       }
@@ -2017,10 +2016,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.12s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.6
+            "seconds": 2.2
           }
         ],
         "guard": [],
@@ -2034,7 +2033,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.6
+            "seconds": 2.1
           }
         ]
       }
@@ -2063,10 +2062,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.09s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -2077,10 +2076,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.08s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.14s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.5
           }
         ]
       }
@@ -2109,10 +2108,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.09s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.14s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 3.8
           }
         ],
         "guard": [],
@@ -2123,10 +2122,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.08s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.5
           }
         ]
       }
@@ -2155,10 +2154,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.10s\n",
+            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.7
           }
         ],
         "guard": [],
@@ -2169,10 +2168,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.06s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.3
           }
         ]
       }
@@ -2203,10 +2202,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 20 deselected in 0.11s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 20 deselected in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.5
           }
         ],
         "guard": [],
@@ -2217,10 +2216,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 20 deselected in 0.14s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 20 deselected in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.5
+            "seconds": 2.8
           }
         ]
       }
@@ -2251,10 +2250,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.14s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.7
+            "seconds": 3.1
           }
         ],
         "guard": [],
@@ -2265,7 +2264,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.14s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.5
@@ -2297,10 +2296,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/test_service.py::test_service_lifecycle_and_health_endpoint\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n14 passed, 2 warnings in 2.16s\n",
+            "tail": "legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/test_service.py::test_service_lifecycle_and_health_endpoint\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n14 passed, 2 warnings in 2.95s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 4.9
+            "seconds": 6.3
           }
         ],
         "guard": [],
@@ -2311,10 +2310,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed in 0.32s\n",
+            "tail": ".                                                                        [100%]\n1 passed in 0.74s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.9
+            "seconds": 4.6
           }
         ]
       }
@@ -2346,7 +2345,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 9 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.6
           }
         ],
         "guard": [],
@@ -2357,10 +2356,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 9 deselected in 0.05s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 9 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.6
           }
         ]
       }
@@ -2392,7 +2391,7 @@
             "tail": "....                                                                     [100%]\n4 passed, 1 deselected in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.4
           }
         ],
         "guard": [],
@@ -2403,10 +2402,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 4 deselected in 0.63s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 4 deselected in 0.67s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.8
+            "seconds": 3.4
           }
         ]
       }
@@ -2435,10 +2434,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.09s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.5
           }
         ],
         "guard": [],
@@ -2449,10 +2448,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.08s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.13s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.5
           }
         ]
       }
@@ -2481,10 +2480,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.09s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.13s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 3.1
           }
         ],
         "guard": [],
@@ -2495,10 +2494,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.08s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 3.1
           }
         ]
       }
@@ -2527,10 +2526,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.09s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.8
           }
         ],
         "guard": [],
@@ -2541,10 +2540,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.08s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.5
           }
         ]
       }
@@ -2573,10 +2572,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.08s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -2587,10 +2586,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.06s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.3
           }
         ]
       }
@@ -2622,7 +2621,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.2
           }
         ],
         "guard": [],
@@ -2633,10 +2632,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.05s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 1.9
+            "seconds": 2.5
           }
         ]
       }
@@ -2665,10 +2664,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.08s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.23s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 4.7
           }
         ],
         "guard": [],
@@ -2679,10 +2678,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.09s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.25s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 3.7
           }
         ]
       }
@@ -2714,7 +2713,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.8
           }
         ],
         "guard": [],
@@ -2728,7 +2727,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 3.1
           }
         ]
       }
@@ -2757,10 +2756,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.59s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.60s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.6
+            "seconds": 3.2
           }
         ],
         "guard": [],
@@ -2774,7 +2773,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 1.61s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.7
+            "seconds": 4.2
           }
         ]
       }
@@ -2803,10 +2802,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.05s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.7
           }
         ],
         "guard": [],
@@ -2817,10 +2816,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.08s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.7
           }
         ]
       }
@@ -2852,7 +2851,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.7
           }
         ],
         "guard": [],
@@ -2863,10 +2862,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.09s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.11s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.7
           }
         ]
       }
@@ -2898,7 +2897,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.6
+            "seconds": 2.9
           }
         ],
         "guard": [],
@@ -2909,10 +2908,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.4
           }
         ]
       }
@@ -2941,10 +2940,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 20 deselected in 0.08s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 20 deselected in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -2958,7 +2957,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.4
           }
         ]
       }
@@ -2990,7 +2989,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.5
           }
         ],
         "guard": [],
@@ -3033,10 +3032,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -3050,7 +3049,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.5
+            "seconds": 2.0
           }
         ]
       }
@@ -3081,10 +3080,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.10s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -3098,7 +3097,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.0
+            "seconds": 1.9
           }
         ]
       }
@@ -3127,7 +3126,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.1
@@ -3144,7 +3143,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.5
+            "seconds": 2.1
           }
         ]
       }
@@ -3176,7 +3175,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -3187,10 +3186,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.09s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.0
           }
         ]
       }
@@ -3219,10 +3218,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -3236,7 +3235,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.0
           }
         ]
       }
@@ -3265,10 +3264,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -3282,7 +3281,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 14 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ]
       }
@@ -3311,10 +3310,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.08s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -3328,7 +3327,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.0
           }
         ]
       }
@@ -3357,10 +3356,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.10s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -3406,7 +3405,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ],
         "guard": [
@@ -3426,7 +3425,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.1
           }
         ]
       }
@@ -3455,10 +3454,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 6 deselected in 0.11s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 6 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.2
           }
         ],
         "guard": [],
@@ -3469,10 +3468,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 6 deselected in 0.13s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 6 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.7
+            "seconds": 2.1
           }
         ]
       }
@@ -3481,18 +3480,14 @@
       "id": "F-0084",
       "title": "core/ vs sidecar/ Deduplication",
       "verdict": "INTEGRATED",
-      "level": 4,
-      "label": "INTEGRATED",
-      "pct": 85,
+      "level": 5,
+      "label": "PROVEN",
+      "pct": 100,
       "claimed_pct": 100.0,
-      "gap": 15.0,
-      "flags": [
-        "PROOF_STALE"
-      ],
-      "reasons": [
-        "proof is STALE: evidence files changed since it was recorded"
-      ],
-      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "gap": 0.0,
+      "flags": [],
+      "reasons": [],
+      "next": "",
       "checks": {
         "symbols": {
           "ok": true,
@@ -3505,10 +3500,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.05s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.1
           }
         ],
         "guard": [
@@ -3550,10 +3545,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.06s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ]
       }
@@ -3582,10 +3577,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.12s\n",
+            "tail": ".....                                                                    [100%]\n5 passed, 1 deselected in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.1
           }
         ],
         "guard": [],
@@ -3596,10 +3591,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.62s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.61s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.0
+            "seconds": 2.6
           }
         ]
       }
@@ -3628,10 +3623,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 4 deselected in 0.05s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 4 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -3645,7 +3640,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 4 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.0
           }
         ]
       }
@@ -3674,7 +3669,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.1
@@ -3699,7 +3694,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.06s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 5 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.0
@@ -3731,10 +3726,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "...                                                                      [100%]\n3 passed, 2 deselected in 0.06s\n",
+            "tail": "...                                                                      [100%]\n3 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -3745,10 +3740,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.05s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 1.9
           }
         ]
       }
@@ -3777,10 +3772,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.06s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -3791,10 +3786,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.19s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.1
           }
         ]
       }
@@ -3826,7 +3821,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -3837,10 +3832,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "...                                                                      [100%]\n3 passed, 2 deselected in 0.04s\n",
+            "tail": "...                                                                      [100%]\n3 passed, 2 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.1
           }
         ]
       }
@@ -3869,10 +3864,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -3886,7 +3881,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.0
           }
         ]
       }
@@ -3915,10 +3910,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "....                                                                     [100%]\n4 passed, 2 deselected in 0.05s\n",
+            "tail": "....                                                                     [100%]\n4 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -3932,7 +3927,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 4 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.0
           }
         ]
       }
@@ -3961,10 +3956,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "....                                                                     [100%]\n4 passed, 3 deselected in 0.06s\n",
+            "tail": "....                                                                     [100%]\n4 passed, 3 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -3978,7 +3973,7 @@
             "tail": "...                                                                      [100%]\n3 passed, 4 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ]
       }
@@ -4007,10 +4002,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.06s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -4024,7 +4019,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 2 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.0
           }
         ]
       }
@@ -4053,10 +4048,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.06s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 3 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -4067,10 +4062,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "...                                                                      [100%]\n3 passed, 2 deselected in 0.06s\n",
+            "tail": "...                                                                      [100%]\n3 passed, 2 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.1
           }
         ]
       }
@@ -4102,7 +4097,7 @@
             "tail": "...                                                                      [100%]\n3 passed, 4 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.1
           }
         ],
         "guard": [],
@@ -4113,10 +4108,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "....                                                                     [100%]\n4 passed, 3 deselected in 0.05s\n",
+            "tail": "....                                                                     [100%]\n4 passed, 3 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.5
+            "seconds": 2.1
           }
         ]
       }
@@ -4176,7 +4171,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.16s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.2
           }
         ],
         "guard": [],
@@ -4187,10 +4182,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.13s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.14s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.2
           }
         ]
       }
@@ -4222,7 +4217,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.1
           }
         ],
         "guard": [],
@@ -4233,10 +4228,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.10s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.0
+            "seconds": 2.1
           }
         ]
       }
@@ -4268,7 +4263,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -4282,7 +4277,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ]
       }
@@ -4328,7 +4323,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -4339,10 +4334,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.10s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ]
       }
@@ -4388,7 +4383,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.1
           }
         ]
       }
@@ -4448,7 +4443,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -4459,7 +4454,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.08s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 25 deselected in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.1
@@ -4491,10 +4486,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.05s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.6
+            "seconds": 2.1
           }
         ],
         "guard": [],
@@ -4508,7 +4503,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.0
           }
         ]
       }
@@ -4551,10 +4546,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.25s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 2 deselected in 0.20s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.2
           }
         ]
       }
@@ -4586,7 +4581,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.04s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 1.9
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -4629,10 +4624,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.1
           }
         ],
         "guard": [],
@@ -4643,10 +4638,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.09s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.1
           }
         ]
       }
@@ -4675,10 +4670,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.06s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -4689,7 +4684,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.1
@@ -4724,7 +4719,7 @@
             "tail": "..                                                                       [100%]\n2 passed, 20 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -4735,10 +4730,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.09s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.5
+            "seconds": 2.1
           }
         ]
       }
@@ -4813,10 +4808,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 20 deselected in 0.08s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 20 deselected in 0.18s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 3.0
           }
         ],
         "guard": [],
@@ -4827,10 +4822,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.10s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.11s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.6
+            "seconds": 3.0
           }
         ]
       }
@@ -4859,10 +4854,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.09s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.10s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 3.0
           }
         ],
         "guard": [],
@@ -4876,7 +4871,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.1
           }
         ]
       }
@@ -4905,10 +4900,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -4919,10 +4914,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.2
           }
         ]
       }
@@ -4951,10 +4946,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.05s\n",
+            "tail": "..                                                                       [100%]\n2 passed, 1 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -4997,10 +4992,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.05s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.5
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -5011,10 +5006,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.06s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ]
       }
@@ -5043,7 +5038,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.09s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.1
@@ -5057,10 +5052,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.7
+            "seconds": 2.0
           }
         ]
       }
@@ -5089,7 +5084,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.06s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.0
@@ -5103,7 +5098,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.05s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.1
@@ -5138,7 +5133,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.1
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -5149,10 +5144,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.07s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.09s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.1
           }
         ]
       }
@@ -5181,10 +5176,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.09s\n",
+            "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.07s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -5198,7 +5193,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 21 deselected in 0.08s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.0
           }
         ]
       }
@@ -5230,7 +5225,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 9 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 1.9
           }
         ],
         "guard": [],
@@ -5244,7 +5239,7 @@
             "tail": ".                                                                        [100%]\n1 passed, 9 deselected in 0.05s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 1.9
           }
         ]
       }
@@ -5273,10 +5268,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "................                                                         [100%]\n16 passed in 4.42s\n",
+            "tail": "................                                                         [100%]\n16 passed in 1.46s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 6.9
+            "seconds": 3.8
           }
         ],
         "guard": [],
@@ -5287,16 +5282,14 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "..                                                                       [100%]\n2 passed in 1.18s\n",
+            "tail": "..                                                                       [100%]\n2 passed in 1.19s\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.3
+            "seconds": 3.5
           }
         ]
       }
     }
   },
-  "regressions": [
-    "F-0084 core/ vs sidecar/ Deduplication: 100% -> 85%"
-  ]
+  "regressions": []
 }

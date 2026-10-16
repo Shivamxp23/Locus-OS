@@ -1,18 +1,14 @@
 # Tracker status (computed, not written)
 
-- commit `2bb7449b1b` (dirty working tree) - 2026-10-16T13:20:19+0530 - with test runs
-- guard: PASS {'FAIL': 0, 'WARN': 11, 'INFO': 0}
-- features: 125 | verified average **99.9%** | old claimed average 71.4% over 86 rows
-- integrated or better: 125 | proven: 107 | overclaims (claimed >= verified + 25): 0 | no evidence: 0
-- by level: {'INHERITED_OK': 17, 'INTEGRATED': 1, 'PROVEN': 107}
-
-## REGRESSIONS since last run
-- F-0084 core/ vs sidecar/ Deduplication: 100% -> 85%
+- commit `768bb3efa9` (dirty working tree) - 2026-10-16T14:05:57+0530 - with test runs
+- guard: PASS {'FAIL': 0, 'WARN': 12, 'INFO': 0}
+- features: 125 | verified average **100.0%** | old claimed average 71.4% over 86 rows
+- integrated or better: 125 | proven: 108 | overclaims (claimed >= verified + 25): 0 | no evidence: 0
+- by level: {'INHERITED_OK': 17, 'PROVEN': 108}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
 |---|---|---:|---:|---|---|---|
-| F-0084 | core/ vs sidecar/ Deduplication | 100% | 85% | INTEGRATED | PROOF_STALE | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0001 | Pi Agent Loop | 100% | 100% | INHERITED_OK |  |  |
 | F-0002 | System Prompt Construction | 100% | 100% | PROVEN |  |  |
 | F-0003 | Tool System (13 Canonical Tools) | 100% | 100% | PROVEN |  |  |
@@ -32,6 +28,7 @@
 | F-0060 | Obsidian Self-Hosted LiveSync & CouchDB Real | 100% | 100% | PROVEN |  |  |
 | F-0082 | Install Script (ALL platforms) | 100% | 100% | PROVEN |  |  |
 | F-0083 | Telegram Setup via /setup command | 100% | 100% | PROVEN |  |  |
+| F-0084 | core/ vs sidecar/ Deduplication | 100% | 100% | PROVEN |  |  |
 
 ## All features
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -119,7 +116,7 @@
 | F-0081 | Obsidian/LightRAG Bridge | 45% | 100% | PROVEN |  |  |
 | F-0082 | Install Script (ALL platforms) | 100% | 100% | PROVEN |  |  |
 | F-0083 | Telegram Setup via /setup command | 100% | 100% | PROVEN |  |  |
-| F-0084 | core/ vs sidecar/ Deduplication | 100% | 85% | INTEGRATED | PROOF_STALE | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0084 | core/ vs sidecar/ Deduplication | 100% | 100% | PROVEN |  |  |
 | F-0085 | VM Backend Setup | 100% | 100% | PROVEN |  |  |
 | F-0086 | Deployment (systemd/Docker) | 65% | 100% | PROVEN |  |  |
 | F-0087 | ARCH-6 Pi bridge (sidecar -> Pi CLI, used by | - | 100% | PROVEN |  |  |

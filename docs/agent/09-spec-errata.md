@@ -15,7 +15,7 @@ agent that touches it STOPS and asks; prompt P3 settles OPEN rows with the owner
 | D-6 | DECIDED | Spec TypeScript paths map into `locus-extension/src/` | - |
 | D-7 | DEFAULT | Redis: sixth container | state engine, inner loop, approval gate |
 | D-8 | DECIDED | The "85 features" claim is wrong | - |
-| D-9 | OPEN (owner edits spec) | Duplicate section ids | tracker mapping by id |
+| D-9 | DECIDED | Duplicate section ids | tracker mapping by id |
 | D-10 | DECIDED | Where the `locus.*` config tree is stored | every feature (via the accessor) |
 | D-11 | DEFAULT | `inner_loop_audit` and `inner_loop_log` are two tables | F-0058 |
 | D-12 | DEFAULT | Registry / config file names and off conventions (03) | every feature |
@@ -60,9 +60,10 @@ removes `locus-redis` and activates the PostgreSQL fallbacks everywhere.
 81 from the old workbook, 7 owner requirements or session reports with no spec section (F-0082 to F-0087 and F-0125), and 37 spec sections the old workbook never
 listed (rows marked `origin: spec-gap`). The verifier's spec-gap list, not any of these numbers, is the coverage truth.
 
-**D-9 Duplicate ids (OPEN, owner edits the spec).** Section 2.4 is both State Engine (line 1704) and Provider Registry (line 2460); 2.5 is both Context
+**D-9 Duplicate ids (DECIDED 2026-10-16).** Section 2.4 is both State Engine (line 1704) and Provider Registry (line 2460); 2.5 is both Context
 Forge (1752) and Model Selection (2465); 26.1 is the heading of the combined "12.1-12.5 + 26.1" scheduler section (4217) and of "Inner Loop" (4768).
-Until the owner renumbers, the tracker cites these by title and line, and agents never edit the spec.
+Decision: "The tracker cites duplicate sections disambiguated by title and line number; agents never mutate or renumber the upstream spec document."
+Rule: The tracker explicitly maps duplicate section IDs by pairing section numbers with exact section headings and source file line references. Upstream specification files remain unmutated.
 
 **D-10 Config location (DECIDED 2026-10-15).** The spec says both: Pi `settings.json` under a `locus` key (lines 465, 545, 5283-5327) and `.locus/config.yaml`
 (31 mentions). Decision: "LOCUS_HOME/config.yaml is the canonical home of the locus.* tree; secrets stay in ~/.locus/.env".

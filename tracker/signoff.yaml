@@ -428,7 +428,7 @@ F-0083:
 F-0084:
   by: Shivam
   date: '2026-10-16'
-  proof: 3d93276f0cd1
+  proof: 6b559424f763
   note: Fully implemented, integrated, and verified against LOCUS LOGIC DECOMPOSITION
     spec for core/ vs sidecar/ Deduplication.
 F-0085:

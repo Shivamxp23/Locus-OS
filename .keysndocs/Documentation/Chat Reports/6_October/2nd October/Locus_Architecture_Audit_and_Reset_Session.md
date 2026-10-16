@@ -3097,15 +3097,15 @@ The following changes were made by the replace_file_content tool to: c:\Users\so
 +        self.assertEqual(r.mask_token("sk-short"), "***REDACTED***")
 +
 +        # Long token — preserve first 6 / last 4
-+        masked = r.mask_token("sk-1234567890abcdefghijklmnop")
-+        self.assertTrue(masked.startswith("sk-123"))
++        masked = r.mask_token("sk_example_1234567890abcdefghijklmnop")
++        self.assertTrue(masked.startswith("sk_example_123"))
 +        self.assertTrue(masked.endswith("mnop"))
 +        self.assertIn("...", masked)
 +
 +        # Full text redaction
-+        text = "My OpenAI key is sk-1234567890abcdefghij and my GitHub token is ghp_sample_dummy_github_token"
++        text = "My OpenAI key is sk_example_1234567890abcdefghij and my GitHub token is ghp_sample_dummy_github_token"
 +        redacted = r.redact_text(text)
-+        self.assertNotIn("sk-1234567890abcdefghij", redacted)
++        self.assertNotIn("sk_example_1234567890abcdefghij", redacted)
 +        self.assertNotIn("ghp_sample_dummy_github_token", redacted)
 +
 +        # Structure redaction
