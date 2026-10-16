@@ -323,6 +323,7 @@ Commands:
   (no command)      Launch interactive Locus TUI (runs installer if not yet installed)
   tui               Launch interactive Locus TUI session
   install           Run Locus OS installer / bootstrapper
+  uninstall         Run interactive uninstaller (deletes ~/.locus, optional vault cleanup)
   setup             Run interactive configuration wizard (modes, API keys)
   doctor            Run diagnostic checks on environment and dependencies
   dashboard         Display real-time terminal status dashboard
@@ -385,6 +386,11 @@ def main(argv: list[str] | None = None) -> None:
 
     if subcommand == "install":
         sys.exit(run_installer(argv[1:]))
+
+    if subcommand in ("uninstall", "--uninstall"):
+        from locus_cli.uninstall import run_uninstaller
+
+        sys.exit(run_uninstaller(argv[1:], locus_home=home_path))
 
     if subcommand == "tui":
         from locus_cli.tui import run_tui
