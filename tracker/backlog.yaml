@@ -351,3 +351,17 @@ stories:
       - "Strictly enforces security rule S-3: never passes --dangerously-skip-permissions to Claude Code; scratch worktrees are cleaned up post-execution."
       - "Returns structured execution results (exit code, diff, output logs) to the caller."
     demo: "Invoke harness delegate with a test task: verify it spawns in a temporary git worktree without touching the main tree, runs without forbidden permissions flags, and returns the result."
+
+  - id: US-21
+    epic: E1
+    feature: F-0084
+    slug: deduplicate-core-proof-refresh
+    title: "Refresh F-0084 proof hash and re-verify core/ package absence against sidecar layout"
+    points: 1
+    target_level: 4
+    depends_on: [US-01]
+    accept:
+      - "py -3 tools/guard/check.py --full prints 0 FAIL, verifying that no core/ directory, alias, or forbidden import exists."
+      - "py -3 -m pytest tests/test_sidecar_layout.py -q passes cleanly without regressions."
+      - "The owner runs tools/tracker/record_proof.py F-0084 and signs off in tracker/signoff.yaml, restoring F-0084 from 85% INTEGRATED (PROOF_STALE) to 100% PROVEN."
+    demo: 'Run py -3 tools/tracker/show.py F-0084: verify level is PROVEN (100%) and flags has no PROOF_STALE.'
