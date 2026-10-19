@@ -122,6 +122,89 @@ def create_app(
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
+    # Trajectory Recording & Batch Evaluation routes (SPEC §19.2 / F-0049)
+    from sidecar.learning.trajectory import TrajectoryRecorder
+    active_registry.register("trajectory_recorder", "default_trajectory_recorder", TrajectoryRecorder)
+
+    @app.post("/trajectories/record")
+    def record_trajectory_turn(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Record turn for an agent session with sensitive token redaction."""
+        if not app.state.registry.is_feature_enabled("learning", "trajectory"):
+            return JSONResponse(status_code=503, content={"disabled": "locus.learning.trajectory.enabled"})
+        session_id = body.get("session_id")
+        role = body.get("role")
+        content = body.get("content")
+        if not session_id or not role or content is None:
+            raise HTTPException(status_code=400, detail="Missing session_id, role, or content")
+
+        provider_cls = app.state.registry.get_active_provider("trajectory_recorder", default_name="default_trajectory_recorder")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No trajectory recorder provider registered")
+
+        rec = provider_cls()
+        rec.initialize()
+        turn = rec.record_turn(
+            session_id=session_id,
+            role=role,
+            content=content,
+            tool_calls=body.get("tool_calls"),
+            tokens=body.get("tokens"),
+            metadata=body.get("metadata"),
+        )
+        if not turn:
+            return {"status": "skipped", "reason": "disabled"}
+        return {"status": "ok", "turn": turn.to_dict()}
+
+    @app.post("/trajectories/sessions/{session_id}/flush")
+    def flush_trajectory_session(session_id: str) -> Dict[str, Any]:
+        """Flush active session trajectory to disk."""
+        if not app.state.registry.is_feature_enabled("learning", "trajectory"):
+            return JSONResponse(status_code=503, content={"disabled": "locus.learning.trajectory.enabled"})
+        provider_cls = app.state.registry.get_active_provider("trajectory_recorder", default_name="default_trajectory_recorder")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No trajectory recorder provider registered")
+
+        rec = provider_cls()
+        rec.initialize()
+        path = rec.flush_session(session_id)
+        if not path:
+            raise HTTPException(status_code=404, detail=f"Session trajectory '{session_id}' not found or disabled")
+        return {"status": "ok", "path": str(path)}
+
+    @app.get("/trajectories/sessions/{session_id}")
+    def get_trajectory_session(session_id: str) -> Dict[str, Any]:
+        """Retrieve stored trajectory for a session."""
+        if not app.state.registry.is_feature_enabled("learning", "trajectory"):
+            return JSONResponse(status_code=503, content={"disabled": "locus.learning.trajectory.enabled"})
+        provider_cls = app.state.registry.get_active_provider("trajectory_recorder", default_name="default_trajectory_recorder")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No trajectory recorder provider registered")
+
+        rec = provider_cls()
+        rec.initialize()
+        traj = rec.get_trajectory(session_id)
+        if not traj:
+            raise HTTPException(status_code=404, detail=f"Session trajectory '{session_id}' not found")
+        return {"status": "ok", "trajectory": traj}
+
+    @app.post("/trajectories/evaluate")
+    def evaluate_trajectories(body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Run batch evaluation across recorded trajectories."""
+        if not app.state.registry.is_feature_enabled("learning", "trajectory"):
+            return JSONResponse(status_code=503, content={"disabled": "locus.learning.trajectory.enabled"})
+        provider_cls = app.state.registry.get_active_provider("trajectory_recorder", default_name="default_trajectory_recorder")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No trajectory recorder provider registered")
+
+        rec = provider_cls()
+        rec.initialize()
+        payload = body or {}
+        evaluation = rec.batch_evaluate(
+            session_ids=payload.get("session_ids"),
+            eval_prompt=payload.get("eval_prompt"),
+        )
+        return {"status": "ok", "evaluation": evaluation}
+
     return app
 
 

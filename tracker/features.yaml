@@ -1724,10 +1724,20 @@ features:
   evidence:
     files:
     - sidecar/learning/trajectory.py
-    symbols: []
+    - sidecar/providers/trajectory.py
+    - locus-extension/src/trajectory.ts
+    symbols:
+    - file: sidecar/learning/trajectory.py
+      name: TrajectoryRecorder
+    - file: sidecar/providers/trajectory.py
+      name: BaseTrajectoryRecorder
+    - file: sidecar/providers/trajectory.py
+      name: TurnRecord
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: pytest tests/unit/test_trajectory.py
+    integration:
+    - cmd: pytest tests/integration/test_trajectory_service.py
   depends_on: []
 - id: F-0050
   title: AI Chat Archiver
