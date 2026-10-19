@@ -45,3 +45,4 @@
 {"event":"planned","sprint":"S14","start":"2026-12-10","end":"2026-12-13","goal":"Every task at every scale gets a priority score; Locus drives other harnesses.","capacity":2,"points":2,"stories":["US-20"],"date":"2026-12-10"}
 {"event":"accepted","story":"US-20","feature":"F-0020","level":4,"note":"Coding harness delegation in scratch worktree verified at Level 4 (INTEGRATED). S-3 permission guard verified.","date":"2026-12-10","commit":"d3c2aa2cfd7d"}
 {"event":"closed","sprint":"S14","date":"2026-12-13","planned_points":2,"velocity":2,"done":["US-20"],"not_done":{}}
+{"event":"planned","sprint":"S15","start":"2026-12-14","end":"2026-12-17","goal":"One layout, no known security hole, the guard shows 0 FAIL and the hooks are on.","capacity":2,"points":2,"stories":["US-21"],"date":"2026-12-14"}
