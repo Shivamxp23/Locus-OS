@@ -2,3 +2,4 @@
 {"event":"accepted","story":"US-01","feature":"F-0084","level":3,"note":"Verified 0 FAIL, skeleton layout in place, fake Pi launcher tests pass","date":"2026-10-19","commit":"c5f59e75f342"}
 {"event":"accepted","story":"US-05","feature":"F-0125","level":3,"note":"Verified get and is_enabled in Python and TypeScript, no direct env reads outside accessor","date":"2026-10-19","commit":"c5f59e75f342"}
 {"event":"closed","sprint":"S1","date":"2026-10-22","planned_points":5,"velocity":5,"done":["US-01","US-05"],"not_done":{}}
+{"event":"planned","sprint":"S2","start":"2026-10-23","end":"2026-10-26","goal":"One layout, no known security hole, the guard shows 0 FAIL and the hooks are on.","capacity":8,"points":6,"stories":["US-03","US-04","US-06"],"date":"2026-10-23"}
