@@ -2972,7 +2972,9 @@ features:
     - core-alias-shim
     - core-module-run
     - core-path-in-scripts
-    unit: []
+    unit:
+    - cmd: pytest tests/unit/test_skeleton.py
+    - cmd: pytest tests/unit/test_pi_bridge.py
     integration: []
   depends_on: []
 - id: F-0085
