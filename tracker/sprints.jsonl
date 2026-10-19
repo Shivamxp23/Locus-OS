@@ -82,3 +82,5 @@
 {"event":"accepted","story":"US-32","feature":"F-0092","level":4,"note":"Pytest verified 12 unit and integration tests asserting all 8 intent classifications, anti-hallucination confidence gate, temporal scope timestamp resolution, and 503 off-switch","date":"2027-01-30","commit":"646797a1589c"}
 {"event":"closed","sprint":"S26","date":"2027-01-30","planned_points":2,"velocity":2,"done":["US-32"],"not_done":{}}
 {"event":"planned","sprint":"S27","start":"2027-01-31","end":"2027-02-03","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-33"],"date":"2027-01-31"}
+{"event":"accepted","story":"US-33","feature":"F-0093","level":4,"note":"Verified 12 unit and integration tests asserting canonical DCS calculation, 5 operating mode tiers, staleness penalties, and 503 off-switch","date":"2027-02-03","commit":"eee306c7c2ae"}
+{"event":"closed","sprint":"S27","date":"2027-02-03","planned_points":2,"velocity":2,"done":["US-33"],"not_done":{}}
