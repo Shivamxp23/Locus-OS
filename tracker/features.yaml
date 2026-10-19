@@ -2071,15 +2071,19 @@ features:
   evidence:
     files:
     - sidecar/scheduler.py
+    - sidecar/service.py
     symbols:
     - file: sidecar/scheduler.py
       name: SchedulerProvider
     - file: sidecar/scheduler.py
       name: ResearchJob
+    - file: sidecar/service.py
+      name: HeadlessService
     guard: []
     unit:
     - cmd: pytest tests/unit/test_scheduler.py
-    integration: []
+    integration:
+    - cmd: pytest tests/integration/test_service_restart.py
   depends_on: []
 - id: F-0059
   title: PageIndex Retrieval
