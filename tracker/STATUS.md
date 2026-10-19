@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `f10b98a81d` - 2026-10-19T18:09:34+0530 - with test runs
+- commit `97edb6bbcf` - 2026-10-19T18:18:01+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **11.7%** | old claimed average 71.4% over 86 rows
-- integrated or better: 12 | proven: 0 | overclaims (claimed >= verified + 25): 71 | no evidence: 109
-- by level: {'INHERITED_OK': 12, 'NO_EVIDENCE': 109, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **11.8%** | old claimed average 71.4% over 86 rows
+- integrated or better: 13 | proven: 0 | overclaims (claimed >= verified + 25): 71 | no evidence: 109
+- by level: {'INHERITED_OK': 12, 'INTEGRATED': 1, 'NO_EVIDENCE': 109, 'UNIT_VERIFIED': 3}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -157,4 +157,4 @@
 | F-0122 | LOCUS_SHORTHAND 4× Text Compressor | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0123 | 3-Level Tag Hierarchy & Semantic Indexing | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0124 | Auxiliary LLM Client | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
-| F-0125 | Modularity foundation: provider registry + c | - | 65% | UNIT_VERIFIED |  | Add evidence.integration: a DIFFERENT test that crosses a boundary (sidecar<->Pi, extensio |
+| F-0125 | Modularity foundation: provider registry + c | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
