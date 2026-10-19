@@ -1,0 +1,5 @@
+# Spec sections deliberately NOT tracked. Human-owned.
+# exclusions:
+#   - ref: "§1.8: Stream Diagnostics"
+#     reason: "..."
+exclusions: []

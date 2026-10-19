@@ -1,0 +1,3 @@
+# Human-only caps: lower a feature's computed level with a reason.
+# F-0007: {cap_level: 2, by: Shivam, date: 2026-10-05, reason: "..."}
+{}

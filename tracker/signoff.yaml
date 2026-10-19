@@ -1,0 +1,4 @@
+# Human-only. A feature reaches L5 PROVEN only with a current proof file AND an entry here that names that proof.
+# record_proof.py prints the exact line to paste, e.g.:
+# F-0007: {by: Shivam, date: 2026-10-05, proof: "3f9a1c2b7d10", note: "watched the cron run end to end"}
+{}

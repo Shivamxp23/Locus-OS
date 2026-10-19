@@ -1,0 +1,269 @@
+# tracker/backlog.yaml - the Product Backlog. HUMAN-OWNED (AGENTS.md law 11).
+#
+# ORDER = PRIORITY. The story at the top is built first. Only the owner changes the order.
+# Agents change this file only inside a P5 refinement session; the owner commits it with LOCUS_ALLOW_GUARD_EDIT=1.
+# Nobody types a status here: tools/tracker/backlog.py derives it from git, tracker/handoff/, and tracker/status.json.
+# A story = ONE slice of ONE tracker feature that fits in 1 to 3 evening slots (points 1, 2 or 3). Bigger: split it.
+# A story is READY (may enter a sprint) only when it has points, a feature, a slug, accept, demo, target_level,
+# no OPEN decision in requires_decisions, and every depends_on story merged. `backlog.py --check` and `--refine` say what is missing.
+# Stories far down the list are deliberately coarse; refinement (prompt P5) makes the next ones Ready.
+#
+# Fields: id, epic, feature (F-xxxx), slug, title, points, target_level (the computed level the feature must reach: 2 SYMBOLS,
+# 3 UNIT_VERIFIED, 4 INTEGRATED), completes_feature (true = after you accept it you also record proof and sign off 100%),
+# depends_on (stories above), requires_decisions (rows of docs/agent/09-spec-errata.md), addendum (P4 = installer/security rules),
+# accept (observable criteria the verifier checks one by one), demo (what YOU watch at the Sprint Review).
+schema: 1
+config:
+  main_branch: main
+  first_sprint_start: 2026-10-19   # a Friday. Sprints are 14 days: planning in the first slot, refinement in the second-to-last, review + retro in the last.
+  sprint_days: 4
+  slot_days: [Mon, Tue, Wed, Thu, Fri, Sat, Sun]       # your Locus evenings (college days)
+  slot_time: "19:30"
+  capacity_points: 8               # used until 3 sprints have closed; then the average of the last 3 velocities (rounded down, 2 to 8)
+  max_story_points: 3
+  wip_limit: 1                     # one story in progress at a time (AGENTS.md law 12)
+  refine_top: 5                    # refinement looks at this many unstarted stories
+
+epics:
+  - id: E1
+    title: Green baseline
+    goal: "One layout, no known security hole, the guard shows 0 FAIL and the hooks are on."
+  - id: E2
+    title: Modularity foundation
+    goal: "Every feature reads config and registers as a provider through one accessor and one registry."
+  - id: E3
+    title: Headless runtime
+    goal: "A research job runs on the VM by itself and the owner hears about it on Telegram."
+  - id: E4
+    title: One-command installer
+    goal: "One command sets up local, VM or hybrid, with keys and Telegram pairing."
+  - id: E5
+    title: Memory, vault and audit
+    goal: "Everything is recorded and backed up to the vault; Neo4j Agent Memory is the memory layer."
+  - id: E6
+    title: Priority and meta-harness
+    goal: "Every task at every scale gets a priority score; Locus drives other harnesses."
+
+stories:
+  # ------------------------------------------------------------------ E1 Green baseline (Sprint 1)
+  - id: US-01
+    epic: E1
+    feature: F-0084
+    slug: green-skeleton
+    title: "Greenfield skeleton: the one layout (sidecar, locus-extension, locus_cli, docker-compose.yml) plus the Pi launcher, guard 0 FAIL"
+    points: 3
+    target_level: 3
+    accept:
+      - "py -3 tools/guard/check.py --full prints 0 FAIL. The guard's layout-required, must-define and pi-bridge-flags checks pass; nothing else in the repo changes outside the files this story creates."
+      - "Created, each with real content and no stub: sidecar/__init__.py; sidecar/pi_bridge.py that DEFINES run_pi_turn and get_node_executable; locus-extension/ with a package.json and a src/ folder; locus_cli/__init__.py; a docker-compose.yml that parses as valid YAML (services may be empty: CouchDB arrives in US-03). Nothing under packages/ changes."
+      - "run_pi_turn builds the Pi command line itself and always includes --approve and --no-context-files, and runs Pi with the repo root as working folder. A unit test with a fake Pi executable asserts exactly that; the string --dangerously-skip-permissions appears nowhere in the repo."
+      - "A unit test asserts importlib.util.find_spec('core') is None and that no top-level folder named core, locus, locus-os or src exists. The handoff records the Pi release commit (tools/guard/upstream.lock.json baseline) it was built on."
+    demo: 'Run py -3 tools\guard\check.py --full: it prints 0 FAIL. Look at the top level of locus-os: packages, sidecar, locus-extension, locus_cli and docker-compose.yml are there, and there is no core folder. Run the fake-Pi test file named in the handoff with py -3 -m pytest -q <that file>: it prints passed.'
+
+  - id: US-03
+    epic: E1
+    feature: F-0086
+    slug: couchdb-secrets-ports
+    title: "CouchDB password comes from .env and every port binds to 127.0.0.1 (S-2)"
+    points: 1
+    target_level: 3
+    addendum: [P4]
+    depends_on: [US-01]
+    accept:
+      - "docker-compose.yml has no default password and uses ${COUCHDB_PASSWORD:?set it in .locus/.env}: docker compose config fails with that message when it is unset and succeeds when it is set."
+      - "Every published port (5984, 7687, 5432, 6379, 8420) is written as 127.0.0.1:port:port."
+      - "data/couchdb/local.ini limits CORS origins to app://obsidian.md, capacitor://localhost and http://localhost."
+      - "The old default password string appears nowhere in the repo (the guard secrets check stays green) and a unit test parses docker-compose.yml to prove the three points above."
+      - "Greenfield: no data directory exists yet. The handoff still gives the exact commands for rotating the admin password on a data directory that already exists (CouchDB applies COUCHDB_PASSWORD only when it creates the admin), and says that a first install needs none."
+    demo: 'In PowerShell run: $env:COUCHDB_PASSWORD=""; docker compose config   (it must fail with the message). Then set a long random value, run docker compose up -d couchdb and open http://127.0.0.1:5984 (it answers). From your phone on the same Wi-Fi open http://<this PC address>:5984 (it must NOT connect). Then run curl.exe -s -o NUL -w "%{http_code}" -u <your old user>:<your old password> http://127.0.0.1:5984/   (it must print 401). Then docker compose down.'
+
+  - id: US-04
+    epic: E1
+    feature: F-0083
+    slug: telegram-pairing
+    title: "Telegram pairing: one-time code, fail closed, nobody becomes owner by messaging first (S-1)"
+    points: 3
+    target_level: 3
+    addendum: [P4]
+    depends_on: [US-01]
+    accept:
+      - "Greenfield: no Telegram gateway exists yet, so this story builds the smallest real one (long polling, token read through the secrets rules, only at the path `python tools/tracker/show.py F-0083` names) and the pairing in front of it. The six tests run against a fake Telegram transport. If this proves too big for 3 points, stop and say so: refinement splits it."
+      - "The six pairing tests from docs/agent/10-security.md S-1 exist and pass: a stranger's first message is rejected; a wrong code is rejected and counted; the right code pairs once; reuse of the code fails; a corrupted allow-list fails closed; a restart keeps the owner."
+      - "The code has 8 or more characters from the secrets module, is valid 10 minutes, works once, only its hash is stored, 5 wrong attempts lock pairing for 15 minutes, and it is printed only on the machine running setup. The owner's numeric Telegram id is stored in LOCUS_HOME/config.yaml exactly as S-1 says."
+      - "Until paired the bot answers every message with one fixed line and executes nothing; if the allowed-id list cannot be read or written the bot refuses all messages; webhook mode refuses to start without TELEGRAM_WEBHOOK_SECRET."
+    demo: 'With a TEST bot token on this PC (never the real one): start the bot. From a second Telegram account send hello: the bot answers the one fixed line. Run the pairing command on the PC, read the code on its screen, send /pair <code> from your own account: it says paired. Send /pair <code> from the second account: refused. Restart the bot: your account still works and the second account still gets the fixed line.'
+
+  # ------------------------------------------------------------------ E2 Modularity foundation (Sprint 2)
+  - id: US-05
+    epic: E2
+    feature: F-0125
+    slug: config-accessor
+    title: "One config accessor for Python and TypeScript (get, is_enabled)"
+    points: 2
+    target_level: 3
+    requires_decisions: [D-10]
+    accept:
+      - "sidecar/config.py defines get(path, default=None) and is_enabled(path) and reads the config file at the location chosen in errata D-10; locus-extension/src/config.ts offers the same two functions over the same file."
+      - "A missing key returns the default; is_enabled is false when the key is absent or false; no module outside the accessor reads os.environ, process.env or the config file directly (a unit test searches for it)."
+      - "py -3 -m sidecar.config get <path> prints the value (or the default), so any key can be checked by hand."
+    demo: 'Run py -3 -m sidecar.config get locus.demo.value (prints the default). Add locus.demo.value: 7 to the config file at the D-10 location and run it again: it prints 7. Run the unit tests named in the handoff: they pass.'
+
+  - id: US-06
+    epic: E2
+    feature: F-0125
+    slug: provider-registry
+    title: "One provider registry with on/off switch, swap by config, and health check"
+    points: 2
+    target_level: 4
+    completes_feature: true
+    depends_on: [US-05]
+    accept:
+      - "sidecar/registry.py defines ProviderRegistry and get_registry(); a provider registers under (interface, name); the active provider is chosen by the config key locus.<area>.<feature>.provider."
+      - 'When a feature''s enabled switch is false: its HTTP routes answer 503 with {"disabled": "<config key>"}, its tools are not registered and its jobs are not scheduled (one test per behaviour, using a dummy feature).'
+      - "Swap test: two dummy providers for one interface; changing the config key switches behaviour with no code edit. Health test: every registered provider answers health_check()."
+      - "locus-extension/src/registry.ts offers the same register/get and the same off behaviour for tools."
+    demo: 'Run the three tests the handoff names (off, swap, health): each prints passed. Then set the dummy feature''s enabled key to false in the config file and call its route: it answers 503 and names the disabled key.'
+
+  # ------------------------------------------------------------------ E3 Headless runtime (coarse: refine before planning)
+  - id: US-07
+    epic: E3
+    feature: F-0046
+    slug: telegram-gateway
+    title: "Telegram gateway as a ChannelProvider: a paired owner message gets a Pi reply, everyone else is ignored"
+    points: 3
+    target_level: 3
+    depends_on: [US-01, US-04, US-06]
+
+  - id: US-08
+    epic: E3
+    feature: F-0058
+    slug: research-cron
+    title: "Scheduler runs one owner-defined research job through run_pi_turn and writes the result to the vault"
+    points: 3
+    target_level: 3
+    requires_decisions: [D-15, D-16]
+    depends_on: [US-01, US-06]
+
+  - id: US-09
+    epic: E3
+    feature: F-0046
+    slug: deliver-result
+    title: "A finished job sends its result and its run record to the paired owner on Telegram"
+    points: 2
+    target_level: 4
+    depends_on: [US-07, US-08]
+
+  - id: US-10
+    epic: E3
+    feature: F-0058
+    slug: headless-service
+    title: "Sidecar, Pi bridge and scheduler start from a service; a restart keeps the job store and the job still fires"
+    points: 3
+    target_level: 4
+    depends_on: [US-08]
+
+  # ------------------------------------------------------------------ E4 Installer (coarse)
+  - id: US-11
+    epic: E4
+    feature: F-0082
+    slug: installer-launchers
+    title: "R1, R9, R10: install.ps1 and install.sh are thin launchers; one Python installer; non-interactive --yes --answers"
+    points: 3
+    target_level: 3
+    addendum: [P4]
+    depends_on: [US-05]
+
+  - id: US-12
+    epic: E4
+    feature: F-0082
+    slug: installer-modes-keys
+    title: "R2, R3, R8: mode question, key collection with one live check each, safe re-run"
+    points: 3
+    target_level: 3
+    autopilot: false   # by hand: needs your real API keys
+    addendum: [P4]
+    depends_on: [US-11]
+
+  - id: US-13
+    epic: E4
+    feature: F-0082
+    slug: doctor-and-pi-setup
+    title: "R7, R5: locus doctor with one PASS/FAIL line per check; Pi's own TUI setup keeps working"
+    points: 3
+    target_level: 3
+    addendum: [P4]
+    depends_on: [US-12]
+
+  - id: US-14
+    epic: E4
+    feature: F-0083
+    slug: telegram-setup
+    title: "R6, R4: Telegram setup in the installer and /setup with the secret-reference flow"
+    points: 3
+    target_level: 3
+    autopilot: false   # by hand: needs your real Telegram bot
+    addendum: [P4]
+    depends_on: [US-04, US-12]
+
+  - id: US-15
+    epic: E4
+    feature: F-0085
+    slug: vm-and-hybrid
+    title: "VM backend and hybrid mode: services on the VM, TUI on this computer"
+    points: 3
+    target_level: 4
+    autopilot: false   # by hand: needs your real VM over ssh
+    addendum: [P4]
+    requires_decisions: [D-13]
+    depends_on: [US-10, US-12]
+
+  # ------------------------------------------------------------------ E5 Memory, vault, audit (coarse)
+  - id: US-16
+    epic: E5
+    feature: F-0060
+    slug: livesync
+    title: "Obsidian LiveSync through CouchDB reaches the vault only over loopback, HTTPS or a private network"
+    points: 3
+    target_level: 3
+    depends_on: [US-03]
+
+  - id: US-17
+    epic: E5
+    feature: F-0049
+    slug: trajectory-recording
+    title: "Trajectory recording (spec 19.2) writes one record per turn, redacted"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+
+  - id: US-18
+    epic: E5
+    feature: F-0050
+    slug: chat-archiver
+    title: "Nightly AI chat archiver (spec 19.3) writes into the vault"
+    points: 3
+    target_level: 3
+    requires_decisions: [D-4]
+    depends_on: [US-06]
+
+  # ------------------------------------------------------------------ E6 Priority and meta-harness (coarse)
+  - id: US-19
+    epic: E6
+    feature: F-0055
+    slug: task-priority-score
+    title: "Task priority score (TWS) computed for a task at any scale"
+    points: 3
+    target_level: 3
+    requires_decisions: [D-1, D-3]
+    depends_on: [US-06]
+
+  - id: US-20
+    epic: E6
+    feature: F-0020
+    slug: harness-delegation
+    title: "Coding harness delegation (spec 3.7 and 11.5) in a scratch worktree"
+    points: 3
+    target_level: 3
+    autopilot: false   # by hand: it starts other coding agents and git worktrees
+    requires_decisions: [D-5]
+    depends_on: [US-01, US-06]

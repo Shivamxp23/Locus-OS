@@ -1,0 +1,12 @@
+#!/bin/sh
+# Locus pre-commit: runs the mechanical guard on what you are about to commit (takes seconds).
+# Do not bypass with --no-verify. If a FAIL is wrong, tell the human; do not edit the guard.
+cd "$(git rev-parse --show-toplevel)" || exit 1
+for PY in "${LOCUS_PYTHON:-}" python3 python py; do
+  [ -n "$PY" ] || continue
+  if "$PY" -c "import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)" >/dev/null 2>&1; then
+    exec "$PY" tools/guard/check.py --fast --hook
+  fi
+done
+echo "Locus guard: no Python 3.11+ found. Set LOCUS_PYTHON to its full path." >&2
+exit 1

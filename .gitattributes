@@ -24,3 +24,8 @@ packages/agent/docs/**/*.diff -whitespace
 *.gz binary
 *.woff binary
 *.woff2 binary
+.githooks/* text eol=lf
+*.py text eol=lf
+*.toml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf

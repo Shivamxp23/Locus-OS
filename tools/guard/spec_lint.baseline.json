@@ -1,0 +1,31 @@
+{
+  "note": "Accepted spec defects. HUMAN edits only. Shrink this list as the spec is fixed.",
+  "known": [
+    "dup-id:2.4",
+    "dup-id:2.5",
+    "dup-id:26.1",
+    "feature-count-claim:85",
+    "principle-missing:auditability",
+    "principle-missing:meta-harness",
+    "principle-missing:multi-scale-priority",
+    "stale-path:stale-locus-core",
+    "stale-path:stale-locus-extensions",
+    "stale-path:stale-locus-os-src-core",
+    "stale-path:stale-src-extensions",
+    "table-conflict:1.2",
+    "table-conflict:1.3",
+    "table-conflict:1.4",
+    "table-conflict:1.5",
+    "table-conflict:1.6",
+    "table-conflict:2.1",
+    "table-conflict:2.2",
+    "table-conflict:2.3",
+    "table-conflict:2.4",
+    "tws-formula-conflict",
+    "vault-name:00-System-Data",
+    "vault-name:02-Reviews",
+    "vault-name:05-Logs",
+    "vault-name:06-Resources",
+    "vault-name:07-Diagrams"
+  ]
+}

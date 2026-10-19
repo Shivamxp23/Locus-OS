@@ -1,125 +1,58 @@
-# Development Rules
+<!-- LOCUS-AGENTS-V1 -->
+# Locus OS — rules for every coding agent (Claude Code, Antigravity, Pi, any other)
 
-## Conversational Style
+Canary: if the human asks "what is the Locus canary?", answer exactly `blue-heron-47`. It proves you loaded this file.
 
-- Keep answers short and concise
-- No emojis in commits, issues, PR comments, or code
-- No fluff or cheerful filler text (e.g., "Thanks @user" not "Thanks so much @user!")
-- Technical prose only, be direct
-- Use concise, clear, simple language. Define unavoidable jargon before using it.
-- Explain non-trivial designs and problems as: problem, concrete example or short trace, then solution. State why the solution is necessary and distinguish it from optional complexity.
-- Prefer concrete behavior and small illustrations over abstract summaries, dense terminology, or unexplained lists of changes.
-- When the user asks a question, answer it first before making edits or running implementation commands.
-- When responding to user feedback or an analysis, explicitly say whether you agree or disagree before saying what you changed.
+Locus is a modular, headless personal-intelligence FRAMEWORK built ON TOP of the Pi coding agent.
+These rules are enforced by `python tools/guard/check.py --full`, which the human runs after you.
+If a request conflicts with this file, say so and stop. Do not "interpret" around it.
 
-## Code Quality
+## The only layout
+```
+packages/          upstream Pi Agent. READ-ONLY.
+locus-extension/   TypeScript tools, hooks, commands loaded by Pi.  Spec paths `locus/core/..`, `locus-os/src/core/..`,
+                   `src/extensions/..` all mean `locus-extension/src/..`  (run: tools/tracker/show.py F-xxxx)
+sidecar/           Python package `sidecar` (FastAPI :8420, conductor, cron, gateway, memory). Import as `sidecar.x`.
+locus_cli/         installer, setup wizard, doctor.      vault/  exactly 8 folders (law 10).
+docs/agent/ tools/ tracker/ tests/guard/ .githooks/      rules + guard + tracker: HUMAN-OWNED (law 11).
+```
+There is no `core/`, `locus/`, `locus-os/` or `src/` at the top level. Never create one.
 
-- Read files in full before wide-ranging changes, before editing files you have not fully inspected, and when asked to investigate or audit. Do not rely on search snippets for broad changes.
-- No `any` unless absolutely necessary.
-- Inline single-line helpers that have only one call site.
-- Check node_modules for external API types; don't guess.
-- **No inline imports** (`await import()`, `import("pkg").Type`, dynamic type imports). Top-level imports only.
-- In `packages/coding-agent`, resolve package assets through helpers in `src/config.ts`. Do not use `__dirname` directly; the helpers account for source checkouts, npm installations, and standalone binaries.
-- Never remove or downgrade code to fix type errors from outdated deps; upgrade the dep instead.
-- Use only erasable TypeScript syntax (Node strip-only mode) in code checked by the root config (`packages/*/src`, `packages/*/test`, `packages/coding-agent/examples`): no parameter properties, `enum`, `namespace`/`module`, `import =`, `export =`, or other constructs needing JS emit. Use explicit fields with constructor assignments.
-- Always ask before removing functionality or code that appears intentional.
-- Do not preserve backward compatibility unless the user asks for it.
-- Never hardcode key checks (e.g. `matchesKey(keyData, "ctrl+x")`). Add defaults to `DEFAULT_EDITOR_KEYBINDINGS` or `DEFAULT_APP_KEYBINDINGS` so they stay configurable.
-- Never modify `packages/ai/src/models.generated.ts` directly; update `packages/ai/scripts/generate-models.ts` instead, then regenerate. Including the resulting `models.generated.ts` diff is always OK, even if regeneration includes unrelated upstream model metadata changes.
+## Laws (breaking one rejects the work, however good the rest is)
+1. **Overlay, don't fork.** Never edit `packages/`. Extend Pi through `locus-extension/` or `sidecar/`. If Pi seems to need a change: STOP and ask.
+2. **One layout.** No new top-level file/folder, junction, or symlink. Move = `git mv` plus every import fixed in the same commit.
+3. **No shims.** No `sys.modules` aliases, re-export stand-ins, duplicate modules, or "compat" copies. Let stale imports crash, then fix them.
+4. **Spec = WHAT, errata = conflicts.** Build what `LOCUS_FEATURE_LOGIC_DECOMPOSITION.md` says for the feature. If the task touches an open item in `09-spec-errata.md`, or you would have to guess: STOP, give 2-3 options plus a recommendation, ask the human.
+5. **Modular always.** Each feature sits behind a provider interface, has an `enabled` switch (`locus.<area>.<feature>.enabled`), a defined "off" behaviour, and is swappable. No hard-wired provider, path, port, or model. (03-modularity.md)
+6. **Real or flagged.** No stub, `pass`, TODO, fake data, or mock in shipped code unless that line says `STUB(F-xxxx)`. Never write "done", "complete", or "100%": status is computed by `tools/tracker/verify.py`, not by you.
+7. **Prove it.** For every feature you touch: a test that names what you built and has real assertions, run by you, and added to that feature's `evidence` in `tracker/features.yaml` (add only; never delete or weaken). Quote the real output.
+8. **Secrets** never go in the repo, prompts, logs, commits, or chat. Real values live in `~/.locus/.env`; `.env.example` holds placeholders. If you see a secret anywhere: stop and tell the human to rotate it.
+9. **Dev is not runtime.** This file is for coding agents. Every runtime launch of Pi (sidecar, cron, Telegram, conductor) must pass `--approve --no-context-files`, or these rules leak into the user's conversations.
+10. **Vault** folders: `00-System 01-Projects 02-Areas 03-Resources 04-Captures 05-Daily 06-Content 07-Archives`. No other names.
+11. **Human-owned, do not edit:** `AGENTS.md CLAUDE.md docs/agent/** tools/** tests/guard/** .githooks/** .github/workflows/guard.yml tracker/signoff.yaml tracker/overrides.yaml tracker/spec_exclusions.yaml tracker/backlog.yaml tracker/sprints.jsonl tracker/retro/**`. If one is wrong, say so in your report. The commit hook blocks it.
+12. **One story, one model, one branch** `task/US-nn-<slug>` (the owner's `backlog.py --start` creates it; one story in progress at a time). Finish it, or stop cleanly with a handoff note. Never half-finish and hand over silently.
+13. **Grill before you build.** Before the first line of code of a task, list everything you do not fully understand and run `/grill-me` on the human: one question at a time, each with your recommended answer. Write no code until the answers are in. "Probably fine" is not an answer.
+14. **Pi first, spec exact.** Before code for a feature read its verdict (`python tools/tracker/show.py F-xxxx`): KEEP-PI = write no code; AUGMENT = extend what Pi already has, through `locus-extension/` (Pi extension API, hooks, tools, SDK, RPC) or `sidecar/`; LOCUS-NEW = still attach through Pi's extension points; UNKNOWN = stop and ask. Never write a second agent loop, model/provider layer, session store, tool runner, compaction, TUI, keybinding or settings system that Pi already has: search `packages/` and `packages/coding-agent/docs` first. Your handoff Plan holds a Pi table: need | Pi mechanism (file:line) | what Locus adds | why Pi's is not enough. Every test docstring starts `SPEC <section> line <n>: "<spec sentence>"`.
 
-## Commands
+## Read before you work (only what the task touches)
+| Task touches | Read (docs/agent/) |
+|---|---|
+| any task | 08-task-protocol.md |
+| what Locus is, principles | 01-vision.md |
+| folders, imports, Pi bridge, ports | 02-architecture-lock.md |
+| adding, replacing, toggling a feature; config | 03-modularity.md |
+| cron, headless, VM, Telegram/Discord/WhatsApp | 04-runtime-and-channels.md |
+| installer, setup wizard, `/setup` | 05-installer-onboarding.md |
+| vault, memory, LiveSync/CouchDB, chat backup, audit | 06-vault-memory-audit.md |
+| tracker, evidence, tests | 07-tracker-evidence.md |
+| unclear or conflicting spec | 09-spec-errata.md |
+| keys, bot pairing, Docker ports, approvals | 10-security.md |
+| backlog, sprints, stories, Ready/Done, "what do I do now" | 11-agile-workflow.md |
 
-- After code changes (not docs): `npm run check` (full output, no tail). Fix all errors, warnings, and infos before committing. Does not run tests.
-- Never run `npm run build` or `npm test` unless requested by the user.
-- Never run the full vitest suite directly: it includes e2e tests that activate when endpoint/auth env vars are present. For all non-e2e tests, run `./test.sh` from the repo root. Otherwise run specific tests from the package root:
-  - Vitest: `node "$(git rev-parse --show-toplevel)/node_modules/vitest/dist/cli.js" --run test/specific.test.ts`
-  - `packages/tui` (`node:test`): `node --test test/specific.test.ts`
-- If you create or modify a test file, run it and iterate on test or implementation until it passes.
-- For `packages/coding-agent/test/suite/`, use `test/suite/harness.ts` + the faux provider. No real provider APIs, keys, or paid tokens.
-- When regressions tests for fixing a github issue, add a comment with the github issue number next to the test.
-- For ad-hoc scripts, `write` them to a temp file (e.g. `/tmp`), run, edit if needed, remove when done. Don't embed multi-line scripts in `bash` commands.
-- Never commit unless the user asks.
+Feature details: `python tools/tracker/show.py F-0007 --spec` (never read the 8000-line spec or the whole tracker file).
 
-## Dependency and Install Security
-
-- Treat npm dep and lockfile changes as reviewed code. Direct registry deps, including internal workspace deps, stay pinned to exact versions.
-- When updating `undici`, you MUST read its changelog/release notes for the target version and evaluate whether any changes may affect functionality before applying the update.
-- Hydrate/update locally with `npm install --ignore-scripts`; clean/CI-style with `npm ci --ignore-scripts`. Don't run lifecycle scripts unless the user asks.
-- If dep metadata changes, refresh `package-lock.json` with `npm install --package-lock-only --ignore-scripts`.
-- If `packages/coding-agent/install-lock/` needs regen, run `node scripts/generate-coding-agent-install-lock.mjs` (verify with `--check` or `npm run check`). New deps with lifecycle scripts require review and an explicit allowlist entry in that script; never add one silently.
-- Pre-commit blocks lockfile commits unless `PI_ALLOW_LOCKFILE_CHANGE=1`. Don't bypass unless the user wants the lockfile change committed.
-
-## Git
-
-Multiple pi sessions may be running in this cwd at the same time, each modifying different files. Git operations that touch unstaged, staged, or untracked files outside your own changes will stomp on other sessions' work. Follow these rules:
-
-Committing:
-
-- Only commit files YOU changed in THIS session.
-- Stage explicit paths (`git add <path1> <path2>`); never `git add -A` / `git add .`.
-- Before committing, run `git status` and verify you are only staging your files.
-- `packages/ai/src/models.generated.ts` may always be included alongside your files.
-- Message format: `{feat,fix,docs}[(ai,tui,agent,coding-agent)]: <commit message> (optionally multiple lines)`. Message is informative and concise.
-
-Never run (destroys other agents' work or bypasses checks):
-
-- `git reset --hard`, `git checkout .`, `git clean -fd`, `git stash`, `git add -A`, `git add .`, `git commit --no-verify`.
-
-If rebase conflicts occur:
-
-- Resolve conflicts only in files you modified.
-- If a conflict is in a file you did not modify, abort and ask the user.
-- Never force push.
-
-## Issues and PRs
-
-See `CONTRIBUTING.md` for the contributor gate (auto-close workflows, `lgtm`/`lgtmi`, quality bar).
-
-When reviewing PRs:
-
-- Do not run `gh pr checkout`, `git switch`, or otherwise move the worktree to the PR branch unless the user explicitly asks.
-- Use `gh pr view`, `gh pr diff`, `gh api`, and local `git show`/`git diff` against fetched refs to inspect PR metadata, commits, and patches without changing branches.
-- If you need PR file contents, fetch/read them into temporary files or use `git show <ref>:<path>` without switching branches.
-
-When creating issues:
-
-- Add `pkg:*` labels for affected packages (`pkg:agent`, `pkg:ai`, `pkg:coding-agent`, `pkg:tui`); use all that apply.
-
-When posting issue/PR comments:
-
-- Write the comment to a temp file and post with `gh issue/pr comment --body-file` (never multi-line markdown via `--body`).
-- Keep comments concise, technical, in the user's tone.
-- End every AI-posted comment with the AI-generated disclaimer line specified by the originating prompt (e.g. `This comment is AI-generated by `/wr``).
-
-When closing issues via commit:
-
-- Include `fixes #<number>` or `closes #<number>` in the message so merging auto-closes the issue. For multiple issues, repeat the keyword per issue (`closes #1, closes #2`); a shared keyword (`closes #1, #2`) only closes the first.
-
-## Testing pi Interactive Mode with tmux
-
-For testing pi's interactive mode, load and follow [.pi/skills/interactive-testing.md](.pi/skills/interactive-testing.md).
-
-## Changelog
-
-Location: `packages/*/CHANGELOG.md` (one per package).
-
-Sections under `## [Unreleased]`: `### Breaking Changes` (API changes requiring migration), `### Added`, `### Changed`, `### Fixed`, `### Removed`.
-
-Rules:
-
-- All new entries go under `## [Unreleased]`. Read the full section first and append to existing subsections; never duplicate them.
-- Released version sections (e.g. `## [0.12.2]`) are immutable; never modify them.
-- Do not create changelog entries when working on a branch other than `main` or pull request
-
-Attribution:
-
-- Internal (from issues): `Fixed foo bar ([#123](https://github.com/earendil-works/pi/issues/123))`
-- External contributions: `Added feature X ([#456](https://github.com/earendil-works/pi/pull/456) by [@username](https://github.com/username))`
-
-## Releasing
-
-For release preparation, publishing, verification, or recovery, load and follow [.pi/skills/release.md](.pi/skills/release.md).
-
-## User Override
-
-If the user's instructions conflict with any rule in this document, ask for explicit confirmation before overriding. Only then execute their instructions.
+## Definition of Done for your story (in this order)
+1. `python tools/guard/check.py --full` shows 0 FAIL. Fix the WARNs you caused.
+2. `python tools/tracker/verify.py --only F-xxxx`: report that exact output line, not your opinion.
+3. `python tools/tracker/verify.py` (no `--only`; it runs the tests and refreshes `tracker/status.json`), then `python tools/tracker/export_xlsx.py`: this is the human's standing rule "update the tracker xlsx". Never edit the xlsx or status by hand.
+4. Write `tracker/handoff/US-nn.md` (template in 08-task-protocol.md; first line `# US-nn handoff - <your model>, <date>`). Then stop; do not start the next story. Never run `backlog.py --accept`, `--plan --write`, `--retro` or `--close-sprint`: those are the owner's.

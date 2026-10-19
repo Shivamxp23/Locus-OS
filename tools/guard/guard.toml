@@ -1,0 +1,193 @@
+# tools/guard/guard.toml
+# ---------------------------------------------------------------------------
+# The ONLY place where Locus layout facts are written down in machine-readable
+# form. check.py enforces every line of this file.
+#
+#   * HUMAN-OWNED. Agents must not edit this file (the pre-commit hook blocks
+#     it unless LOCUS_ALLOW_GUARD_EDIT=1 is set by you).
+#   * If reality and this file disagree, either reality is wrong (fix the code)
+#     or this file is wrong (you edit it, in a commit that says why).
+# ---------------------------------------------------------------------------
+
+[repo]
+name = "locus-os"
+# Paths are relative to the repo root (the folder that contains .git).
+spec_path = ".keysndocs/Documentation/Implementation Plans/LOCUS_FEATURE_LOGIC_DECOMPOSITION.md"
+tracker_xlsx = ".keysndocs/Documentation/Implementation Plans/Implementation Report/Locus_Implementation_Tracker.xlsx"
+
+[walk]
+# Folder names skipped at ANY depth.
+skip_dirs = ["node_modules", ".venv", "venv", "__pycache__", "dist", "build", ".git", "graphify-out", "locus-os-legacy", "deps", ".pytest_cache"]
+# Upstream Pi Agent lives here. Locus code scans skip it; the upstream check protects it.
+upstream_dirs = ["packages"]
+# Files/folders that legitimately contain the "forbidden" strings (the rules themselves, tests, history).
+# tools/ is human-owned guard code: it is protected by the human-review gate and syntax-checked, not text-scanned.
+scan_exclude = ["tools", "tests/guard", "docs/agent", "tracker", "docs/upstream", ".keysndocs/Documentation/Chat Reports"]
+
+[layout]
+# Must exist. (Created by the architecture in docs/agent/02-architecture-lock.md)
+required_dirs = ["packages", "sidecar", "locus-extension", "locus_cli"]
+required_files = ["AGENTS.md", "sidecar/__init__.py", "docker-compose.yml"]
+# Must NEVER exist. These are the exact mix-up classes that already happened or are
+# contradicted by the spec ("core", "locus/", "src/extensions" are spec-only paths).
+forbidden = ["core", "sidecar/core", "locus", "locus-os", "src/core", "src/extensions"]
+# Top-level entries you have reviewed and accepted. EMPTY until you run:
+#   python tools/guard/check.py --adopt-top-level
+# After that, any NEW top-level file/folder fails the guard until you add it here.
+allowed_top_level = [".dockerignore", ".env.example", ".gitattributes", ".github", ".gitignore", ".husky", ".keysndocs", ".npmrc", ".pi", ".pytest_cache", ".ruff_cache", ".venv", "AGENTS.md", "CONTRIBUTING.md", "LICENSE", "README.md", "SECURITY.md", "__pycache__", "biome.json", "data", "docker-compose.yml", "flake.lock", "flake.nix", "nix", "node_modules", "package-lock.json", "package.json", "packages", "pi-test.bat", "pi-test.ps1", "pi-test.sh", "pyproject.toml", "scripts", "test.sh", "tsconfig.base.json", "tsconfig.json", "vault", "vitest.base.ts"]
+[reparse]
+# Junctions / symlinks anywhere in the repo are forbidden (a junction caused the core/sidecar mix-up).
+# Paths listed here are exempt. Keep this empty unless you can explain each entry.
+allow = []
+
+[must_define]
+# These files must DEFINE (not just re-export) these names. Catches a stub or re-export
+# overwriting the real implementation (it already happened to pi_bridge.py).
+"sidecar/pi_bridge.py" = ["run_pi_turn", "get_node_executable"]
+
+[pi_bridge]
+# The sidecar launches Pi in the repo folder. Pi auto-loads AGENTS.md/CLAUDE.md from the
+# working folder AND every parent folder, which would inject the developer rules into every
+# runtime/cron/Telegram turn. These flags must appear in the bridge.
+file = "sidecar/pi_bridge.py"
+required_tokens = ["--approve"]
+required_any_of = [["--no-context-files", "-nc"]]
+
+[python]
+packages = ["sidecar", "locus_cli", "tools", "tests"]
+# Used only by `--deep`: modules that must import without error.
+smoke_imports = ["sidecar", "sidecar.pi_bridge", "sidecar.conductor", "sidecar.life_os"]
+
+[vault]
+root = "vault"
+# Canonical top-level vault folders (decision D-2 in docs/agent/09-spec-errata.md).
+canonical = ["00-System", "01-Projects", "02-Areas", "03-Resources", "04-Captures", "05-Daily", "06-Content", "07-Archives"]
+# Non-canonical name -> where it goes. Names are compared case-insensitively.
+[vault.aliases]
+"00-System-Data" = "00-System/"
+"02-Reviews" = "05-Daily/Weekly/"
+"05-Logs" = "05-Daily/Logs/"
+"06-Resources" = "03-Resources/"
+"07-Diagrams" = "03-Resources/Diagrams/"
+"01-Daily" = "05-Daily/"
+"02-Projects" = "01-Projects/"
+"03-Knowledge" = "03-Resources/"
+"05-Archive" = "07-Archives/"
+
+[agents]
+# AGENTS.md is read on EVERY turn, so it must stay small. Segments must stay concentrated.
+agents_md_max_bytes = 9000
+segment_max_bytes = 7500
+agents_md_marker = "LOCUS-AGENTS-V1"
+# Antigravity documents no precedence when AGENTS.md and GEMINI.md both exist at the same level.
+forbid_root_gemini_md = true
+
+[human_review]
+# Changing any of these requires LOCUS_ALLOW_GUARD_EDIT=1 in the hook (a deliberate human act).
+globs = [
+  "tools/*", "tools/**/*", "AGENTS.md", "CLAUDE.md", "docs/agent/*", "docs/agent/**/*",
+  "tests/guard/*", "tests/guard/**/*",
+  ".githooks/*", ".github/workflows/guard.yml",
+  "tracker/signoff.yaml", "tracker/overrides.yaml", "tracker/spec_exclusions.yaml",
+  "tracker/backlog.yaml", "tracker/sprints.jsonl", "tracker/retro/*",
+]
+
+[upstream]
+# Written by tools/guard/pin_upstream.py
+lock_file = "tools/guard/upstream.lock.json"
+# Upstream files Locus is allowed to touch (usually none). fnmatch patterns, repo-relative.
+allow_modified = []
+
+[spec_lint]
+baseline_file = "tools/guard/spec_lint.baseline.json"
+required_principles = [
+  { id = "meta-harness",   pattern = "meta[- ]harness",                          why = "Locus is a meta-harness over other harnesses (Antigravity, Claude Code, Pi)." },
+  { id = "auditability",    pattern = "auditab",                                   why = "Auditability is a headline feature: every chat/action is recorded and backed up to the vault." },
+  { id = "multi-scale-priority", pattern = "multi-?scale|task[- ]scale|scale[- ]aware", why = "Tasks of every scale get their own priority score (needs a definition of 'scale')." },
+  { id = "neo4j-agent-memory", pattern = "neo4j-labs/agent-memory|neo4j agent memory", why = "Neo4j Agent Memory is the memory substrate." },
+]
+
+# ---- forbidden text in CODE / CONFIG (FAIL) --------------------------------
+[[forbidden_text]]
+id = "py-import-core"
+pattern = '^\s*(?:from|import)\s+core(?:\.|\s|$)'
+globs = ["*.py"]
+severity = "FAIL"
+message = "Import of the removed `core` package. Use `sidecar`."
+
+[[forbidden_text]]
+id = "core-alias-shim"
+pattern = 'sys\.modules[^\n]*["\x27]core["\x27]'
+globs = ["*.py"]
+severity = "FAIL"
+message = "A runtime alias for `core` hides leftover references and creates duplicate module instances. Delete the shim; let stale imports crash."
+
+[[forbidden_text]]
+id = "core-module-run"
+pattern = '(?:-m|uvicorn|gunicorn)\s+core\b'
+globs = ["*.py", "*.sh", "*.ps1", "*.bat", "*.cmd", "*.service", "Dockerfile*", "docker-compose*.yml", "docker-compose*.yaml"]
+severity = "FAIL"
+message = "Launches the removed `core` package."
+
+[[forbidden_text]]
+id = "core-path-in-scripts"
+pattern = '(?:^|[\s"\x27=(:,;])(?:\./|\.\\)?core[/\\]'
+globs = ["*.sh", "*.ps1", "*.bat", "*.cmd", "*.service", "Dockerfile*", "docker-compose*.yml", "docker-compose*.yaml"]
+severity = "FAIL"
+message = "Script/config refers to a `core/` folder. The Python package is `sidecar/`."
+
+# ---- spec-only paths that must not leak into code (FAIL in code, WARN in docs) ----
+[[stale_paths]]
+id = "stale-locus-os-src-core"
+pattern = '(?<![\w.-])locus-os/src/core/'
+canonical = "locus-extension/src/"
+
+[[stale_paths]]
+id = "stale-locus-core"
+pattern = '(?<![\w/.-])locus/core/'
+canonical = "locus-extension/src/"
+
+[[stale_paths]]
+id = "stale-locus-extensions"
+pattern = '(?<![\w/.-])locus/extensions/'
+canonical = "locus-extension/src/"
+
+[[stale_paths]]
+id = "stale-src-extensions"
+pattern = '(?<![\w/.-])src/extensions/'
+canonical = "locus-extension/src/"
+
+# ---- secrets -----------------------------------------------------------------
+[secrets]
+allow_files = [".env.example", "tests/guard/*"]
+[[secrets.patterns]]
+id = "groq"
+pattern = 'gsk_[A-Za-z0-9]{20,}'
+[[secrets.patterns]]
+id = "openrouter"
+pattern = 'sk-or-v1-[A-Za-z0-9]{20,}'
+[[secrets.patterns]]
+id = "openai-anthropic"
+pattern = 'sk-(?:ant-|proj-)?[A-Za-z0-9_\-]{32,}'
+[[secrets.patterns]]
+id = "google"
+pattern = 'AIza[0-9A-Za-z_\-]{35}'
+[[secrets.patterns]]
+id = "telegram-bot-token"
+pattern = '\b\d{8,10}:AA[A-Za-z0-9_\-]{33}\b'
+[[secrets.patterns]]
+id = "github"
+pattern = 'gh[pousr]_[A-Za-z0-9]{36,}'
+[[secrets.patterns]]
+id = "slack"
+pattern = 'xox[baprs]-[A-Za-z0-9-]{10,}'
+[[secrets.patterns]]
+id = "couchdb-default-password"
+pattern = 'locus_admin_secret'  # guard:allow-secret (this line is the detector for the old default, not a credential)
+[[secrets.patterns]]
+id = "private-key"
+pattern = '-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----'
+
+[gitignore]
+# Lines that must be present in .gitignore (WARN otherwise).
+required_lines = [".env", ".venv/", "node_modules/", "dist/", "data/couchdb/*", "!data/couchdb/local.ini", "__pycache__/", "tracker/.cache/"]

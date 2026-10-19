@@ -46,3 +46,13 @@ plans/
 .pi/settings.json
 collect.sh
 packages/agent/docs/extensions/pi-server-artifact/index.md
+.venv/
+node_modules/
+data/couchdb/*
+!data/couchdb/local.ini
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+tracker/.cache/
+.keysndocs/*
+!.keysndocs/Documentation/
