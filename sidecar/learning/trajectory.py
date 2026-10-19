@@ -90,7 +90,7 @@ class TrajectoryRecorder(BaseTrajectoryRecorder):
         except Exception:
             pass
 
-        # 2. From config accessor / os.environ for known secrets
+        # 2. From config accessor for known secrets
         try:
             for k, v in config.get_environ().items():
                 k_upper = k.upper()
