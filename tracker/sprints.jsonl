@@ -1,0 +1,1 @@
+{"event":"planned","sprint":"S1","start":"2026-10-19","end":"2026-10-22","goal":"One layout, no known security hole, the guard shows 0 FAIL and the hooks are on.","capacity":8,"points":5,"stories":["US-01","US-05"],"date":"2026-10-19"}
