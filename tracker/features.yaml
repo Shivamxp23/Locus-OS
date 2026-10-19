@@ -1617,7 +1617,8 @@ features:
     unit:
     - cmd: pytest tests/unit/test_telegram_gateway.py
     - cmd: pytest tests/unit/test_telegram_pairing.py
-    integration: []
+    integration:
+    - cmd: pytest tests/integration/test_job_telegram_delivery.py
   depends_on: []
 - id: F-0047
   title: Graceful Restart
