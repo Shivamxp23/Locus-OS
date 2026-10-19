@@ -22,6 +22,8 @@ from sidecar.registry import ProviderRegistry, get_registry
 from sidecar.scheduler import ResearchJob, SchedulerProvider
 import sidecar.rate_limiter  # ensures default provider is registered
 from sidecar.providers.rate_limit import RateLimitState
+import sidecar.cost_tracker  # ensures default cost tracker is registered
+from sidecar.providers.cost_tracker import CanonicalUsage, CostResult, PricingEntry
 
 logger = logging.getLogger("locus.service")
 
@@ -997,6 +999,98 @@ def create_app(
             "display": display_str,
             "has_data": state.has_data,
         }
+
+    # -------------------------------------------------------------
+    # SPEC §1.10 / F-0010 / US-29: Usage / Cost Tracking routes
+    # -------------------------------------------------------------
+    def _is_cost_tracking_enabled() -> bool:
+        val1 = config.get("locus.usage_cost_tracking.enabled")
+        val2 = config.get("locus.tracking.cost.enabled")
+        if val1 is not None and not config.is_enabled("locus.usage_cost_tracking.enabled"):
+            return False
+        if val2 is not None and not config.is_enabled("locus.tracking.cost.enabled"):
+            return False
+        if not app.state.registry.is_feature_enabled("cost_tracker"):
+            return False
+        return True
+
+    @app.post("/cost/calculate")
+    def calculate_cost_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Calculate USD cost for a given usage and model."""
+        if not _is_cost_tracking_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.usage_cost_tracking.enabled"})
+        raw_usage = body.get("usage") or {}
+        model = body.get("model") or ""
+        provider_name = body.get("provider") or ""
+
+        provider_cls = app.state.registry.get_active_provider("cost_tracker", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No cost tracker provider registered")
+        provider = provider_cls()
+        usage_obj = CanonicalUsage.from_dict(raw_usage)
+        pricing = provider.resolve_pricing(model=model, provider=provider_name)
+        cost_res = provider.calculate_cost(usage=usage_obj, pricing=pricing)
+        return {"status": "ok", "cost": cost_res.to_dict()}
+
+    @app.post("/cost/record")
+    def record_cost_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Calculate and record usage against session and daily totals."""
+        if not _is_cost_tracking_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.usage_cost_tracking.enabled"})
+        raw_usage = body.get("usage") or {}
+        model = body.get("model") or ""
+        provider_name = body.get("provider") or ""
+
+        provider_cls = app.state.registry.get_active_provider("cost_tracker", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No cost tracker provider registered")
+        provider = provider_cls()
+        usage_obj = CanonicalUsage.from_dict(raw_usage)
+        cost_res = provider.record_usage(usage=usage_obj, model=model, provider=provider_name)
+        summary = provider.get_session_summary()
+        return {"status": "ok", "cost": cost_res.to_dict(), "session": summary}
+
+    @app.get("/cost/session")
+    def get_session_cost_route() -> Dict[str, Any]:
+        """Retrieve session and daily cost summary."""
+        if not _is_cost_tracking_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.usage_cost_tracking.enabled"})
+        provider_cls = app.state.registry.get_active_provider("cost_tracker", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No cost tracker provider registered")
+        provider = provider_cls()
+        summary = provider.get_session_summary()
+        return {"status": "ok", "session": summary}
+
+    @app.get("/cost/pricing")
+    def get_model_pricing_route(model: str, provider: Optional[str] = None) -> Dict[str, Any]:
+        """Resolve pricing rates for a given model."""
+        if not _is_cost_tracking_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.usage_cost_tracking.enabled"})
+        provider_cls = app.state.registry.get_active_provider("cost_tracker", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No cost tracker provider registered")
+        provider = provider_cls()
+        pricing = provider.resolve_pricing(model=model, provider=provider or "")
+        return {"status": "ok", "pricing": pricing.to_dict()}
+
+    @app.post("/cost/pricing/override")
+    def set_pricing_override_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Set user pricing override for a model."""
+        if not _is_cost_tracking_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.usage_cost_tracking.enabled"})
+        model = body.get("model") or ""
+        if not model:
+            raise HTTPException(status_code=400, detail="Missing 'model'")
+        raw_pricing = body.get("pricing") or {}
+        pricing_obj = PricingEntry.from_dict({**raw_pricing, "source": "user_override"})
+
+        provider_cls = app.state.registry.get_active_provider("cost_tracker", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No cost tracker provider registered")
+        provider = provider_cls()
+        provider.set_pricing_override(model=model, pricing=pricing_obj)
+        return {"status": "ok", "model": model, "pricing": pricing_obj.to_dict()}
 
     return app
 

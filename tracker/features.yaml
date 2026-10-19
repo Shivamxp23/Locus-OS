@@ -491,10 +491,40 @@ features:
   evidence:
     files:
     - sidecar/cost_tracker.py
-    symbols: []
+    - sidecar/providers/cost_tracker.py
+    - locus-extension/src/cost-tracker.ts
+    - locus-extension/src/tracking/pricing.ts
+    - locus-extension/src/tracking/usage.ts
+    symbols:
+    - file: sidecar/cost_tracker.py
+      contains:
+      - CostTrackerProvider
+      - extract_canonical_usage
+      - resolve_pricing
+      - calculate_cost
+      - format_usage_display
+    - file: sidecar/providers/cost_tracker.py
+      contains:
+      - BaseCostTrackerProvider
+      - CanonicalUsage
+      - PricingEntry
+      - CostResult
+    - file: locus-extension/src/tracking/usage.ts
+      contains:
+      - CanonicalUsage
+      - extractCanonicalUsage
+      - calculateCost
+      - formatUsageDisplay
+      - UsageTracker
+    - file: locus-extension/src/tracking/pricing.ts
+      contains:
+      - PricingEntry
+      - resolvePricing
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - pytest tests/unit/test_cost_tracker.py
+    integration:
+    - pytest tests/integration/test_cost_tracker_service.py
   depends_on: []
 - id: F-0011
   title: Title Generation

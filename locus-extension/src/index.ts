@@ -4,6 +4,7 @@
 export const LOCUS_EXTENSION_VERSION = "0.1.0";
 
 export * from "./context-manager";
+export * from "./cost-tracker";
 export * from "./learning";
 export * from "./lifecycle";
 export * from "./model-escalation";
@@ -12,7 +13,9 @@ export * from "./prompt-builder";
 export * from "./rate-limiter";
 export * from "./tools/index";
 export * from "./tools/locus_vault";
+export * from "./tracking/pricing";
 export * from "./tracking/rate-limits";
+export * from "./tracking/usage";
 export * from "./trajectory";
 
 export function activate(pi?: any): void {

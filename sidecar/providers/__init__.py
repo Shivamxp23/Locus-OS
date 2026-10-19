@@ -16,6 +16,12 @@ from sidecar.providers.harness import (
     HarnessType,
     TaskBrief,
 )
+from sidecar.providers.cost_tracker import (
+    BaseCostTrackerProvider,
+    CanonicalUsage,
+    CostResult,
+    PricingEntry,
+)
 from sidecar.providers.context_compression import (
     BaseCompressionProvider,
     CompactionResult,
@@ -85,6 +91,7 @@ __all__ = [
     "BaseChannelProvider",
     "BaseChatArchiverProvider",
     "BaseCompressionProvider",
+    "BaseCostTrackerProvider",
     "BaseExtensionLifecycleProvider",
     "BaseHarnessProvider",
     "BaseLearningProvider",
@@ -97,10 +104,12 @@ __all__ = [
     "BaseTrajectoryRecorder",
     "BaseVaultSyncProvider",
     "CANONICAL_LIFECYCLE_EVENTS",
+    "CanonicalUsage",
     "ChatTurn",
     "CheckInInput",
     "CompactionResult",
     "CompressionMode",
+    "CostResult",
     "ContextMessage",
     "DCSResult",
     "DelegationResult",
@@ -120,6 +129,7 @@ __all__ = [
     "PatternRecord",
     "PostTaskLog",
     "PostTurnReviewResult",
+    "PricingEntry",
     "PromptOptions",
     "RateLimitBucket",
     "RateLimitState",
