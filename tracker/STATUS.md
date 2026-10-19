@@ -1,6 +1,6 @@
 # Tracker status (computed, not written)
 
-- commit `a52f3df067` - 2026-10-19T23:33:19+0530 - with test runs
+- commit `74faddb637` - 2026-10-19T23:38:20+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
 - features: 125 | verified average **19.5%** | old claimed average 71.4% over 86 rows
 - integrated or better: 23 | proven: 0 | overclaims (claimed >= verified + 25): 61 | no evidence: 95
