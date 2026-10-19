@@ -20,7 +20,9 @@ import yaml
 
 from sidecar import config
 from sidecar.pi_bridge import run_pi_turn
+from sidecar.providers.channel import BaseChannelProvider
 from sidecar.registry import get_registry
+from sidecar.telegram.pairing import PairingManager
 
 
 @dataclass
@@ -54,11 +56,19 @@ class ResearchJob:
 class SchedulerProvider:
     """
     Autonomous research scheduler and job executor.
-    Wires cron execution into the headless Pi bridge and persists results to the vault.
+    Wires cron execution into the headless Pi bridge, persists results to the vault,
+    and delivers execution notifications to the paired owner via Telegram.
     """
 
-    def __init__(self, pi_runner: Optional[Callable[..., Any]] = None) -> None:
+    def __init__(
+        self,
+        pi_runner: Optional[Callable[..., Any]] = None,
+        channel_provider: Optional[BaseChannelProvider] = None,
+        pairing_manager: Optional[PairingManager] = None,
+    ) -> None:
         self._pi_runner = pi_runner or run_pi_turn
+        self._channel_provider = channel_provider
+        self.pairing_manager = pairing_manager or PairingManager()
         self._jobs: Dict[str, ResearchJob] = {}
         self._enabled: bool = True
         self._running: bool = False
@@ -67,6 +77,10 @@ class SchedulerProvider:
     def set_pi_runner(self, pi_runner: Optional[Callable[..., Any]]) -> None:
         """Inject Pi runner callable for testing."""
         self._pi_runner = pi_runner or run_pi_turn
+
+    def set_channel_provider(self, channel_provider: Optional[BaseChannelProvider]) -> None:
+        """Inject ChannelProvider for delivery testing."""
+        self._channel_provider = channel_provider
 
     def get_jobs_dir(self) -> pathlib.Path:
         """Resolve directory containing owner job definitions."""
@@ -229,6 +243,9 @@ class SchedulerProvider:
 
         self.append_audit_trail(job, success=True, details=f"Output saved to {output_file.name} ({len(result_text)} chars)")
 
+        # Deliver notification to paired owner on Telegram (never fatal)
+        self._notify_owner(job, output_file, result_text)
+
         run_record = {
             "job_id": job.id,
             "status": "completed",
@@ -238,6 +255,43 @@ class SchedulerProvider:
         }
         self._execution_history.append(run_record)
         return run_record
+
+    def _notify_owner(self, job: ResearchJob, output_file: pathlib.Path, result_text: str) -> bool:
+        """
+        Send an executive summary to the paired owner via Telegram channel provider.
+        Truncates or splits if exceeding 4096 characters and references the vault note.
+        Failures are logged and swallowed (never fatal).
+        """
+        owner_id = self.pairing_manager.get_owner_id()
+        if owner_id is None:
+            return False
+
+        header = f"🔔 Research Job Completed: {job.name}\n• ID: `{job.id}`\n• Vault Note: `{output_file.name}`\n\n"
+        suffix = f"\n\n... (truncated; full report in `{output_file.name}`)"
+        max_body_len = 4096 - len(header) - len(suffix) - 5
+        if len(result_text) > max_body_len:
+            body = result_text[:max_body_len].rstrip() + suffix
+        else:
+            body = result_text
+
+        message = header + body
+
+        try:
+            provider = self._channel_provider
+            if provider is None:
+                provider_cls = get_registry().get("channels", "telegram") or get_registry().get("channel", "telegram")
+                if provider_cls:
+                    provider = provider_cls(pairing_manager=self.pairing_manager)
+
+            if provider is not None:
+                if hasattr(provider, "initialize"):
+                    provider.initialize()
+                return bool(provider.send_message(owner_id, message))
+        except Exception as exc:
+            # SPEC 04 line 27: Never fatal: notification failures are logged and swallowed
+            self.append_audit_trail(job, success=True, details=f"Telegram notification swallowed error: {exc}")
+
+        return False
 
 
 # Register default SchedulerProvider in universal registry
