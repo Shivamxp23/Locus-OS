@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `cdc7227c58` - 2026-10-20T00:08:27+0530 - with test runs
+- commit `27420964ae` - 2026-10-20T00:25:06+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **20.8%** | old claimed average 71.4% over 86 rows
-- integrated or better: 25 | proven: 0 | overclaims (claimed >= verified + 25): 59 | no evidence: 94
-- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 13, 'NO_EVIDENCE': 94, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **21.6%** | old claimed average 71.4% over 86 rows
+- integrated or better: 26 | proven: 0 | overclaims (claimed >= verified + 25): 58 | no evidence: 92
+- by level: {'FILES_PRESENT': 3, 'INHERITED_OK': 12, 'INTEGRATED': 14, 'NO_EVIDENCE': 92, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -38,7 +38,7 @@
 | F-0003 | Tool System (13 Canonical Tools) | 100% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0004 | Model Management & Escalation | 85% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0005 | Extension Lifecycle | 100% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0006 | Context Window Management | 70% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/context/headroom_adapter.py. Create them or correct the  |
+| F-0006 | Context Window Management | 70% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0007 | Post-Turn Review | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/learning/reflector.py. Create them or correct the path. |
 | F-0008 | Stream Diagnostics | 100% | 100% | INHERITED_OK |  |  |
 | F-0009 | Rate Limit Tracking | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/rate_limiter.py. Create them or correct the path. |
@@ -58,7 +58,7 @@
 | F-0023 | STDP Reinforcement | 40% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/patterns/hebbian.py. Create them or correct the path. |
 | F-0024 | Spaced Repetition | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/spaced_rep.py. Create them or correct the path. |
 | F-0025 | Project Memory Decay | 25% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
-| F-0026 | Headroom CCR | 50% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/context/headroom_adapter.py. Create them or correct the  |
+| F-0026 | Headroom CCR | 50% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0027 | Session Management | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/memory.py, sidecar/session_export.py. Create them or cor |
 | F-0028 | Context References | 40% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
 | F-0029 | Coding Context | 90% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
