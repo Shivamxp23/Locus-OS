@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `3ec73e12f7` (dirty working tree) - 2026-10-19T21:33:48+0530 - with test runs
-- guard: PASS {'FAIL': 0, 'WARN': 10, 'INFO': 0}
-- features: 125 | verified average **15.9%** | old claimed average 71.4% over 86 rows
-- integrated or better: 18 | proven: 0 | overclaims (claimed >= verified + 25): 66 | no evidence: 102
-- by level: {'FILES_PRESENT': 1, 'INHERITED_OK': 12, 'INTEGRATED': 6, 'NO_EVIDENCE': 102, 'UNIT_VERIFIED': 4}
+- commit `7f8f90f782` - 2026-10-19T21:49:59+0530 - with test runs
+- guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
+- features: 125 | verified average **16.6%** | old claimed average 71.4% over 86 rows
+- integrated or better: 19 | proven: 0 | overclaims (claimed >= verified + 25): 65 | no evidence: 101
+- by level: {'FILES_PRESENT': 1, 'INHERITED_OK': 12, 'INTEGRATED': 7, 'NO_EVIDENCE': 101, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -82,7 +82,7 @@
 | F-0047 | Graceful Restart | 50% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/. Create them or correct the path. |
 | F-0048 | MCP Server/Client | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/mcp_client.py. Create them or correct the path. |
 | F-0049 | Trajectory Recording | 40% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0050 | AI Chat Archiver | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/chat_archiver.py, sidecar/crawlers/chat_crawle |
+| F-0050 | AI Chat Archiver | 55% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0051 | Computer Use / Screen | 40% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/screen/. Create them or correct the path. |
 | F-0052 | VNC Remote | 20% | 0% | NO_EVIDENCE | NO_FILES_NAMED | Name the files this feature lives in (evidence.files). |
 | F-0053 | Google Calendar | 35% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/integrations/calendar_sync.py. Create them or correct th |
