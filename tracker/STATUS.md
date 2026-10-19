@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `d544f7ef37` - 2026-10-20T02:42:30+0530 - with test runs
+- commit `d9e60b17e8` - 2026-10-20T02:58:32+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **26.2%** | old claimed average 71.4% over 86 rows
-- integrated or better: 33 | proven: 0 | overclaims (claimed >= verified + 25): 52 | no evidence: 86
-- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 21, 'NO_EVIDENCE': 86, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **26.9%** | old claimed average 71.4% over 86 rows
+- integrated or better: 34 | proven: 0 | overclaims (claimed >= verified + 25): 52 | no evidence: 85
+- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 22, 'NO_EVIDENCE': 85, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -125,7 +125,7 @@
 | F-0090 | Memory Queue (Async Job Pipeline) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0091 | Memory Diff (Snapshot-Based Change Tracking) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0092 | Query Router / Intent Classifier (Stage 2) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0093 | State Engine (Stage 3) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0093 | State Engine (Stage 3) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0094 | Context Forge (Stage 6) — The 6-Layer Assemb | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0095 | Anti-Hallucination Guard (Stage 10) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0096 | Intelligent Model Routing + Quality-Based Fa | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
