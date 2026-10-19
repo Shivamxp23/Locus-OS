@@ -4,3 +4,4 @@
 {"event":"closed","sprint":"S1","date":"2026-10-22","planned_points":5,"velocity":5,"done":["US-01","US-05"],"not_done":{}}
 {"event":"planned","sprint":"S2","start":"2026-10-23","end":"2026-10-26","goal":"One layout, no known security hole, the guard shows 0 FAIL and the hooks are on.","capacity":8,"points":6,"stories":["US-03","US-04","US-06"],"date":"2026-10-23"}
 {"event":"accepted","story":"US-03","feature":"F-0086","level":3,"note":"verified CouchDB loopback binding, password interpolation, and local.ini CORS","date":"2026-10-23","commit":"132c068e40ea"}
+{"event":"accepted","story":"US-04","feature":"F-0083","level":3,"note":"verified stranger rejection, wrong code count, single use pair, restart retention","date":"2026-10-23","commit":"f10b98a81d95"}
