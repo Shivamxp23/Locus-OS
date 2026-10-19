@@ -60,3 +60,4 @@
 {"event":"planned","sprint":"S19","start":"2026-12-30","end":"2027-01-02","goal":"One layout, no known security hole, the guard shows 0 FAIL and the hooks are on.","capacity":2,"points":2,"stories":["US-25"],"date":"2026-12-30"}
 {"event":"accepted","story":"US-25","feature":"F-0006","level":4,"note":"Verified token estimation, shouldCompact threshold evaluation, first-3/last-6 preservation, Headroom CCR reversible retrieval, inflation guard, and 503 off-switch at Level 4 (INTEGRATED)","date":"2027-01-02","commit":"f496c2fea8cb"}
 {"event":"closed","sprint":"S19","date":"2027-01-02","planned_points":2,"velocity":2,"done":["US-25"],"not_done":{}}
+{"event":"planned","sprint":"S20","start":"2027-01-03","end":"2027-01-06","goal":"One layout, no known security hole, the guard shows 0 FAIL and the hooks are on.","capacity":2,"points":2,"stories":["US-26"],"date":"2027-01-03"}
