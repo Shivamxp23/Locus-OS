@@ -13,3 +13,4 @@
 {"event":"closed","sprint":"S3","date":"2026-10-30","planned_points":6,"velocity":6,"done":["US-07","US-08"],"not_done":{}}
 {"event":"planned","sprint":"S4","start":"2026-10-31","end":"2026-11-03","goal":"A research job runs on the VM by itself and the owner hears about it on Telegram.","capacity":5,"points":5,"stories":["US-09","US-10"],"date":"2026-10-31"}
 {"event":"accepted","story":"US-09","feature":"F-0046","level":4,"note":"Scheduler delivers job output to paired owner on Telegram, truncating under 4096 chars and citing vault note. F-0046 reaches level 4 INTEGRATED.","date":"2026-10-31","commit":"e908aa9f9806"}
+{"event":"accepted","story":"US-10","feature":"F-0058","level":4,"note":"Headless service starts FastAPI, Pi bridge, and scheduler; SQLite job store retains schedule and next_run_time across restarts. F-0058 reaches level 4 INTEGRATED.","date":"2026-10-31","commit":"f28f74b2315b"}
