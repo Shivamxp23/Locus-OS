@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `68a8c240af` - 2026-10-20T01:08:30+0530 - with test runs
+- commit `9ab42705e9` - 2026-10-20T01:30:28+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **22.8%** | old claimed average 71.4% over 86 rows
-- integrated or better: 28 | proven: 0 | overclaims (claimed >= verified + 25): 56 | no evidence: 91
-- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 16, 'NO_EVIDENCE': 91, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **23.5%** | old claimed average 71.4% over 86 rows
+- integrated or better: 29 | proven: 0 | overclaims (claimed >= verified + 25): 55 | no evidence: 90
+- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 17, 'NO_EVIDENCE': 90, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -17,7 +17,6 @@
 | F-0056 | Operating Modes / Scheduler | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/scheduler/. Create them or correct the path. |
 | F-0059 | PageIndex Retrieval | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/search/pageindex.py. Create them or correct the path. |
 | F-0064 | Dual Interface / Check-ins | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/. Create them or correct the path. |
-| F-0009 | Rate Limit Tracking | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/rate_limiter.py. Create them or correct the path. |
 | F-0021 | Neo4j Agent Memory (POLE+O) | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/neo4j_memory.py. Create them or correct the path. |
 | F-0027 | Session Management | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/memory.py, sidecar/session_export.py. Create them or cor |
 | F-0037 | Injection Filter | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/injection_filter.py. Create them or correct the |
@@ -29,6 +28,7 @@
 | F-0061 | Rough Note Parser | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/rough_note_parser.py. Create them or correct t |
 | F-0062 | Link Dump Logger | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/link_logger.py. Create them or correct the pat |
 | F-0040 | Shell Blocklist | 70% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/. Create them or correct the path. |
+| F-0057 | Goal Tracker (3-Layer Stack) | 85% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 
 ## All features
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -41,7 +41,7 @@
 | F-0006 | Context Window Management | 70% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0007 | Post-Turn Review | 80% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0008 | Stream Diagnostics | 100% | 100% | INHERITED_OK |  |  |
-| F-0009 | Rate Limit Tracking | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/rate_limiter.py. Create them or correct the path. |
+| F-0009 | Rate Limit Tracking | 80% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0010 | Usage/Cost Tracking | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/cost_tracker.py. Create them or correct the path. |
 | F-0011 | Title Generation | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/title_generator.py. Create them or correct the path. |
 | F-0012 | Onboarding Flow | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus_cli/setup.py. Create them or correct the path. |
