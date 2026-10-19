@@ -74,6 +74,10 @@ class PortForwarder(threading.Thread):
             pass
         finally:
             try:
+                dst.shutdown(socket.SHUT_WR)
+            except Exception:
+                pass
+            try:
                 src.close()
             except Exception:
                 pass
