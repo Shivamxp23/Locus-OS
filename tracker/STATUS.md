@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `12f100be8c` - 2026-10-19T19:09:56+0530 - with test runs
+- commit `5cc3467f5b` - 2026-10-19T19:21:03+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **13.0%** | old claimed average 71.4% over 86 rows
-- integrated or better: 14 | proven: 0 | overclaims (claimed >= verified + 25): 69 | no evidence: 107
-- by level: {'INHERITED_OK': 12, 'INTEGRATED': 2, 'NO_EVIDENCE': 107, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **13.2%** | old claimed average 71.4% over 86 rows
+- integrated or better: 15 | proven: 0 | overclaims (claimed >= verified + 25): 69 | no evidence: 107
+- by level: {'INHERITED_OK': 12, 'INTEGRATED': 3, 'NO_EVIDENCE': 107, 'UNIT_VERIFIED': 3}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -90,7 +90,7 @@
 | F-0055 | DCS / TWS / Factions | 90% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/life_os.py. Create them or correct the path. |
 | F-0056 | Operating Modes / Scheduler | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/life_os.py, sidecar/scheduler/. Create them or correct t |
 | F-0057 | Goal Tracker (3-Layer Stack) | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/life_os.py. Create them or correct the path. |
-| F-0058 | Proactive Inner Loop | 70% | 65% | UNIT_VERIFIED |  | Add evidence.integration: a DIFFERENT test that crosses a boundary (sidecar<->Pi, extensio |
+| F-0058 | Proactive Inner Loop | 70% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0059 | PageIndex Retrieval | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/search/pageindex.py. Create them or correct the path. |
 | F-0060 | Obsidian Self-Hosted LiveSync & CouchDB Real | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/vault/livesync_bridge.py, src/extensions/locus-extension |
 | F-0061 | Rough Note Parser | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/rough_note_parser.py. Create them or correct t |
