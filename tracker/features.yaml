@@ -2927,11 +2927,26 @@ features:
   spec_targets: []
   spec_sha: {}
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/telegram/pairing.py
+    - sidecar/telegram/gateway.py
+    - locus_cli/setup_telegram.py
+    symbols:
+    - file: sidecar/telegram/pairing.py
+      contains:
+      - "class PairingManager"
+      - "def generate_pairing_code"
+      - "def attempt_pair"
+      - "def is_allowed_user"
+    - file: sidecar/telegram/gateway.py
+      contains:
+      - "class TelegramGateway"
+      - "def handle_update"
     guard: []
-    unit: []
+    unit:
+    - cmd: pytest tests/unit/test_telegram_pairing.py
     integration: []
+
   depends_on: []
 - id: F-0084
   title: core/ vs sidecar/ Deduplication

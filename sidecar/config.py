@@ -37,8 +37,57 @@ def get_config_path() -> Path:
     return get_locus_home() / "config.yaml"
 
 
+def is_config_valid() -> bool:
+    """
+    Check if config.yaml is readable and syntactically valid YAML.
+    If file does not exist, returns True (greenfield default).
+    If file exists but fails to parse or is invalid, returns False.
+    """
+    cfg_path = get_config_path()
+    if not cfg_path.is_file():
+        return True
+    try:
+        content = cfg_path.read_text(encoding="utf-8")
+        if not content.strip():
+            return True
+        parsed = yaml.safe_load(content)
+        return isinstance(parsed, dict)
+    except Exception:
+        return False
+
+
+def set_value(path: str, value: Any) -> None:
+    """
+    Set a configuration value by dot-separated path and atomically save to config.yaml.
+    """
+    if not path:
+        return
+    cfg_path = get_config_path()
+    cfg_path.parent.mkdir(parents=True, exist_ok=True)
+    data: dict[str, Any] = {}
+    if cfg_path.is_file():
+        try:
+            content = cfg_path.read_text(encoding="utf-8")
+            parsed = yaml.safe_load(content)
+            if isinstance(parsed, dict):
+                data = parsed
+        except Exception:
+            data = {}
+    parts = path.strip().split(".")
+    curr = data
+    for part in parts[:-1]:
+        if part not in curr or not isinstance(curr[part], dict):
+            curr[part] = {}
+        curr = curr[part]
+    curr[parts[-1]] = value
+    temp_path = cfg_path.with_suffix(".tmp")
+    temp_path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+    temp_path.replace(cfg_path)
+
+
+
 def _load_raw_config() -> dict[str, Any]:
-    """Load config.yaml if it exists, returning parsed dict."""
+    """Load config.yaml if it exists and is valid, returning parsed dict."""
     cfg_path = get_config_path()
     if not cfg_path.is_file():
         return {}
