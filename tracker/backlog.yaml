@@ -305,6 +305,13 @@ stories:
     points: 2
     target_level: 3
     depends_on: [US-06]
+    accept:
+      - "sidecar/learning/trajectory.py implements TrajectoryRecorder with record_turn(), flush_session(), and batch_evaluate()."
+      - "Trajectory record stores session_id, model, timestamp, role, content, tool_calls, and token counts."
+      - "Sensitive tokens, passwords, and API keys are redacted to [REDACTED] prior to JSON persistence."
+      - "Compressed/formatted session trajectory is written to LOCUS_HOME/trajectories/{session_id}.json on session completion."
+      - "Unit tests assert turn appending, secret redaction, JSON serialization on flush, and batch evaluation metric aggregation."
+    demo: 'Run trajectory unit tests: asserts session trajectory records turns, redacts sensitive keys, writes JSON on flush, and computes batch metrics.'
 
   - id: US-18
     epic: E5
@@ -315,6 +322,13 @@ stories:
     target_level: 3
     requires_decisions: [D-4]
     depends_on: [US-06]
+    accept:
+      - "sidecar/ingestion/chat_archiver.py and sidecar/crawlers/chat_crawler.py implement ChatArchiverProvider."
+      - "Parses and normalizes external conversation dumps (ChatGPT, Claude, Cursor, Pi, Telegram) into unified markdown format."
+      - "Extracted markdown notes are written into the vault under 04-Captures/AI Chats/YYYY-MM-DD/{title}.md with YAML frontmatter."
+      - "Automated replication triggers LiveSync push to CouchDB on write, and respects modular off-switch locus.ingestion.chat_archiver.enabled."
+      - "Unit tests assert multi-platform dump parsing, frontmatter generation, vault note writing, and LiveSync hook notification."
+    demo: 'Run chat archiver unit tests: asserts discovery of chat dumps, markdown normalization with frontmatter, vault persistence under 04-Captures, and LiveSync push hook.'
 
   # ------------------------------------------------------------------ E6 Priority and meta-harness (coarse)
   - id: US-19
