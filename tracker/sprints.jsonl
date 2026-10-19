@@ -76,3 +76,5 @@
 {"event":"accepted","story":"US-30","feature":"F-0011","level":4,"note":"Pytest verified 16 unit and integration tests asserting prompt formatting, 500-char truncation, artifact cleaning, async execution, and 503 off-switch","date":"2027-01-22","commit":"64b52df2ed6d"}
 {"event":"closed","sprint":"S24","date":"2027-01-22","planned_points":2,"velocity":2,"done":["US-30"],"not_done":{}}
 {"event":"planned","sprint":"S25","start":"2027-01-23","end":"2027-01-26","goal":"One layout, no known security hole, the guard shows 0 FAIL and the hooks are on.","capacity":2,"points":2,"stories":["US-31"],"date":"2027-01-23"}
+{"event":"accepted","story":"US-31","feature":"F-0012","level":4,"note":"Pytest verified 18 unit and integration tests asserting multi-topology onboarding, cognitive memory tri-stack setup, live diagnostics, non-interactive setup runner, and 503 off-switch","date":"2027-01-26","commit":"7aa65e17c8f1"}
+{"event":"closed","sprint":"S25","date":"2027-01-26","planned_points":2,"velocity":2,"done":["US-31"],"not_done":{}}
