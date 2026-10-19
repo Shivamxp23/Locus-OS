@@ -73,3 +73,5 @@
 {"event":"accepted","story":"US-29","feature":"F-0010","level":4,"note":"Pytest verified 17 unit and integration tests asserting canonical usage extraction across 4 formats, priority pricing chain, USD cost calculation, and 503 off switch","date":"2027-01-18","commit":"f0af433e8739"}
 {"event":"closed","sprint":"S23","date":"2027-01-18","planned_points":2,"velocity":2,"done":["US-29"],"not_done":{}}
 {"event":"planned","sprint":"S24","start":"2027-01-19","end":"2027-01-22","goal":"One layout, no known security hole, the guard shows 0 FAIL and the hooks are on.","capacity":2,"points":2,"stories":["US-30"],"date":"2027-01-19"}
+{"event":"accepted","story":"US-30","feature":"F-0011","level":4,"note":"Pytest verified 16 unit and integration tests asserting prompt formatting, 500-char truncation, artifact cleaning, async execution, and 503 off-switch","date":"2027-01-22","commit":"64b52df2ed6d"}
+{"event":"closed","sprint":"S24","date":"2027-01-22","planned_points":2,"velocity":2,"done":["US-30"],"not_done":{}}
