@@ -4026,7 +4026,9 @@ features:
       name: get
     - file: sidecar/config.py
       name: is_enabled
-    guard: []
-    unit: []
+    unit:
+    - cmd: pytest tests/unit/test_config.py
+    - cmd: pytest tests/unit/test_registry.py
+    - cmd: node --test --test-reporter=tap tests/unit/test_config.test.ts
     integration: []
   depends_on: []

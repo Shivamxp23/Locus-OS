@@ -9,12 +9,14 @@ import shutil
 import subprocess
 from typing import Optional, List, Dict, Any
 
+from sidecar.config import get_env, get_environ
+
 
 def get_node_executable() -> str:
     """Resolve the path to node.exe or node."""
     node_path = shutil.which("node")
     if not node_path:
-        node_env = os.environ.get("NODE_PATH")
+        node_env = get_env("NODE_PATH")
         if node_env and os.path.exists(node_env):
             return node_env
         raise FileNotFoundError("Node.js executable not found in PATH")
@@ -64,7 +66,7 @@ def run_pi_turn(
     if extra_args:
         cmd.extend(extra_args)
 
-    run_env = os.environ.copy()
+    run_env = get_environ()
     if env:
         run_env.update(env)
 
