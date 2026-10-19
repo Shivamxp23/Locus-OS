@@ -15,3 +15,4 @@
 {"event":"accepted","story":"US-09","feature":"F-0046","level":4,"note":"Scheduler delivers job output to paired owner on Telegram, truncating under 4096 chars and citing vault note. F-0046 reaches level 4 INTEGRATED.","date":"2026-10-31","commit":"e908aa9f9806"}
 {"event":"accepted","story":"US-10","feature":"F-0058","level":4,"note":"Headless service starts FastAPI, Pi bridge, and scheduler; SQLite job store retains schedule and next_run_time across restarts. F-0058 reaches level 4 INTEGRATED.","date":"2026-10-31","commit":"f28f74b2315b"}
 {"event":"closed","sprint":"S4","date":"2026-11-03","planned_points":5,"velocity":5,"done":["US-09","US-10"],"not_done":{}}
+{"event":"planned","sprint":"S5","start":"2026-11-04","end":"2026-11-07","goal":"One command sets up local, VM or hybrid, with keys and Telegram pairing.","capacity":5,"points":3,"stories":["US-11"],"date":"2026-11-04"}
