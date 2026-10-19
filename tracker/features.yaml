@@ -3049,14 +3049,24 @@ features:
   spec_sha: {}
   evidence:
     files:
-    - HEADLESS_VM_AND_CRON_SETUP_GUIDE.md
+    - docs/HEADLESS_VM_AND_CRON_SETUP_GUIDE.md
     - install.sh
     - install.ps1
     - docker-compose.yml
-    symbols: []
+    - locus_cli/tunnel.py
+    - sidecar/service.py
+    symbols:
+    - file: locus_cli/tunnel.py
+      contains:
+      - "class SSHTunnelManager"
+    - file: sidecar/service.py
+      contains:
+      - "class HeadlessService"
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: pytest tests/unit/test_tunnel.py
+    integration:
+    - cmd: pytest tests/integration/test_hybrid_tunnel.py
   depends_on: []
 - id: F-0086
   title: Deployment (systemd/Docker)
