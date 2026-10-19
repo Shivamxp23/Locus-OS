@@ -92,6 +92,12 @@ from sidecar.providers.rate_limit import (
     RateLimitBucket,
     RateLimitState,
 )
+from sidecar.providers.state_engine import (
+    BaseStateEngineProvider,
+    CheckInRecord,
+    CurrentState,
+    OperatingMode as StateOperatingMode,
+)
 from sidecar.providers.tool_system import (
     AgentTool,
     AgentToolResult,
@@ -121,6 +127,7 @@ __all__ = [
     "BasePromptBuilderProvider",
     "BaseQueryRouterProvider",
     "BaseRateLimitProvider",
+    "BaseStateEngineProvider",
     "BaseTitleGeneratorProvider",
     "BaseToolSystemProvider",
     "BaseTrajectoryRecorder",
@@ -129,10 +136,12 @@ __all__ = [
     "CanonicalUsage",
     "ChatTurn",
     "CheckInInput",
+    "CheckInRecord",
     "CompactionResult",
     "CompressionMode",
     "CostResult",
     "ContextMessage",
+    "CurrentState",
     "DCSResult",
     "DelegationResult",
     "DiagnosticProbeResult",

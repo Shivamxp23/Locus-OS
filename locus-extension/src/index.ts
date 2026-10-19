@@ -14,6 +14,7 @@ export * from "./post-turn-reviewer";
 export * from "./prompt-builder";
 export * from "./rate-limiter";
 export * from "./sessions/title-gen";
+export * from "./state-engine";
 export * from "./title-generator";
 export * from "./ui/setup-wizard";
 export * from "./tools/index";

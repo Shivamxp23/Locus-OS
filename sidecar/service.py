@@ -30,6 +30,8 @@ import sidecar.onboarding  # ensures default onboarding provider is registered
 from sidecar.providers.onboarding import TopologyType
 import sidecar.router.classifier  # ensures default query router is registered
 from sidecar.providers.query_router import ALL_RETRIEVAL_SOURCES, IntentType, RoutingManifest, TemporalScope
+import sidecar.state_engine  # ensures default state engine is registered
+from sidecar.providers.state_engine import CheckInRecord, CurrentState, OperatingMode as StateOperatingMode
 
 logger = logging.getLogger("locus.service")
 
@@ -1287,6 +1289,51 @@ def create_app(
         provider = provider_cls()
         manifest = provider.classify(query=query, timezone=tz)
         return {"status": "ok", "manifest": manifest.to_dict()}
+
+    # -------------------------------------------------------------------------
+    # SPEC §2.4 / F-0093 / US-33: State Engine (Stage 3) Routes
+    # -------------------------------------------------------------------------
+    def _is_state_engine_enabled() -> bool:
+        if config.get("locus.state_engine.enabled") is False:
+            return False
+        return True
+
+    @app.get("/state/current")
+    def get_current_state_route() -> Dict[str, Any]:
+        """Retrieve CURRENT_STATE snapshot with staleness penalties if applicable."""
+        if not _is_state_engine_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.state_engine.enabled"})
+        provider_cls = app.state.registry.get_active_provider("state_engine", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No state engine provider registered")
+        provider = provider_cls()
+        state = provider.get_current_state()
+        return {"status": "ok", "state": state.to_dict()}
+
+    @app.post("/state/calculate")
+    def calculate_state_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Process check-in and update CURRENT_STATE."""
+        if not _is_state_engine_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.state_engine.enabled"})
+        provider_cls = app.state.registry.get_active_provider("state_engine", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No state engine provider registered")
+        provider = provider_cls()
+        checkin = CheckInRecord.from_dict(body)
+        state = provider.process_checkin(checkin)
+        return {"status": "ok", "state": state.to_dict()}
+
+    @app.post("/state/reset")
+    def reset_state_route() -> Dict[str, Any]:
+        """Reset state engine for testing isolation."""
+        if not _is_state_engine_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.state_engine.enabled"})
+        provider_cls = app.state.registry.get_active_provider("state_engine", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No state engine provider registered")
+        provider = provider_cls()
+        provider.reset()
+        return {"status": "ok", "message": "State engine reset"}
 
     return app
 
