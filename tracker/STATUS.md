@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `f8d8196c77` - 2026-10-19T17:23:00+0530 - with test runs
+- commit `eb3ff7561f` - 2026-10-19T17:36:08+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **10.2%** | old claimed average 71.4% over 86 rows
-- integrated or better: 12 | proven: 0 | overclaims (claimed >= verified + 25): 72 | no evidence: 111
-- by level: {'FILES_PRESENT': 1, 'INHERITED_OK': 12, 'NO_EVIDENCE': 111, 'UNIT_VERIFIED': 1}
+- features: 125 | verified average **10.8%** | old claimed average 71.4% over 86 rows
+- integrated or better: 12 | proven: 0 | overclaims (claimed >= verified + 25): 72 | no evidence: 110
+- by level: {'FILES_PRESENT': 1, 'INHERITED_OK': 12, 'NO_EVIDENCE': 110, 'UNIT_VERIFIED': 2}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -157,4 +157,4 @@
 | F-0122 | LOCUS_SHORTHAND 4× Text Compressor | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0123 | 3-Level Tag Hierarchy & Semantic Indexing | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0124 | Auxiliary LLM Client | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
-| F-0125 | Modularity foundation: provider registry + c | - | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING | Files claimed but absent: sidecar/registry.py, sidecar/config.py, locus-extension/src/regi |
+| F-0125 | Modularity foundation: provider registry + c | - | 65% | UNIT_VERIFIED |  | Add evidence.integration: a DIFFERENT test that crosses a boundary (sidecar<->Pi, extensio |
