@@ -336,10 +336,19 @@ stories:
     feature: F-0055
     slug: task-priority-score
     title: "Task priority score (TWS) computed for a task at any scale"
-    points: 3
+    points: 2
     target_level: 3
     requires_decisions: [D-1, D-3]
     depends_on: [US-06]
+    accept:
+      - "sidecar/life_os/tws.py, sidecar/life_os/dcs.py, sidecar/life_os/factions.py, and sidecar/life_os/modes.py implement LifeOSProvider adhering to BaseLifeOSProvider in sidecar/providers/life_os.py."
+      - "TWS formula implements D-1 Option A: base TWS = (P * 0.4) + (U * 0.4) + (D * 0.2) with inputs 1-10, plus lag bonus (+2 for lag > 3h, +4 for lag > 6h, -1 if ahead)."
+      - "DCS formula implements (E + M + S)/3 * (1 - ST/20) mapped to 5 Operating Modes (SURVIVAL 0.0-2.0, RECOVERY 2.1-4.0, NORMAL 4.1-6.0, DEEP WORK 6.1-8.0, PEAK 8.1-10.0) with staleness penalty."
+      - "Four factions tracked with weekly splits: Health 25%, Leverage 25%, Craft 30%, Expression 20% (Appendix C)."
+      - "Multi-scale scoring supports vision, milestone, and daily task levels with parent-child roll-up (D-3 Option a)."
+      - "Modular off-switch locus.life_os.enabled returns 503 per SPEC §03 line 35 for /life_os endpoints."
+      - "Unit and integration tests assert TWS calculation, lag bonus, DCS modes, faction allocation, multi-scale roll-up, and off-switch behavior."
+    demo: 'Run life OS unit tests: py -3 -m pytest -v tests/unit/test_life_os.py: asserts TWS calculation with lag bonus, DCS mode resolution, faction split tracking, and multi-scale score roll-up.'
 
   - id: US-20
     epic: E6
@@ -351,3 +360,10 @@ stories:
     autopilot: false   # by hand: it starts other coding agents and git worktrees
     requires_decisions: [D-5]
     depends_on: [US-01, US-06]
+    accept:
+      - "sidecar/harness/delegation.py implements HarnessProvider adhering to BaseHarnessProvider in sidecar/providers/harness.py."
+      - "Executes coding tasks in isolated scratch worktree using configured coding harness (Pi, Claude Code, OpenCode, Antigravity) without --dangerously-skip-permissions (D-5 Option a, S-3)."
+      - "Captures execution exit status, modified diffs, and execution logs from delegated subprocess run."
+      - "Modular off-switch locus.harness.enabled returns 503 per SPEC §03 line 35."
+      - "Unit tests assert worktree creation/cleanup, subprocess command line construction, permission guard enforcement, and error handling."
+    demo: 'Run harness delegation unit tests: asserts scratch worktree creation, command argument construction, and execution capture.'
