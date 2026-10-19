@@ -70,11 +70,24 @@ features:
     '§1.2: System Prompt Construction': 5a83aa278c006d8d
   evidence:
     files:
-    - locus-extension/src/hooks/index.ts
-    symbols: []
+    - locus-extension/src/prompt-builder.ts
+    - sidecar/prompt_builder.py
+    - sidecar/providers/prompt_builder.py
+    symbols:
+    - file: sidecar/prompt_builder.py
+      contains:
+      - PromptBuilderProvider
+      - build_system_prompt
+      - load_soul_personality
+    - file: sidecar/providers/prompt_builder.py
+      contains:
+      - BasePromptBuilderProvider
+      - PromptOptions
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest -v tests/unit/test_prompt_builder.py
+    integration:
+    - py -3 -m pytest -v tests/integration/test_prompt_builder_service.py
   depends_on: []
 - id: F-0003
   title: Tool System (13 Canonical Tools)

@@ -13,7 +13,7 @@ from pathlib import Path
 import threading
 from typing import Any, Dict, Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Body, FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 
 from sidecar.registry import ProviderRegistry, get_registry
@@ -379,6 +379,56 @@ def create_app(
         provider.initialize()
         health = provider.health_check()
         return {"status": "ok", "harnesses": health.get("available_harnesses", [])}
+
+    # Prompt builder routes (SPEC §1.2 / F-0002 / US-21)
+    @app.post("/prompt/build")
+    def build_system_prompt_route(body: Optional[Dict[str, Any]] = Body(None)) -> Dict[str, Any]:
+        """Construct Locus system prompt with personality, state engine, and context forge."""
+        if not app.state.registry.is_feature_enabled("prompt_builder"):
+            return JSONResponse(status_code=503, content={"disabled": "locus.prompt_builder.enabled"})
+        provider_cls = app.state.registry.get_active_provider("prompt_builder", default_name="default_prompt_builder")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No prompt builder provider registered")
+        provider = provider_cls()
+        payload = body or {}
+        from sidecar.providers.prompt_builder import ContextFile, OperatingState, PromptOptions, SkillSummary
+
+        ctx_files = [ContextFile(path=cf.get("path", ""), content=cf.get("content", "")) for cf in payload.get("context_files", [])]
+        skills = [SkillSummary(name=s.get("name", ""), description=s.get("description", "")) for s in payload.get("skills", [])]
+        op_state = None
+        if payload.get("operating_state"):
+            os_data = payload["operating_state"]
+            op_state = OperatingState(
+                dcs=float(os_data.get("dcs", 5.0)),
+                operating_mode=os_data.get("operating_mode", "NORMAL"),
+                faction_status=os_data.get("faction_status", {}),
+            )
+        opts = PromptOptions(
+            cwd=payload.get("cwd", "/"),
+            custom_prompt=payload.get("custom_prompt"),
+            append_system_prompt=payload.get("append_system_prompt"),
+            context_files=ctx_files,
+            skills=skills,
+            available_tools=payload.get("available_tools", ["read", "bash", "edit", "write"]),
+            prompt_guidelines=payload.get("prompt_guidelines", []),
+            soul_context=payload.get("soul_context"),
+            context_forge_tokens=payload.get("context_forge_tokens"),
+            operating_state=op_state,
+        )
+        prompt = provider.build_system_prompt(opts)
+        return {"status": "ok", "prompt": prompt}
+
+    @app.get("/prompt/personality")
+    def get_personality_route() -> Dict[str, Any]:
+        """Return the active Locus SOUL personality context."""
+        if not app.state.registry.is_feature_enabled("prompt_builder"):
+            return JSONResponse(status_code=503, content={"disabled": "locus.prompt_builder.enabled"})
+        provider_cls = app.state.registry.get_active_provider("prompt_builder", default_name="default_prompt_builder")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No prompt builder provider registered")
+        provider = provider_cls()
+        personality = provider.load_soul_personality()
+        return {"status": "ok", "personality": personality}
 
     return app
 
