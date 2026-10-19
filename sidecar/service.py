@@ -11,6 +11,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 import threading
+import time
 from typing import Any, Dict, Optional
 
 from fastapi import Body, FastAPI, HTTPException
@@ -763,6 +764,153 @@ def create_app(
         if not res:
             raise HTTPException(status_code=404, detail=f"Review ID '{review_id}' not found")
         return {"status": "ok", "result": res.to_dict()}
+
+    # Learning / Profiling / Reward Model routes (SPEC §1.7, §10.1, §10.3, §10.5, §10.6-10.7 / F-0035 / US-27)
+    from sidecar.learning.learning_system import UnifiedLearningProvider
+    from sidecar.providers.learning import LearningCandidate
+    active_registry.register("learning", "default_learning", UnifiedLearningProvider)
+
+    def _is_learning_enabled() -> bool:
+        val = config.get("locus.learning_profiling_reward_model.enabled")
+        if val is not None and not config.is_enabled("locus.learning_profiling_reward_model.enabled"):
+            return False
+        if not app.state.registry.is_feature_enabled("learning"):
+            return False
+        return True
+
+    @app.post("/learning/candidate")
+    def record_learning_candidate_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Record candidate reflection item."""
+        if not _is_learning_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.learning_profiling_reward_model.enabled"})
+        facet_class = body.get("facet_class", "workflow")
+        cue_family = body.get("cue_family", "implicit_pattern")
+        evidence = body.get("evidence") or {}
+        timestamp = float(body.get("timestamp", time.time()))
+        val = body.get("value")
+
+        provider_cls = app.state.registry.get_active_provider("learning", default_name="default_learning")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No learning provider registered")
+        provider = provider_cls()
+        cand = LearningCandidate(
+            facet_class=facet_class,
+            cue_family=cue_family,
+            evidence=evidence,
+            timestamp=timestamp,
+            value=val,
+        )
+        provider.record_candidate(cand)
+        return {"status": "ok", "candidate": cand.to_dict()}
+
+    @app.post("/learning/stability/check")
+    def check_stability_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Run stability detection and stabilize converged facets."""
+        if not _is_learning_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.learning_profiling_reward_model.enabled"})
+        window_seconds = float(body.get("window_seconds", 1800.0))
+        threshold = float(body.get("threshold", 0.7))
+
+        provider_cls = app.state.registry.get_active_provider("learning", default_name="default_learning")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No learning provider registered")
+        provider = provider_cls()
+        stabilized = provider.check_stability(window_seconds=window_seconds, threshold=threshold)
+        return {"status": "ok", "stabilized": [s.to_dict() for s in stabilized]}
+
+    @app.get("/learning/profile")
+    def get_user_profile_route() -> Dict[str, Any]:
+        """Retrieve rendered markdown user profile."""
+        if not _is_learning_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.learning_profiling_reward_model.enabled"})
+        provider_cls = app.state.registry.get_active_provider("learning", default_name="default_learning")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No learning provider registered")
+        provider = provider_cls()
+        profile_md = provider.generate_profile_markdown()
+        return {"status": "ok", "profile": profile_md}
+
+    @app.post("/learning/tool-usage")
+    def record_tool_usage_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Record tool usage execution event."""
+        if not _is_learning_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.learning_profiling_reward_model.enabled"})
+        tool_name = body.get("tool_name", "")
+        args = body.get("args") or {}
+        success = bool(body.get("success", True))
+        duration_ms = float(body.get("duration_ms", 0.0))
+
+        provider_cls = app.state.registry.get_active_provider("learning", default_name="default_learning")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No learning provider registered")
+        provider = provider_cls()
+        rec = provider.record_tool_usage(tool_name=tool_name, args=args, success=success, duration_ms=duration_ms)
+        return {"status": "ok", "record": rec.to_dict()}
+
+    @app.post("/learning/reward/signal")
+    def record_reward_signal_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Record a thumbs-up or thumbs-down feedback signal."""
+        if not _is_learning_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.learning_profiling_reward_model.enabled"})
+        features = body.get("features") or {}
+        label = int(body.get("label", 1))
+
+        provider_cls = app.state.registry.get_active_provider("learning", default_name="default_learning")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No learning provider registered")
+        provider = provider_cls()
+        sig = provider.record_reward_signal(features=features, label=label)
+        return {"status": "ok", "signal": sig.to_dict()}
+
+    @app.post("/learning/reward/score")
+    def score_thought_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Score candidate thought/action returning probability of thumbs_up."""
+        if not _is_learning_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.learning_profiling_reward_model.enabled"})
+        features = body.get("features") or {}
+
+        provider_cls = app.state.registry.get_active_provider("learning", default_name="default_learning")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No learning provider registered")
+        provider = provider_cls()
+        score = provider.score_thought(features)
+        return {
+            "status": "ok",
+            "probability": score,
+            "deliver_proactive": score >= 0.6,
+        }
+
+    @app.post("/learning/hebbian/update")
+    def update_hebbian_weight_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Update Hebbian pathway weight with access, feedback, and STDP."""
+        if not _is_learning_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.learning_profiling_reward_model.enabled"})
+        edge_id = body.get("edge_id")
+        if not edge_id:
+            raise HTTPException(status_code=400, detail="Missing 'edge_id'")
+        feedback = body.get("feedback")
+        response_time_ms = body.get("response_time_ms")
+        if response_time_ms is not None:
+            response_time_ms = float(response_time_ms)
+
+        provider_cls = app.state.registry.get_active_provider("learning", default_name="default_learning")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No learning provider registered")
+        provider = provider_cls()
+        weight = provider.update_edge_weight(edge_id=edge_id, feedback=feedback, response_time_ms=response_time_ms)
+        return {"status": "ok", "edge_id": edge_id, "weight": weight}
+
+    @app.get("/learning/patterns")
+    def get_patterns_route() -> Dict[str, Any]:
+        """Detect and return behavioral patterns across horizons."""
+        if not _is_learning_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.learning_profiling_reward_model.enabled"})
+        provider_cls = app.state.registry.get_active_provider("learning", default_name="default_learning")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No learning provider registered")
+        provider = provider_cls()
+        patterns = provider.detect_patterns()
+        return {"status": "ok", "patterns": [p.to_dict() for p in patterns]}
 
     return app
 
