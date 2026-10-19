@@ -3644,15 +3644,37 @@ features:
   manual: false
   claimed: null
   spec_targets:
-  - locus/core/context-forge.ts
+  - locus-extension/src/context-forge.ts
+  - sidecar/context_forge.py
   spec_sha:
     '§2.5: Context Forge (Stage 6) — The 6-Layer Assembler': 01ab8fc70c3253de
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/context_forge.py
+    - sidecar/providers/context_forge.py
+    - locus-extension/src/context-forge.ts
+    symbols:
+    - file: sidecar/context_forge.py
+      contains:
+      - ContextForgeProvider
+      - estimate_tokens
+      - truncate_to_tokens
+    - file: sidecar/providers/context_forge.py
+      contains:
+      - BaseContextForgeProvider
+      - LayerBudgetConfig
+      - AssembledLayer
+      - RetrievalInput
+      - ContextForgeResult
+    - file: locus-extension/src/context-forge.ts
+      contains:
+      - ContextForge
+      - DEFAULT_LAYER_BUDGETS
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - pytest tests/unit/test_context_forge.py
+    integration:
+    - pytest tests/integration/test_context_forge_service.py
   depends_on: []
 - id: F-0095
   title: Anti-Hallucination Guard (Stage 10)

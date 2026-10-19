@@ -32,6 +32,12 @@ import sidecar.router.classifier  # ensures default query router is registered
 from sidecar.providers.query_router import ALL_RETRIEVAL_SOURCES, IntentType, RoutingManifest, TemporalScope
 import sidecar.state_engine  # ensures default state engine is registered
 from sidecar.providers.state_engine import CheckInRecord, CurrentState, OperatingMode as StateOperatingMode
+import sidecar.context_forge  # ensures default context forge is registered
+from sidecar.providers.context_forge import (
+    ContextForgeResult,
+    LayerBudgetConfig,
+    RetrievalInput,
+)
 
 logger = logging.getLogger("locus.service")
 
@@ -1334,6 +1340,48 @@ def create_app(
         provider = provider_cls()
         provider.reset()
         return {"status": "ok", "message": "State engine reset"}
+
+    # -------------------------------------------------------------------------
+    # SPEC §2.5 / F-0094 / US-34: Context Forge (Stage 6) Routes
+    # -------------------------------------------------------------------------
+    def _is_context_forge_enabled() -> bool:
+        val = config.get("locus.brain.context_forge.enabled")
+        if val is None:
+            val = config.get("locus.context_forge.enabled", True)
+        return bool(val)
+
+    @app.post("/forge/assemble")
+    def assemble_context_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Assemble 6-layer context block with global relevance scoring and headroom CCR compression."""
+        if not _is_context_forge_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.brain.context_forge.enabled"})
+        provider_cls = app.state.registry.get_active_provider("context_forge", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No context forge provider registered")
+        provider = provider_cls()
+        retrieval_data = body.get("retrieval_input", body)
+        retrieval_input = RetrievalInput.from_dict(retrieval_data)
+        budget_override = None
+        if "budget_override" in body:
+            budget_override = LayerBudgetConfig.from_dict(body["budget_override"])
+        result = provider.assemble_context(retrieval_input, budget_override=budget_override)
+        return {"status": "ok", "result": result.to_dict()}
+
+    @app.get("/forge/config")
+    def get_forge_config_route() -> Dict[str, Any]:
+        """Get current Context Forge layer budgets and status."""
+        if not _is_context_forge_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.brain.context_forge.enabled"})
+        provider_cls = app.state.registry.get_active_provider("context_forge", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No context forge provider registered")
+        provider = provider_cls()
+        budgets = provider.get_layer_budget_config()
+        return {
+            "status": "ok",
+            "enabled": True,
+            "budgets": budgets.to_dict(),
+        }
 
     return app
 
