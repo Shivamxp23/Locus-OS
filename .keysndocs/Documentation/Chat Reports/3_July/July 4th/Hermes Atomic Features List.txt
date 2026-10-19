@@ -1,0 +1,863 @@
+[6/5/2026 3:22 PM] Hermes Locus Bot: HERMES AGENT — COMPLETE ATOMIC FEATURE SPECIFICATION
+Source-of-truth dump for clone/reimplementation.
+Covers: core runtime, tools, skills, plugins, providers, memory, gateway, TUI, MCP, ACP, cron, kanban, voice, observability, context engines, terminal backends, release features.
+
+— Chunk 1/12 —
+
+## 1. CORE RUNTIME & EXECUTION
+
+### Agent Loop
+- `AIAgent.run_conversation()` core loop with tool calling
+- Iteration budget: `max_iterations` (default 90) + grace call
+- Interrupt checks per iteration (`_interrupt_requested`)
+- Budget tracking via `iteration_budget`
+- Tool-call dispatch via `handle_function_call()`
+- Grace-turn after budget exhaustion
+- `AIAgent.chat()` simple interface — returns final response string
+- OpenAI-format message roles: `system / user / assistant / tool`
+- Reasoning content stored in `assistant_msg["reasoning"]`
+- Streaming + non-streaming response paths
+- Tool-call argument coercion to JSON Schema types
+- Accept reasoning-only responses without retry
+- Self-optimized GPT/Codex tool-use guidance (behavioral benchmarking of 5 failure modes)
+- Thinking-only prefill continuation for structured reasoning
+
+### Context & Memory
+- Automatic context compression at token limit
+- `/compress` manual trigger
+- Context compaction failure recovery
+- Save oversized tool results to file instead of destructive truncation
+- Sandbox-aware tool result persistence
+- Prior-history tool messages excluded from review summary (clean-context fork)
+- Multi-modal image routing based on model vision capability (not provider defaults)
+- `context.engine` pluggable context engines — only one active at a time
+- Default: `compressor` (built-in ContextCompressor)
+- Plugin-dir: `plugins/context_engine/<name>/`
+- Prompt cache TTL configurable: `prompt_caching.cache_ttl` (5m default, 1h opt-in)
+
+### Provider / Model Layer
+- 30+ model providers via plugin architecture (see Section 8)
+- Credential pool: rotate across multiple API keys; exhaustion-aware
+- `hermes fallback` command for managing fallback providers
+- Remote model catalog manifest (OpenRouter + Nous Portal pulled from remote)
+- `/model` live mid-session model/provider switching
+- Aggregator-aware resolution
+- Automatic cross-provider fallback
+- Inline button picker on Telegram/Discord
+- Model pricing display for OpenRouter and Nous Portal
+- Free-tier model gating + pricing display
+- Non-agentic model warning
+- `/fast` whitelist for OpenAI + Anthropic models
+- Auxiliary client payment fallback: retry next provider on 402
+- Auxiliary client resolves named custom providers and `main` alias
+- Vision auto-detection: tries main provider first
+
+### Profiles
+- Multiple independent Hermes instances with isolated configs/sessions/skills/memory
+- `hermes profile list / create / use / delete / show / alias / rename / export / import`
+- Clone profiles: `--clone`, `--clone-all`, `--clone-from`
+- Profile-scoped memory isolation
+- Sticky default profile
+- Profile-aware paths via `get_hermes_home()`
+- Profile-aware service units (systemd)
+- Worktree mode: `hermes -w` (isolated git worktree for parallel agents)
+
+### Sessions & History
+- SQLite + FTS5 session store (`state.db`)
+- Session export to JSONL
+- Session rename / delete / prune (--older-than N days)
+- Session stats
+- Session browsing with interactive picker
+- JSONL transcripts + optional per-session JSON snapshots
+- Subagent sessions linked to parent, hidden from list
+- Thread sessions by default (multi-user thread support across gateway)
+- Shared thread sessions across platforms
+- `hermes sessions export`, `list`, `browse`, `rename`, `delete`, `prune`, `stats`
+- `/resume [name]` resume named session
+- `/branch`, `/fork`
+- `/usage` token usage
+- `/insights [days]` usage analytics
+
+### Self-Improvement Loop
+- Background review fork per turn
+- Rubric-based skill review (class-first)
+- Active-update bias (prefers skill just loaded)
+- Handles `references/` / `templates/` sub-files
+- Inherits parent's live runtime (provider, model, credentials)
+- Scoped to memory + skills toolsets (no shell/web) (1/2)
+[6/5/2026 3:22 PM] Hermes Locus Bot: - Clean shutdown for memory providers
+- Excludes prior-history tool messages from summary
+
+### Autonomous Curator
+- Runs as background agent via gateway cron ticker
+- 7-day cycle default (configurable)
+- Grades skill library; consolidates related skills; prunes dead ones
+- Archived skills classified: consolidated vs pruned (model + heuristic)
+- Per-run reports: `logs/curator/run.json` + `REPORT.md`
+- `hermes curator status` ranks skills by usage
+- Unified under `auxiliary.curator` config
+- Defense-in-depth: never touches bundled/hub skills; max action is archive
+- Pinned skills exempt from all auto-transitions + LLM review passes
+- Backup tar.gz before every run
+- Available verbs: status, run, pause, resume, pin, unpin, archive, restore, prune, backup, rollback
+- Slash: `/curator <subcommand>` (2/2)
+[6/5/2026 3:23 PM] Hermes Locus Bot: — Chunk 2/12 —
+
+## 2. CLI & TERMINAL UI
+
+### HERMES CLI (`hermes`)
+- `hermes` default to chat mode
+- `hermes chat -q` single-query mode
+- `hermes -z <prompt>` one-shot mode
+- `hermes --yolo` skip dangerous command approval
+- `--resume`, `--continue`, `--worktree`, `--skills`, `--profile`, `--pass-session-id`
+- Skin engine: data-driven theming (banner colors, spinner faces/verbs/wings, tool prefix, response box)
+- KawaiiSpinner animated faces during API calls; `┊` activity feed
+- Rich banner/panels; prompt_toolkit input with autocomplete
+- Ghost status-bar lines cleared on terminal resize
+- CR/LF normalization in pasted text
+- Native Windows image paste
+- LaTeX rendering
+- Mouse-wheel line scroll; `/mouse` toggle for ConPTY phantom mouse injection
+
+### TUI (Ink/React terminal UI)
+- `hermes --tui` Ink terminal UI
+- TUI cold-start ~57% faster (lazy agent init, lazy imports, mtime-cached config, memoized tool defs)
+- Entry: `ui-tui/src/entry.tsx`
+- Python JSON-RPC backend: `tui_gateway/`
+- Types: `gatewayTypes.ts`, `types/`
+- Components, hooks, lib, theme
+- Auto-resume last session (opt-in)
+- Light-terminal auto-detection
+- Session delete from `/resume` picker with `d`
+- `/redraw` force full UI repaint
+
+### CLI Subcommands (`hermes`)
+- `config` — view config
+- `config edit` — open config.yaml
+- `config set KEY VAL`
+- `config path`, `config env-path`, `config check`, `config migrate`
+- `model` — interactive model/provider picker
+- `model` `/model` mid-session switch
+- `setup [section]` — interactive wizard (model|terminal|gateway|tools|agent)
+- `doctor [--fix]` — dependency/config diagnostics
+- `status [--all]` — component status
+- `login [--provider]` — OAuth login
+- `logout`
+- `auth add / list / remove / reset` — credential pool
+- `insights [--days]` — usage analytics
+- `update`, `update --check`
+- `completion bash|zsh`
+- `acp` — ACP server for IDE integration
+- `claw migrate` — migrate from OpenClaw
+- `uninstall`
+- `honcho setup/status` — Honcho memory integration
+- `memory setup/status/off` — memory provider config
+- `pairing list/approve/revoke` — DM authorization
+- `plugins list/install/remove` — plugin management
+- `tools` — interactive tool enable/disable (curses UI)
+- `tools list / enable / disable`
+- `skills list / search / install / inspect / config / check / update / uninstall / publish / browse / tap`
+- `mcp serve / add / remove / list / test / configure`
+- `gateway run / install / start / stop / restart / status / setup`
+- `cron list / add / edit / pause / resume / run / status`
+- `webhook subscribe / list / remove / test`
+- `profile list / create / use / delete / show / alias / rename / export / import`
+- `sessions list / export / rename / delete / prune / stats / browse`
+- `logs [--follow] [--level] [--session]`
+
+### Slash Commands (in-session)
+- Session: `/new` `/reset` `/clear` `/retry` `/undo` `/title` `/compress` `/stop` `/rollback` `/snapshot` `/background` `/queue` `/steer` `/agents` `/tasks` `/resume` `/goal` `/redraw` `/branch` `/fork` `/fast` `/browser` `/history` `/save` `/copy` `/paste` `/image`
+- Config: `/config` `/model` `/personality` `/reasoning` `/verbose` `/voice` `/yolo` `/busy` `/indicator` `/footer` `/skin` `/statusbar`
+- Tools/Skills: `/tools` `/toolsets` `/skills` `/skill` `/reload-skills` `/reload` `/reload-mcp` `/cron` `/curator` `/kanban` `/plugins`
+- Gateway: `/approve` `/deny` `/restart` `/sethome` `/update` `/topic` `/platforms` `/gateway`
+- Info: `/help` `/commands` `/usage` `/insights` `/gquota` `/status` `/profile` `/debug`
+- Exit: `/quit` `/exit` `/q`
+- Special: `/background <prompt>` fire-and-forget in background
+- `/queue <prompt>` queue for next turn
+- `/steer <prompt>` inject after next tool call without interrupting
+- `/goal [text|sub]` set standing goal across turns (`status`, `pause`, `resume`, `clear`)
+- `/fast` priority/fast processing toggle
+- `/voice [on|off|tts]`
+[6/5/2026 3:23 PM] Hermes Locus Bot: — Chunk 3/12 —
+
+3. TOOLSYSTEM
+
+Tool Architecture
+- tools/registry.py central registry with auto-discovery
+- discover_builtin_tools() imports tools/*.py with top-level registry.register() calls
+- ToolEntry metadata: name, toolset, schema, handler, check_fn, requires_env, is_async, emoji, max_result_size_chars, dynamic_schema_overrides
+- check_fn TTL cache (~30s)
+- All handlers return JSON strings
+- get_hermes_home() for paths (profile-safe)
+- path_security.py for path sandboxing
+- tool_result_storage.py for persistent result storage
+- tool_output_limits.py for output truncation
+- tool_backend_helpers.py for backend support
+- tirith_security.py for website/shell blocklists
+- schema_sanitizer.py for schema sanitization
+
+Built-in Tools (from _HERMES_CORE_TOOLS)
+- web_search — web search
+- web_extract — web content extraction
+- terminal — shell commands + process management + background
+- process — background process management (list/poll/log/wait/kill/write/close)
+- read_file — read file with pagination
+- write_file — write/overwrite files
+- patch — targeted find-and-replace edits; V4A patch mode supported
+- search_files — ripgrep-backed content/file search with context, output modes
+- vision_analyze — image analysis (URL, file path, data URL)
+- image_generate — AI image generation
+- text_to_speech — text-to-speech with provider config
+- todo — task list management (read/write/complete/cancel)
+- memory — persistent memory read/write
+- session_search — FTS5 full-text search over past sessions
+- clarify — ask user clarifying questions (multi-choice / open-ended)
+- execute_code — sandboxed Python execution with Hermes tools programmable
+- delegate_task — subagent task delegation (single/batch)
+- cronjob — scheduled task management
+- send_message — cross-platform message sending
+- browser_navigate, browser_snapshot, browser_click, browser_type, browser_scroll, browser_back, browser_press, browser_get_images, browser_vision, browser_console — browser automation
+- skills_list — list installed skills
+- skill_view — view skill content + linked files
+- skill_manage — create/edit/patch/delete/write_file/remove_file skills
+- Home Assistant: ha_list_entities, ha_get_state, ha_list_services, ha_call_service
+- Kanban: kanban_show, kanban_list, kanban_complete, kanban_block, kanban_heartbeat, kanban_comment, kanban_create, kanban_link, kanban_unblock
+- computer_use — macOS computer use (gated on cua-driver)
+
+Special / Auxiliary Tools
+- browser_cdp — CDP browser connection
+- browser_dialog — browser dialog tool
+- computer_use_tool — computer use wrapper
+- mixture_of_agents_tool — MoA
+- x_search_tool — X/Twitter search via xAI
+- yuanbao_tools — Yuanbao integration tools
+- feishu_doc_tool — Feishu doc tools
+- feishu_drive_tool — Feishu drive tools
+- homeassistant_tool — HA tools
+- discord_tool — Discord tools
+- send_message_tool — messaging
+- session_search_tool — session history search
+- memory_tool — memory interface
+- todo_tool — todo interface
+- skill_manager_tool, skill_provenance, skill_usage, skills_ast_audit, skills_guard, skills_hub, skills_sync, skills_tool — skill management subsystem
+- transcription_tools — STT-provider tools
+- tts_tool — TTS provider
+- cronjob_tools — cron management tools
+- code_execution_tool — Python execution
+- delegate_tool — delegation
+- terminal_tool — terminal backend
+- file_operations, file_tools, file_state — file I/O
+- web_tools — web search/extract
+- vision_tools — vision
+- video_generation_tool — video gen
+- image_generation_tool — image gen
+- tts_tool — text to speech provider tool
+- approval.py — approval gating
+- interrupt.py — interrupt handling
+- checkpoint_manager.py — filesystem checkpoints
+- process_registry.py — background process registry
+- credential_files — cred-file helpers (1/2)
+[6/5/2026 3:23 PM] Hermes Locus Bot: - credential_pool / credential_sources / credential_persistence — credential management
+- mcp_tool — MCP tool adapter
+- mcp_oauth.py, mcp_oauth_manager.py — MCP OAuth flows
+- env_passthrough.py — env passthrough for sandbox
+- slash_confirm.py — slash confirm
+- debug_helpers.py — debug helpers
+- patch_parser.py — patch parsing
+- fuzzy_match.py — fuzzy matching
+- url_safety.py — URL safety checks
+- website_policy.py — website policy
+- binary_extensions.py — binary detection
+- path_security.py — path security
+- tool_result_classification.py — result classification
+- tool_output_limits.py — output limits
+- lazy_deps.py — lazy dependency imports
+- managed_tool_gateway.py — gateway tool management
+- ansible_strip.py — ANSI stripping
+- neutts_samples, neutts_synth.py — NeuTTS lib
+- fal_common.py — FAL shared
+- openrouter_client.py — OpenRouter client
+- xai_http.py — xAI HTTP helpers
+- microsoft_graph_auth.py, microsoft_graph_client.py — MS Graph auth
+- lsp/client.py, lsp/manager.py, lsp/workspace.py, lsp/eventlog.py, lsp/cli.py, lsp/install.py, lsp/protocol.py, lsp/servers.py, lsp/reporter.py, lsp/range_shift.py — LSP client (2/2)
+[6/5/2026 3:23 PM] Hermes Locus Bot: — Chunk 4/12 —
+
+Toolsets
+Core bundle _HERMES_CORE_TOOLS (CLI + all platforms inherits):
+- web, terminal, file, vision, image_gen, text_to_speech, skills, browser, todo, memory, session_search, clarify, execute_code, delegate_task, cronjob, send_message, kanban, computer_use
+- Home Assistant (gated), etc.
+
+Named toolsets:
+- web — web_search, web_extract
+- search — web_search only
+- x_search — x_search via xAI
+- vision — vision_analyze
+- video — video generation/analysis
+- image_gen — image generation
+- tts — text-to-speech
+- browser — browser automation
+- terminal — shell/process
+- file — file ops
+- code_execution — Python sandbox
+- delegation — subagents
+- cronjob — cron
+- todo — task list
+- memory — memory interface
+- session_search — history search
+- clarify — clarifying questions
+- messaging — cross-platform messaging
+- spotify — Spotify
+- homeassistant — HA
+- discord — Discord tools
+- discord_admin — Discord admin
+- feishu_doc — Feishu docs
+- feishu_drive — Feishu drive
+- yuanbao — Yuanbao
+- kanban — kanban board
+- skills — skills browse/install/manage
+- video_gen — video gen
+- image_gen — image gen
+- homeassistant — smart home
+- debugging — introspection (off by default)
+- safe — minimal low-risk
+- rl — RL tools (off by default)
+- moa — Mixture of Agents (off by default)
+- x_search — X/Twitter search
+- rl — reinforcement learning
+- moa — mixture of agents
+
+Enumerated canonical list from toolsets.py:
+web, search, x_search, browser, terminal, file, code_execution, vision, image_gen, video, tts, skills, memory, session_search, delegation, cronjob, clarify, messaging, todo, kanban, debugging, safe, spotify, homeassistant, discord, discord_admin, feishu_doc, feishu_drive, yuanbao, rl, moa
+
+Browser Automation
+- Browserbase provider
+- Camofox local Firefox
+- Firecrawl
+- Local Chromium auto-spawn for LAN/localhost
+- CDP supervisor: dialog detection + response + cross-origin iframe eval
+- Browser CDP tool
+- Browser dialog tool
+- Browser state tool
+
+Terminal / Code Execution Backends
+- local — host shell
+- docker — container
+- ssh — remote SSH
+- modal — Modal cloud
+- daytona — Daytona
+- singularity — Singularity
+- vercel_sandbox — Vercel Sandbox (v0.12.0)
+- Docker: run container as host user (no root-owned bind mounts)
+- Subprocess.run() timeouts
+- PTY mode for interactive CLI tools
+- SSH tar permission fixes
+
+— Chunk 5/12 —
+
+4. SKILL SYSTEM
+
+Skill Architecture
+- Agent-created skills: saved as SKILL.md with YAML frontmatter
+- Skills hub: search, install, inspect, update, unpublish, browse, tap
+- Install from direct HTTP(S) URL
+- /reload-skills slash command
+- Preload on startup: -s skill1,skill2
+- Per-platform enable/disable
+- hermes skills list shows enabled/disabled status
+- hermes skills config — per-platform enable
+- skill_manage refuses writes on pinned skills
+- skill_manage edits external_dirs skills in place
+- Skill telemetry: ~/.hermes/skills/.usage.json
+- use_count, view_count, patch_count, last_activity_at, state, pinned
+- Skill AST audit (skills_ast_audit.py)
+- Skills guard (skills_guard.py)
+- Skill sync (skills_sync.py)
+- Automated skill generation during conversation loop (background review fork)
+- References/templates sub-files in skill dirs
+- .archive/ excluded from index walk
+- Curator manages skill lifecycle: grade, consolidate, prune, archive
+- Bundled + hub skills protected from mutation
+[6/5/2026 3:23 PM] Hermes Locus Bot: — Chunk 6/12 —
+
+Bundled Skills (from skills/)
+- autonomous-ai-agents — spawning/orchestrating agents
+- creative — ASCII art, diagrams, visual design, etc.
+- data-science — Jupyter kernels, data analysis
+- diagramming — Excalidraw diagrams (arch, flow, seq)
+- domain — domain intelligence (subdomain discovery, SSL, WHOIS, DNS)
+- email — terminal email (Himalaya)
+- gaming — Minecraft modpacks, Pokemon player
+- gifs — GIF search/download
+- github — GitHub workflows (PRs, issues, auth, codebase inspection)
+- inference-sh — inference.sh platform (150+ AI apps)
+- mcp — MCP server building/testing/deploying
+- media — YouTube transcripts, GIFs, Suno music, spectrograms, Spotify
+- mlops — training, fine-tuning, inference, evaluation, model search
+- note-taking — Obsidian vault integration (read, search, create, edit)
+- productivity — docs, spreadsheets, presentations, Linear, Airtable, Notion, Google Workspace, OCR, PDF editing, Maps, Teams pipeline
+- research — arXiv, blog/RSS monitoring, Polymarket, LLM Wiki, paper writing
+- smart-home — Philips Hue lights
+- social-media — X/Twitter via xurl CLI
+- apple — macOS desktop integration (Finder, native apps, accessibility, screenshots)
+- yuanbao — Tencent Yuanbao groups
+
+Optional Skills (from optional-skills/)
+autonomous-ai-agents:
+- blackbox — Blackbox AI CLI multi-model coding agent
+- honcho — Honcho memory advanced config
+blockchain:
+- evm — EVM chain interactions
+- hyperliquid — Hyperliquid DEX
+- solana — Solana interactions
+communication:
+- one-three-one-rule — decision framework
+creative:
+- blender-mcp — Blender via MCP
+- concept-diagrams — concept diagram generation
+- hyperframes — Hyperframes website-to-video
+- kanban-video-orchestrator — Kanban-driven video pipeline
+- meme-generation — meme creation
+devops:
+- cli — CLI app discovery/auth/reference
+- docker-management — Docker management
+- pinggy-tunnel — Pinggy tunnels
+- watchers — HTTP/RSS/GitHub watchers
+dogfood:
+- adversarial-ux-test — advanced QA
+email:
+- agentmail — AgentMail
+finance:
+- 3-statement-model, comps-analysis, dcf-model, excel-author, lbo-model, merger-model, pptx-author, stocks
+health:
+- fitness-nutrition — fitness calculations, nutrition search
+- neuroskill-bci — BCI/neurofeedback integration
+mcp:
+- fastmcp — FastMCP scaffolding/CLI/templates
+- mcporter — MCP porting/packaging
+migration:\n- openclaw-migration — OpenClaw → Hermes migration
+security:
+- 1password — 1Password CLI
+- oss-forensics — open-source forensics
+- sherlock — Sherlock username search
+software-development:
+- rest-graphql-debug — REST/GraphQL debugging
+web-development:
+- page-agent — client-side web dev workflows
+[6/5/2026 3:24 PM] Hermes Locus Bot: — Chunk 7/12 —
+
+## 5. PLUGIN SYSTEM
+
+### Plugin Architecture
+- `plugins/` directory scanned at startup
+- Plugin types: `backend` (auto-loaded), `standalone` (opt-in), `kind` field
+- Registration API via `ctx`: `register_tool`, `register_hook`, `register_memory_provider`, `register_context_engine`, `register_cli_command`, `register_web_search_provider`, `register_image_gen_provider`, `register_video_gen_provider`
+- Hook lifecycle: `pre_api_request`, `post_api_request`, `pre_llm_call`, `post_llm_call`, `pre_tool_call`, `post_tool_call`, `on_session_end`, `on_pre_compress`, `pre_gateway_dispatch`, `pre_approval_request`, `post_approval_response`
+- Plugin discovery: subdirectory scans in `plugins/<category>/<name>/`
+- `plugin.yaml` metadata: name, version, kind, description, hooks, provides_tools, pip_dependencies, external_dependencies, requires_env
+- Page-scoped plugin slots for built-in dashboard pages
+- Declarative plugin installation for NixOS module
+
+### Bundled Plugins
+
+**Context Engines:**
+- `compressor` (default) — built-in ContextCompressor
+
+**Memory Providers (plugins/memory/):**
+- `honcho` — Honcho AI-native memory
+- `mem0` — Mem0
+- `hindsight` — long-term memory with knowledge graph
+- `holographic` — local SQLite fact store, FTS5 search, trust scoring
+- `byterover` — persistent knowledge tree with `brv` CLI
+- `openviking` — session-managed memory
+- `retaindb` — cloud memory API
+- `supermemory` — semantic long-term memory
+- `builtin` (default) — built-in Python memory
+
+**Model Providers (plugins/model-providers/):**
+- `openai-codex`, `openrouter`, `anthropic`, `gemini`, `deepseek`, `xai`, `nous`, `huggingface`
+- `copilot`, `copilot-acp`, `bedrock`
+- `minimax`, `minimax_cn`, `minimax_oauth`, `zai` (GLM)
+- `kimi-coding`, `alibaba`, `alibaba-coding-plan`, `xiaomi` (MiMo), `kilocode`
+- `gmi` (GMI Cloud), `stepfun`, `azure-foundry`, `qwen-oauth`, `ai-gateway`
+- `opencode-zen`, `opencode-go`, `ollama-cloud`, `arcee`, `novita`, `nvidia`
+- `custom`
+
+**Image Gen Providers (plugins/image_gen/):**
+- `openai`, `openai-codex`, `fal`, `xai`
+
+**Video Gen Providers (plugins/video_gen/):**
+- `fal`, `xai`
+
+**Web Search Providers (plugins/web/):**
+- `brave_free`, `ddgs` (DuckDuckGo), `exa`, `firecrawl`, `parallel`, `searxng`, `tavily`, `xai`
+
+**Browser Providers (plugins/browser/):**
+- `browser_use`, `browserbase`, `firecrawl`
+
+**Platform Adapters (plugins/platforms/):**
+- `discord`, `google_chat`, `irc`, `line`, `mattermost`, `ntfy`, `simplex`, `teams`
+
+**Standalone Plugins:**
+- `disk-cleanup` — auto-cleanup of ephemeral session files
+- Hooks: `post_tool_call`, `on_session_end`
+- Slash: `/disk-cleanup` status/dry-run/quick/deep/track/forget
+- `google_meet` — join Meet calls, transcribe, speak, follow up
+- v1: transcribe-only (headless Chromium + live captions)
+- v2: realtime duplex audio (OpenAI Realtime + BlackHole/PulseAudio)
+- v3: remote node host (gateway on Linux, Chrome+signed-in profile on Mac)
+- Tools: `meet_join`, `meet_leave`, `meet_status`, `meet_transcript`, `meet_say`
+- Explicit-by-design: only joins `meet.google.com` URLs passed in
+- `spotify` — Spotify integration
+- 7 tools: playback, devices, queue, search, playlists, albums, library
+- PKCE OAuth, `hermes auth spotify`
+- `teams_pipeline` — Microsoft Teams meeting pipeline
+- Operator CLI flows
+- Graph-backed transcript-first meeting summaries
+- Durable runtime state
+- Subscriptions, jobs, meetings modules
+
+**Observability:**
+- `langfuse` — Langfuse observability
+- Hooks: `pre_api_request`, `post_api_request`, `pre_llm_call`, `post_llm_call`, `pre_tool_call`, `post_tool_call`
+[6/5/2026 3:24 PM] Hermes Locus Bot: — Chunk 8/12 —
+
+Achievements:
+- hermes-achievements — gamified achievement tracking
+- Scans local session history
+- Tiers: Copper → Silver → Gold → Diamond → Olympian
+- 60+ achievements
+- Share cards (1200×630 PNG)
+- Dashboard integration
+- /achievements, /scan-status, /recent-unlocks, /sessions/{id}/badges API
+
+Kanban:
+- Multi-agent board dispatcher + worker plugin
+- SQLite durable board
+- Dispatcher in gateway by default
+- Auto-claims ready tasks, spawns assigned profiles
+- Auto-blocks after failure_limit consecutive failures
+- Tenant namespace for workspace-path + memory-key isolation
+
+Other:
+- web platform plugin continues existing inline teleport
+- context_engine — plugin discovery loader
+- disk-cleanup — described above
+- example-dashboard — dashboard example
+- image_gen / memory / model-providers / observability / platforms / video_gen — plugin category directories
+- spotify — described above
+
+Plugin Hooks API
+- register_hook(event, fn) — lifecycle hooks
+- Events: pre_api_request, post_api_request, pre_llm_call, post_llm_call, pre_tool_call, post_tool_call, on_session_end, on_pre_compress, pre_gateway_dispatch, pre_approval_request, post_approval_response
+- register_cli_command(name, setup_fn, handler_fn, description) — plugins add subcommands
+- register_memory_provider(provider) — pluggable memory
+- register_context_engine(engine) — pluggable context engine
+- register_web_search_provider(provider) — pluggable web search
+- register_image_gen_provider(provider) — pluggable image gen
+- register_video_gen_provider(provider) — pluggable video gen
+
+6. GATEWAY — MULTI-PLATFORM MESSAGING
+
+Supported Platforms (25)
+1. Telegram
+2. Discord
+3. Slack
+4. WhatsApp
+5. Signal
+6. Matrix
+7. Email (IMAP/SMTP via Himalaya)
+8. SMS
+9. Mattermost
+10. Home Assistant
+11. DingTalk
+12. Feishu / Lark
+13. WeCom
+14. BlueBubbles (iMessage on macOS)
+15. Weixin (WeChat)
+16. Yuanbao (Tencent 元bao)
+17. IRC
+18. Google Chat
+19. Microsoft Teams (plugin)
+20. NTFY
+21. Simplex
+22. Line
+23. QQ Bot
+24. Webhook
+25. API Server (Open WebUI adapter)
+[6/5/2026 3:24 PM] Hermes Locus Bot: — Chunk 9/12 —
+
+### Gateway Core
+- `gateway/run.py` + `gateway/session.py`
+- `gateway/platforms/<name>/adapter.py` per platform
+- `gateway/platforms/<name>/plugin.yaml` per platform
+- `builtin_hooks/` extension point (none shipped yet)
+- Runtime-metadata footer on final replies (`/footer`)
+- Inactivity-based agent timeout (tracks tool activity, not wall-clock)
+- Infinite timeout support + periodic notifications
+- Duplicate message prevention + dedup
+- Typing indicator paused during approval waits
+- Caption exact-line match (not substring match)
+- MEDIA: tag extraction/stripping from streamed gateway messages
+- Profile-aware service units
+- Thread-safe PairingStore with atomic writes
+- Make-hygiene hard message limit configurable
+- Opt-in runtime-metadata footer
+- `pre_gateway_dispatch` hook
+- `pre_approval_request` / `post_approval_response` hooks
+
+### Platform-Specific Features
+**Telegram:**
+- Chat allowlists for groups and forums
+- Emoji reactions for approval status
+- Group topics skill binding for supergroup forums
+- Fresh finals for stale preview streams
+- Markdown tables rendered as row-group bullets
+- Native multi-image sending
+- Centralized audio routing + FLAC support + Telegram document fallback
+- Command names sanitized
+- Per-platform disabled skills respected
+
+**Discord:**
+- Opt-in toolsets
+- ID injection + tool split
+- Feishu wiring
+- Coerce `limit` to int
+- Channel ignored/no_thread_channels
+- Skills registered as native slash commands
+- `/approve`, `/deny`, `/queue`, `/background`, `/btw` native slash commands
+
+**Slack:**
+- Thread engagement (auto-respond in bot-started + mentioned threads)
+- `strict_mention` config
+- `channel_skill_bindings`
+- Approval buttons + thread context preservation
+- mrkdwn in edit_message
+[6/5/2026 3:24 PM] Hermes Locus Bot: — Chunk 10/12 —
+
+Signal:
+- Native formatting (markdown → bodyRanges, reply quotes, reactions)
+- Full MEDIA: tag delivery (send_image_file, send_voice, send_video)
+
+Matrix:
+- Tier 1 feature parity (reactions, read receipts, rich formatting, room management)
+- MATRIX_REQUIRE_MENTION, MATRIX_AUTO_THREAD
+- Encrypted media, auth recovery, cron E2EE, Synapse compat
+- CJK input, E2EE, reconnect
+
+Feishu:
+- Interactive card approval buttons
+- Reconnect + ACL fixes
+- Native multi-image sending
+
+Mattermost:
+- File attachments (DOCUMENT type when post has files)
+- Native multi-image sending
+
+Microsoft Teams (plugin):
+- Graph-backed transcript-first meeting summaries
+- Operator CLI
+- Subscriptions
+- Jobs, meetings runtime
+
+Offline / No-gateway:
+- send_message tool checks if gateway running; falls back
+- Webhook tool constrained to safe tools only
+
+DM Authorization / Pairing
+- hermes pairing list / approve / revoke
+- /approve, /deny in gateway
+- PairingStore atomic writes
+- Approval session key isolated per turn
+- Active-session guard bypass for /approve, /deny, /stop, /new
+
+7. VOICE & TRANSCRIPTION
+
+STT (Voice → Text)
+- Provider auto-detection
+1. Local faster-whisper (free, no key: pip install faster-whisper)
+2. Groq Whisper (free tier: GROQ_API_KEY)
+3. OpenAI Whisper (paid: VOICE_TOOLS_OPENAI_KEY)
+4. Mistral Voxtral (MISTRAL_API_KEY)
+- Config: stt.enabled, stt.provider, stt.local.model
+- Local model options: tiny, base, small, medium, large-v3
+[6/5/2026 3:26 PM] Hermes Locus Bot: — Chunk 11/12 —
+
+8. MODEL PROVIDERS (COMPLETE INVENTORY)
+
+Native / Plugin Providers
+- OpenRouter — API key — OPENROUTER_API_KEY
+- Anthropic — API key — ANTHROPIC_API_KEY
+- Nous Portal — OAuth — hermes auth
+- OpenAI Codex — OAuth — hermes auth
+- GitHub Copilot — Token / OAuth — hermes model → Copilot
+- Google Gemini / AI Studio — API key — GOOGLE_API_KEY / GEMINI_API_KEY
+- DeepSeek — API key — DEEPSEEK_API_KEY
+- xAI / Grok — API key — XAI_API_KEY
+- Hugging Face — Token — HF_TOKEN
+- Z.AI / GLM — API key — GLM_API_KEY
+- MiniMax — API key — MINIMAX_API_KEY
+- MiniMax CN — API key — MINIMAX_CN_API_KEY
+- MiniMax OAuth — OAuth (PKCE) — Browser flow
+- Kimi / Moonshot — API key — KIMI_API_KEY
+- Alibaba / DashScope — API key — DASHSCOPE_API_KEY
+- Xiaomi MiMo — API key — XIAOMI_API_KEY
+- Kilo Code — API key — KILOCODE_API_KEY
+- Vercel AI Gateway — API key — AI_GATEWAY_API_KEY
+- OpenCode Zen — API key — OPENCODE_ZEN_API_KEY
+- OpenCode Go — API key — OPENCODE_GO_API_KEY
+- Qwen OAuth — OAuth — hermes login --provider qwen-oauth
+- GMI Cloud — API key — Plugin
+- Azure AI Foundry — API key — Plugin
+- LM Studio — Local — First-class provider
+- Tencent Tokenhub — API key — Plugin
+- Ollama Cloud — API key — Plugin
+- Arcee — API key — Plugin
+- Novita — API key — Plugin
+- Nvidia — API key — Plugin
+- Bedrock — AWS — Plugin
+- Copilot ACP — External — COPILOT_CLI_PATH or Copilot CLI
+- Custom endpoint — Config — model.base_url + model.api_key
+
+9. MEMORY SYSTEM
+- builtin, honcho, mem0, hindsight, holographic, byterover, openviking, retaindb, supermemory
+- Memory hooks: on_session_end, on_pre_compress, shutdown on /new or /resume
+- Profile-scoped memory isolation
+- Thread gateway user_id → memory plugin for per-user scoping
+- Secret redaction in memory operations
+
+10. MCP (MODEL CONTEXT PROTOCOL)
+- Native MCP client; hermes mcp serve / add / remove / list / test / configure / reload
+- MCP OAuth 2.1 PKCE; OSV malware scanning; circuit breaker
+- Dynamic tool discovery; 401 handling; schema prefix stripping for Anthropic
+- Configurable in config.yaml; auto-discovery from config
+
+ACP (AGENT COMMUNICATION PROTOCOL)
+- hermes acp ACP server mode
+- ACP adapter modules: entry, server, session, auth, permissions, edit_approval, tools, events
+- Transports: Hermes tools as MCP server, Copilot ACP client, Codex transport
+- IDE support: VS Code, Zed, JetBrains
+
+11. SCHEDULING & BACKGROUND
+- CLI: hermes cron list / add / edit / pause / resume / run / status; slash /cron
+- Schedules: duration, natural language, cron, ISO timestamp
+- Per-job overrides: skills, model/provider, script, no_agent, context_from, workdir, profile, deliver, enabled_toolsets
+- 3-minute hard interrupt; .tick.lock; skip_memory; header/footer framing
+- Background processes: terminal(background=True, notify_on_complete=True)
+- Webhooks: hermes webhook subscribe / list / remove / test; safe-tools-only execution
+
+12. KANBAN — MULTI-AGENT WORK QUEUE
+- SQLite durable board
+- CLI verbs: init, create, list, show, assign, link, unlink, comment, complete, block, unblock, archive, tail, watch, stats, runs, log, dispatch, daemon, gc
+- Worker tools: show, complete, block, heartbeat, comment, create, link
+- Orchestrator tools: list, unblock
+- Dispatcher in gateway; reclaims stale claims; atomic claims
+
+13. DELEGATION (SUBAGENTS)
+- delegate_task for single task or batch parallel tasks
+- Roles: leaf, orchestrator; depth=1 by default
+- Synchronous; isolated context + terminal per child
+- Uses same provider pool + credentials as parent
+
+14. SECURITY
+- Approval modes: manual, smart, off; redact_secrets / redact_pii
+- SSRF protection, cron path traversal hardening, cross-session isolation, DM pairing
+
+15. RELEASE HISTORY v0.3 → v0.12
+- v0.12: Autonomous Curator, self-improvement upgrade, LM Studio, Azure Foundry, MiniMax OAuth, Tencent Tokenhub, Google Meet, TTS provider registry, Vercel Sandbox, 57% cold-start cut (1/2)
+[6/5/2026 3:26 PM] Hermes Locus Bot: - v0.8: Background auto-notifications, live Model Switching, MCP OAuth 2.1 + OSV scanning, security hardening, shared thread sessions
+- v0.7: ACP adapter, dashboard/plugins, gateway hooks
+- v0.6: Self-improving skills background review fork
+- v0.4: Achievement share cards
+- v0.3: s6 container supervision, ACP backend
+
+16. OBSERVABILITY
+- Langfuse plugin with pre/post hooks
+- Insights analytics, per-skill telemetry, account usage, rate limits (2/2)
+[6/5/2026 3:26 PM] Hermes Locus Bot: 📨 send_message: "to telegram: "— Chunk 12/12 — #...""
+[6/5/2026 3:26 PM] Hermes Locus Bot: — Chunk 12/12 —
+
+## 17. OBSIDIAN / EXCALIDRAW
+- Note-taking skill: read, search, create, edit markdown notes in local vault
+- Interacts with frontmatter, wikilinks, tags
+- Excalidraw skill: hand-drawn style JSON diagrams; embed/render in notes
+
+## 18. COMPUTER USE (CUA)
+- `computer_use` tool for macOS
+- Accessibility API, screenshot, mouse/keyboard simulation, Finder/native app interaction
+
+## 19. SPECIAL CAPABILITIES
+- Patch tool with V4A multi-file patch format
+- LSP client workspace support and server discovery
+- Task planning: `/goal`, `/queue`, `/steer`, `/background`
+- Terminal checkpoints + `/rollback`
+- Secret management: Bitwarden secret source, credential pool exhaustion-aware rotation
+
+## 20. CODE PATHS / EXTENSION POINTS
+- `tools/<toolname>.py`
+- `toolsets.py`
+- `hermes_cli/commands.py`
+- `cli.py`
+- `gateway/platforms/<name>/`
+- `plugins/<category>/<name>/`
+- `context.engine`, `memory.provider` in `config.yaml`
+
+### Repo Layout
+```
+hermes-agent/
+├── run_agent.py
+├── model_tools.py
+├── toolsets.py
+├── cli.py
+├── hermes_state.py
+├── hermes_constants.py
+├── agent/
+├── hermes_cli/
+├── tools/
+├── gateway/
+├── cron/
+├── plugins/
+├── optional-skills/
+├── skills/
+├── ui-tui/
+├── acp_adapter/
+├── scripts/
+├── website/
+└── tests/
+```
+
+## 21. CONFIG KEYS
+- model, agent, terminal, compression, display, stt/tts, memory, security/privacy, approvals, delegation, checkpoints, prompt_caching, context, auxiliary, curator, kanban, hooks
+
+## 22. ENV VARS
+- Provider keys: OPENROUTER_API_KEY, ANTHROPIC_API_KEY, GROQ_API_KEY, VOICE_TOOLS_OPENAI_KEY, MISTRAL_API_KEY, ELEVENLABS_API_KEY, MINIMAX_API_KEY, MINIMAX_CN_API_KEY, DEEPSEEK_API_KEY, XAI_API_KEY, HF_TOKEN, GLM_API_KEY, KIMI_API_KEY, DASHSCOPE_API_KEY, XIAOMI_API_KEY, KILOCODE_API_KEY, AI_GATEWAY_API_KEY, OPENCODE_ZEN_API_KEY, OPENCODE_GO_API_KEY
+- Memory/services: OPENVIKING_ENDPOINT, RETAINDB_API_KEY, SUPERMEMORY_API_KEY, COPILOT_GITHUB_TOKEN, COPILOT_CLI_PATH
+- Runtime: HERMES_HOME, HERMES_MEDIA_ALLOW_DIRS, HERMES_REDACT_SECRETS, HERMES_YOLO_MODE, HERMES_PORTAL_BASE_URL, HERMES_KANBAN_TASK, HERMES_KANBAN_BOARD, HASS_TOKEN
+- Generic fallbacks: OPENAI_API_KEY, GOOGLE_API_KEY, GEMINI_API_KEY
+- Platform tokens: Telegram bot token, Discord bot token, Slack bot token, etc.
+
+## 23. KEY PATHS
+- `~/.hermes/config.yaml`
+- `~/.hermes/.env`
+- `~/.hermes/state.db`
+- `~/.hermes/sessions/`
+- `~/.hermes/logs/`
+- `~/.hermes/skills/`
+- `~/.hermes/plugins/`
+- `~/.hermes/memories/`
+- `~/.hermes/auth.json`
+- `~/.hermes/state-snapshots/`
+- Profile dirs: `~/.hermes/profiles/<name>/`
+- Source: `~/.hermes/hermes-agent/`
+
+## 24. OBSIDIAN MCP / OBSIDIAN SKILL SCOPE
+- No standalone obsidian-mcp server ships in this repo
+- Obsidian integration is via the `note-taking` skill
+- Excalidraw integration is via the `diagramming/excalidraw` skill
+
+## 25. KNOWN GAPS
+- No standalone obsidian-mcp server
+- `page-agent` is optional web-dev skill only
+- `blender-mcp`, `meme-generation` are optional creative skills
+
+End of atomic specification.
