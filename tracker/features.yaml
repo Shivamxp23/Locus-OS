@@ -4054,5 +4054,8 @@ features:
     - cmd: pytest tests/unit/test_config.py
     - cmd: pytest tests/unit/test_registry.py
     - cmd: node --test --test-reporter=tap tests/unit/test_config.test.ts
-    integration: []
+    - cmd: node --test --test-reporter=tap tests/unit/test_registry.test.ts
+    integration:
+    - cmd: pytest tests/integration/test_provider_modularity.py
+
   depends_on: []

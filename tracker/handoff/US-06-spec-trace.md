@@ -1,0 +1,8 @@
+# US-06 Spec Trace
+
+| spec line / source | the sentence quoted word for word | verdict | mechanism / file:line | test name |
+|---|---|---|---|---|
+| US-06 accept criteria 1 | "sidecar/registry.py defines ProviderRegistry and get_registry(); a provider registers under (interface, name); the active provider is chosen by the config key locus.<area>.<feature>.provider." | LOCUS-NEW | sidecar/registry.py:17, 36 | tests/unit/test_registry.py::test_provider_registry_singleton, test_provider_registry_active_by_config |
+| US-06 accept criteria 2 | "When a feature's enabled switch is false: its HTTP routes answer 503 with {\"disabled\": \"<config key>\"}, its tools are not registered and its jobs are not scheduled (one test per behaviour, using a dummy feature)." | LOCUS-NEW | sidecar/registry.py:72, 83, 94 | tests/unit/test_registry.py::test_off_switch_routes_answer_503, test_off_switch_tools_not_registered, test_off_switch_jobs_not_scheduled |
+| US-06 accept criteria 3 | "Swap test: two dummy providers for one interface; changing the config key switches behaviour with no code edit. Health test: every registered provider answers health_check()." | LOCUS-NEW | sidecar/registry.py:36, 116 | tests/unit/test_registry.py::test_provider_swap_via_config, test_health_check_all_registered, tests/integration/test_provider_modularity.py::test_integration_provider_swap_via_config, test_integration_health_check_all_providers |
+| US-06 accept criteria 4 | "locus-extension/src/registry.ts offers the same register/get and the same off behaviour for tools." | LOCUS-NEW | locus-extension/src/registry.ts:13, 19, 39 | tests/unit/test_registry.test.ts, tests/integration/test_provider_modularity.py::test_integration_cross_language_typescript_registry |

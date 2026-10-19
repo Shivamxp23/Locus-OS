@@ -1,10 +1,14 @@
 /**
- * SPEC §03 / F-0125: Universal Provider Registry in TypeScript.
+ * SPEC §03 / F-0125 / US-06: Universal Provider Registry in TypeScript.
+ * Enforces modular register, get, active provider resolution by config,
+ * and off-switch behavior for tools and routes.
  */
+import { get as getConfig, isEnabled } from "./config.ts";
 
 export class ProviderRegistry {
   private providers: Map<string, Map<string, any>> = new Map();
   private instances: Map<string, any> = new Map();
+  private tools: Map<string, any> = new Map();
 
   register(area: string, name: string, provider: any): void {
     if (!this.providers.has(area)) {
@@ -18,6 +22,47 @@ export class ProviderRegistry {
     if (!areaMap) return null;
     if (name) return areaMap.get(name) || null;
     return areaMap.values().next().value || null;
+  }
+
+  getActiveProvider(area: string, feature?: string, defaultName?: string): any {
+    let chosen: string | null = null;
+    if (feature) {
+      chosen = getConfig(`locus.${area}.${feature}.provider`);
+    }
+    if (!chosen) {
+      chosen = getConfig(`locus.${area}.provider`);
+    }
+    if (!chosen) {
+      chosen = defaultName || null;
+    }
+    return this.get(area, chosen || undefined);
+  }
+
+  /**
+   * Register a tool only if its feature switch is enabled.
+   * If configKey evaluates to false, tool is NOT registered.
+   */
+  registerTool(toolName: string, configKey: string, toolDef: any): boolean {
+    if (!isEnabled(configKey)) {
+      return false;
+    }
+    this.tools.set(toolName, toolDef);
+    return true;
+  }
+
+  getRegisteredTools(): string[] {
+    return Array.from(this.tools.keys());
+  }
+
+  /**
+   * Check if an HTTP route is allowed.
+   * Returns 503 with {"disabled": configKey} if disabled, null if allowed.
+   */
+  checkRouteAllowed(configKey: string): { status: number; body: { disabled: string } } | null {
+    if (!isEnabled(configKey)) {
+      return { status: 503, body: { disabled: configKey } };
+    }
+    return null;
   }
 
   listProviders(area?: string): string[] {
