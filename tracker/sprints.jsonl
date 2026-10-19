@@ -36,3 +36,4 @@
 {"event":"planned","sprint":"S11","start":"2026-11-28","end":"2026-12-01","goal":"Everything is recorded and backed up to the vault; Neo4j Agent Memory is the memory layer.","capacity":3,"points":2,"stories":["US-17"],"date":"2026-11-28"}
 {"event":"accepted","story":"US-17","feature":"F-0049","level":4,"note":"Trajectory recording verified at Level 4 (INTEGRATED). Sensitive secret redaction, disk persistence, and batch evaluation verified.","date":"2026-12-01","commit":"3111ee671ba1"}
 {"event":"closed","sprint":"S11","date":"2026-12-01","planned_points":2,"velocity":2,"done":["US-17"],"not_done":{}}
+{"event":"planned","sprint":"S12","start":"2026-12-02","end":"2026-12-05","goal":"Everything is recorded and backed up to the vault; Neo4j Agent Memory is the memory layer.","capacity":2,"points":2,"stories":["US-18"],"date":"2026-12-02"}
