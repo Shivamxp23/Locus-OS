@@ -2956,6 +2956,7 @@ features:
     files:
     - sidecar/telegram/pairing.py
     - sidecar/telegram/gateway.py
+    - sidecar/telegram/secret_manager.py
     - locus_cli/setup_telegram.py
     symbols:
     - file: sidecar/telegram/pairing.py
@@ -2968,9 +2969,13 @@ features:
       contains:
       - "class TelegramGateway"
       - "def handle_update"
+    - file: sidecar/telegram/secret_manager.py
+      contains:
+      - "class SecretReferenceManager"
     guard: []
     unit:
     - cmd: pytest tests/unit/test_telegram_pairing.py
+    - cmd: pytest tests/unit/test_telegram_setup.py
     integration: []
 
   depends_on: []

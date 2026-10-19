@@ -273,6 +273,23 @@ def prompt_keys(
     return updates
 
 
+def prompt_telegram_pairing(answers: Optional[Dict[str, Any]] = None) -> bool:
+    """Prompt user to set up Telegram pairing and generate pairing code (R6, S-1)."""
+    ans = answers or {}
+    if "telegram_pair" in ans:
+        do_pair = bool(ans["telegram_pair"])
+    else:
+        resp = input("\nSet up Telegram bot and generate secure pairing code now? [y/N]: ").strip().lower()
+        do_pair = resp in ("y", "yes")
+
+    if do_pair:
+        from locus_cli.setup_telegram import generate_and_print_pairing_code
+
+        generate_and_print_pairing_code()
+        return True
+    return False
+
+
 def run_install(
     target_dir: Optional[Path] = None,
     answers: Optional[Dict[str, Any]] = None,
@@ -389,6 +406,13 @@ def run_install(
 
     save_env_file(env_file, env_updates)
 
+    # 8. Telegram Pairing setup (R6, S-1)
+    paired_code_generated = False
+    if not non_interactive and (reconf_section in (None, "all", "telegram", "pairing")):
+        paired_code_generated = prompt_telegram_pairing(ans)
+    elif ans.get("telegram_pair", False):
+        paired_code_generated = prompt_telegram_pairing(ans)
+
     return {
         "status": "installed",
         "target_dir": str(target_path),
@@ -396,6 +420,7 @@ def run_install(
         "config_file": str(config_file),
         "env_file": str(env_file),
         "topology": locus_sec.get("topology"),
+        "telegram_pairing_triggered": paired_code_generated,
         "prerequisites": {k: msg for k, (_, msg) in prereqs.items()},
     }
 
@@ -409,7 +434,7 @@ def main() -> None:
     parser.add_argument(
         "--reconfigure",
         type=str,
-        choices=["all", "topology", "keys", "vault"],
+        choices=["all", "topology", "keys", "vault", "telegram", "pairing"],
         help="Reconfigure a specific section of Locus setup (R8)",
     )
 

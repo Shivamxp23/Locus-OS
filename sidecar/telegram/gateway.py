@@ -19,6 +19,7 @@ from sidecar.pi_bridge import run_pi_turn
 from sidecar.providers.channel import BaseChannelProvider
 from sidecar.registry import get_registry
 from sidecar.telegram.pairing import PairingManager
+from sidecar.telegram.secret_manager import SecretReferenceManager
 
 
 def chunk_telegram_text(text: str, max_len: int = 4096) -> list[str]:
@@ -60,15 +61,42 @@ class TelegramGateway(BaseChannelProvider):
         self,
         pairing_manager: PairingManager | None = None,
         pi_runner: Callable[..., Any] | None = None,
+        secret_manager: SecretReferenceManager | None = None,
     ) -> None:
         self.pairing_manager = pairing_manager or PairingManager()
         self._pi_runner = pi_runner or run_pi_turn
+        self.secret_manager = secret_manager or SecretReferenceManager()
         self._enabled: bool = True
         self._webhook_mode: bool = False
         self._token: str | None = None
         self._running: bool = False
         self._outbox: list[dict[str, Any]] = []
+        self._deleted_messages: list[dict[str, Any]] = []
         self._custom_transport: Callable[[dict[str, Any]], Any] | None = None
+
+    def delete_message(self, chat_id: int | str, message_id: int) -> bool:
+        """Request deletion of a Telegram message to prevent secrets persisting in chat history (R4)."""
+        payload = {"method": "deleteMessage", "chat_id": int(chat_id), "message_id": int(message_id)}
+        self._deleted_messages.append(payload)
+        if self._custom_transport is not None:
+            try:
+                self._custom_transport(payload)
+            except Exception:
+                pass
+            return True
+
+        if self._token:
+            import json
+            import urllib.request
+            url = f"https://api.telegram.org/bot{self._token}/deleteMessage"
+            try:
+                data = json.dumps({"chat_id": int(chat_id), "message_id": int(message_id)}).encode("utf-8")
+                req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
+                with urllib.request.urlopen(req, timeout=3.0) as resp:
+                    return resp.status == 200
+            except Exception:
+                return False
+        return True
 
     def set_transport(self, transport: Callable[[dict[str, Any]], Any] | None) -> None:
         """Inject transport for testing (e.g. fake Telegram network transport)."""
@@ -209,6 +237,44 @@ class TelegramGateway(BaseChannelProvider):
                 self.send_message(chat_id, reply["text"])
                 return reply
 
+            # SPEC §18 / R4: Telegram /setup command initiates secret reference flow
+            if raw_text.startswith("/setup"):
+                parts = raw_text.split(maxsplit=1)
+                if len(parts) > 1 and parts[1].strip():
+                    prov = parts[1].strip().lower()
+                    ref_token = self.secret_manager.create_secret_reference(prov)
+                    reply_text = (
+                        f"Secret reference issued for provider '{prov}':\n"
+                        f"Token: {ref_token}\n"
+                        f"Valid for 5 minutes. Reply with: /secret {ref_token} <api_key>"
+                    )
+                    self.send_message(chat_id, reply_text)
+                    return {"chat_id": chat_id, "text": reply_text, "ref_token": ref_token}
+                else:
+                    reply_text = (
+                        "Usage: /setup <provider>\n"
+                        "Supported providers: anthropic, openai, google, telegram, composio"
+                    )
+                    self.send_message(chat_id, reply_text)
+                    return {"chat_id": chat_id, "text": reply_text}
+
+            # SPEC §18 / R4: Secret transmission - delete message immediately and consume ref
+            if raw_text.startswith("/secret"):
+                msg_id = message.get("message_id")
+                if msg_id is not None:
+                    self.delete_message(chat_id, msg_id)
+
+                lines = raw_text.split(maxsplit=2)
+                if len(lines) >= 3:
+                    ref_token = lines[1].strip()
+                    secret_val = lines[2].strip()
+                    ok, res_msg = self.secret_manager.consume_secret_reference(ref_token, secret_val)
+                else:
+                    res_msg = "Invalid format. Expected: /secret <ref_token> <api_key>"
+
+                self.send_message(chat_id, res_msg)
+                return {"chat_id": chat_id, "text": res_msg, "deleted_message_id": msg_id}
+
             # Execute turn via Pi bridge
             session_id = f"telegram_{chat_id}"
             try:
@@ -243,6 +309,14 @@ class TelegramGateway(BaseChannelProvider):
             success, msg = self.pairing_manager.attempt_pair(code, int(sender_id))
             self.send_message(chat_id, msg)
             return {"chat_id": chat_id, "text": msg}
+
+        if raw_text.startswith("/secret"):
+            # Delete message containing potential secrets immediately
+            msg_id = message.get("message_id")
+            if msg_id is not None:
+                self.delete_message(chat_id, msg_id)
+            self.send_message(chat_id, self.FIXED_UNCONFIGURED_LINE)
+            return {"chat_id": chat_id, "text": self.FIXED_UNCONFIGURED_LINE, "deleted_message_id": msg_id}
 
         # S-1 item 4: Until paired, the bot answers every message with one fixed line ("not configured") and executes nothing.
         self.send_message(chat_id, self.FIXED_UNCONFIGURED_LINE)
