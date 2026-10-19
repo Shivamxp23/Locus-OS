@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-19T22:09:15+0530",
-  "commit": "308a37fe63bc71b0e8e554b1391a783b466a67b2",
+  "generated_at": "2026-10-19T22:21:02+0530",
+  "commit": "7ba002c189db642531c2df9dd50791323c05ce10",
   "dirty": false,
   "static": false,
   "guard": {
@@ -13,20 +13,20 @@
   },
   "summary": {
     "features": 125,
-    "verified_mean_pct": 17.5,
+    "verified_mean_pct": 18.2,
     "claimed_mean_pct": 71.4,
     "claimed_rows": 86,
     "by_label": {
       "FILES_PRESENT": 3,
       "INHERITED_OK": 12,
-      "INTEGRATED": 8,
-      "NO_EVIDENCE": 98,
+      "INTEGRATED": 9,
+      "NO_EVIDENCE": 97,
       "UNIT_VERIFIED": 4
     },
-    "integrated_or_better": 20,
+    "integrated_or_better": 21,
     "proven": 0,
-    "overclaims": 64,
-    "no_evidence": 98,
+    "overclaims": 63,
+    "no_evidence": 97,
     "spec_sections_total": 135,
     "spec_changed": 0
   },
@@ -351,20 +351,49 @@
       "id": "F-0020",
       "title": "Harness Delegation",
       "verdict": "MULTI-PROVIDER",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 65.0,
-      "gap": 65.0,
-      "flags": [
-        "CLAIMED_FILES_MISSING",
-        "OVERCLAIM"
-      ],
+      "gap": -20.0,
+      "flags": [],
       "reasons": [
-        "declared files missing: sidecar/inter_harness_bridge.py"
+        "no recorded proof"
       ],
-      "next": "Files claimed but absent: sidecar/inter_harness_bridge.py. Create them or correct the path.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "pytest tests/unit/test_harness_delegation.py",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 10 items\n\ntests\\unit\\test_harness_delegation.py ..........                         [100%]\n\n============================= 10 passed in 0.34s ==============================\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.7
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "pytest tests/integration/test_harness_service.py",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 2 items\n\ntests\\integration\\test_harness_service.py ..                             [100%]\n\n============================== 2 passed in 0.69s ==============================\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 3.1
+          }
+        ]
+      }
     },
     "F-0021": {
       "id": "F-0021",
@@ -863,10 +892,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 11 items\n\ntests\\unit\\test_telegram_pairing.py ...........                          [100%]\n\n============================= 11 passed in 0.33s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 11 items\n\ntests\\unit\\test_telegram_pairing.py ...........                          [100%]\n\n============================= 11 passed in 0.35s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.5
+            "seconds": 2.7
           }
         ],
         "guard": [],
@@ -877,7 +906,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 3 items\n\ntests\\integration\\test_job_telegram_delivery.py ...                      [100%]\n\n============================== 3 passed in 0.39s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 3 items\n\ntests\\integration\\test_job_telegram_delivery.py ...                      [100%]\n\n============================== 3 passed in 0.41s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.7
@@ -949,10 +978,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 8 items\n\ntests\\unit\\test_trajectory.py ........                                   [100%]\n\n============================== 8 passed in 0.19s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 8 items\n\ntests\\unit\\test_trajectory.py ........                                   [100%]\n\n============================== 8 passed in 0.21s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.5
+            "seconds": 2.6
           }
         ],
         "guard": [],
@@ -963,10 +992,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 2 items\n\ntests\\integration\\test_trajectory_service.py ..                          [100%]\n\n============================== 2 passed in 0.60s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 2 items\n\ntests\\integration\\test_trajectory_service.py ..                          [100%]\n\n============================== 2 passed in 0.57s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.8
+            "seconds": 3.0
           }
         ]
       }
@@ -997,10 +1026,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 11 items\n\ntests\\unit\\test_chat_archiver.py ...........                             [100%]\n\n============================= 11 passed in 0.17s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 11 items\n\ntests\\unit\\test_chat_archiver.py ...........                             [100%]\n\n============================= 11 passed in 0.15s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -1011,10 +1040,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 2 items\n\ntests\\integration\\test_chat_archiver_service.py ..                       [100%]\n\n============================== 2 passed in 0.55s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 2 items\n\ntests\\integration\\test_chat_archiver_service.py ..                       [100%]\n\n============================== 2 passed in 0.56s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.3
+            "seconds": 3.0
           }
         ]
       }
@@ -1121,10 +1150,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 13 items\n\ntests\\unit\\test_life_os.py .............                                 [100%]\n\n============================= 13 passed in 0.16s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 13 items\n\ntests\\unit\\test_life_os.py .............                                 [100%]\n\n============================= 13 passed in 0.13s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.2
           }
         ],
         "guard": [],
@@ -1138,7 +1167,7 @@
             "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 2 items\n\ntests\\integration\\test_life_os_service.py ..                             [100%]\n\n============================== 2 passed in 0.66s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.0
+            "seconds": 3.1
           }
         ]
       }
@@ -1208,10 +1237,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 5 items\n\ntests\\unit\\test_scheduler.py .....                                       [100%]\n\n============================== 5 passed in 0.41s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 5 items\n\ntests\\unit\\test_scheduler.py .....                                       [100%]\n\n============================== 5 passed in 0.43s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.6
           }
         ],
         "guard": [],
@@ -1222,10 +1251,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 3 items\n\ntests\\integration\\test_service_restart.py ...                            [100%]\n\n============================== 3 passed in 0.73s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 3 items\n\ntests\\integration\\test_service_restart.py ...                            [100%]\n\n============================== 3 passed in 0.88s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.1
+            "seconds": 3.3
           }
         ]
       }
@@ -1275,7 +1304,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 8 items\n\ntests\\unit\\test_livesync.py ........                                     [100%]\n\n============================== 8 passed in 0.18s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 8 items\n\ntests\\unit\\test_livesync.py ........                                     [100%]\n\n============================== 8 passed in 0.27s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.3
@@ -1289,7 +1318,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 2 items\n\ntests\\integration\\test_livesync_couchdb.py ..                            [100%]\n\n============================== 2 passed in 0.59s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 2 items\n\ntests\\integration\\test_livesync_couchdb.py ..                            [100%]\n\n============================== 2 passed in 0.56s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.9
@@ -1725,10 +1754,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 9 items\n\ntests\\unit\\test_install.py .........                                     [100%]\n\n============================== 9 passed in 2.27s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 9 items\n\ntests\\unit\\test_install.py .........                                     [100%]\n\n============================== 9 passed in 2.48s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 4.3
+            "seconds": 4.5
           },
           {
             "cmd": "pytest tests/unit/test_doctor.py",
@@ -1736,10 +1765,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 5 items\n\ntests\\unit\\test_doctor.py .....                                          [100%]\n\n============================== 5 passed in 2.36s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 5 items\n\ntests\\unit\\test_doctor.py .....                                          [100%]\n\n============================== 5 passed in 2.47s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 4.4
+            "seconds": 4.7
           }
         ],
         "guard": [],
@@ -1774,10 +1803,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 11 items\n\ntests\\unit\\test_telegram_pairing.py ...........                          [100%]\n\n============================= 11 passed in 0.30s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 11 items\n\ntests\\unit\\test_telegram_pairing.py ...........                          [100%]\n\n============================= 11 passed in 0.46s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.6
           },
           {
             "cmd": "pytest tests/unit/test_telegram_setup.py",
@@ -1785,10 +1814,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 5 items\n\ntests\\unit\\test_telegram_setup.py .....                                  [100%]\n\n============================== 5 passed in 0.28s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 5 items\n\ntests\\unit\\test_telegram_setup.py .....                                  [100%]\n\n============================== 5 passed in 0.27s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.6
+            "seconds": 2.5
           }
         ],
         "guard": [],
@@ -1823,10 +1852,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 4 items\n\ntests\\unit\\test_skeleton.py ....                                         [100%]\n\n============================== 4 passed in 0.03s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 4 items\n\ntests\\unit\\test_skeleton.py ....                                         [100%]\n\n============================== 4 passed in 0.04s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.4
           },
           {
             "cmd": "pytest tests/unit/test_pi_bridge.py",
@@ -1837,7 +1866,7 @@
             "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 4 items\n\ntests\\unit\\test_pi_bridge.py ....                                        [100%]\n\n============================== 4 passed in 0.06s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.4
+            "seconds": 2.2
           }
         ],
         "guard": [
@@ -1901,10 +1930,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 4 items\n\ntests\\unit\\test_tunnel.py ....                                           [100%]\n\n============================== 4 passed in 0.05s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 4 items\n\ntests\\unit\\test_tunnel.py ....                                           [100%]\n\n============================== 4 passed in 0.04s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.3
+            "seconds": 2.0
           }
         ],
         "guard": [],
@@ -1915,10 +1944,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "wto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/integration/test_hybrid_tunnel.py::test_hybrid_tunnel_cross_boundary_communication\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n======================== 2 passed, 2 warnings in 0.90s ========================\n",
+            "tail": "wto/upgrade.html for upgrade instructions\n    warnings.warn(  # deprecated in 14.0 - 2024-11-09\n\ntests/integration/test_hybrid_tunnel.py::test_hybrid_tunnel_cross_boundary_communication\n  C:\\Users\\soni8\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py:17: DeprecationWarning: websockets.server.WebSocketServerProtocol is deprecated\n    from websockets.server import WebSocketServerProtocol\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n======================== 2 passed, 2 warnings in 0.99s ========================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 3.1
+            "seconds": 3.0
           }
         ]
       }
@@ -1949,10 +1978,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 2 items\n\ntests\\unit\\test_docker_compose.py ..                                     [100%]\n\n============================== 2 passed in 0.03s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 2 items\n\ntests\\unit\\test_docker_compose.py ..                                     [100%]\n\n============================== 2 passed in 0.04s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.2
+            "seconds": 2.3
           }
         ],
         "guard": [],
@@ -2595,7 +2624,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 5 items\n\ntests\\unit\\test_config.py .....                                          [100%]\n\n============================== 5 passed in 0.45s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 5 items\n\ntests\\unit\\test_config.py .....                                          [100%]\n\n============================== 5 passed in 0.47s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.4
@@ -2606,7 +2635,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 8 items\n\ntests\\unit\\test_registry.py ........                                     [100%]\n\n============================== 8 passed in 0.15s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 8 items\n\ntests\\unit\\test_registry.py ........                                     [100%]\n\n============================== 8 passed in 0.16s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 2.3
@@ -2617,7 +2646,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "TAP version 13\n# Subtest: TypeScript config accessor: get and is_enabled on nonexistent config\nok 1 - TypeScript config accessor: get and is_enabled on nonexistent config\n  ---\n  duration_ms: 2.3375\n  type: 'test'\n  ...\n# Subtest: TypeScript config accessor: get and is_enabled with config.yaml\nok 2 - TypeScript config accessor: get and is_enabled with config.yaml\n  ---\n  duration_ms: 7.3482\n  type: 'test'\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 163.2176\n",
+            "tail": "TAP version 13\n# Subtest: TypeScript config accessor: get and is_enabled on nonexistent config\nok 1 - TypeScript config accessor: get and is_enabled on nonexistent config\n  ---\n  duration_ms: 2.1157\n  type: 'test'\n  ...\n# Subtest: TypeScript config accessor: get and is_enabled with config.yaml\nok 2 - TypeScript config accessor: get and is_enabled with config.yaml\n  ---\n  duration_ms: 9.4984\n  type: 'test'\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 153.4098\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 0.3
@@ -2628,7 +2657,7 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "TAP version 13\n# Subtest: TypeScript ProviderRegistry: singleton and basic registration\nok 1 - TypeScript ProviderRegistry: singleton and basic registration\n  ---\n  duration_ms: 1.3535\n  type: 'test'\n  ...\n# Subtest: TypeScript ProviderRegistry: off-switch for tools and route check\nok 2 - TypeScript ProviderRegistry: off-switch for tools and route check\n  ---\n  duration_ms: 9.1559\n  type: 'test'\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 191.1269\n",
+            "tail": "TAP version 13\n# Subtest: TypeScript ProviderRegistry: singleton and basic registration\nok 1 - TypeScript ProviderRegistry: singleton and basic registration\n  ---\n  duration_ms: 1.5494\n  type: 'test'\n  ...\n# Subtest: TypeScript ProviderRegistry: off-switch for tools and route check\nok 2 - TypeScript ProviderRegistry: off-switch for tools and route check\n  ---\n  duration_ms: 9.0474\n  type: 'test'\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 167.0535\n",
             "vacuous": false,
             "why_vacuous": "",
             "seconds": 0.3
@@ -2642,10 +2671,10 @@
             "ran": true,
             "ok": true,
             "exit": 0,
-            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 4 items\n\ntests\\integration\\test_provider_modularity.py ....                       [100%]\n\n============================== 4 passed in 0.35s ==============================\n",
+            "tail": "============================= test session starts =============================\nplatform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0\nrootdir: C:\\Users\\soni8\\Desktop\\everything\\University 2.0\\Project(s)\\5_Locus\\locus-os\nplugins: anyio-4.12.0, hydra-core-1.3.2, langsmith-0.3.9, asyncio-0.22.0, typeguard-4.5.1\nasyncio: mode=Mode.STRICT\ncollected 4 items\n\ntests\\integration\\test_provider_modularity.py ....                       [100%]\n\n============================== 4 passed in 0.36s ==============================\n",
             "vacuous": false,
             "why_vacuous": "",
-            "seconds": 2.6
+            "seconds": 3.1
           }
         ]
       }
