@@ -327,6 +327,59 @@ def create_app(
             },
         }
 
+    # Coding Harness Delegation routes (SPEC §3.7 + §11.5 / F-0020)
+    from sidecar.harness.delegation import HarnessProvider
+    active_registry.register("harness", "default_harness", HarnessProvider)
+
+    @app.post("/harness/delegate")
+    def delegate_harness_route(body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Delegate coding task execution to external harness in isolated scratch worktree."""
+        if not app.state.registry.is_feature_enabled("harness"):
+            return JSONResponse(status_code=503, content={"disabled": "locus.harness.enabled"})
+        provider_cls = app.state.registry.get_active_provider("harness", default_name="default_harness")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No harness provider registered")
+
+        provider = provider_cls()
+        provider.initialize()
+        payload = body or {}
+        from sidecar.providers.harness import HarnessType, TaskBrief
+
+        h_override = None
+        if payload.get("harness_override"):
+            try:
+                h_override = HarnessType(payload["harness_override"])
+            except ValueError:
+                h_override = None
+
+        brief = TaskBrief(
+            description=payload.get("description", "Inspect codebase"),
+            target_files=payload.get("target_files", []),
+            constraints=payload.get("constraints", []),
+            test_commands=payload.get("test_commands", []),
+            timeout=payload.get("timeout", 600),
+            complexity=payload.get("complexity", "normal"),
+            requires_autonomous=payload.get("requires_autonomous", False),
+            is_quick_fix=payload.get("is_quick_fix", False),
+            harness_override=h_override,
+        )
+        res = provider.execute_delegation(brief)
+        return {"status": "ok", "result": res.to_dict()}
+
+    @app.get("/harness/harnesses")
+    def list_harnesses_route() -> Dict[str, Any]:
+        """List available coding harnesses and status."""
+        if not app.state.registry.is_feature_enabled("harness"):
+            return JSONResponse(status_code=503, content={"disabled": "locus.harness.enabled"})
+        provider_cls = app.state.registry.get_active_provider("harness", default_name="default_harness")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No harness provider registered")
+
+        provider = provider_cls()
+        provider.initialize()
+        health = provider.health_check()
+        return {"status": "ok", "harnesses": health.get("available_harnesses", [])}
+
     return app
 
 
