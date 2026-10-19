@@ -6,3 +6,5 @@
 {"event":"accepted","story":"US-03","feature":"F-0086","level":3,"note":"verified CouchDB loopback binding, password interpolation, and local.ini CORS","date":"2026-10-23","commit":"132c068e40ea"}
 {"event":"accepted","story":"US-04","feature":"F-0083","level":3,"note":"verified stranger rejection, wrong code count, single use pair, restart retention","date":"2026-10-23","commit":"f10b98a81d95"}
 {"event":"accepted","story":"US-06","feature":"F-0125","level":4,"note":"verified provider swap via config, route 503 off switch, tool/job suppression, health checks","date":"2026-10-23","commit":"97edb6bbcfac"}
+{"event":"closed","sprint":"S2","date":"2026-10-26","planned_points":6,"velocity":6,"done":["US-03","US-04","US-06"],"not_done":{}}
+{"event":"planned","sprint":"S3","start":"2026-10-27","end":"2026-10-30","goal":"A research job runs on the VM by itself and the owner hears about it on Telegram.","capacity":8,"points":6,"stories":["US-07","US-08"],"date":"2026-10-27"}

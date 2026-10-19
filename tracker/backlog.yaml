@@ -133,6 +133,14 @@ stories:
     points: 3
     target_level: 3
     depends_on: [US-01, US-04, US-06]
+    accept:
+      - "The Telegram adapter implements BaseChannelProvider and is registered with ProviderRegistry under ('channel', 'telegram')."
+      - "When an incoming text message arrives from the paired owner, the gateway calls run_pi_turn(prompt=message_text, session_id='telegram_<chat_id>') and replies to the owner with the generated output."
+      - "Messages exceeding 4096 characters are split into multiple message chunks without truncation."
+      - "Messages from strangers or unpaired users receive the fixed line 'not configured' and never trigger run_pi_turn."
+      - "When locus.channels.telegram.enabled is false, the gateway shuts down and processes no messages."
+      - "Unit tests with fake Telegram transport and fake Pi executable assert each rule above."
+    demo: 'Run tests for Telegram gateway channel provider: fake Telegram receives message from paired owner, triggers run_pi_turn with session_id telegram_<chat_id>, and sends reply. Message from stranger is rejected with "not configured" and no Pi turn runs.'
 
   - id: US-08
     epic: E3
@@ -143,6 +151,15 @@ stories:
     target_level: 3
     requires_decisions: [D-15, D-16]
     depends_on: [US-01, US-06]
+    accept:
+      - "sidecar/scheduler.py implements SchedulerProvider and registers under ('scheduler', 'apscheduler') or ('scheduler', 'cron')."
+      - "Loads research jobs defined in YAML under LOCUS_HOME/jobs/<job_id>.yaml per errata D-15 (fields id, name, cron, prompt, tier, allowed_paths, budget_max_tokens, destination)."
+      - "When a job fires, it executes unattended via run_pi_turn(prompt=job.prompt, session_id='cron_<job_id>') without blocking the scheduler."
+      - "Result is saved to the vault under <destination>/<date>-<job_id>.md, and an audit record is created."
+      - "If a job fails, the scheduler logs the error to the audit trail and continues running subsequent jobs."
+      - "When locus.scheduler.enabled is false, scheduled jobs do not fire."
+      - "Unit tests assert job loading, execution via run_pi_turn, vault output writing, error containment, and off switch."
+    demo: 'Run scheduler unit tests: a mock job fires, invokes run_pi_turn with cron_<job_id>, writes the resulting markdown file to vault 04-Captures/Research/, logs to audit trail, and does not block when the bridge fails.'
 
   - id: US-09
     epic: E3
@@ -152,6 +169,12 @@ stories:
     points: 2
     target_level: 4
     depends_on: [US-07, US-08]
+    accept:
+      - "When a scheduled research job finishes, the scheduler invokes the Telegram channel provider to send an executive summary to the paired owner."
+      - "If the summary exceeds 4096 characters, it is truncated or split cleanly with a reference to the vault capture note."
+      - "Failure in Telegram delivery is logged and swallowed (never fatal to the scheduler loop)."
+      - "A unit test asserts a completed job triggers Telegram notification to the paired owner."
+    demo: 'Trigger a test research job completion: assert that the Telegram channel provider sends the summary message to the paired owner chat ID.'
 
   - id: US-10
     epic: E3
@@ -161,6 +184,12 @@ stories:
     points: 3
     target_level: 4
     depends_on: [US-08]
+    accept:
+      - "sidecar/service.py or CLI daemon command starts the FastAPI sidecar, Pi bridge, and scheduler in a single headless process."
+      - "Job definitions and schedules persist in SQLite under LOCUS_HOME; on service restart, existing jobs are reloaded and pending jobs still trigger."
+      - "Graceful shutdown flushes in-flight state and stops workers cleanly."
+      - "A restart test stops and restarts the scheduler process, verifying job retention and next execution time."
+    demo: 'Schedule a test job, stop the scheduler service, restart it, and assert the job is loaded from SQLite with its next execution schedule intact.'
 
   # ------------------------------------------------------------------ E4 Installer (coarse)
   - id: US-11
@@ -172,6 +201,13 @@ stories:
     target_level: 3
     addendum: [P4]
     depends_on: [US-05]
+    accept:
+      - "install.ps1 and install.sh exist at the repo root and act as thin launchers checking Python 3.10+ and executing locus_cli/install.py."
+      - "locus_cli/install.py supports non-interactive mode via --yes --answers <file.json>."
+      - "Validates prerequisites: Python 3, Node 18+, Docker (if mode requires it), and git."
+      - "Creates ~/.locus/ and ~/.locus/config.yaml using defaults if answers file specifies them."
+      - "A test exercises the non-interactive install with a temporary answers file."
+    demo: 'Run py -3 -m locus_cli.install --yes --answers tests/fixtures/install_answers.json --target-dir <temp_dir>: creates config.yaml and exits 0.'
 
   - id: US-12
     epic: E4

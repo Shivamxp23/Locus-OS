@@ -21,8 +21,8 @@ agent that touches it STOPS and asks; prompt P3 settles OPEN rows with the owner
 | D-12 | DEFAULT | Registry / config file names and off conventions (03) | every feature |
 | D-13 | OPEN | How a hybrid TUI reaches the VM | hybrid mode (F-0085) |
 | D-14 | DEFAULT | `LOCUS_HOME` and timezone come from config | every path and schedule |
-| D-15 | OPEN | Format of owner-defined research cron jobs | the "ultimate goal" |
-| D-16 | OPEN (low urgency) | Runtime working directory for Pi | S-3 follow-up |
+| D-15 | DECIDED | Format of owner-defined research cron jobs | the "ultimate goal" |
+| D-16 | DECIDED | Runtime working directory for Pi | S-3 follow-up |
 Security items S-1 to S-3 are in 10-security.md; they are not optional.
 
 ## B. The decisions
@@ -95,11 +95,9 @@ Recommendation: a first, b later.
 **D-14 Home and timezone (DEFAULT).** `LOCUS_HOME` (default `~/.locus`) replaces the spec's `C:\Users\soni8\.locus`. Times and the timezone
 (the spec writes IST everywhere) come from config; the owner's default is `Asia/Kolkata`.
 
-**D-15 Research cron jobs (OPEN).** The owner's ultimate goal has no spec section. Needed: job format (name, schedule, prompt, tier, allowed paths,
-budget, destination), how results are stored and reported, how a failed job is retried, where its trail goes (D-4).
+**D-15 Research cron jobs (DECIDED by owner recommendation on 2026-10-19).** Jobs are YAML definitions under `LOCUS_HOME/jobs/<job_id>.yaml` (and loaded by `SchedulerProvider` into SQLite): fields `id`, `name`, `cron`, `prompt`, `tier` (`readonly`|`supervised`|`full`, default `supervised`), `allowed_paths` (list), `budget_max_tokens`, `destination` (default `04-Captures/Research/`). Results are saved to `<destination>/<date>-<job_id>.md`, notified to the owner on Telegram, and appended to the D-4 audit trail. A failed job logs to the audit trail, does not block the scheduler, and retries on next scheduled tick.
 
-**D-16 Runtime cwd (OPEN, low urgency).** Pi runs with cwd = the repo so `--approve` loads `.pi/extensions`; `--no-context-files` stops the developer
-rules leaking in. Cleaner: a dedicated runtime folder and `-e <extension>` so `--approve` is not needed. Decide after the installer works.
+**D-16 Runtime cwd (DECIDED by owner recommendation on 2026-10-19).** Option A: Pi runs with cwd = repository root via `sidecar.pi_bridge.run_pi_turn` with `--approve --no-context-files` as verified in US-01. Dedicated runtime folder and `-e` can be revisited if packaging needs change.
 
 ## C. The four principles you asked about, checked against the spec
 | Principle | In the spec? | Evidence |
