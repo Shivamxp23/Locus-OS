@@ -109,6 +109,10 @@ def set_value(path: str, value: Any) -> None:
     temp_path.replace(cfg_path)
 
 
+# Alias set to set_value for ergonomic accessor calling
+set = set_value
+
+
 
 def _load_raw_config() -> dict[str, Any]:
     """Load config.yaml if it exists and is valid, returning parsed dict."""

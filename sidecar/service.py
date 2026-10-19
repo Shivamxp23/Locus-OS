@@ -26,6 +26,8 @@ import sidecar.cost_tracker  # ensures default cost tracker is registered
 from sidecar.providers.cost_tracker import CanonicalUsage, CostResult, PricingEntry
 import sidecar.title_generator  # ensures default title generator is registered
 from sidecar.title_generator import clean_title, format_title_prompt, generate_fallback_title
+import sidecar.onboarding  # ensures default onboarding provider is registered
+from sidecar.providers.onboarding import TopologyType
 
 logger = logging.getLogger("locus.service")
 
@@ -1136,6 +1138,127 @@ def create_app(
             return JSONResponse(status_code=503, content={"disabled": "locus.title_generation.enabled"})
         prompt_data = format_title_prompt(user_snippet, assistant_snippet)
         return {"status": "ok", "prompt": prompt_data}
+
+    # -------------------------------------------------------------------------
+    # SPEC §1.12 / F-0012 / US-31: Onboarding Flow Routes
+    # -------------------------------------------------------------------------
+    def _is_onboarding_enabled() -> bool:
+        if config.get("locus.onboarding_flow.enabled") is False:
+            return False
+        if config.get("locus.onboarding.enabled") is False:
+            return False
+        return True
+
+    @app.post("/onboarding/start")
+    def start_onboarding_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Start or configure onboarding topology."""
+        if not _is_onboarding_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.onboarding_flow.enabled"})
+        topology = body.get("topology", "local")
+        provider_cls = app.state.registry.get_active_provider("onboarding", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No onboarding provider registered")
+        provider = provider_cls()
+        step_res = provider.set_topology(topology)
+        return {"status": "ok", "result": step_res.to_dict()}
+
+    @app.post("/onboarding/step")
+    def onboarding_step_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Configure a specific onboarding step."""
+        if not _is_onboarding_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.onboarding_flow.enabled"})
+        step = (body.get("step") or "").strip().lower()
+        payload = body.get("payload") or {}
+
+        provider_cls = app.state.registry.get_active_provider("onboarding", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No onboarding provider registered")
+        provider = provider_cls()
+
+        if step == "llm":
+            res = provider.configure_llm(
+                provider=payload.get("provider", "deepseek"),
+                model=payload.get("model", "deepseek-chat"),
+                endpoint=payload.get("endpoint"),
+                api_key=payload.get("api_key"),
+                fallback_provider=payload.get("fallback_provider"),
+                fallback_key=payload.get("fallback_key"),
+            )
+        elif step == "memory":
+            res = provider.configure_memory(
+                enable_neo4j=payload.get("enable_neo4j", False),
+                neo4j_uri=payload.get("neo4j_uri"),
+                neo4j_user=payload.get("neo4j_user"),
+                neo4j_password=payload.get("neo4j_password"),
+                enable_headroom=payload.get("enable_headroom", True),
+            )
+        elif step == "vault":
+            res = provider.configure_vault(
+                vault_path=payload.get("vault_path", ""),
+                enable_livesync=payload.get("enable_livesync", False),
+                couch_url=payload.get("couch_url"),
+                couch_user=payload.get("couch_user"),
+                couch_password=payload.get("couch_password"),
+                couch_db=payload.get("couch_db"),
+            )
+        elif step == "life_os":
+            res = provider.configure_life_os(
+                timezone=payload.get("timezone", "Asia/Kolkata"),
+                morning_checkin_time=payload.get("morning_checkin_time", "08:00"),
+                factions=payload.get("factions"),
+            )
+        elif step == "telegram":
+            res = provider.configure_telegram(
+                enabled=payload.get("enabled", False),
+                token=payload.get("token"),
+                owner_id=payload.get("owner_id"),
+            )
+        elif step == "cron":
+            res = provider.configure_cron(
+                enabled=payload.get("enabled", True),
+                schedules=payload.get("schedules"),
+            )
+        else:
+            raise HTTPException(status_code=400, detail=f"Unknown onboarding step '{step}'")
+
+        return {"status": "ok", "result": res.to_dict()}
+
+    @app.post("/onboarding/diagnostics")
+    def run_onboarding_diagnostics_route(body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Execute diagnostic probe suite across configured subsystems."""
+        if not _is_onboarding_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.onboarding_flow.enabled"})
+        probes = (body or {}).get("probes") if body else None
+        provider_cls = app.state.registry.get_active_provider("onboarding", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No onboarding provider registered")
+        provider = provider_cls()
+        diag = provider.run_diagnostics(probes=probes)
+        return {"status": "ok", "diagnostics": diag}
+
+    @app.get("/onboarding/status")
+    def get_onboarding_status_route() -> Dict[str, Any]:
+        """Retrieve onboarding completion and topology status."""
+        if not _is_onboarding_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.onboarding_flow.enabled"})
+        provider_cls = app.state.registry.get_active_provider("onboarding", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No onboarding provider registered")
+        provider = provider_cls()
+        st = provider.get_status()
+        return {"status": "ok", "onboarding": st}
+
+    @app.post("/onboarding/reset")
+    def reset_onboarding_route() -> Dict[str, Any]:
+        """Reset onboarding state to uninitialized."""
+        if not _is_onboarding_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.onboarding_flow.enabled"})
+        provider_cls = app.state.registry.get_active_provider("onboarding", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No onboarding provider registered")
+        provider = provider_cls()
+        provider.reset()
+        return {"status": "ok", "message": "Onboarding state reset"}
 
     return app
 

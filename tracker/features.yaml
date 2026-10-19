@@ -604,16 +604,36 @@ features:
     remaining: None (install.ps1/sh/bat with full wizard created)
     notes: CLI setup wizard works but install scripts don't exist
     key_files_raw: locus_cli/setup.py
-  spec_targets: []
+  spec_targets:
+  - locus-extension/src/ui/setup-wizard.ts
   spec_sha:
-    '§1.12: Onboarding Flow': 631c8b158baad280
+    '§1.12: Onboarding & Multi-Topology Setup Flow (Installer & First-Run)': 92ba3aee93c38d71
   evidence:
     files:
+    - sidecar/onboarding.py
+    - sidecar/providers/onboarding.py
     - locus_cli/setup.py
-    symbols: []
+    - locus-extension/src/ui/setup-wizard.ts
+    - locus-extension/src/onboarding.ts
+    symbols:
+    - file: sidecar/onboarding.py
+      contains:
+      - OnboardingProvider
+      - run_non_interactive_setup
+    - file: sidecar/providers/onboarding.py
+      contains:
+      - BaseOnboardingProvider
+      - DiagnosticProbeResult
+      - OnboardingStepResult
+      - TopologyType
+    - file: locus-extension/src/ui/setup-wizard.ts
+      contains:
+      - SetupWizard
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - pytest tests/unit/test_onboarding.py
+    integration:
+    - pytest tests/integration/test_onboarding_service.py
   depends_on: []
 - id: F-0013
   title: Agent Initialization

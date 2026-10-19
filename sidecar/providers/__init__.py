@@ -67,6 +67,12 @@ from sidecar.providers.model_manager import (
     TurnEscalationDecision,
     TurnEscalationRequest,
 )
+from sidecar.providers.onboarding import (
+    BaseOnboardingProvider,
+    DiagnosticProbeResult,
+    OnboardingStepResult,
+    TopologyType,
+)
 from sidecar.providers.post_turn import (
     ALLOWED_REVIEW_TOOLS,
     BasePostTurnProvider,
@@ -102,6 +108,7 @@ __all__ = [
     "BaseLearningProvider",
     "BaseLifeOSProvider",
     "BaseModelManagementProvider",
+    "BaseOnboardingProvider",
     "BasePostTurnProvider",
     "BasePromptBuilderProvider",
     "BaseRateLimitProvider",
@@ -119,6 +126,7 @@ __all__ = [
     "ContextMessage",
     "DCSResult",
     "DelegationResult",
+    "DiagnosticProbeResult",
     "ExecutionMode",
     "ExtensionHookDescriptor",
     "FactionType",
@@ -130,6 +138,7 @@ __all__ = [
     "ModelDescriptor",
     "ModelTier",
     "NormalizedChat",
+    "OnboardingStepResult",
     "OperatingMode",
     "PatternHorizon",
     "PatternRecord",
@@ -149,6 +158,7 @@ __all__ = [
     "TitleGenerationRequest",
     "TitleGenerationResult",
     "ToolUsageRecord",
+    "TopologyType",
     "TrajectorySession",
     "TurnEscalationDecision",
     "TurnEscalationRequest",
