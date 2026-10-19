@@ -228,6 +228,26 @@ def prompt_topology(current: Optional[str] = None) -> str:
     return default
 
 
+def prompt_vm_settings(existing_vm: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """Prompt user for remote VM host and SSH settings in hybrid/vm mode (D-13)."""
+    cur = existing_vm or {}
+    print("\nRemote VM Configuration (D-13 SSH Tunnel / Connect):")
+    def_host = cur.get("host", "127.0.0.1")
+    host = input(f"Enter remote VM host/IP [{def_host}]: ").strip() or def_host
+    def_user = cur.get("user", "ubuntu")
+    user = input(f"Enter remote SSH username [{def_user}]: ").strip() or def_user
+    ssh_port = int(cur.get("ssh_port", 22))
+    sidecar_port = int(cur.get("sidecar_port", 8420))
+    local_port = int(cur.get("local_port", 8420))
+    return {
+        "host": host,
+        "user": user,
+        "ssh_port": ssh_port,
+        "sidecar_port": sidecar_port,
+        "local_port": local_port,
+    }
+
+
 def prompt_keys(
     existing_keys: Dict[str, str],
     providers: Optional[List[str]] = None,
@@ -382,6 +402,21 @@ def run_install(
     sched_sec.setdefault("enabled", ans.get("scheduler_enabled", True))
     sched_sec.setdefault("provider", "apscheduler")
 
+    # Remote VM settings for VM and Hybrid topologies (D-13)
+    if topology in ("vm", "hybrid") or "vm" in ans:
+        vm_sec = locus_sec.setdefault("vm", {})
+        if not non_interactive and (reconf_section in (None, "all", "vm", "topology")):
+            vm_prompts = prompt_vm_settings(vm_sec)
+            vm_sec.update(vm_prompts)
+        elif "vm" in ans and isinstance(ans["vm"], dict):
+            vm_sec.update(ans["vm"])
+        else:
+            vm_sec.setdefault("host", "127.0.0.1")
+            vm_sec.setdefault("user", "ubuntu")
+            vm_sec.setdefault("ssh_port", 22)
+            vm_sec.setdefault("sidecar_port", 8420)
+            vm_sec.setdefault("local_port", 8420)
+
     # Write merged configuration
     config_file.write_text(yaml.dump(cfg, sort_keys=False), encoding="utf-8")
 
@@ -434,7 +469,7 @@ def main() -> None:
     parser.add_argument(
         "--reconfigure",
         type=str,
-        choices=["all", "topology", "keys", "vault", "telegram", "pairing"],
+        choices=["all", "topology", "keys", "vault", "telegram", "pairing", "vm"],
         help="Reconfigure a specific section of Locus setup (R8)",
     )
 

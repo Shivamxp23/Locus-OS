@@ -15,6 +15,16 @@ if "%1"=="pair" (
     py -3 -m locus_cli.setup_telegram %1 %2 %3 %4 %5 %6 %7 %8 %9
     exit /b %ERRORLEVEL%
 )
+if "%1"=="tunnel" (
+    shift
+    py -3 -m locus_cli.tunnel %1 %2 %3 %4 %5 %6 %7 %8 %9
+    exit /b %ERRORLEVEL%
+)
+if "%1"=="connect" (
+    shift
+    py -3 -m locus_cli.tunnel %1 %2 %3 %4 %5 %6 %7 %8 %9
+    exit /b %ERRORLEVEL%
+)
 if "%1"=="setup" (
     if "%2"=="pi" (
         shift

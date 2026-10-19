@@ -101,6 +101,12 @@ class HeadlessService:
         scheduler: Optional[SchedulerProvider] = None,
         registry: Optional[ProviderRegistry] = None,
     ) -> None:
+        # SPEC 10-security.md / D-13: Sidecar binds strictly to loopback (127.0.0.1), never 0.0.0.0
+        if host in ("0.0.0.0", "::", ""):
+            raise ValueError(
+                "Binding plain HTTP to 0.0.0.0 is forbidden per 10-security.md and errata D-13. "
+                "Sidecar service must bind only to loopback (127.0.0.1) and be accessed via SSH tunnel."
+            )
         self.host = host
         self.port = port
         self.registry = registry or get_registry()
