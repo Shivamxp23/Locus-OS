@@ -555,10 +555,32 @@ features:
   evidence:
     files:
     - sidecar/title_generator.py
-    symbols: []
+    - sidecar/providers/title_generator.py
+    - locus-extension/src/sessions/title-gen.ts
+    - locus-extension/src/title-generator.ts
+    symbols:
+    - file: sidecar/title_generator.py
+      contains:
+      - TitleGeneratorProvider
+      - clean_title
+      - format_title_prompt
+      - generate_fallback_title
+    - file: sidecar/providers/title_generator.py
+      contains:
+      - BaseTitleGeneratorProvider
+      - TitleGenerationRequest
+      - TitleGenerationResult
+    - file: locus-extension/src/sessions/title-gen.ts
+      contains:
+      - TitleGenerator
+      - cleanTitle
+      - formatTitlePrompt
+      - generateFallbackTitle
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - pytest tests/unit/test_title_generator.py
+    integration:
+    - pytest tests/integration/test_title_generator_service.py
   depends_on: []
 - id: F-0012
   title: Onboarding Flow

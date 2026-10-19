@@ -22,6 +22,11 @@ from sidecar.providers.cost_tracker import (
     CostResult,
     PricingEntry,
 )
+from sidecar.providers.title_generator import (
+    BaseTitleGeneratorProvider,
+    TitleGenerationRequest,
+    TitleGenerationResult,
+)
 from sidecar.providers.context_compression import (
     BaseCompressionProvider,
     CompactionResult,
@@ -100,6 +105,7 @@ __all__ = [
     "BasePostTurnProvider",
     "BasePromptBuilderProvider",
     "BaseRateLimitProvider",
+    "BaseTitleGeneratorProvider",
     "BaseToolSystemProvider",
     "BaseTrajectoryRecorder",
     "BaseVaultSyncProvider",
@@ -140,6 +146,8 @@ __all__ = [
     "TaskBrief",
     "TaskScoreInput",
     "TaskScoreResult",
+    "TitleGenerationRequest",
+    "TitleGenerationResult",
     "ToolUsageRecord",
     "TrajectorySession",
     "TurnEscalationDecision",

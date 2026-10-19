@@ -24,6 +24,8 @@ import sidecar.rate_limiter  # ensures default provider is registered
 from sidecar.providers.rate_limit import RateLimitState
 import sidecar.cost_tracker  # ensures default cost tracker is registered
 from sidecar.providers.cost_tracker import CanonicalUsage, CostResult, PricingEntry
+import sidecar.title_generator  # ensures default title generator is registered
+from sidecar.title_generator import clean_title, format_title_prompt, generate_fallback_title
 
 logger = logging.getLogger("locus.service")
 
@@ -1091,6 +1093,49 @@ def create_app(
         provider = provider_cls()
         provider.set_pricing_override(model=model, pricing=pricing_obj)
         return {"status": "ok", "model": model, "pricing": pricing_obj.to_dict()}
+
+    # -------------------------------------------------------------------------
+    # SPEC §1.11 / F-0011 / US-30: Title Generation Routes
+    # -------------------------------------------------------------------------
+    def _is_title_generation_enabled() -> bool:
+        if config.get("locus.title_generation.enabled") is False:
+            return False
+        if config.get("locus.sessions.auto_title.enabled") is False:
+            return False
+        return True
+
+    @app.post("/title/generate")
+    def generate_title_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate a short 3-7 word session title from first conversation exchange."""
+        if not _is_title_generation_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.title_generation.enabled"})
+        user_message = body.get("user_message") or ""
+        assistant_response = body.get("assistant_response") or ""
+        timeout = float(body.get("timeout", 30.0))
+
+        provider_cls = app.state.registry.get_active_provider("title_generator", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No title generator provider registered")
+        provider = provider_cls()
+        title = provider.generate_title(user_message=user_message, assistant_response=assistant_response, timeout=timeout)
+        return {"status": "ok", "title": title}
+
+    @app.post("/title/clean")
+    def clean_title_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Clean artifacts (quotes, 'Title:' prefix, trailing punctuation, 80 char clamp)."""
+        if not _is_title_generation_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.title_generation.enabled"})
+        raw_title = body.get("raw_title") or ""
+        cleaned = clean_title(raw_title)
+        return {"status": "ok", "cleaned_title": cleaned}
+
+    @app.get("/title/prompt")
+    def get_title_prompt_route(user_snippet: str = "", assistant_snippet: str = "") -> Dict[str, Any]:
+        """Assemble title generation system prompt and snippet payload."""
+        if not _is_title_generation_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.title_generation.enabled"})
+        prompt_data = format_title_prompt(user_snippet, assistant_snippet)
+        return {"status": "ok", "prompt": prompt_data}
 
     return app
 
