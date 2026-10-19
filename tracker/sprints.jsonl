@@ -54,3 +54,4 @@
 {"event":"planned","sprint":"S17","start":"2026-12-22","end":"2026-12-25","goal":"One layout, no known security hole, the guard shows 0 FAIL and the hooks are on.","capacity":2,"points":2,"stories":["US-23"],"date":"2026-12-22"}
 {"event":"accepted","story":"US-23","feature":"F-0004","level":4,"note":"Verified model management tier lookup, dynamic escalation rules on Sunday synthesis and token/complexity triggers, thinking budget clamping, and 503 off-switch at Level 4","date":"2026-12-25","commit":"1da866389dd3"}
 {"event":"closed","sprint":"S17","date":"2026-12-25","planned_points":2,"velocity":2,"done":["US-23"],"not_done":{}}
+{"event":"planned","sprint":"S18","start":"2026-12-26","end":"2026-12-29","goal":"One layout, no known security hole, the guard shows 0 FAIL and the hooks are on.","capacity":2,"points":2,"stories":["US-24"],"date":"2026-12-26"}
