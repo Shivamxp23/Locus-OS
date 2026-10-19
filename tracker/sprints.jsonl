@@ -27,3 +27,4 @@
 {"event":"planned","sprint":"S8","start":"2026-11-16","end":"2026-11-19","goal":"One command sets up local, VM or hybrid, with keys and Telegram pairing.","capacity":3,"points":3,"stories":["US-14"],"date":"2026-11-16"}
 {"event":"accepted","story":"US-14","feature":"F-0083","level":3,"note":"Telegram setup in installer and /setup secret-reference flow verified at Level 3.","date":"2026-11-16","commit":"265e412ac0ae"}
 {"event":"closed","sprint":"S8","date":"2026-11-19","planned_points":3,"velocity":3,"done":["US-14"],"not_done":{}}
+{"event":"planned","sprint":"S9","start":"2026-11-20","end":"2026-11-23","goal":"One command sets up local, VM or hybrid, with keys and Telegram pairing.","capacity":3,"points":3,"stories":["US-15"],"date":"2026-11-20"}
