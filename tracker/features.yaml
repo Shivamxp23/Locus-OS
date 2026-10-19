@@ -1348,11 +1348,46 @@ features:
     '§10.6-10.7: Hebbian Learning & Pattern Engine': 05372a5b6111ac36
   evidence:
     files:
-    - sidecar/learning/
-    symbols: []
+    - sidecar/learning/learning_system.py
+    - sidecar/providers/learning.py
+    - locus-extension/src/learning.ts
+    symbols:
+    - file: sidecar/learning/learning_system.py
+      contains:
+      - UnifiedLearningProvider
+      - is_enabled
+      - record_candidate
+      - check_stability
+      - generate_profile_markdown
+      - record_tool_usage
+      - record_reward_signal
+      - score_thought
+      - update_edge_weight
+      - apply_weekly_decay
+      - detect_patterns
+    - file: sidecar/providers/learning.py
+      contains:
+      - BaseLearningProvider
+      - LearningCandidate
+      - StableFacet
+      - ToolUsageRecord
+      - RewardSignal
+      - PatternRecord
+    - file: locus-extension/src/learning.ts
+      contains:
+      - recordLearningCandidate
+      - checkStability
+      - getUserProfile
+      - recordToolUsage
+      - recordRewardSignal
+      - scoreThought
+      - updateHebbianWeight
+      - getPatterns
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest -v tests/unit/test_learning_system.py
+    integration:
+    - py -3 -m pytest -v tests/integration/test_learning_service.py
   depends_on: []
 - id: F-0036
   title: Subagents / AutoResearch
