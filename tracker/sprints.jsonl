@@ -23,3 +23,4 @@
 {"event":"closed","sprint":"S6","date":"2026-11-11","planned_points":3,"velocity":3,"done":["US-12"],"not_done":{}}
 {"event":"planned","sprint":"S7","start":"2026-11-12","end":"2026-11-15","goal":"One command sets up local, VM or hybrid, with keys and Telegram pairing.","capacity":3,"points":3,"stories":["US-13"],"date":"2026-11-12"}
 {"event":"accepted","story":"US-13","feature":"F-0082","level":3,"note":"Locus doctor diagnostics with PASS/FAIL lines and launcher Pi pass-through verified at Level 3.","date":"2026-11-12","commit":"9d521c137b6a"}
+{"event":"closed","sprint":"S7","date":"2026-11-15","planned_points":3,"velocity":3,"done":["US-13"],"not_done":{}}
