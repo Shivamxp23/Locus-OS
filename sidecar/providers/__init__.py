@@ -10,6 +10,12 @@ from sidecar.providers.chat_archiver import (
     ChatTurn,
     NormalizedChat,
 )
+from sidecar.providers.harness import (
+    BaseHarnessProvider,
+    DelegationResult,
+    HarnessType,
+    TaskBrief,
+)
 from sidecar.providers.life_os import (
     BaseLifeOSProvider,
     CheckInInput,
@@ -29,22 +35,27 @@ __all__ = [
     "ArchiveResult",
     "BaseChannelProvider",
     "BaseChatArchiverProvider",
+    "BaseHarnessProvider",
     "BaseLifeOSProvider",
     "BaseTrajectoryRecorder",
     "BaseVaultSyncProvider",
     "ChatTurn",
     "CheckInInput",
     "DCSResult",
+    "DelegationResult",
     "FactionType",
     "GoalStackLevel",
+    "HarnessType",
     "ModeConstraints",
     "NormalizedChat",
     "OperatingMode",
     "PostTaskLog",
     "SyncState",
+    "TaskBrief",
     "TaskScoreInput",
     "TaskScoreResult",
     "TrajectorySession",
     "TurnRecord",
 ]
+
 

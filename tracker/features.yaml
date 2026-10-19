@@ -699,10 +699,20 @@ features:
   evidence:
     files:
     - sidecar/inter_harness_bridge.py
-    symbols: []
+    - sidecar/harness/delegation.py
+    - sidecar/providers/harness.py
+    symbols:
+    - file: sidecar/harness/delegation.py
+      name: HarnessProvider
+    - file: sidecar/providers/harness.py
+      name: BaseHarnessProvider
+    - file: sidecar/inter_harness_bridge.py
+      name: InterHarnessBridge
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: pytest tests/unit/test_harness_delegation.py
+    integration:
+    - cmd: pytest tests/integration/test_harness_service.py
   depends_on: []
 - id: F-0021
   title: Neo4j Agent Memory (POLE+O)
