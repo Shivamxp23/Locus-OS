@@ -1,7 +1,7 @@
 # Tracker status (computed, not written)
 
-- commit `704b209c8a` - 2026-10-19T18:46:34+0530 - with test runs
-- guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
+- commit `9afd64ce17` (dirty working tree) - 2026-10-19T18:47:58+0530 - with test runs
+- guard: PASS {'FAIL': 0, 'WARN': 11, 'INFO': 0}
 - features: 125 | verified average **12.4%** | old claimed average 71.4% over 86 rows
 - integrated or better: 13 | proven: 0 | overclaims (claimed >= verified + 25): 71 | no evidence: 108
 - by level: {'INHERITED_OK': 12, 'INTEGRATED': 1, 'NO_EVIDENCE': 108, 'UNIT_VERIFIED': 4}
