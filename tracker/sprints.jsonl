@@ -39,3 +39,4 @@
 {"event":"planned","sprint":"S12","start":"2026-12-02","end":"2026-12-05","goal":"Everything is recorded and backed up to the vault; Neo4j Agent Memory is the memory layer.","capacity":2,"points":2,"stories":["US-18"],"date":"2026-12-02"}
 {"event":"accepted","story":"US-18","feature":"F-0050","level":4,"note":"Multi-platform chat archiver verified at Level 4 (INTEGRATED). Vault persistence and LiveSync push verified.","date":"2026-12-05","commit":"7ccc2a3bcd0a"}
 {"event":"closed","sprint":"S12","date":"2026-12-05","planned_points":2,"velocity":2,"done":["US-18"],"not_done":{}}
+{"event":"planned","sprint":"S13","start":"2026-12-06","end":"2026-12-09","goal":"Every task at every scale gets a priority score; Locus drives other harnesses.","capacity":2,"points":2,"stories":["US-19"],"date":"2026-12-06"}
