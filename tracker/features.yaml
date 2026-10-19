@@ -399,7 +399,7 @@ features:
 - id: F-0012
   title: Onboarding Flow
   spec_refs:
-  - '§1.12: Onboarding Flow'
+  - '§1.12: Onboarding & Multi-Topology Setup Flow (Installer & First-Run)'
   mapping: exact
   origin: legacy-tracker
   category: Foundation
@@ -1025,7 +1025,7 @@ features:
 - id: F-0030
   title: TUI / Dashboard
   spec_refs:
-  - '§7.1-7.9: Terminal Interface & Footer Widget'
+  - '§7.1-7.9: Terminal Interface & Native @earendil-works/pi-tui Augmentation'
   mapping: grouped
   origin: legacy-tracker
   category: Interface
@@ -1060,7 +1060,7 @@ features:
 - id: F-0031
   title: CLI / Doctor Diagnostics
   spec_refs:
-  - '§8.1-8.10: CLI Commands'
+  - '§8.1-8.10: CLI Commands, Multi-Surface Management, Telegram Settings & Headless VM Topology'
   mapping: grouped
   origin: legacy-tracker
   category: CLI

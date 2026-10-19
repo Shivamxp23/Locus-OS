@@ -1,0 +1,2240 @@
+{
+  "generated_at": "2026-10-19T17:11:07+0530",
+  "commit": "fcf40483d5b8e7692c5ef3864992a4caea192517",
+  "dirty": true,
+  "static": true,
+  "guard": {
+    "verdict": "FAIL",
+    "counts": {
+      "FAIL": 6,
+      "WARN": 11,
+      "INFO": 0
+    }
+  },
+  "summary": {
+    "features": 125,
+    "verified_mean_pct": 9.6,
+    "claimed_mean_pct": 71.4,
+    "claimed_rows": 86,
+    "by_label": {
+      "INHERITED_OK": 12,
+      "NO_EVIDENCE": 113
+    },
+    "integrated_or_better": 12,
+    "proven": 0,
+    "overclaims": 72,
+    "no_evidence": 113,
+    "spec_sections_total": 135,
+    "spec_changed": 0
+  },
+  "features": {
+    "F-0001": {
+      "id": "F-0001",
+      "title": "Pi Agent Loop",
+      "verdict": "KEEP-PI",
+      "level": 1,
+      "label": "INHERITED_OK",
+      "pct": 100,
+      "claimed_pct": 100.0,
+      "gap": 0.0,
+      "flags": [],
+      "reasons": [],
+      "next": "",
+      "checks": {}
+    },
+    "F-0002": {
+      "id": "F-0002",
+      "title": "System Prompt Construction",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 100.0,
+      "gap": 100.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: locus-extension/src/hooks/index.ts"
+      ],
+      "next": "Files claimed but absent: locus-extension/src/hooks/index.ts. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0003": {
+      "id": "F-0003",
+      "title": "Tool System (13 Canonical Tools)",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 100.0,
+      "gap": 100.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: locus-extension/src/tools/index.ts"
+      ],
+      "next": "Files claimed but absent: locus-extension/src/tools/index.ts. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0004": {
+      "id": "F-0004",
+      "title": "Model Management & Escalation",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 85.0,
+      "gap": 85.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/life_os.py"
+      ],
+      "next": "Files claimed but absent: sidecar/life_os.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0005": {
+      "id": "F-0005",
+      "title": "Extension Lifecycle",
+      "verdict": "KEEP-PI",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 100.0,
+      "gap": 100.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: locus-extension/index.ts"
+      ],
+      "next": "Files claimed but absent: locus-extension/index.ts. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0006": {
+      "id": "F-0006",
+      "title": "Context Window Management",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 70.0,
+      "gap": 70.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/context/headroom_adapter.py"
+      ],
+      "next": "Files claimed but absent: sidecar/context/headroom_adapter.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0007": {
+      "id": "F-0007",
+      "title": "Post-Turn Review",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 80.0,
+      "gap": 80.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/learning/reflector.py"
+      ],
+      "next": "Files claimed but absent: sidecar/learning/reflector.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0008": {
+      "id": "F-0008",
+      "title": "Stream Diagnostics",
+      "verdict": "KEEP-PI",
+      "level": 1,
+      "label": "INHERITED_OK",
+      "pct": 100,
+      "claimed_pct": 100.0,
+      "gap": 0.0,
+      "flags": [],
+      "reasons": [],
+      "next": "",
+      "checks": {}
+    },
+    "F-0009": {
+      "id": "F-0009",
+      "title": "Rate Limit Tracking",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 80.0,
+      "gap": 80.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/rate_limiter.py"
+      ],
+      "next": "Files claimed but absent: sidecar/rate_limiter.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0010": {
+      "id": "F-0010",
+      "title": "Usage/Cost Tracking",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 75.0,
+      "gap": 75.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/cost_tracker.py"
+      ],
+      "next": "Files claimed but absent: sidecar/cost_tracker.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0011": {
+      "id": "F-0011",
+      "title": "Title Generation",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 75.0,
+      "gap": 75.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/title_generator.py"
+      ],
+      "next": "Files claimed but absent: sidecar/title_generator.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0012": {
+      "id": "F-0012",
+      "title": "Onboarding Flow",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 100.0,
+      "gap": 100.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM",
+        "SPEC_REF_DANGLING"
+      ],
+      "reasons": [
+        "declared files missing: locus_cli/setup.py"
+      ],
+      "next": "Files claimed but absent: locus_cli/setup.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0013": {
+      "id": "F-0013",
+      "title": "Agent Initialization",
+      "verdict": "KEEP-PI",
+      "level": 1,
+      "label": "INHERITED_OK",
+      "pct": 100,
+      "claimed_pct": 100.0,
+      "gap": 0.0,
+      "flags": [],
+      "reasons": [],
+      "next": "",
+      "checks": {}
+    },
+    "F-0014": {
+      "id": "F-0014",
+      "title": "30+ LLM Providers",
+      "verdict": "KEEP-PI",
+      "level": 1,
+      "label": "INHERITED_OK",
+      "pct": 100,
+      "claimed_pct": 100.0,
+      "gap": 0.0,
+      "flags": [],
+      "reasons": [],
+      "next": "",
+      "checks": {}
+    },
+    "F-0015": {
+      "id": "F-0015",
+      "title": "OAuth Flows",
+      "verdict": "KEEP-PI",
+      "level": 1,
+      "label": "INHERITED_OK",
+      "pct": 100,
+      "claimed_pct": 100.0,
+      "gap": 0.0,
+      "flags": [],
+      "reasons": [],
+      "next": "",
+      "checks": {}
+    },
+    "F-0016": {
+      "id": "F-0016",
+      "title": "Custom/Local Models",
+      "verdict": "KEEP-PI",
+      "level": 1,
+      "label": "INHERITED_OK",
+      "pct": 100,
+      "claimed_pct": 100.0,
+      "gap": 0.0,
+      "flags": [],
+      "reasons": [],
+      "next": "",
+      "checks": {}
+    },
+    "F-0017": {
+      "id": "F-0017",
+      "title": "Provider Registry",
+      "verdict": "KEEP-PI",
+      "level": 1,
+      "label": "INHERITED_OK",
+      "pct": 100,
+      "claimed_pct": 100.0,
+      "gap": 0.0,
+      "flags": [],
+      "reasons": [],
+      "next": "",
+      "checks": {}
+    },
+    "F-0018": {
+      "id": "F-0018",
+      "title": "Model Selection",
+      "verdict": "KEEP-PI",
+      "level": 1,
+      "label": "INHERITED_OK",
+      "pct": 100,
+      "claimed_pct": 100.0,
+      "gap": 0.0,
+      "flags": [],
+      "reasons": [],
+      "next": "",
+      "checks": {}
+    },
+    "F-0019": {
+      "id": "F-0019",
+      "title": "File/Shell/Search Tools",
+      "verdict": "KEEP-PI",
+      "level": 1,
+      "label": "INHERITED_OK",
+      "pct": 100,
+      "claimed_pct": 100.0,
+      "gap": 0.0,
+      "flags": [],
+      "reasons": [],
+      "next": "",
+      "checks": {}
+    },
+    "F-0020": {
+      "id": "F-0020",
+      "title": "Harness Delegation",
+      "verdict": "MULTI-PROVIDER",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 65.0,
+      "gap": 65.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/inter_harness_bridge.py"
+      ],
+      "next": "Files claimed but absent: sidecar/inter_harness_bridge.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0021": {
+      "id": "F-0021",
+      "title": "Neo4j Agent Memory (POLE+O)",
+      "verdict": "KEEP-PREBUILT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 80.0,
+      "gap": 80.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/neo4j_memory.py"
+      ],
+      "next": "Files claimed but absent: sidecar/neo4j_memory.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0022": {
+      "id": "F-0022",
+      "title": "Holographic HRR",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 30.0,
+      "gap": 30.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/holographic/"
+      ],
+      "next": "Files claimed but absent: sidecar/holographic/. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0023": {
+      "id": "F-0023",
+      "title": "STDP Reinforcement",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 40.0,
+      "gap": 40.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/patterns/hebbian.py"
+      ],
+      "next": "Files claimed but absent: sidecar/patterns/hebbian.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0024": {
+      "id": "F-0024",
+      "title": "Spaced Repetition",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 60.0,
+      "gap": 60.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/spaced_rep.py"
+      ],
+      "next": "Files claimed but absent: sidecar/spaced_rep.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0025": {
+      "id": "F-0025",
+      "title": "Project Memory Decay",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 25.0,
+      "gap": 25.0,
+      "flags": [
+        "NO_FILES_NAMED",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0026": {
+      "id": "F-0026",
+      "title": "Headroom CCR",
+      "verdict": "KEEP-PREBUILT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 50.0,
+      "gap": 50.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/context/headroom_adapter.py"
+      ],
+      "next": "Files claimed but absent: sidecar/context/headroom_adapter.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0027": {
+      "id": "F-0027",
+      "title": "Session Management",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 80.0,
+      "gap": 80.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/memory.py, sidecar/session_export.py"
+      ],
+      "next": "Files claimed but absent: sidecar/memory.py, sidecar/session_export.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0028": {
+      "id": "F-0028",
+      "title": "Context References",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 40.0,
+      "gap": 40.0,
+      "flags": [
+        "NO_FILES_NAMED",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0029": {
+      "id": "F-0029",
+      "title": "Coding Context",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 90.0,
+      "gap": 90.0,
+      "flags": [
+        "NO_FILES_NAMED",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0030": {
+      "id": "F-0030",
+      "title": "TUI / Dashboard",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 55.0,
+      "gap": 55.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM",
+        "SPEC_REF_DANGLING"
+      ],
+      "reasons": [
+        "declared files missing: locus_cli/curses_ui.py, sidecar/display/dashboard.py"
+      ],
+      "next": "Files claimed but absent: locus_cli/curses_ui.py, sidecar/display/dashboard.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0031": {
+      "id": "F-0031",
+      "title": "CLI / Doctor Diagnostics",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 85.0,
+      "gap": 85.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM",
+        "SPEC_REF_DANGLING"
+      ],
+      "reasons": [
+        "declared files missing: locus_cli/main.py"
+      ],
+      "next": "Files claimed but absent: locus_cli/main.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0032": {
+      "id": "F-0032",
+      "title": "Extension System",
+      "verdict": "KEEP-PI",
+      "level": 1,
+      "label": "INHERITED_OK",
+      "pct": 100,
+      "claimed_pct": 100.0,
+      "gap": 0.0,
+      "flags": [],
+      "reasons": [],
+      "next": "",
+      "checks": {}
+    },
+    "F-0033": {
+      "id": "F-0033",
+      "title": "ACP Protocol",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 55.0,
+      "gap": 55.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/acp_server.py"
+      ],
+      "next": "Files claimed but absent: sidecar/acp_server.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0034": {
+      "id": "F-0034",
+      "title": "Plugin LLM",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 10.0,
+      "gap": 10.0,
+      "flags": [
+        "NO_FILES_NAMED"
+      ],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0035": {
+      "id": "F-0035",
+      "title": "Learning / Profiling / Reward Model",
+      "verdict": "MULTI-PROVIDER",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 70.0,
+      "gap": 70.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/learning/"
+      ],
+      "next": "Files claimed but absent: sidecar/learning/. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0036": {
+      "id": "F-0036",
+      "title": "Subagents / AutoResearch",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 60.0,
+      "gap": 60.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/delegation/"
+      ],
+      "next": "Files claimed but absent: sidecar/delegation/. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0037": {
+      "id": "F-0037",
+      "title": "Injection Filter",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 80.0,
+      "gap": 80.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/security/injection_filter.py"
+      ],
+      "next": "Files claimed but absent: sidecar/security/injection_filter.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0038": {
+      "id": "F-0038",
+      "title": "Shell Sandbox",
+      "verdict": "KEEP-PI",
+      "level": 1,
+      "label": "INHERITED_OK",
+      "pct": 100,
+      "claimed_pct": 100.0,
+      "gap": 0.0,
+      "flags": [],
+      "reasons": [],
+      "next": "",
+      "checks": {}
+    },
+    "F-0039": {
+      "id": "F-0039",
+      "title": "Project Trust",
+      "verdict": "KEEP-PI",
+      "level": 1,
+      "label": "INHERITED_OK",
+      "pct": 100,
+      "claimed_pct": 100.0,
+      "gap": 0.0,
+      "flags": [],
+      "reasons": [],
+      "next": "",
+      "checks": {}
+    },
+    "F-0040": {
+      "id": "F-0040",
+      "title": "Shell Blocklist",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 70.0,
+      "gap": 70.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/security/"
+      ],
+      "next": "Files claimed but absent: sidecar/security/. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0041": {
+      "id": "F-0041",
+      "title": "Data Redaction",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 75.0,
+      "gap": 75.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/security/redact.py"
+      ],
+      "next": "Files claimed but absent: sidecar/security/redact.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0042": {
+      "id": "F-0042",
+      "title": "Think Token Scrubbing",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 75.0,
+      "gap": 75.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/security/think_scrubber.py"
+      ],
+      "next": "Files claimed but absent: sidecar/security/think_scrubber.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0043": {
+      "id": "F-0043",
+      "title": "Message Sanitization",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 75.0,
+      "gap": 75.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/security/sanitizer.py"
+      ],
+      "next": "Files claimed but absent: sidecar/security/sanitizer.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0044": {
+      "id": "F-0044",
+      "title": "STT / TTS Providers",
+      "verdict": "MULTI-PROVIDER",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 60.0,
+      "gap": 60.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/voice/"
+      ],
+      "next": "Files claimed but absent: sidecar/voice/. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0045": {
+      "id": "F-0045",
+      "title": "Browser Automation",
+      "verdict": "MULTI-PROVIDER",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 45.0,
+      "gap": 45.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/browser/"
+      ],
+      "next": "Files claimed but absent: sidecar/browser/. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0046": {
+      "id": "F-0046",
+      "title": "Telegram Gateway",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 90.0,
+      "gap": 90.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/gateway/, gateway/"
+      ],
+      "next": "Files claimed but absent: sidecar/gateway/, gateway/. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0047": {
+      "id": "F-0047",
+      "title": "Graceful Restart",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 50.0,
+      "gap": 50.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/gateway/"
+      ],
+      "next": "Files claimed but absent: sidecar/gateway/. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0048": {
+      "id": "F-0048",
+      "title": "MCP Server/Client",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 55.0,
+      "gap": 55.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/mcp_client.py"
+      ],
+      "next": "Files claimed but absent: sidecar/mcp_client.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0049": {
+      "id": "F-0049",
+      "title": "Trajectory Recording",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 40.0,
+      "gap": 40.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/learning/trajectory.py"
+      ],
+      "next": "Files claimed but absent: sidecar/learning/trajectory.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0050": {
+      "id": "F-0050",
+      "title": "AI Chat Archiver",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 55.0,
+      "gap": 55.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/ingestion/chat_archiver.py, sidecar/crawlers/chat_crawler.py"
+      ],
+      "next": "Files claimed but absent: sidecar/ingestion/chat_archiver.py, sidecar/crawlers/chat_crawler.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0051": {
+      "id": "F-0051",
+      "title": "Computer Use / Screen",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 40.0,
+      "gap": 40.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "LOW_CONFIDENCE_MAPPING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/screen/"
+      ],
+      "next": "Files claimed but absent: sidecar/screen/. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0052": {
+      "id": "F-0052",
+      "title": "VNC Remote",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 20.0,
+      "gap": 20.0,
+      "flags": [
+        "NO_FILES_NAMED"
+      ],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0053": {
+      "id": "F-0053",
+      "title": "Google Calendar",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 35.0,
+      "gap": 35.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/integrations/calendar_sync.py"
+      ],
+      "next": "Files claimed but absent: sidecar/integrations/calendar_sync.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0054": {
+      "id": "F-0054",
+      "title": "CI/CD / Docker",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 65.0,
+      "gap": 65.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: docker-compose.yml, sidecar/deployment/"
+      ],
+      "next": "Files claimed but absent: docker-compose.yml, sidecar/deployment/. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0055": {
+      "id": "F-0055",
+      "title": "DCS / TWS / Factions",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 90.0,
+      "gap": 90.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/life_os.py"
+      ],
+      "next": "Files claimed but absent: sidecar/life_os.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0056": {
+      "id": "F-0056",
+      "title": "Operating Modes / Scheduler",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 85.0,
+      "gap": 85.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "LOW_CONFIDENCE_MAPPING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/life_os.py, sidecar/scheduler/"
+      ],
+      "next": "Files claimed but absent: sidecar/life_os.py, sidecar/scheduler/. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0057": {
+      "id": "F-0057",
+      "title": "Goal Tracker (3-Layer Stack)",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 85.0,
+      "gap": 85.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "LOW_CONFIDENCE_MAPPING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/life_os.py"
+      ],
+      "next": "Files claimed but absent: sidecar/life_os.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0058": {
+      "id": "F-0058",
+      "title": "Proactive Inner Loop",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 70.0,
+      "gap": 70.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/cron_runner.py, sidecar/scheduler/"
+      ],
+      "next": "Files claimed but absent: sidecar/cron_runner.py, sidecar/scheduler/. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0059": {
+      "id": "F-0059",
+      "title": "PageIndex Retrieval",
+      "verdict": "KEEP-PREBUILT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 85.0,
+      "gap": 85.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/search/pageindex.py"
+      ],
+      "next": "Files claimed but absent: sidecar/search/pageindex.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0060": {
+      "id": "F-0060",
+      "title": "Obsidian Self-Hosted LiveSync & CouchDB Real-Time Sync Engine",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 100.0,
+      "gap": 100.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/vault/livesync_bridge.py, src/extensions/locus-extension.ts, docker-compose.yml, data/couchdb/local.ini"
+      ],
+      "next": "Files claimed but absent: sidecar/vault/livesync_bridge.py, src/extensions/locus-extension.ts, docker-compose.yml, data/couchdb/local.ini. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0061": {
+      "id": "F-0061",
+      "title": "Rough Note Parser",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 75.0,
+      "gap": 75.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/ingestion/rough_note_parser.py"
+      ],
+      "next": "Files claimed but absent: sidecar/ingestion/rough_note_parser.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0062": {
+      "id": "F-0062",
+      "title": "Link Dump Logger",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 75.0,
+      "gap": 75.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/ingestion/link_logger.py"
+      ],
+      "next": "Files claimed but absent: sidecar/ingestion/link_logger.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0063": {
+      "id": "F-0063",
+      "title": "Excalidraw MCP Skill",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 70.0,
+      "gap": 70.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/display/excalidraw_builder.py"
+      ],
+      "next": "Files claimed but absent: sidecar/display/excalidraw_builder.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0064": {
+      "id": "F-0064",
+      "title": "Dual Interface / Check-ins",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 85.0,
+      "gap": 85.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/gateway/, locus-extension/"
+      ],
+      "next": "Files claimed but absent: sidecar/gateway/, locus-extension/. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0065": {
+      "id": "F-0065",
+      "title": "Error Classifier",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 55.0,
+      "gap": 55.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/diagnostics/error_classifier.py"
+      ],
+      "next": "Files claimed but absent: sidecar/diagnostics/error_classifier.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0066": {
+      "id": "F-0066",
+      "title": "Health Checks",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 90.0,
+      "gap": 90.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: locus_cli/main.py"
+      ],
+      "next": "Files claimed but absent: locus_cli/main.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0067": {
+      "id": "F-0067",
+      "title": "Notifications",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 65.0,
+      "gap": 65.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/gateway/"
+      ],
+      "next": "Files claimed but absent: sidecar/gateway/. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0068": {
+      "id": "F-0068",
+      "title": "Connectivity Check",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 60.0,
+      "gap": 60.0,
+      "flags": [
+        "NO_FILES_NAMED",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0069": {
+      "id": "F-0069",
+      "title": "Code Graph",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 50.0,
+      "gap": 50.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: .graphifyignore"
+      ],
+      "next": "Files claimed but absent: .graphifyignore. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0070": {
+      "id": "F-0070",
+      "title": "Subconscious",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 40.0,
+      "gap": 40.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/heartbeat/"
+      ],
+      "next": "Files claimed but absent: sidecar/heartbeat/. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0071": {
+      "id": "F-0071",
+      "title": "Workflows",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 55.0,
+      "gap": 55.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/scheduler/workflow.py"
+      ],
+      "next": "Files claimed but absent: sidecar/scheduler/workflow.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0072": {
+      "id": "F-0072",
+      "title": "Collector + Chunker",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 60.0,
+      "gap": 60.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/ingestion/collector.py"
+      ],
+      "next": "Files claimed but absent: sidecar/ingestion/collector.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0073": {
+      "id": "F-0073",
+      "title": "Cause Chain Engine",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 55.0,
+      "gap": 55.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/cause_chain.py"
+      ],
+      "next": "Files claimed but absent: sidecar/cause_chain.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0074": {
+      "id": "F-0074",
+      "title": "SOUL.md / Wants Engine",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 55.0,
+      "gap": 55.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/soul.py"
+      ],
+      "next": "Files claimed but absent: sidecar/soul.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0075": {
+      "id": "F-0075",
+      "title": "Content Engine",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 60.0,
+      "gap": 60.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "LOW_CONFIDENCE_MAPPING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/content/engine.py"
+      ],
+      "next": "Files claimed but absent: sidecar/content/engine.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0076": {
+      "id": "F-0076",
+      "title": "Spaced Repetition",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 60.0,
+      "gap": 60.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/spaced_rep.py"
+      ],
+      "next": "Files claimed but absent: sidecar/spaced_rep.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0077": {
+      "id": "F-0077",
+      "title": "QLoRA Pipeline",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 25.0,
+      "gap": 25.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/evolution/dataset_curator.py"
+      ],
+      "next": "Files claimed but absent: sidecar/evolution/dataset_curator.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0078": {
+      "id": "F-0078",
+      "title": "Master Conductor",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 90.0,
+      "gap": 90.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/conductor.py"
+      ],
+      "next": "Files claimed but absent: sidecar/conductor.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0079": {
+      "id": "F-0079",
+      "title": "Dashboard/TUI Spec",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 45.0,
+      "gap": 45.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: locus_cli/curses_ui.py"
+      ],
+      "next": "Files claimed but absent: locus_cli/curses_ui.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0080": {
+      "id": "F-0080",
+      "title": "Redis Integration",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 55.0,
+      "gap": 55.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/redis_state.py"
+      ],
+      "next": "Files claimed but absent: sidecar/redis_state.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0081": {
+      "id": "F-0081",
+      "title": "Obsidian/LightRAG Bridge",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 45.0,
+      "gap": 45.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/vault/lightrag_bridge.py"
+      ],
+      "next": "Files claimed but absent: sidecar/vault/lightrag_bridge.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0082": {
+      "id": "F-0082",
+      "title": "Install Script (ALL platforms)",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 100.0,
+      "gap": 100.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: install.ps1, install.sh, install.bat, locus.bat, locus.cmd"
+      ],
+      "next": "Files claimed but absent: install.ps1, install.sh, install.bat, locus.bat .... Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0083": {
+      "id": "F-0083",
+      "title": "Telegram Setup via /setup command",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 100.0,
+      "gap": 100.0,
+      "flags": [
+        "NO_FILES_NAMED",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0084": {
+      "id": "F-0084",
+      "title": "core/ vs sidecar/ Deduplication",
+      "verdict": "UNKNOWN",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 100.0,
+      "gap": 100.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/, sidecar/__init__.py"
+      ],
+      "next": "Files claimed but absent: sidecar/, sidecar/__init__.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0085": {
+      "id": "F-0085",
+      "title": "VM Backend Setup",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 100.0,
+      "gap": 100.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: HEADLESS_VM_AND_CRON_SETUP_GUIDE.md, install.sh, install.ps1, docker-compose.yml"
+      ],
+      "next": "Files claimed but absent: HEADLESS_VM_AND_CRON_SETUP_GUIDE.md, install.sh, install.ps1, docker-compose.yml. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0086": {
+      "id": "F-0086",
+      "title": "Deployment (systemd/Docker)",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": 65.0,
+      "gap": 65.0,
+      "flags": [
+        "CLAIMED_FILES_MISSING",
+        "OVERCLAIM"
+      ],
+      "reasons": [
+        "declared files missing: docker-compose.yml"
+      ],
+      "next": "Files claimed but absent: docker-compose.yml. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0087": {
+      "id": "F-0087",
+      "title": "ARCH-6 Pi bridge (sidecar -> Pi CLI, used by cron + Telegram + conductor)",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [
+        "CLAIMED_FILES_MISSING"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/pi_bridge.py, sidecar/cron_runner.py"
+      ],
+      "next": "Files claimed but absent: sidecar/pi_bridge.py, sidecar/cron_runner.py. Create them or correct the path.",
+      "checks": {}
+    },
+    "F-0088": {
+      "id": "F-0088",
+      "title": "Memory Tree (Hierarchical Summarization Cascade)",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0089": {
+      "id": "F-0089",
+      "title": "Memory Sync (Multi-Source Ingestion Pipelines)",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0090": {
+      "id": "F-0090",
+      "title": "Memory Queue (Async Job Pipeline)",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0091": {
+      "id": "F-0091",
+      "title": "Memory Diff (Snapshot-Based Change Tracking)",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0092": {
+      "id": "F-0092",
+      "title": "Query Router / Intent Classifier (Stage 2)",
+      "verdict": "UNKNOWN",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0093": {
+      "id": "F-0093",
+      "title": "State Engine (Stage 3)",
+      "verdict": "UNKNOWN",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0094": {
+      "id": "F-0094",
+      "title": "Context Forge (Stage 6) — The 6-Layer Assembler",
+      "verdict": "UNKNOWN",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0095": {
+      "id": "F-0095",
+      "title": "Anti-Hallucination Guard (Stage 10)",
+      "verdict": "UNKNOWN",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0096": {
+      "id": "F-0096",
+      "title": "Intelligent Model Routing + Quality-Based Fallback",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0097": {
+      "id": "F-0097",
+      "title": "Streaming (SSE)",
+      "verdict": "KEEP-PI",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0098": {
+      "id": "F-0098",
+      "title": "Image Generation",
+      "verdict": "KEEP-PI",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0099": {
+      "id": "F-0099",
+      "title": "Git Tools",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0100": {
+      "id": "F-0100",
+      "title": "Tool Call Validation",
+      "verdict": "AUGMENT",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0101": {
+      "id": "F-0101",
+      "title": "Tool Result Classification",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0102": {
+      "id": "F-0102",
+      "title": "Tool Output Accumulator",
+      "verdict": "KEEP-PI",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0103": {
+      "id": "F-0103",
+      "title": "Tool Timeout / Budget",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0104": {
+      "id": "F-0104",
+      "title": "Custom Locus Tools",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0105": {
+      "id": "F-0105",
+      "title": "Web Search (8 Providers)",
+      "verdict": "KEEP-PI",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0106": {
+      "id": "F-0106",
+      "title": "Pi Utilities (Clipboard, Syntax Highlighting, Frontmatter, File Watcher)",
+      "verdict": "KEEP-PI",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0107": {
+      "id": "F-0107",
+      "title": "File Safety",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0108": {
+      "id": "F-0108",
+      "title": "Autonomy Tiers",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0109": {
+      "id": "F-0109",
+      "title": "Approval Gate",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0110": {
+      "id": "F-0110",
+      "title": "Context Compression",
+      "verdict": "UNKNOWN",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0111": {
+      "id": "F-0111",
+      "title": "Emergency Task Injection",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0112": {
+      "id": "F-0112",
+      "title": "Exhaustion Predictor",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0113": {
+      "id": "F-0113",
+      "title": "Weekly Faction Rebalance",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0114": {
+      "id": "F-0114",
+      "title": "Review Cadence System",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0115": {
+      "id": "F-0115",
+      "title": "Goal Stack Enforcement",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0116": {
+      "id": "F-0116",
+      "title": "Cross-Faction Efficiency",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0117": {
+      "id": "F-0117",
+      "title": "Four-Level Emergency Protocol",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0118": {
+      "id": "F-0118",
+      "title": "Memory Provider Interface",
+      "verdict": "UNKNOWN",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0119": {
+      "id": "F-0119",
+      "title": "Skill System & Multi-Source Marketplace",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0120": {
+      "id": "F-0120",
+      "title": "Self-Evolving Architect Bot",
+      "verdict": "UNKNOWN",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0121": {
+      "id": "F-0121",
+      "title": "Agent Experience Tracking (Procedural Memory)",
+      "verdict": "MULTI-PROVIDER",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0122": {
+      "id": "F-0122",
+      "title": "LOCUS_SHORTHAND 4× Text Compressor",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0123": {
+      "id": "F-0123",
+      "title": "3-Level Tag Hierarchy & Semantic Indexing",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0124": {
+      "id": "F-0124",
+      "title": "Auxiliary LLM Client",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [],
+      "reasons": [
+        "no evidence files declared"
+      ],
+      "next": "Name the files this feature lives in (evidence.files).",
+      "checks": {}
+    },
+    "F-0125": {
+      "id": "F-0125",
+      "title": "Modularity foundation: provider registry + config accessor (sidecar and TypeScript)",
+      "verdict": "LOCUS-NEW",
+      "level": 0,
+      "label": "NO_EVIDENCE",
+      "pct": 0,
+      "claimed_pct": null,
+      "gap": null,
+      "flags": [
+        "CLAIMED_FILES_MISSING"
+      ],
+      "reasons": [
+        "declared files missing: sidecar/registry.py, sidecar/config.py, locus-extension/src/registry.ts, locus-extension/src/config.ts"
+      ],
+      "next": "Files claimed but absent: sidecar/registry.py, sidecar/config.py, locus-extension/src/registry.ts, locus-extension/src/config.ts. Create them or correct the path.",
+      "checks": {}
+    }
+  },
+  "regressions": []
+}
