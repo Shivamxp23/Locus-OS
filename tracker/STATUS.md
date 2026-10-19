@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `7721418a94` - 2026-10-20T00:47:33+0530 - with test runs
+- commit `68a8c240af` - 2026-10-20T01:08:30+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **22.2%** | old claimed average 71.4% over 86 rows
-- integrated or better: 27 | proven: 0 | overclaims (claimed >= verified + 25): 57 | no evidence: 91
-- by level: {'FILES_PRESENT': 3, 'INHERITED_OK': 12, 'INTEGRATED': 15, 'NO_EVIDENCE': 91, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **22.8%** | old claimed average 71.4% over 86 rows
+- integrated or better: 28 | proven: 0 | overclaims (claimed >= verified + 25): 56 | no evidence: 91
+- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 16, 'NO_EVIDENCE': 91, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -67,7 +67,7 @@
 | F-0032 | Extension System | 100% | 100% | INHERITED_OK |  |  |
 | F-0033 | ACP Protocol | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/acp_server.py. Create them or correct the path. |
 | F-0034 | Plugin LLM | 10% | 0% | NO_EVIDENCE | NO_FILES_NAMED | Name the files this feature lives in (evidence.files). |
-| F-0035 | Learning / Profiling / Reward Model | 70% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
+| F-0035 | Learning / Profiling / Reward Model | 70% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0036 | Subagents / AutoResearch | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/delegation/. Create them or correct the path. |
 | F-0037 | Injection Filter | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/injection_filter.py. Create them or correct the |
 | F-0038 | Shell Sandbox | 100% | 100% | INHERITED_OK |  |  |
