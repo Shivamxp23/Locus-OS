@@ -5,6 +5,7 @@ export const LOCUS_EXTENSION_VERSION = "0.1.0";
 
 export * from "./context-manager";
 export * from "./cost-tracker";
+export * from "./intent-classifier";
 export * from "./learning";
 export * from "./lifecycle";
 export * from "./model-escalation";

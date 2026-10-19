@@ -80,6 +80,13 @@ from sidecar.providers.post_turn import (
     SkillUpdatePreference,
 )
 from sidecar.providers.prompt_builder import BasePromptBuilderProvider, PromptOptions
+from sidecar.providers.query_router import (
+    ALL_RETRIEVAL_SOURCES,
+    BaseQueryRouterProvider,
+    IntentType,
+    RoutingManifest,
+    TemporalScope,
+)
 from sidecar.providers.rate_limit import (
     BaseRateLimitProvider,
     RateLimitBucket,
@@ -95,6 +102,7 @@ from sidecar.providers.trajectory import BaseTrajectoryRecorder, TrajectorySessi
 from sidecar.providers.vault_sync import BaseVaultSyncProvider, SyncState
 
 __all__ = [
+    "ALL_RETRIEVAL_SOURCES",
     "ALLOWED_REVIEW_TOOLS",
     "AgentTool",
     "AgentToolResult",
@@ -111,6 +119,7 @@ __all__ = [
     "BaseOnboardingProvider",
     "BasePostTurnProvider",
     "BasePromptBuilderProvider",
+    "BaseQueryRouterProvider",
     "BaseRateLimitProvider",
     "BaseTitleGeneratorProvider",
     "BaseToolSystemProvider",
@@ -132,6 +141,7 @@ __all__ = [
     "FactionType",
     "GoalStackLevel",
     "HarnessType",
+    "IntentType",
     "LifecycleDispatchResult",
     "LearningCandidate",
     "ModeConstraints",
@@ -149,12 +159,14 @@ __all__ = [
     "RateLimitBucket",
     "RateLimitState",
     "RewardSignal",
+    "RoutingManifest",
     "SkillUpdatePreference",
     "StableFacet",
     "SyncState",
     "TaskBrief",
     "TaskScoreInput",
     "TaskScoreResult",
+    "TemporalScope",
     "TitleGenerationRequest",
     "TitleGenerationResult",
     "ToolUsageRecord",

@@ -28,6 +28,8 @@ import sidecar.title_generator  # ensures default title generator is registered
 from sidecar.title_generator import clean_title, format_title_prompt, generate_fallback_title
 import sidecar.onboarding  # ensures default onboarding provider is registered
 from sidecar.providers.onboarding import TopologyType
+import sidecar.router.classifier  # ensures default query router is registered
+from sidecar.providers.query_router import ALL_RETRIEVAL_SOURCES, IntentType, RoutingManifest, TemporalScope
 
 logger = logging.getLogger("locus.service")
 
@@ -1259,6 +1261,32 @@ def create_app(
         provider = provider_cls()
         provider.reset()
         return {"status": "ok", "message": "Onboarding state reset"}
+
+    # -------------------------------------------------------------------------
+    # SPEC §2.1-2.3 / F-0092 / US-32: Query Router / Intent Classifier Routes
+    # -------------------------------------------------------------------------
+    def _is_query_router_enabled() -> bool:
+        if config.get("locus.query_router.enabled") is False:
+            return False
+        if config.get("locus.intent_classifier.enabled") is False:
+            return False
+        return True
+
+    @app.post("/router/classify")
+    def classify_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Classify user query and emit Routing Manifest with anti-hallucination confidence gate."""
+        if not _is_query_router_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.query_router.enabled"})
+        query = body.get("query", "")
+        tz = body.get("timezone", "Asia/Kolkata")
+        provider_cls = app.state.registry.get_active_provider("query_router", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("intent_classifier", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No query router provider registered")
+        provider = provider_cls()
+        manifest = provider.classify(query=query, timezone=tz)
+        return {"status": "ok", "manifest": manifest.to_dict()}
 
     return app
 

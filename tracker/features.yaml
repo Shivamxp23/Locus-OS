@@ -3555,16 +3555,35 @@ features:
   manual: false
   claimed: null
   spec_targets:
-  - locus/core/intent-classifier.ts
+  - locus-extension/src/intent-classifier.ts
   - sidecar/router/classifier.py
   spec_sha:
     '§2.1-2.3: Query Router / Intent Classifier (Stage 2)': befca9e03d856062
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/router/classifier.py
+    - sidecar/providers/query_router.py
+    - locus-extension/src/intent-classifier.ts
+    symbols:
+    - file: sidecar/router/classifier.py
+      contains:
+      - QueryRouterProvider
+      - build_classifier_prompt
+      - classify_query
+    - file: sidecar/providers/query_router.py
+      contains:
+      - BaseQueryRouterProvider
+      - IntentType
+      - RoutingManifest
+      - TemporalScope
+    - file: locus-extension/src/intent-classifier.ts
+      contains:
+      - IntentClassifier
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - pytest tests/unit/test_query_router.py
+    integration:
+    - pytest tests/integration/test_query_router_service.py
   depends_on: []
 - id: F-0093
   title: State Engine (Stage 3)
