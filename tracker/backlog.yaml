@@ -318,7 +318,7 @@ stories:
     feature: F-0050
     slug: chat-archiver
     title: "Nightly AI chat archiver (spec 19.3) writes into the vault"
-    points: 3
+    points: 2
     target_level: 3
     requires_decisions: [D-4]
     depends_on: [US-06]
