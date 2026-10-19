@@ -1,15 +1,14 @@
 # Tracker status (computed, not written)
 
-- commit `20255b279e` - 2026-10-20T02:03:49+0530 - with test runs
+- commit `32db5e7000` - 2026-10-20T02:26:56+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **24.8%** | old claimed average 71.4% over 86 rows
-- integrated or better: 31 | proven: 0 | overclaims (claimed >= verified + 25): 53 | no evidence: 88
-- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 19, 'NO_EVIDENCE': 88, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **25.5%** | old claimed average 71.4% over 86 rows
+- integrated or better: 32 | proven: 0 | overclaims (claimed >= verified + 25): 52 | no evidence: 87
+- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 20, 'NO_EVIDENCE': 87, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
 |---|---|---:|---:|---|---|---|
-| F-0012 | Onboarding Flow | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus_cli/setup.py. Create them or correct the path. |
 | F-0029 | Coding Context | 90% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
 | F-0066 | Health Checks | 90% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus_cli/main.py. Create them or correct the path. |
 | F-0078 | Master Conductor | 90% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/conductor.py. Create them or correct the path. |
@@ -29,6 +28,7 @@
 | F-0057 | Goal Tracker (3-Layer Stack) | 85% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0063 | Excalidraw MCP Skill | 70% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/display/excalidraw_builder.py. Create them or correct th |
 | F-0054 | CI/CD / Docker | 65% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/deployment/. Create them or correct the path. |
+| F-0067 | Notifications | 65% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/. Create them or correct the path. |
 
 ## All features
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -44,7 +44,7 @@
 | F-0009 | Rate Limit Tracking | 80% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0010 | Usage/Cost Tracking | 75% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0011 | Title Generation | 75% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0012 | Onboarding Flow | 100% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: locus_cli/setup.py. Create them or correct the path. |
+| F-0012 | Onboarding Flow | 100% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0013 | Agent Initialization | 100% | 100% | INHERITED_OK |  |  |
 | F-0014 | 30+ LLM Providers | 100% | 100% | INHERITED_OK |  |  |
 | F-0015 | OAuth Flows | 100% | 100% | INHERITED_OK |  |  |
