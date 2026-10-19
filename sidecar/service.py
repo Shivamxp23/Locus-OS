@@ -620,6 +620,82 @@ def create_app(
             "enabled": provider.is_extension_enabled(extension_id),
         }
 
+    # Context Window Management & Headroom CCR routes (SPEC §1.6 & §4.17 / F-0006 / US-25)
+    from sidecar.context.headroom_adapter import HeadroomCCRAdapter
+    active_registry.register("context_compression", "default_context_compression", HeadroomCCRAdapter)
+
+    def _is_context_compression_enabled() -> bool:
+        val = config.get("locus.context_window_management.enabled")
+        if val is not None and not config.is_enabled("locus.context_window_management.enabled"):
+            return False
+        if not app.state.registry.is_feature_enabled("context_compression"):
+            return False
+        return True
+
+    @app.post("/context/estimate")
+    def estimate_context_tokens_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Estimate token count for a text snippet or list of messages."""
+        if not _is_context_compression_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.context_window_management.enabled"})
+        provider_cls = app.state.registry.get_active_provider("context_compression", default_name="default_context_compression")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No context compression provider registered")
+        provider = provider_cls()
+        text_or_messages = body.get("messages") if "messages" in body else body.get("text", "")
+        tokens = provider.estimate_tokens(text_or_messages)
+        return {"status": "ok", "estimated_tokens": tokens}
+
+    @app.post("/context/compact")
+    def compact_context_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Compact message history preserving first 3 and last 6 messages with CCR."""
+        if not _is_context_compression_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.context_window_management.enabled"})
+        messages = body.get("messages") or []
+        protect_first_n = int(body.get("protect_first_n", 3))
+        protect_last_n = int(body.get("protect_last_n", 6))
+        options = body.get("options") or {}
+
+        provider_cls = app.state.registry.get_active_provider("context_compression", default_name="default_context_compression")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No context compression provider registered")
+        provider = provider_cls()
+        result = provider.compact(
+            messages=messages,
+            protect_first_n=protect_first_n,
+            protect_last_n=protect_last_n,
+            options=options,
+        )
+        return {"status": "ok", "compaction": result.to_dict()}
+
+    @app.post("/context/compress")
+    def compress_text_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Compress text with CCR caching and inflation guard."""
+        if not _is_context_compression_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.context_window_management.enabled"})
+        text = body.get("text", "")
+        cache_key = body.get("cache_key")
+
+        provider_cls = app.state.registry.get_active_provider("context_compression", default_name="default_context_compression")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No context compression provider registered")
+        provider = provider_cls()
+        result = provider.compress_text(text=text, cache_key=cache_key)
+        return {"status": "ok", "result": result}
+
+    @app.get("/context/retrieve/{cache_key}")
+    def retrieve_original_route(cache_key: str) -> Dict[str, Any]:
+        """Retrieve original uncompressed content by CCR cache key."""
+        if not _is_context_compression_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.context_window_management.enabled"})
+        provider_cls = app.state.registry.get_active_provider("context_compression", default_name="default_context_compression")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No context compression provider registered")
+        provider = provider_cls()
+        original = provider.retrieve_original(cache_key)
+        if original is None:
+            raise HTTPException(status_code=404, detail=f"CCR cache key '{cache_key}' not found or expired")
+        return {"status": "ok", "cache_key": cache_key, "original": original}
+
     return app
 
 

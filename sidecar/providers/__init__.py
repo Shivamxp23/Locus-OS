@@ -16,6 +16,12 @@ from sidecar.providers.harness import (
     HarnessType,
     TaskBrief,
 )
+from sidecar.providers.context_compression import (
+    BaseCompressionProvider,
+    CompactionResult,
+    CompressionMode,
+    ContextMessage,
+)
 from sidecar.providers.extension_lifecycle import (
     BaseExtensionLifecycleProvider,
     CANONICAL_LIFECYCLE_EVENTS,
@@ -57,6 +63,7 @@ __all__ = [
     "ArchiveResult",
     "BaseChannelProvider",
     "BaseChatArchiverProvider",
+    "BaseCompressionProvider",
     "BaseExtensionLifecycleProvider",
     "BaseHarnessProvider",
     "BaseLifeOSProvider",
@@ -68,6 +75,9 @@ __all__ = [
     "CANONICAL_LIFECYCLE_EVENTS",
     "ChatTurn",
     "CheckInInput",
+    "CompactionResult",
+    "CompressionMode",
+    "ContextMessage",
     "DCSResult",
     "DelegationResult",
     "ExecutionMode",

@@ -286,10 +286,32 @@ features:
   evidence:
     files:
     - sidecar/context/headroom_adapter.py
-    symbols: []
+    - sidecar/providers/context_compression.py
+    - locus-extension/src/context-manager.ts
+    symbols:
+    - file: sidecar/context/headroom_adapter.py
+      contains:
+      - HeadroomCCRAdapter
+      - estimate_tokens
+      - should_compact
+      - compact
+      - compress_text
+      - retrieve_original
+    - file: sidecar/providers/context_compression.py
+      contains:
+      - BaseCompressionProvider
+      - CompactionResult
+      - CompressionMode
+    - file: locus-extension/src/context-manager.ts
+      contains:
+      - estimateContextTokens
+      - shouldCompact
+      - compactContext
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest -v tests/unit/test_context_window.py
+    integration:
+    - py -3 -m pytest -v tests/integration/test_context_window_service.py
   depends_on: []
 - id: F-0007
   title: Post-Turn Review
