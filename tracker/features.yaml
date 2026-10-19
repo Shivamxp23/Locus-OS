@@ -2069,11 +2069,15 @@ features:
     '§26.7: Weekly Full Vault Synthesis': f6d004b735c578e5
   evidence:
     files:
-    - sidecar/cron_runner.py
-    - sidecar/scheduler/
-    symbols: []
+    - sidecar/scheduler.py
+    symbols:
+    - file: sidecar/scheduler.py
+      name: SchedulerProvider
+    - file: sidecar/scheduler.py
+      name: ResearchJob
     guard: []
-    unit: []
+    unit:
+    - cmd: pytest tests/unit/test_scheduler.py
     integration: []
   depends_on: []
 - id: F-0059
