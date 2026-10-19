@@ -34,7 +34,7 @@ forbidden = ["core", "sidecar/core", "locus", "locus-os", "src/core", "src/exten
 # Top-level entries you have reviewed and accepted. EMPTY until you run:
 #   python tools/guard/check.py --adopt-top-level
 # After that, any NEW top-level file/folder fails the guard until you add it here.
-allowed_top_level = [".dockerignore", ".env.example", ".gitattributes", ".github", ".gitignore", ".husky", ".keysndocs", ".npmrc", ".pi", ".pytest_cache", ".ruff_cache", ".venv", "AGENTS.md", "CONTRIBUTING.md", "LICENSE", "README.md", "SECURITY.md", "__pycache__", "biome.json", "data", "docker-compose.yml", "flake.lock", "flake.nix", "nix", "node_modules", "package-lock.json", "package.json", "packages", "pi-test.bat", "pi-test.ps1", "pi-test.sh", "pyproject.toml", "scripts", "test.sh", "tsconfig.base.json", "tsconfig.json", "vault", "vitest.base.ts"]
+allowed_top_level = [".husky", ".keysndocs", ".npmrc", ".pi", ".pytest_cache", "CONTRIBUTING.md", "LICENSE", "README.md", "SECURITY.md", "biome.json", "data", "docker-compose.yml", "flake.lock", "flake.nix", "install.bat", "install.ps1", "install.sh", "locus.bat", "locus.cmd", "nix", "package-lock.json", "package.json", "pi-test.bat", "pi-test.ps1", "pi-test.sh", "scripts", "test.sh", "tsconfig.base.json", "tsconfig.json", "vitest.base.ts"]
 [reparse]
 # Junctions / symlinks anywhere in the repo are forbidden (a junction caused the core/sidecar mix-up).
 # Paths listed here are exempt. Keep this empty unless you can explain each entry.
