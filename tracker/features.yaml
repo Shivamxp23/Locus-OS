@@ -434,10 +434,32 @@ features:
   evidence:
     files:
     - sidecar/rate_limiter.py
-    symbols: []
+    - sidecar/providers/rate_limit.py
+    - locus-extension/src/rate-limiter.ts
+    - locus-extension/src/tracking/rate-limits.ts
+    symbols:
+    - file: sidecar/rate_limiter.py
+      contains:
+      - RateLimitTrackerProvider
+      - parse_rate_limit_headers
+      - format_rate_limit_display
+      - should_throttle
+    - file: sidecar/providers/rate_limit.py
+      contains:
+      - BaseRateLimitProvider
+      - RateLimitBucket
+      - RateLimitState
+    - file: locus-extension/src/rate-limiter.ts
+      contains:
+      - RateLimitTracker
+      - parseRateLimitHeaders
+      - formatRateLimitDisplay
+      - shouldThrottle
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - pytest tests/unit/test_rate_limiter.py
+    integration:
+    - pytest tests/integration/test_rate_limiter_service.py
   depends_on: []
 - id: F-0010
   title: Usage/Cost Tracking

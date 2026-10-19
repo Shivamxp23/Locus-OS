@@ -20,6 +20,8 @@ from fastapi.responses import JSONResponse
 from sidecar import config
 from sidecar.registry import ProviderRegistry, get_registry
 from sidecar.scheduler import ResearchJob, SchedulerProvider
+import sidecar.rate_limiter  # ensures default provider is registered
+from sidecar.providers.rate_limit import RateLimitState
 
 logger = logging.getLogger("locus.service")
 
@@ -911,6 +913,90 @@ def create_app(
         provider = provider_cls()
         patterns = provider.detect_patterns()
         return {"status": "ok", "patterns": [p.to_dict() for p in patterns]}
+
+    # -------------------------------------------------------------
+    # SPEC §1.9 / F-0009 / US-28: Rate Limit Tracking routes
+    # -------------------------------------------------------------
+    def _is_rate_limit_enabled() -> bool:
+        val1 = config.get("locus.rate_limit_tracking.enabled")
+        val2 = config.get("locus.tracking.rate_limit.enabled")
+        if val1 is not None and not config.is_enabled("locus.rate_limit_tracking.enabled"):
+            return False
+        if val2 is not None and not config.is_enabled("locus.tracking.rate_limit.enabled"):
+            return False
+        if not app.state.registry.is_feature_enabled("rate_limit"):
+            return False
+        return True
+
+    @app.post("/ratelimit/parse")
+    def parse_rate_limit_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Parse 12 x-ratelimit-* headers and return updated rate limit state."""
+        if not _is_rate_limit_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.rate_limit_tracking.enabled"})
+        headers = body.get("headers") or {}
+        provider_name = body.get("provider") or "default"
+
+        provider_cls = app.state.registry.get_active_provider("rate_limit", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No rate limit provider registered")
+        provider = provider_cls()
+        state = provider.parse_headers(headers, provider=provider_name)
+        return {"status": "ok", "state": state.to_dict()}
+
+    @app.get("/ratelimit/state")
+    def get_rate_limit_state_route(provider: Optional[str] = None) -> Dict[str, Any]:
+        """Retrieve current in-memory rate limit state for provider."""
+        if not _is_rate_limit_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.rate_limit_tracking.enabled"})
+        prov = provider or "default"
+        provider_cls = app.state.registry.get_active_provider("rate_limit", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No rate limit provider registered")
+        provider = provider_cls()
+        state = provider.get_state(provider=prov)
+        return {"status": "ok", "state": state.to_dict()}
+
+    @app.post("/ratelimit/throttle/check")
+    def check_throttle_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Pre-call guard rate limit throttle check."""
+        if not _is_rate_limit_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.rate_limit_tracking.enabled"})
+        provider_name = body.get("provider") or "default"
+        safety_margin = float(body.get("safety_margin", 0.1))
+        raw_state = body.get("state")
+
+        provider_cls = app.state.registry.get_active_provider("rate_limit", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No rate limit provider registered")
+        provider = provider_cls()
+
+        state_obj = RateLimitState.from_dict(raw_state) if raw_state else None
+        should_sleep, sleep_sec = provider.should_throttle(
+            state=state_obj, provider=provider_name, safety_margin=safety_margin
+        )
+        return {
+            "status": "ok",
+            "should_throttle": should_sleep,
+            "throttle_seconds": sleep_sec,
+        }
+
+    @app.get("/ratelimit/display")
+    def get_rate_limit_display_route(provider: Optional[str] = None) -> Dict[str, Any]:
+        """Retrieve formatted status for TUI/footer."""
+        if not _is_rate_limit_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.rate_limit_tracking.enabled"})
+        prov = provider or "default"
+        provider_cls = app.state.registry.get_active_provider("rate_limit", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No rate limit provider registered")
+        provider = provider_cls()
+        state = provider.get_state(provider=prov)
+        display_str = provider.format_display(state=state, provider=prov)
+        return {
+            "status": "ok",
+            "display": display_str,
+            "has_data": state.has_data,
+        }
 
     return app
 

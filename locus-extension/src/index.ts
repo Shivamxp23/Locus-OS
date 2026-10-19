@@ -9,8 +9,10 @@ export * from "./lifecycle";
 export * from "./model-escalation";
 export * from "./post-turn-reviewer";
 export * from "./prompt-builder";
+export * from "./rate-limiter";
 export * from "./tools/index";
 export * from "./tools/locus_vault";
+export * from "./tracking/rate-limits";
 export * from "./trajectory";
 
 export function activate(pi?: any): void {

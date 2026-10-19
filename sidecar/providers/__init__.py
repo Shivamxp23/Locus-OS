@@ -63,6 +63,11 @@ from sidecar.providers.post_turn import (
     SkillUpdatePreference,
 )
 from sidecar.providers.prompt_builder import BasePromptBuilderProvider, PromptOptions
+from sidecar.providers.rate_limit import (
+    BaseRateLimitProvider,
+    RateLimitBucket,
+    RateLimitState,
+)
 from sidecar.providers.tool_system import (
     AgentTool,
     AgentToolResult,
@@ -87,6 +92,7 @@ __all__ = [
     "BaseModelManagementProvider",
     "BasePostTurnProvider",
     "BasePromptBuilderProvider",
+    "BaseRateLimitProvider",
     "BaseToolSystemProvider",
     "BaseTrajectoryRecorder",
     "BaseVaultSyncProvider",
@@ -115,6 +121,8 @@ __all__ = [
     "PostTaskLog",
     "PostTurnReviewResult",
     "PromptOptions",
+    "RateLimitBucket",
+    "RateLimitState",
     "RewardSignal",
     "SkillUpdatePreference",
     "StableFacet",
