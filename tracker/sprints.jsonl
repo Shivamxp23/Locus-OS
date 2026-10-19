@@ -34,3 +34,5 @@
 {"event":"accepted","story":"US-16","feature":"F-0060","level":4,"note":"Obsidian LiveSync through CouchDB verified at Level 4 (INTEGRATED). Loopback binding, non-default credentials, diff3 merge, and deterministic conflict sidecar notes verified.","date":"2026-11-27","commit":"b38bb10f3027"}
 {"event":"closed","sprint":"S10","date":"2026-11-27","planned_points":3,"velocity":3,"done":["US-16"],"not_done":{}}
 {"event":"planned","sprint":"S11","start":"2026-11-28","end":"2026-12-01","goal":"Everything is recorded and backed up to the vault; Neo4j Agent Memory is the memory layer.","capacity":3,"points":2,"stories":["US-17"],"date":"2026-11-28"}
+{"event":"accepted","story":"US-17","feature":"F-0049","level":4,"note":"Trajectory recording verified at Level 4 (INTEGRATED). Sensitive secret redaction, disk persistence, and batch evaluation verified.","date":"2026-12-01","commit":"3111ee671ba1"}
+{"event":"closed","sprint":"S11","date":"2026-12-01","planned_points":2,"velocity":2,"done":["US-17"],"not_done":{}}
