@@ -2917,12 +2917,16 @@ features:
     - locus.bat
     - locus.cmd
     - locus_cli/install.py
+    - locus_cli/doctor.py
     symbols:
     - file: locus_cli/install.py
       name: run_install
+    - file: locus_cli/doctor.py
+      name: run_doctor
     guard: []
     unit:
     - cmd: pytest tests/unit/test_install.py
+    - cmd: pytest tests/unit/test_doctor.py
     integration: []
   depends_on: []
 - id: F-0083
