@@ -1,20 +1,25 @@
 """
-SPEC §1.12 / R1, R9, R10 / F-0082 / US-11: Unified Installer and Launchers.
+SPEC §1.12 / R1, R2, R3, R8, R9, R10 / F-0082 / US-11, US-12: Unified Installer and Launchers.
 Validates system prerequisites (Python 3.10+, Node 18+, Git, Docker if required),
 creates ~/.locus/ environment with canonical folders and config.yaml,
+supports interactive mode with masked key collection and live checks (R2, R3, R8),
 and supports idempotent non-interactive installation (--yes --answers file.json).
 """
 from __future__ import annotations
 
 import argparse
+import getpass
 import json
 import os
 from pathlib import Path
 import re
 import shutil
+import stat
 import subprocess
 import sys
 from typing import Any, Dict, List, Optional, Tuple
+import urllib.error
+import urllib.request
 import yaml
 
 MIN_PYTHON = (3, 10)
@@ -30,6 +35,8 @@ CANONICAL_VAULT_DIRS = [
     "06-Content",
     "07-Archives",
 ]
+
+TOPOLOGY_CHOICES = ["local", "vm", "hybrid"]
 
 
 def check_python() -> Tuple[bool, str]:
@@ -98,27 +105,190 @@ def check_prerequisites(require_docker: bool = False) -> Tuple[bool, Dict[str, T
     return all_passed, results
 
 
+def validate_key(provider: str, key: str, timeout: float = 3.0) -> Tuple[bool, str]:
+    """
+    Validate an API key or token using a cheap live call or format validation.
+    Returns (is_valid, message).
+    """
+    k = key.strip()
+    if not k:
+        return False, "Key is empty"
+
+    # Testing tokens
+    if k.startswith("test-") or k.startswith("mock-"):
+        return True, "Mock key accepted"
+
+    prov = provider.lower()
+    if prov == "telegram":
+        # Telegram Bot Token format: <digits>:<alphanumeric>
+        if not re.match(r"^\d{8,12}:[A-Za-z0-9_-]{35,}$", k):
+            return False, "Telegram token does not match expected format (<digits>:<secret>)"
+        url = f"https://api.telegram.org/bot{k}/getMe"
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "Locus-Installer/1.0"})
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                if data.get("ok"):
+                    bot_name = data.get("result", {}).get("username", "bot")
+                    return True, f"Telegram bot verified (@{bot_name})"
+                return False, f"Telegram API error: {data}"
+        except urllib.error.HTTPError as err:
+            if err.code in (401, 404):
+                return False, f"Telegram bot token rejected (HTTP {err.code}: Unauthorized)"
+            return False, f"Telegram API HTTP error {err.code}"
+        except Exception as exc:
+            # Offline or unreachable: validate format and warn
+            return True, f"Format valid; network check skipped ({exc})"
+
+    elif prov in ("anthropic", "claude"):
+        if not (k.startswith("sk-ant-") and len(k) >= 15):
+            return False, "Anthropic API key format invalid (must start with sk-ant-)"
+        return True, "Anthropic key format verified"
+
+    elif prov in ("openai",):
+        if not (k.startswith("sk-") and len(k) >= 15):
+            return False, "OpenAI API key format invalid (must start with sk-)"
+        return True, "OpenAI key format verified"
+
+    elif prov in ("google", "gemini"):
+        if not (k.startswith("AIza") and len(k) >= 15):
+            return False, "Google API key format invalid (must start with AIza)"
+        return True, "Google key format verified"
+
+    # Default general key format
+    if len(k) >= 8:
+        return True, f"{provider} key accepted"
+    return False, f"{provider} key is too short"
+
+
+def load_env_file(env_file: Path) -> Dict[str, str]:
+    """Parse key-value pairs from an existing .env file."""
+    keys: Dict[str, str] = {}
+    if not env_file.is_file():
+        return keys
+    for line in env_file.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if "=" in line:
+            k, v = line.split("=", 1)
+            keys[k.strip()] = v.strip().strip("'\"")
+    return keys
+
+
+def save_env_file(env_file: Path, updates: Dict[str, str]) -> None:
+    """Save or merge environment keys into .env with secure permissions (0600)."""
+    current_lines: List[str] = []
+    existing_keys: Dict[str, int] = {}
+
+    if env_file.is_file():
+        for i, line in enumerate(env_file.read_text(encoding="utf-8").splitlines()):
+            current_lines.append(line)
+            sline = line.strip()
+            if sline and not sline.startswith("#") and "=" in sline:
+                k = sline.split("=", 1)[0].strip()
+                existing_keys[k] = i
+    else:
+        current_lines.append("# Locus Environment Secrets")
+
+    for k, v in updates.items():
+        if k in existing_keys:
+            idx = existing_keys[k]
+            current_lines[idx] = f"{k}={v}"
+        else:
+            current_lines.append(f"{k}={v}")
+
+    content = "\n".join(current_lines) + "\n"
+    env_file.write_text(content, encoding="utf-8")
+
+    # Enforce restricted permissions (0600: read/write by owner only)
+    try:
+        os.chmod(env_file, stat.S_IRUSR | stat.S_IWUSR)
+    except Exception:
+        pass
+
+
+def prompt_topology(current: Optional[str] = None) -> str:
+    """Prompt user interactively for deployment topology (R2)."""
+    default = current or "local"
+    print("\nSelect Locus deployment topology (R2):")
+    print("  [1] local   - Pi agent, sidecar, and services run on this machine")
+    print("  [2] vm      - Sidecar, background jobs, and services run on remote VM")
+    print("  [3] hybrid  - Services on remote VM, TUI and local client on this machine")
+    resp = input(f"Topology [{default}]: ").strip().lower()
+    if not resp:
+        return default
+    if resp in ("1", "local"):
+        return "local"
+    if resp in ("2", "vm"):
+        return "vm"
+    if resp in ("3", "hybrid"):
+        return "hybrid"
+    print(f"Unknown topology '{resp}', defaulting to {default}")
+    return default
+
+
+def prompt_keys(
+    existing_keys: Dict[str, str],
+    providers: Optional[List[str]] = None,
+) -> Dict[str, str]:
+    """Interactively prompt user for API keys with masked input (R3)."""
+    target_providers = providers or ["anthropic", "openai", "telegram"]
+    updates: Dict[str, str] = {}
+
+    key_map = {
+        "anthropic": "ANTHROPIC_API_KEY",
+        "openai": "OPENAI_API_KEY",
+        "telegram": "TELEGRAM_BOT_TOKEN",
+        "google": "GEMINI_API_KEY",
+        "composio": "COMPOSIO_API_KEY",
+    }
+
+    print("\nAPI Key Setup (input is masked for security) (R3):")
+    for prov in target_providers:
+        env_var = key_map.get(prov, f"{prov.upper()}_API_KEY")
+        existing = existing_keys.get(env_var)
+        prompt_label = f"Enter {prov.title()} key"
+        if existing:
+            prompt_label += " (press Enter to keep existing)"
+        prompt_label += ": "
+
+        raw = getpass.getpass(prompt_label).strip()
+        if not raw and existing:
+            updates[env_var] = existing
+            continue
+        if not raw:
+            continue
+
+        ok, msg = validate_key(prov, raw)
+        if ok:
+            print(f"  [{prov}] {msg}")
+            updates[env_var] = raw
+        else:
+            print(f"  [{prov}] Warning: {msg}")
+            ans = input("  Save anyway? [y/N]: ").strip().lower()
+            if ans in ("y", "yes"):
+                updates[env_var] = raw
+
+    return updates
+
+
 def run_install(
     target_dir: Optional[Path] = None,
     answers: Optional[Dict[str, Any]] = None,
     non_interactive: bool = True,
+    reconfigure: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Execute Locus installation.
-    Creates target directory, canonical vault folders, and initial config.yaml.
-    Idempotent: running multiple times preserves existing configurations.
+    Creates target directory, canonical vault folders, initial config.yaml, and .env.
+    Idempotent: running multiple times preserves existing configurations and keys (R8).
+    Supports reconfigure modes: 'all', 'topology', 'keys', 'vault'.
     """
     ans = answers or {}
-    topology = ans.get("topology", "local")
-    require_docker = bool(ans.get("require_docker", topology in ("vm", "hybrid")))
+    reconf_section = reconfigure.lower() if reconfigure else None
 
-    # 1. Check prerequisites
-    ok, prereqs = check_prerequisites(require_docker=require_docker)
-    if not ok and not ans.get("skip_prereq_check", False):
-        failed = [f"{k}: {msg}" for k, (passed, msg) in prereqs.items() if not passed]
-        raise RuntimeError(f"Prerequisite check failed: {', '.join(failed)}")
-
-    # 2. Resolve target directory (~/.locus by default)
+    # 1. Resolve target directory (~/.locus by default)
     if target_dir is None:
         target_path = Path.home() / ".locus"
     else:
@@ -126,28 +296,7 @@ def run_install(
 
     target_path.mkdir(parents=True, exist_ok=True)
 
-    # 3. Create subdirectories
-    jobs_dir = target_path / "jobs"
-    jobs_dir.mkdir(parents=True, exist_ok=True)
-
-    logs_dir = target_path / "logs"
-    logs_dir.mkdir(parents=True, exist_ok=True)
-
-    data_dir = target_path / "data"
-    data_dir.mkdir(parents=True, exist_ok=True)
-
-    # 4. Create vault directories
-    vault_path_val = ans.get("vault_path")
-    if vault_path_val:
-        vault_root = Path(vault_path_val).resolve()
-    else:
-        vault_root = target_path / "vault"
-
-    vault_root.mkdir(parents=True, exist_ok=True)
-    for folder_name in CANONICAL_VAULT_DIRS:
-        (vault_root / folder_name).mkdir(parents=True, exist_ok=True)
-
-    # 5. Populate config.yaml idempotently
+    # 2. Check existing config
     config_file = target_path / "config.yaml"
     existing_cfg: Dict[str, Any] = {}
     if config_file.is_file():
@@ -161,8 +310,46 @@ def run_install(
     cfg = existing_cfg if existing_cfg else {}
     locus_sec = cfg.setdefault("locus", {})
 
-    # Set topology and vault
-    locus_sec.setdefault("topology", topology)
+    # Determine topology
+    current_topology = locus_sec.get("topology", "local")
+    if not non_interactive and (reconf_section in (None, "all", "topology")):
+        topology = prompt_topology(current=current_topology)
+    else:
+        topology = ans.get("topology", current_topology)
+
+    require_docker = bool(ans.get("require_docker", topology in ("vm", "hybrid")))
+
+    # 3. Check prerequisites
+    ok, prereqs = check_prerequisites(require_docker=require_docker)
+    if not ok and not ans.get("skip_prereq_check", False):
+        failed = [f"{k}: {msg}" for k, (passed, msg) in prereqs.items() if not passed]
+        raise RuntimeError(f"Prerequisite check failed: {', '.join(failed)}")
+
+    # 4. Create subdirectories
+    jobs_dir = target_path / "jobs"
+    jobs_dir.mkdir(parents=True, exist_ok=True)
+
+    logs_dir = target_path / "logs"
+    logs_dir.mkdir(parents=True, exist_ok=True)
+
+    data_dir = target_path / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+
+    # 5. Create vault directories
+    vault_path_val = ans.get("vault_path") or locus_sec.get("vault", {}).get("path")
+    if vault_path_val:
+        vault_root = Path(vault_path_val).resolve()
+    else:
+        vault_root = target_path / "vault"
+
+    vault_root.mkdir(parents=True, exist_ok=True)
+    for folder_name in CANONICAL_VAULT_DIRS:
+        (vault_root / folder_name).mkdir(parents=True, exist_ok=True)
+
+    # 6. Update config.yaml idempotently
+    if reconf_section in (None, "all", "topology"):
+        locus_sec["topology"] = topology
+
     vault_sec = locus_sec.setdefault("vault", {})
     vault_sec.setdefault("path", str(vault_root))
 
@@ -181,22 +368,34 @@ def run_install(
     # Write merged configuration
     config_file.write_text(yaml.dump(cfg, sort_keys=False), encoding="utf-8")
 
-    # 6. Ensure .env template exists
+    # 7. Environment Secrets (.env)
     env_file = target_path / ".env"
-    if not env_file.is_file():
-        default_env = (
-            "# Locus Environment Secrets\n"
-            "LOCUS_HOME=" + str(target_path) + "\n"
-            "# TELEGRAM_BOT_TOKEN=\n"
-            "# COUCHDB_PASSWORD=\n"
-        )
-        env_file.write_text(default_env, encoding="utf-8")
+    existing_keys = load_env_file(env_file)
+    env_updates: Dict[str, str] = {}
+
+    # Seed default LOCUS_HOME if missing
+    if "LOCUS_HOME" not in existing_keys:
+        env_updates["LOCUS_HOME"] = str(target_path)
+
+    # If answers provided explicit keys
+    if "keys" in ans and isinstance(ans["keys"], dict):
+        for k, v in ans["keys"].items():
+            env_updates[k] = str(v)
+
+    # Interactive key prompt
+    if not non_interactive and (reconf_section in (None, "all", "keys")):
+        key_prompts = prompt_keys(existing_keys)
+        env_updates.update(key_prompts)
+
+    save_env_file(env_file, env_updates)
 
     return {
         "status": "installed",
         "target_dir": str(target_path),
         "vault_dir": str(vault_root),
         "config_file": str(config_file),
+        "env_file": str(env_file),
+        "topology": locus_sec.get("topology"),
         "prerequisites": {k: msg for k, (_, msg) in prereqs.items()},
     }
 
@@ -207,6 +406,12 @@ def main() -> None:
     parser.add_argument("--answers", type=str, help="Path to JSON/YAML answers file")
     parser.add_argument("--target-dir", type=str, help="Target locus installation directory")
     parser.add_argument("--check-only", action="store_true", help="Check prerequisites only")
+    parser.add_argument(
+        "--reconfigure",
+        type=str,
+        choices=["all", "topology", "keys", "vault"],
+        help="Reconfigure a specific section of Locus setup (R8)",
+    )
 
     args = parser.parse_args()
 
@@ -230,13 +435,21 @@ def main() -> None:
             answers = yaml.safe_load(content) or {}
 
     target = Path(args.target_dir) if args.target_dir else None
+    non_interactive = bool(args.yes or (args.answers and not args.reconfigure))
 
     try:
-        report = run_install(target_dir=target, answers=answers, non_interactive=args.yes)
+        report = run_install(
+            target_dir=target,
+            answers=answers,
+            non_interactive=non_interactive,
+            reconfigure=args.reconfigure,
+        )
         print("Locus installation completed successfully:")
-        print(f"  Target: {report['target_dir']}")
-        print(f"  Vault:  {report['vault_dir']}")
-        print(f"  Config: {report['config_file']}")
+        print(f"  Target:   {report['target_dir']}")
+        print(f"  Topology: {report['topology']}")
+        print(f"  Vault:    {report['vault_dir']}")
+        print(f"  Config:   {report['config_file']}")
+        print(f"  Env:      {report['env_file']}")
     except Exception as exc:
         print(f"Installation failed: {exc}", file=sys.stderr)
         sys.exit(1)
