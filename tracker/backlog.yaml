@@ -355,7 +355,7 @@ stories:
     feature: F-0020
     slug: harness-delegation
     title: "Coding harness delegation (spec 3.7 and 11.5) in a scratch worktree"
-    points: 3
+    points: 2
     target_level: 3
     autopilot: false   # by hand: it starts other coding agents and git worktrees
     requires_decisions: [D-5]
