@@ -1,0 +1,10 @@
+# US-18 Spec Trace
+
+| spec line / source | the sentence quoted word for word | verdict | mechanism / file:line | test name |
+|---|---|---|---|---|
+| SPEC §19.3 line 15 | "BaseChatArchiverProvider defines multi-platform crawl and vault archive contracts" | LOCUS-NEW | sidecar/ingestion/chat_archiver.py:35-180, sidecar/providers/chat_archiver.py:15-70 | tests/unit/test_chat_archiver.py::test_chat_archiver_implements_interface |
+| SPEC §19.3 line 24 | "Scan local browser export directories and API logs: Claude Web / App JSON exports, ChatGPT export archives, Cursor IDE conversation logs, Pi native session histories, Telegram Locus conversation logs" | LOCUS-NEW | sidecar/crawlers/chat_crawler.py:100-240 | tests/unit/test_chat_archiver.py::test_parse_chatgpt_export_format, tests/unit/test_chat_archiver.py::test_parse_claude_export_format, tests/unit/test_chat_archiver.py::test_parse_cursor_and_pi_formats, tests/unit/test_chat_archiver.py::test_parse_telegram_export_format |
+| SPEC §19.3 line 30 | "Convert platform-specific JSON/HTML into unified Markdown format with YAML Frontmatter" | LOCUS-NEW | sidecar/ingestion/chat_archiver.py:75-115 | tests/unit/test_chat_archiver.py::test_format_markdown_note_with_frontmatter |
+| SPEC §19.3 line 35 | "Write generated notes to /vault/04-Captures/AI Chats/YYYY-MM-DD/{title}.md" | LOCUS-NEW | sidecar/ingestion/chat_archiver.py:120-165 | tests/unit/test_chat_archiver.py::test_archive_chat_writes_to_vault_and_replicates |
+| SPEC §19.3 line 40 | "Submit file modification event to livesync_bridge.py: Increment document revision in CouchDB (locus-couchdb:5984/locus-vault)" | LOCUS-NEW | sidecar/ingestion/chat_archiver.py:145-165 | tests/unit/test_chat_archiver.py::test_archive_chat_writes_to_vault_and_replicates |
+| SPEC §03 line 35 | "a disabled feature's HTTP routes answer 503 with {'disabled': '<config key>'}" | LOCUS-NEW | sidecar/service.py:210-250 | tests/unit/test_chat_archiver.py::test_chat_archiver_off_switch, tests/integration/test_chat_archiver_service.py::test_chat_archiver_service_off_switch_returns_503 |

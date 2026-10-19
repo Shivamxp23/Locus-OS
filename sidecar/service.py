@@ -9,6 +9,7 @@ Provides single-process supervisor managing:
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 import threading
 from typing import Any, Dict, Optional
 
@@ -204,6 +205,44 @@ def create_app(
             eval_prompt=payload.get("eval_prompt"),
         )
         return {"status": "ok", "evaluation": evaluation}
+
+    # AI Chat Archiver routes (SPEC §19.3 / F-0050)
+    from sidecar.ingestion.chat_archiver import ChatArchiverProvider
+    active_registry.register("chat_archiver", "default_chat_archiver", ChatArchiverProvider)
+
+    @app.post("/ingestion/chats/crawl")
+    def crawl_chats(body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Crawl export directories and return normalized conversations."""
+        if not app.state.registry.is_feature_enabled("ingestion", "chat_archiver"):
+            return JSONResponse(status_code=503, content={"disabled": "locus.ingestion.chat_archiver.enabled"})
+        provider_cls = app.state.registry.get_active_provider("chat_archiver", default_name="default_chat_archiver")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No chat archiver provider registered")
+
+        archiver = provider_cls()
+        archiver.initialize()
+        payload = body or {}
+        source_dir = payload.get("source_dir")
+        target_path = Path(source_dir).resolve() if source_dir else None
+        chats = archiver.crawl_and_parse(target_path) if target_path else []
+        return {"status": "ok", "count": len(chats), "chats": [c.to_dict() for c in chats]}
+
+    @app.post("/ingestion/chats/archive")
+    def archive_chats(body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Archive discovered AI conversations into vault and trigger LiveSync."""
+        if not app.state.registry.is_feature_enabled("ingestion", "chat_archiver"):
+            return JSONResponse(status_code=503, content={"disabled": "locus.ingestion.chat_archiver.enabled"})
+        provider_cls = app.state.registry.get_active_provider("chat_archiver", default_name="default_chat_archiver")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No chat archiver provider registered")
+
+        archiver = provider_cls()
+        archiver.initialize()
+        payload = body or {}
+        source_dir = payload.get("source_dir")
+        source_dirs = [Path(source_dir).resolve()] if source_dir else None
+        results = archiver.archive_all(source_dirs=source_dirs)
+        return {"status": "ok", "count": len(results), "results": [r.to_dict() for r in results]}
 
     return app
 

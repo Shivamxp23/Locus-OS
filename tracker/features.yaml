@@ -1771,10 +1771,19 @@ features:
     files:
     - sidecar/ingestion/chat_archiver.py
     - sidecar/crawlers/chat_crawler.py
-    symbols: []
+    - sidecar/providers/chat_archiver.py
+    symbols:
+    - file: sidecar/ingestion/chat_archiver.py
+      name: ChatArchiverProvider
+    - file: sidecar/crawlers/chat_crawler.py
+      name: ChatCrawler
+    - file: sidecar/providers/chat_archiver.py
+      name: BaseChatArchiverProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: pytest tests/unit/test_chat_archiver.py
+    integration:
+    - cmd: pytest tests/integration/test_chat_archiver_service.py
   depends_on: []
 - id: F-0051
   title: Computer Use / Screen
