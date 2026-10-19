@@ -19,3 +19,4 @@
 {"event":"accepted","story":"US-11","feature":"F-0082","level":3,"note":"Unified installer and thin launchers validate prerequisites and initialize ~/.locus idempotently. F-0082 reaches level 3.","date":"2026-11-04","commit":"71c0ea2371d4"}
 {"event":"closed","sprint":"S5","date":"2026-11-07","planned_points":3,"velocity":3,"done":["US-11"],"not_done":{}}
 {"event":"planned","sprint":"S6","start":"2026-11-08","end":"2026-11-11","goal":"One command sets up local, VM or hybrid, with keys and Telegram pairing.","capacity":4,"points":3,"stories":["US-12"],"date":"2026-11-08"}
+{"event":"accepted","story":"US-12","feature":"F-0082","level":3,"note":"Interactive mode questions, masked key collection with live checks, and safe reconfigure verified at Level 3.","date":"2026-11-08","commit":"ac24c719bb07"}
