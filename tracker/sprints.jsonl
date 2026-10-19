@@ -31,3 +31,5 @@
 {"event":"accepted","story":"US-15","feature":"F-0085","level":4,"note":"VM backend and hybrid mode SSH tunnel helper verified at Level 4 (INTEGRATED).","date":"2026-11-20","commit":"d30359f51f90"}
 {"event":"closed","sprint":"S9","date":"2026-11-23","planned_points":3,"velocity":3,"done":["US-15"],"not_done":{}}
 {"event":"planned","sprint":"S10","start":"2026-11-24","end":"2026-11-27","goal":"Everything is recorded and backed up to the vault; Neo4j Agent Memory is the memory layer.","capacity":3,"points":3,"stories":["US-16"],"date":"2026-11-24"}
+{"event":"accepted","story":"US-16","feature":"F-0060","level":4,"note":"Obsidian LiveSync through CouchDB verified at Level 4 (INTEGRATED). Loopback binding, non-default credentials, diff3 merge, and deterministic conflict sidecar notes verified.","date":"2026-11-27","commit":"b38bb10f3027"}
+{"event":"closed","sprint":"S10","date":"2026-11-27","planned_points":3,"velocity":3,"done":["US-16"],"not_done":{}}
