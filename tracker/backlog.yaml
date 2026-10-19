@@ -367,3 +367,1420 @@ stories:
       - "Modular off-switch locus.harness.enabled returns 503 per SPEC §03 line 35."
       - "Unit tests assert worktree creation/cleanup, subprocess command line construction, permission guard enforcement, and error handling."
     demo: 'Run harness delegation unit tests: asserts scratch worktree creation, command argument construction, and execution capture.'
+
+  - id: US-21
+    epic: E1
+    feature: F-0002
+    slug: system-prompt-construction
+    title: "System Prompt Construction (§1.2: System Prompt Construction)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing System Prompt Construction per §1.2: System Prompt Construction created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.system_prompt_construction.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0002: asserts core logic and off-switch behavior."
+
+  - id: US-22
+    epic: E1
+    feature: F-0003
+    slug: tool-system-13-canonical
+    title: "Tool System (13 Canonical Tools) (§1.3: Tool System)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Tool System (13 Canonical Tools) per §1.3: Tool System created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.tool_system_13_canonical_tools.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0003: asserts core logic and off-switch behavior."
+
+  - id: US-23
+    epic: E1
+    feature: F-0004
+    slug: model-management-escalation
+    title: "Model Management & Escalation (§1.4: Model Management)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Model Management & Escalation per §1.4: Model Management created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.model_management_escalation.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0004: asserts core logic and off-switch behavior."
+
+  - id: US-24
+    epic: E1
+    feature: F-0005
+    slug: extension-lifecycle
+    title: "Extension Lifecycle (§1.5: Extension Lifecycle (25+ Events))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Extension Lifecycle per §1.5: Extension Lifecycle (25+ Events) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.extension_lifecycle.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0005: asserts core logic and off-switch behavior."
+
+  - id: US-25
+    epic: E1
+    feature: F-0006
+    slug: context-window-management
+    title: "Context Window Management (§1.6: Context Window Management)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Context Window Management per §1.6: Context Window Management created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.context_window_management.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0006: asserts core logic and off-switch behavior."
+
+  - id: US-26
+    epic: E1
+    feature: F-0007
+    slug: post-turn-review
+    title: "Post-Turn Review (§1.7 + §10.1: Post-Turn Background Review)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Post-Turn Review per §1.7 + §10.1: Post-Turn Background Review created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.post_turn_review.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0007: asserts core logic and off-switch behavior."
+
+  - id: US-27
+    epic: E6
+    feature: F-0035
+    slug: learning-profiling-reward-model
+    title: "Learning / Profiling / Reward Model (§1.7 + §10.1: Post-Turn Background Review)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Learning / Profiling / Reward Model per §1.7 + §10.1: Post-Turn Background Review created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.learning_profiling_reward_model.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0035: asserts core logic and off-switch behavior."
+
+  - id: US-28
+    epic: E1
+    feature: F-0009
+    slug: rate-limit-tracking
+    title: "Rate Limit Tracking (§1.9: Rate Limit Tracking)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Rate Limit Tracking per §1.9: Rate Limit Tracking created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.rate_limit_tracking.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0009: asserts core logic and off-switch behavior."
+
+  - id: US-29
+    epic: E1
+    feature: F-0010
+    slug: usage-cost-tracking
+    title: "Usage/Cost Tracking (§1.10: Usage / Cost Tracking)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Usage/Cost Tracking per §1.10: Usage / Cost Tracking created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.usage_cost_tracking.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0010: asserts core logic and off-switch behavior."
+
+  - id: US-30
+    epic: E1
+    feature: F-0011
+    slug: title-generation
+    title: "Title Generation (§1.11: Title Generation)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Title Generation per §1.11: Title Generation created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.title_generation.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0011: asserts core logic and off-switch behavior."
+
+  - id: US-31
+    epic: E1
+    feature: F-0012
+    slug: onboarding-flow
+    title: "Onboarding Flow (§1.12: Onboarding & Multi-Topology Setup Flow (Installer & First-Run))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Onboarding Flow per §1.12: Onboarding & Multi-Topology Setup Flow (Installer & First-Run) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.onboarding_flow.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0012: asserts core logic and off-switch behavior."
+
+  - id: US-32
+    epic: E2
+    feature: F-0092
+    slug: query-router-intent-classifier
+    title: "Query Router / Intent Classifier (Stage 2) (§2.1-2.3: Query Router / Intent Classifier (Stage 2))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    autopilot: false
+    accept:
+      - "Specification for Query Router / Intent Classifier (Stage 2) per §2.1-2.3: Query Router / Intent Classifier (Stage 2) clarified and reviewed with owner."
+      - "Provider interface and stub implementation registered in sidecar with 503 off-switch."
+      - "Unit tests assert provider registration and schema conformance."
+    demo: "Run unit test suite for F-0092: asserts provider registration and off-switch."
+
+  - id: US-33
+    epic: E2
+    feature: F-0093
+    slug: state-engine-stage-3
+    title: "State Engine (Stage 3) (§2.4: State Engine (Stage 3))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    autopilot: false
+    accept:
+      - "Specification for State Engine (Stage 3) per §2.4: State Engine (Stage 3) clarified and reviewed with owner."
+      - "Provider interface and stub implementation registered in sidecar with 503 off-switch."
+      - "Unit tests assert provider registration and schema conformance."
+    demo: "Run unit test suite for F-0093: asserts provider registration and off-switch."
+
+  - id: US-34
+    epic: E2
+    feature: F-0094
+    slug: context-forge-stage-6
+    title: "Context Forge (Stage 6) — The 6-Layer Assembler (§2.5: Context Forge (Stage 6) — The 6-Layer Assembler)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    autopilot: false
+    accept:
+      - "Specification for Context Forge (Stage 6) — The 6-Layer Assembler per §2.5: Context Forge (Stage 6) — The 6-Layer Assembler clarified and reviewed with owner."
+      - "Provider interface and stub implementation registered in sidecar with 503 off-switch."
+      - "Unit tests assert provider registration and schema conformance."
+    demo: "Run unit test suite for F-0094: asserts provider registration and off-switch."
+
+  - id: US-35
+    epic: E2
+    feature: F-0095
+    slug: anti-hallucination-guard-stage
+    title: "Anti-Hallucination Guard (Stage 10) (§2.6: Anti-Hallucination Guard (Stage 10))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    autopilot: false
+    accept:
+      - "Specification for Anti-Hallucination Guard (Stage 10) per §2.6: Anti-Hallucination Guard (Stage 10) clarified and reviewed with owner."
+      - "Provider interface and stub implementation registered in sidecar with 503 off-switch."
+      - "Unit tests assert provider registration and schema conformance."
+    demo: "Run unit test suite for F-0095: asserts provider registration and off-switch."
+
+  - id: US-36
+    epic: E2
+    feature: F-0097
+    slug: streaming-sse
+    title: "Streaming (SSE) (§2.6a: Streaming (SSE))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Streaming (SSE) per §2.6a: Streaming (SSE) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.streaming_sse.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0097: asserts core logic and off-switch behavior."
+
+  - id: US-37
+    epic: E2
+    feature: F-0096
+    slug: intelligent-model-routing-quality
+    title: "Intelligent Model Routing + Quality-Based Fallback (§2.7-2.8: Intelligent Model Routing + Quality-Based Fallback)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Intelligent Model Routing + Quality-Based Fallback per §2.7-2.8: Intelligent Model Routing + Quality-Based Fallback created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.intelligent_model_routing_quality_based_fallback.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0096: asserts core logic and off-switch behavior."
+
+  - id: US-38
+    epic: E2
+    feature: F-0098
+    slug: image-generation
+    title: "Image Generation (§2.9: Image Generation)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Image Generation per §2.9: Image Generation created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.image_generation.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0098: asserts core logic and off-switch behavior."
+
+  - id: US-39
+    epic: E6
+    feature: F-0036
+    slug: subagents-autoresearch
+    title: "Subagents / AutoResearch (§3.7 + §11.5: Coding Harness Delegation)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Subagents / AutoResearch per §3.7 + §11.5: Coding Harness Delegation created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.subagents_autoresearch.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0036: asserts core logic and off-switch behavior."
+
+  - id: US-40
+    epic: E2
+    feature: F-0099
+    slug: git-tools
+    title: "Git Tools (§3.7a: Git Tools)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Git Tools per §3.7a: Git Tools created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.git_tools.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0099: asserts core logic and off-switch behavior."
+
+  - id: US-41
+    epic: E2
+    feature: F-0100
+    slug: tool-call-validation
+    title: "Tool Call Validation (§3.8: Tool Call Validation)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Tool Call Validation per §3.8: Tool Call Validation created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.tool_call_validation.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0100: asserts core logic and off-switch behavior."
+
+  - id: US-42
+    epic: E2
+    feature: F-0101
+    slug: tool-result-classification
+    title: "Tool Result Classification (§3.9: Tool Result Classification)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Tool Result Classification per §3.9: Tool Result Classification created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.tool_result_classification.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0101: asserts core logic and off-switch behavior."
+
+  - id: US-43
+    epic: E2
+    feature: F-0102
+    slug: tool-output-accumulator
+    title: "Tool Output Accumulator (§3.10: Tool Output Accumulator)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Tool Output Accumulator per §3.10: Tool Output Accumulator created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.tool_output_accumulator.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0102: asserts core logic and off-switch behavior."
+
+  - id: US-44
+    epic: E2
+    feature: F-0103
+    slug: tool-timeout-budget
+    title: "Tool Timeout / Budget (§3.11: Tool Timeout / Budget)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Tool Timeout / Budget per §3.11: Tool Timeout / Budget created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.tool_timeout_budget.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0103: asserts core logic and off-switch behavior."
+
+  - id: US-45
+    epic: E2
+    feature: F-0104
+    slug: custom-locus-tools
+    title: "Custom Locus Tools (§3.12: Custom Locus Tools)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Custom Locus Tools per §3.12: Custom Locus Tools created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.custom_locus_tools.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0104: asserts core logic and off-switch behavior."
+
+  - id: US-46
+    epic: E5
+    feature: F-0021
+    slug: neo4j-agent-memory-pole
+    title: "Neo4j Agent Memory (POLE+O) (§4.1-4.2: Graph-Native Memory (Neo4j Agent Memory))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    autopilot: false
+    accept:
+      - "Specification for Neo4j Agent Memory (POLE+O) per §4.1-4.2: Graph-Native Memory (Neo4j Agent Memory) validated against active schema."
+      - "Modular provider interface defined and registered with off-switch behavior."
+      - "Live verification requires owner real keys, external accounts, hardware, or dedicated service."
+    demo: "Manual live demo: owner tests Neo4j Agent Memory (POLE+O) with live service credentials."
+
+  - id: US-47
+    epic: E2
+    feature: F-0088
+    slug: memory-tree-hierarchical-summarizat
+    title: "Memory Tree (Hierarchical Summarization Cascade) (§4.5: Memory Tree (Hierarchical Summarization Cascade))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Memory Tree (Hierarchical Summarization Cascade) per §4.5: Memory Tree (Hierarchical Summarization Cascade) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.memory_tree_hierarchical_summarization_cascade.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0088: asserts core logic and off-switch behavior."
+
+  - id: US-48
+    epic: E2
+    feature: F-0089
+    slug: memory-sync-multi-source
+    title: "Memory Sync (Multi-Source Ingestion Pipelines) (§4.7: Memory Sync (Multi-Source Ingestion Pipelines))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Memory Sync (Multi-Source Ingestion Pipelines) per §4.7: Memory Sync (Multi-Source Ingestion Pipelines) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.memory_sync_multi_source_ingestion_pipelines.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0089: asserts core logic and off-switch behavior."
+
+  - id: US-49
+    epic: E2
+    feature: F-0090
+    slug: memory-queue-async-job
+    title: "Memory Queue (Async Job Pipeline) (§4.8: Memory Queue (Async Job Pipeline))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Memory Queue (Async Job Pipeline) per §4.8: Memory Queue (Async Job Pipeline) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.memory_queue_async_job_pipeline.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0090: asserts core logic and off-switch behavior."
+
+  - id: US-50
+    epic: E2
+    feature: F-0091
+    slug: memory-diff-snapshot-based
+    title: "Memory Diff (Snapshot-Based Change Tracking) (§4.9: Memory Diff (Snapshot-Based Change Tracking))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Memory Diff (Snapshot-Based Change Tracking) per §4.9: Memory Diff (Snapshot-Based Change Tracking) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.memory_diff_snapshot_based_change_tracking.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0091: asserts core logic and off-switch behavior."
+
+  - id: US-51
+    epic: E5
+    feature: F-0022
+    slug: holographic-hrr
+    title: "Holographic HRR (§4.10: Holographic Reduced Representations (HRR Memory Binding))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Holographic HRR per §4.10: Holographic Reduced Representations (HRR Memory Binding) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.holographic_hrr.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0022: asserts core logic and off-switch behavior."
+
+  - id: US-52
+    epic: E5
+    feature: F-0023
+    slug: stdp-reinforcement
+    title: "STDP Reinforcement (§4.12: STDP Reinforcement (Spike-Timing-Dependent Plasticity))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing STDP Reinforcement per §4.12: STDP Reinforcement (Spike-Timing-Dependent Plasticity) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.stdp_reinforcement.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0023: asserts core logic and off-switch behavior."
+
+  - id: US-53
+    epic: E5
+    feature: F-0024
+    slug: spaced-repetition
+    title: "Spaced Repetition (§4.13: Spaced Repetition Memory Consolidation (FSRS / SM-2))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Spaced Repetition per §4.13: Spaced Repetition Memory Consolidation (FSRS / SM-2) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.spaced_repetition.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0024: asserts core logic and off-switch behavior."
+
+  - id: US-54
+    epic: E5
+    feature: F-0025
+    slug: project-memory-decay
+    title: "Project Memory Decay (§4.14: Project-Specific Memory Decay Engine)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Project Memory Decay per §4.14: Project-Specific Memory Decay Engine created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.project_memory_decay.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0025: asserts core logic and off-switch behavior."
+
+  - id: US-55
+    epic: E2
+    feature: F-0110
+    slug: context-compression
+    title: "Context Compression (§4.16: Context Compression)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    autopilot: false
+    accept:
+      - "Specification for Context Compression per §4.16: Context Compression clarified and reviewed with owner."
+      - "Provider interface and stub implementation registered in sidecar with 503 off-switch."
+      - "Unit tests assert provider registration and schema conformance."
+    demo: "Run unit test suite for F-0110: asserts provider registration and off-switch."
+
+  - id: US-56
+    epic: E5
+    feature: F-0026
+    slug: headroom-ccr
+    title: "Headroom CCR (§4.17: Token Compression (Headroom CCR))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Headroom CCR per §4.17: Token Compression (Headroom CCR) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.headroom_ccr.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0026: asserts core logic and off-switch behavior."
+
+  - id: US-57
+    epic: E2
+    feature: F-0118
+    slug: memory-provider-interface
+    title: "Memory Provider Interface (§4.18: Memory Provider Interface)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    autopilot: false
+    accept:
+      - "Specification for Memory Provider Interface per §4.18: Memory Provider Interface clarified and reviewed with owner."
+      - "Provider interface and stub implementation registered in sidecar with 503 off-switch."
+      - "Unit tests assert provider registration and schema conformance."
+    demo: "Run unit test suite for F-0118: asserts provider registration and off-switch."
+
+  - id: US-58
+    epic: E3
+    feature: F-0027
+    slug: session-management
+    title: "Session Management (§5.1-5.8: Session Management & Telegram Bridge)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Session Management per §5.1-5.8: Session Management & Telegram Bridge created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.session_management.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0027: asserts core logic and off-switch behavior."
+
+  - id: US-59
+    epic: E2
+    feature: F-0028
+    slug: context-references
+    title: "Context References (§6.2: Dynamic Context References (@file, @symbol, @git, @diff))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Context References per §6.2: Dynamic Context References (@file, @symbol, @git, @diff) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.context_references.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0028: asserts core logic and off-switch behavior."
+
+  - id: US-60
+    epic: E2
+    feature: F-0029
+    slug: coding-context
+    title: "Coding Context (§6.3: Coding Context Engine (Repo Map, AST Index, Active Diff))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Coding Context per §6.3: Coding Context Engine (Repo Map, AST Index, Active Diff) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.coding_context.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0029: asserts core logic and off-switch behavior."
+
+  - id: US-61
+    epic: E2
+    feature: F-0030
+    slug: tui-dashboard
+    title: "TUI / Dashboard (§7.1-7.9: Terminal Interface & Native @earendil-works/pi-tui Augmentation)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing TUI / Dashboard per §7.1-7.9: Terminal Interface & Native @earendil-works/pi-tui Augmentation created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.tui_dashboard.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0030: asserts core logic and off-switch behavior."
+
+  - id: US-62
+    epic: E2
+    feature: F-0031
+    slug: cli-doctor-diagnostics
+    title: "CLI / Doctor Diagnostics (§8.1-8.10: CLI Commands, Multi-Surface Management, Telegram Settings & Headless VM Topology)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing CLI / Doctor Diagnostics per §8.1-8.10: CLI Commands, Multi-Surface Management, Telegram Settings & Headless VM Topology created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.cli_doctor_diagnostics.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0031: asserts core logic and off-switch behavior."
+
+  - id: US-63
+    epic: E2
+    feature: F-0119
+    slug: skill-system-multi-source
+    title: "Skill System & Multi-Source Marketplace (§9.2: Skill System & Multi-Source Marketplace)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Skill System & Multi-Source Marketplace per §9.2: Skill System & Multi-Source Marketplace created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.skill_system_multi_source_marketplace.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0119: asserts core logic and off-switch behavior."
+
+  - id: US-64
+    epic: E2
+    feature: F-0033
+    slug: acp-protocol
+    title: "ACP Protocol (§9.4: Agent Communication Protocol (ACP Client & Transport))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing ACP Protocol per §9.4: Agent Communication Protocol (ACP Client & Transport) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.acp_protocol.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0033: asserts core logic and off-switch behavior."
+
+  - id: US-65
+    epic: E2
+    feature: F-0034
+    slug: plugin-llm
+    title: "Plugin LLM (§9.9: Plugin LLM Sandboxing & Auxiliary Bridge)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Plugin LLM per §9.9: Plugin LLM Sandboxing & Auxiliary Bridge created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.plugin_llm.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0034: asserts core logic and off-switch behavior."
+
+  - id: US-66
+    epic: E2
+    feature: F-0120
+    slug: self-evolving-architect-bot
+    title: "Self-Evolving Architect Bot (§10.8: Self-Evolving Architect Bot)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    autopilot: false
+    accept:
+      - "Specification for Self-Evolving Architect Bot per §10.8: Self-Evolving Architect Bot clarified and reviewed with owner."
+      - "Provider interface and stub implementation registered in sidecar with 503 off-switch."
+      - "Unit tests assert provider registration and schema conformance."
+    demo: "Run unit test suite for F-0120: asserts provider registration and off-switch."
+
+  - id: US-67
+    epic: E2
+    feature: F-0121
+    slug: agent-experience-tracking-procedura
+    title: "Agent Experience Tracking (Procedural Memory) (§10.9: Agent Experience Tracking (Procedural Memory))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Agent Experience Tracking (Procedural Memory) per §10.9: Agent Experience Tracking (Procedural Memory) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.agent_experience_tracking_procedural_memory.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0121: asserts core logic and off-switch behavior."
+
+  - id: US-68
+    epic: E2
+    feature: F-0037
+    slug: injection-filter
+    title: "Injection Filter (§13.1: Prompt Injection Protection)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Injection Filter per §13.1: Prompt Injection Protection created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.injection_filter.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0037: asserts core logic and off-switch behavior."
+
+  - id: US-69
+    epic: E2
+    feature: F-0107
+    slug: file-safety
+    title: "File Safety (§13.2: File Safety)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing File Safety per §13.2: File Safety created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.file_safety.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0107: asserts core logic and off-switch behavior."
+
+  - id: US-70
+    epic: E2
+    feature: F-0108
+    slug: autonomy-tiers
+    title: "Autonomy Tiers (§13.4: Autonomy Tiers)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Autonomy Tiers per §13.4: Autonomy Tiers created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.autonomy_tiers.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0108: asserts core logic and off-switch behavior."
+
+  - id: US-71
+    epic: E2
+    feature: F-0109
+    slug: approval-gate
+    title: "Approval Gate (§13.5: Approval Gate)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Approval Gate per §13.5: Approval Gate created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.approval_gate.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0109: asserts core logic and off-switch behavior."
+
+  - id: US-72
+    epic: E2
+    feature: F-0040
+    slug: shell-blocklist
+    title: "Shell Blocklist (§13.7: Shell Blocklist)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Shell Blocklist per §13.7: Shell Blocklist created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.shell_blocklist.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0040: asserts core logic and off-switch behavior."
+
+  - id: US-73
+    epic: E2
+    feature: F-0041
+    slug: data-redaction
+    title: "Data Redaction (§13.8: Data Redaction)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Data Redaction per §13.8: Data Redaction created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.data_redaction.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0041: asserts core logic and off-switch behavior."
+
+  - id: US-74
+    epic: E2
+    feature: F-0042
+    slug: think-token-scrubbing
+    title: "Think Token Scrubbing (§13.9: Think Token Scrubbing)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Think Token Scrubbing per §13.9: Think Token Scrubbing created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.think_token_scrubbing.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0042: asserts core logic and off-switch behavior."
+
+  - id: US-75
+    epic: E2
+    feature: F-0043
+    slug: message-sanitization
+    title: "Message Sanitization (§13.10: Message Sanitization)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Message Sanitization per §13.10: Message Sanitization created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.message_sanitization.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0043: asserts core logic and off-switch behavior."
+
+  - id: US-76
+    epic: E3
+    feature: F-0044
+    slug: stt-tts-providers
+    title: "STT / TTS Providers (§14.1-14.4: Voice Pipeline)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    autopilot: false
+    accept:
+      - "Specification for STT / TTS Providers per §14.1-14.4: Voice Pipeline validated against active schema."
+      - "Modular provider interface defined and registered with off-switch behavior."
+      - "Live verification requires owner real keys, external accounts, hardware, or dedicated service."
+    demo: "Manual live demo: owner tests STT / TTS Providers with live service credentials."
+
+  - id: US-77
+    epic: E2
+    feature: F-0105
+    slug: web-search-8-providers
+    title: "Web Search (8 Providers) (§15.1: Web Search (8 Providers))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Web Search (8 Providers) per §15.1: Web Search (8 Providers) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.web_search_8_providers.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0105: asserts core logic and off-switch behavior."
+
+  - id: US-78
+    epic: E3
+    feature: F-0045
+    slug: browser-automation
+    title: "Browser Automation (§16.1-16.2 + §20.1-20.3: Browser Automation & Desktop Control)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    autopilot: false
+    accept:
+      - "Specification for Browser Automation per §16.1-16.2 + §20.1-20.3: Browser Automation & Desktop Control validated against active schema."
+      - "Modular provider interface defined and registered with off-switch behavior."
+      - "Live verification requires owner real keys, external accounts, hardware, or dedicated service."
+    demo: "Manual live demo: owner tests Browser Automation with live service credentials."
+
+  - id: US-79
+    epic: E3
+    feature: F-0051
+    slug: computer-use-screen
+    title: "Computer Use / Screen (§16.1-16.2 + §20.1-20.3: Browser Automation & Desktop Control)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    autopilot: false
+    accept:
+      - "Specification for Computer Use / Screen per §16.1-16.2 + §20.1-20.3: Browser Automation & Desktop Control validated against active schema."
+      - "Modular provider interface defined and registered with off-switch behavior."
+      - "Live verification requires owner real keys, external accounts, hardware, or dedicated service."
+    demo: "Manual live demo: owner tests Computer Use / Screen with live service credentials."
+
+  - id: US-80
+    epic: E2
+    feature: F-0047
+    slug: graceful-restart
+    title: "Graceful Restart (§17.10: Graceful Gateway Restart & State Snapshotting)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Graceful Restart per §17.10: Graceful Gateway Restart & State Snapshotting created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.graceful_restart.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0047: asserts core logic and off-switch behavior."
+
+  - id: US-81
+    epic: E2
+    feature: F-0048
+    slug: mcp-server-client
+    title: "MCP Server/Client (§18.1-18.4: Model Context Protocol)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing MCP Server/Client per §18.1-18.4: Model Context Protocol created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.mcp_server_client.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0048: asserts core logic and off-switch behavior."
+
+  - id: US-82
+    epic: E3
+    feature: F-0052
+    slug: vnc-remote
+    title: "VNC Remote (§20.3: VNC / Remote Desktop Protocol Control)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    autopilot: false
+    accept:
+      - "Specification for VNC Remote per §20.3: VNC / Remote Desktop Protocol Control validated against active schema."
+      - "Modular provider interface defined and registered with off-switch behavior."
+      - "Live verification requires owner real keys, external accounts, hardware, or dedicated service."
+    demo: "Manual live demo: owner tests VNC Remote with live service credentials."
+
+  - id: US-83
+    epic: E3
+    feature: F-0053
+    slug: google-calendar
+    title: "Google Calendar (§21.1-21.3: Google Calendar, Gmail, Webhooks)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    autopilot: false
+    accept:
+      - "Specification for Google Calendar per §21.1-21.3: Google Calendar, Gmail, Webhooks validated against active schema."
+      - "Modular provider interface defined and registered with off-switch behavior."
+      - "Live verification requires owner real keys, external accounts, hardware, or dedicated service."
+    demo: "Manual live demo: owner tests Google Calendar with live service credentials."
+
+  - id: US-84
+    epic: E3
+    feature: F-0054
+    slug: ci-cd-docker
+    title: "CI/CD / Docker (§23.1-23.5: Tests, Docker, Batch Runner)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing CI/CD / Docker per §23.1-23.5: Tests, Docker, Batch Runner created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.ci_cd_docker.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0054: asserts core logic and off-switch behavior."
+
+  - id: US-85
+    epic: E2
+    feature: F-0106
+    slug: pi-utilities-clipboard-syntax
+    title: "Pi Utilities (Clipboard, Syntax Highlighting, Frontmatter, File Watcher) (§24.1: Pi Utilities (Clipboard, Syntax Highlighting, Frontmatter, File Watcher))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Pi Utilities (Clipboard, Syntax Highlighting, Frontmatter, File Watcher) per §24.1: Pi Utilities (Clipboard, Syntax Highlighting, Frontmatter, File Watcher) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.pi_utilities_clipboard_syntax_highlighting_frontmatter_file_watcher.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0106: asserts core logic and off-switch behavior."
+
+  - id: US-86
+    epic: E6
+    feature: F-0056
+    slug: operating-modes-scheduler
+    title: "Operating Modes / Scheduler (§25.5: Three-Layer Goal Stack)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Operating Modes / Scheduler per §25.5: Three-Layer Goal Stack created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.operating_modes_scheduler.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0056: asserts core logic and off-switch behavior."
+
+  - id: US-87
+    epic: E2
+    feature: F-0111
+    slug: emergency-task-injection
+    title: "Emergency Task Injection (§25.9: Emergency Task Injection)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Emergency Task Injection per §25.9: Emergency Task Injection created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.emergency_task_injection.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0111: asserts core logic and off-switch behavior."
+
+  - id: US-88
+    epic: E2
+    feature: F-0112
+    slug: exhaustion-predictor
+    title: "Exhaustion Predictor (§25.10: Exhaustion Predictor)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Exhaustion Predictor per §25.10: Exhaustion Predictor created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.exhaustion_predictor.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0112: asserts core logic and off-switch behavior."
+
+  - id: US-89
+    epic: E2
+    feature: F-0113
+    slug: weekly-faction-rebalance
+    title: "Weekly Faction Rebalance (§25.11: Weekly Faction Rebalance)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Weekly Faction Rebalance per §25.11: Weekly Faction Rebalance created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.weekly_faction_rebalance.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0113: asserts core logic and off-switch behavior."
+
+  - id: US-90
+    epic: E6
+    feature: F-0057
+    slug: goal-tracker-3-layer
+    title: "Goal Tracker (3-Layer Stack) (§25.12: Six-Step Scheduling Algorithm (Full Mathematical Specification))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Goal Tracker (3-Layer Stack) per §25.12: Six-Step Scheduling Algorithm (Full Mathematical Specification) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.goal_tracker_3_layer_stack.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0057: asserts core logic and off-switch behavior."
+
+  - id: US-91
+    epic: E2
+    feature: F-0114
+    slug: review-cadence-system
+    title: "Review Cadence System (§25.13: Review Cadence System)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Review Cadence System per §25.13: Review Cadence System created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.review_cadence_system.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0114: asserts core logic and off-switch behavior."
+
+  - id: US-92
+    epic: E2
+    feature: F-0115
+    slug: goal-stack-enforcement
+    title: "Goal Stack Enforcement (§25.14: Goal Stack Enforcement)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Goal Stack Enforcement per §25.14: Goal Stack Enforcement created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.goal_stack_enforcement.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0115: asserts core logic and off-switch behavior."
+
+  - id: US-93
+    epic: E2
+    feature: F-0116
+    slug: cross-faction-efficiency
+    title: "Cross-Faction Efficiency (§25.15: Cross-Faction Efficiency)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Cross-Faction Efficiency per §25.15: Cross-Faction Efficiency created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.cross_faction_efficiency.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0116: asserts core logic and off-switch behavior."
+
+  - id: US-94
+    epic: E2
+    feature: F-0117
+    slug: four-level-emergency-protocol
+    title: "Four-Level Emergency Protocol (§25.16: Four-Level Emergency Protocol)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Four-Level Emergency Protocol per §25.16: Four-Level Emergency Protocol created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.four_level_emergency_protocol.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0117: asserts core logic and off-switch behavior."
+
+  - id: US-95
+    epic: E5
+    feature: F-0059
+    slug: pageindex-retrieval
+    title: "PageIndex Retrieval (§27.1: Vectorless Retrieval (PageIndex))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing PageIndex Retrieval per §27.1: Vectorless Retrieval (PageIndex) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.pageindex_retrieval.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0059: asserts core logic and off-switch behavior."
+
+  - id: US-96
+    epic: E2
+    feature: F-0122
+    slug: locus-shorthand-4-text
+    title: "LOCUS_SHORTHAND 4× Text Compressor (§27.3: LOCUS_SHORTHAND 4× Text Compressor)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing LOCUS_SHORTHAND 4× Text Compressor per §27.3: LOCUS_SHORTHAND 4× Text Compressor created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.locus_shorthand_4_text_compressor.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0122: asserts core logic and off-switch behavior."
+
+  - id: US-97
+    epic: E2
+    feature: F-0123
+    slug: 3-level-tag-hierarchy
+    title: "3-Level Tag Hierarchy & Semantic Indexing (§27.4: 3-Level Tag Hierarchy & Semantic Indexing)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing 3-Level Tag Hierarchy & Semantic Indexing per §27.4: 3-Level Tag Hierarchy & Semantic Indexing created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.3_level_tag_hierarchy_semantic_indexing.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0123: asserts core logic and off-switch behavior."
+
+  - id: US-98
+    epic: E5
+    feature: F-0061
+    slug: rough-note-parser
+    title: "Rough Note Parser (§27.5: Rough Note Parser & Idea Tracker)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Rough Note Parser per §27.5: Rough Note Parser & Idea Tracker created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.rough_note_parser.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0061: asserts core logic and off-switch behavior."
+
+  - id: US-99
+    epic: E5
+    feature: F-0062
+    slug: link-dump-logger
+    title: "Link Dump Logger (§27.6: Link Dump & Web Resource Logger)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Link Dump Logger per §27.6: Link Dump & Web Resource Logger created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.link_dump_logger.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0062: asserts core logic and off-switch behavior."
+
+  - id: US-100
+    epic: E5
+    feature: F-0063
+    slug: excalidraw-mcp-skill
+    title: "Excalidraw MCP Skill (§27.7: Excalidraw MCP Skill (Visual Architecture Diagrams))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    autopilot: false
+    accept:
+      - "Specification for Excalidraw MCP Skill per §27.7: Excalidraw MCP Skill (Visual Architecture Diagrams) validated against active schema."
+      - "Modular provider interface defined and registered with off-switch behavior."
+      - "Live verification requires owner real keys, external accounts, hardware, or dedicated service."
+    demo: "Manual live demo: owner tests Excalidraw MCP Skill with live service credentials."
+
+  - id: US-101
+    epic: E2
+    feature: F-0064
+    slug: dual-interface-check-ins
+    title: "Dual Interface / Check-ins (§28.1-28.6: Dual-Interface, Check-ins, Voice, Cost Model)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    autopilot: false
+    accept:
+      - "Specification for Dual Interface / Check-ins per §28.1-28.6: Dual-Interface, Check-ins, Voice, Cost Model validated against active schema."
+      - "Modular provider interface defined and registered with off-switch behavior."
+      - "Live verification requires owner real keys, external accounts, hardware, or dedicated service."
+    demo: "Manual live demo: owner tests Dual Interface / Check-ins with live service credentials."
+
+  - id: US-102
+    epic: E2
+    feature: F-0065
+    slug: error-classifier
+    title: "Error Classifier (§29.1: Error Classifier)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Error Classifier per §29.1: Error Classifier created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.error_classifier.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0065: asserts core logic and off-switch behavior."
+
+  - id: US-103
+    epic: E2
+    feature: F-0124
+    slug: auxiliary-llm-client
+    title: "Auxiliary LLM Client (§29.2: Auxiliary LLM Client)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Auxiliary LLM Client per §29.2: Auxiliary LLM Client created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.auxiliary_llm_client.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0124: asserts core logic and off-switch behavior."
+
+  - id: US-104
+    epic: E2
+    feature: F-0066
+    slug: health-checks
+    title: "Health Checks (§29.3: Health Checks)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Health Checks per §29.3: Health Checks created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.health_checks.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0066: asserts core logic and off-switch behavior."
+
+  - id: US-105
+    epic: E2
+    feature: F-0067
+    slug: notifications
+    title: "Notifications (§29.4: Notifications)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Notifications per §29.4: Notifications created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.notifications.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0067: asserts core logic and off-switch behavior."
+
+  - id: US-106
+    epic: E2
+    feature: F-0068
+    slug: connectivity-check
+    title: "Connectivity Check (§29.5: Connectivity Check)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Connectivity Check per §29.5: Connectivity Check created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.connectivity_check.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0068: asserts core logic and off-switch behavior."
+
+  - id: US-107
+    epic: E2
+    feature: F-0069
+    slug: code-graph
+    title: "Code Graph (§29.6: Code Graph Analysis)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Code Graph per §29.6: Code Graph Analysis created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.code_graph.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0069: asserts core logic and off-switch behavior."
+
+  - id: US-108
+    epic: E2
+    feature: F-0070
+    slug: subconscious
+    title: "Subconscious (§29.7: Subconscious Background Processing)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Subconscious per §29.7: Subconscious Background Processing created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.subconscious.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0070: asserts core logic and off-switch behavior."
+
+  - id: US-109
+    epic: E2
+    feature: F-0071
+    slug: workflows
+    title: "Workflows (§29.8: Workflows)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Workflows per §29.8: Workflows created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.workflows.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0071: asserts core logic and off-switch behavior."
+
+  - id: US-110
+    epic: E5
+    feature: F-0072
+    slug: collector-chunker
+    title: "Collector + Chunker (§30.1: Collector + Chunker (Ingestion Pipeline))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Collector + Chunker per §30.1: Collector + Chunker (Ingestion Pipeline) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.collector_chunker.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0072: asserts core logic and off-switch behavior."
+
+  - id: US-111
+    epic: E5
+    feature: F-0073
+    slug: cause-chain-engine
+    title: "Cause Chain Engine (§30.2: Cause Chain Engine (Inferred Causation))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Cause Chain Engine per §30.2: Cause Chain Engine (Inferred Causation) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.cause_chain_engine.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0073: asserts core logic and off-switch behavior."
+
+  - id: US-112
+    epic: E5
+    feature: F-0074
+    slug: soul-md-wants-engine
+    title: "SOUL.md / Wants Engine (§30.3: SOUL.md / Wants Engine (Personality Layer))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing SOUL.md / Wants Engine per §30.3: SOUL.md / Wants Engine (Personality Layer) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.soul_md_wants_engine.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0074: asserts core logic and off-switch behavior."
+
+  - id: US-113
+    epic: E5
+    feature: F-0075
+    slug: content-engine
+    title: "Content Engine (§30.4: Content Engine (8-Step Social & Thought Publication Pipeline))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Content Engine per §30.4: Content Engine (8-Step Social & Thought Publication Pipeline) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.content_engine.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0075: asserts core logic and off-switch behavior."
+
+  - id: US-114
+    epic: E5
+    feature: F-0076
+    slug: spaced-repetition-1
+    title: "Spaced Repetition (§30.5: Spaced Repetition Engine)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Spaced Repetition per §30.5: Spaced Repetition Engine created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.spaced_repetition.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0076: asserts core logic and off-switch behavior."
+
+  - id: US-115
+    epic: E5
+    feature: F-0077
+    slug: qlora-pipeline
+    title: "QLoRA Pipeline (§30.6: QLoRA Fine-Tuning Pipeline)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    autopilot: false
+    accept:
+      - "Specification for QLoRA Pipeline per §30.6: QLoRA Fine-Tuning Pipeline validated against active schema."
+      - "Modular provider interface defined and registered with off-switch behavior."
+      - "Live verification requires owner real keys, external accounts, hardware, or dedicated service."
+    demo: "Manual live demo: owner tests QLoRA Pipeline with live service credentials."
+
+  - id: US-116
+    epic: E5
+    feature: F-0078
+    slug: master-conductor
+    title: "Master Conductor (§30.7: Master Conductor (11-Step Ingress-to-Egress Pipeline))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Master Conductor per §30.7: Master Conductor (11-Step Ingress-to-Egress Pipeline) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.master_conductor.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0078: asserts core logic and off-switch behavior."
+
+  - id: US-117
+    epic: E5
+    feature: F-0079
+    slug: dashboard-tui-spec
+    title: "Dashboard/TUI Spec (§30.8: Real-Time Dashboard & TUI Specification (6-Step Architecture))"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Dashboard/TUI Spec per §30.8: Real-Time Dashboard & TUI Specification (6-Step Architecture) created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.dashboard_tui_spec.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0079: asserts core logic and off-switch behavior."
+
+  - id: US-118
+    epic: E5
+    feature: F-0080
+    slug: redis-integration
+    title: "Redis Integration (§30.9: Redis High-Performance State & Pub/Sub Integration)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    autopilot: false
+    accept:
+      - "Specification for Redis Integration per §30.9: Redis High-Performance State & Pub/Sub Integration validated against active schema."
+      - "Modular provider interface defined and registered with off-switch behavior."
+      - "Live verification requires owner real keys, external accounts, hardware, or dedicated service."
+    demo: "Manual live demo: owner tests Redis Integration with live service credentials."
+
+  - id: US-119
+    epic: E5
+    feature: F-0081
+    slug: obsidian-lightrag-bridge
+    title: "Obsidian/LightRAG Bridge (§30.10: Obsidian & LightRAG Dual-Index Knowledge Bridge)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing Obsidian/LightRAG Bridge per §30.10: Obsidian & LightRAG Dual-Index Knowledge Bridge created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.obsidian_lightrag_bridge.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0081: asserts core logic and off-switch behavior."
+
+  - id: US-120
+    epic: E2
+    feature: F-0087
+    slug: arch-6-pi-bridge
+    title: "ARCH-6 Pi bridge (sidecar -> Pi CLI, used by cron + Telegram + conductor) (spec)"
+    points: 2
+    target_level: 3
+    depends_on: [US-06]
+    accept:
+      - "Module implementing ARCH-6 Pi bridge (sidecar -> Pi CLI, used by cron + Telegram + conductor) per spec created under sidecar/ or locus-extension/."
+      - "Registers as a provider in sidecar/providers/ with modular off-switch locus.arch_6_pi_bridge_sidecar_pi_cli_used_by_cron_telegram_conductor.enabled returning 503."
+      - "Unit tests in tests/unit/ assert expected logic, boundary conditions, and error containment."
+    demo: "Run pytest on unit tests for F-0087: asserts core logic and off-switch behavior."
