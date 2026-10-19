@@ -16,6 +16,7 @@ from typing import Any, Dict, Optional
 from fastapi import Body, FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 
+from sidecar import config
 from sidecar.registry import ProviderRegistry, get_registry
 from sidecar.scheduler import ResearchJob, SchedulerProvider
 
@@ -430,7 +431,69 @@ def create_app(
         personality = provider.load_soul_personality()
         return {"status": "ok", "personality": personality}
 
+    # Tool System routes (SPEC §1.3 / F-0003 / US-22)
+    from sidecar.tool_system import ToolSystemProvider
+    active_registry.register("tool_system", "default_tool_system", ToolSystemProvider)
+
+    def _is_tool_system_enabled() -> bool:
+        val = config.get("locus.tool_system_13_canonical_tools.enabled")
+        if val is not None and not config.is_enabled("locus.tool_system_13_canonical_tools.enabled"):
+            return False
+        if not app.state.registry.is_feature_enabled("tool_system"):
+            return False
+        return True
+
+    @app.get("/tools/list")
+    def list_tools_route() -> Dict[str, Any]:
+        """List registered canonical and custom tools."""
+        if not _is_tool_system_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.tool_system_13_canonical_tools.enabled"})
+        provider_cls = app.state.registry.get_active_provider("tool_system", default_name="default_tool_system")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No tool system provider registered")
+        provider = provider_cls()
+        tools = provider.list_tools()
+        return {
+            "status": "ok",
+            "count": len(tools),
+            "tools": [
+                {
+                    "name": t.name,
+                    "label": t.label,
+                    "description": t.description,
+                    "schema": t.schema,
+                    "execution_mode": t.execution_mode.value if hasattr(t.execution_mode, "value") else str(t.execution_mode),
+                }
+                for t in tools
+            ],
+        }
+
+    @app.post("/tools/execute")
+    def execute_tool_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute a tool through the 5-step lifecycle."""
+        if not _is_tool_system_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.tool_system_13_canonical_tools.enabled"})
+        tool_name = body.get("tool") or body.get("name")
+        if not tool_name:
+            raise HTTPException(status_code=400, detail="Missing 'tool' or 'name' parameter")
+        tool_call_id = body.get("tool_call_id") or "call-manual"
+        params = body.get("params") or {}
+        context = body.get("context")
+
+        provider_cls = app.state.registry.get_active_provider("tool_system", default_name="default_tool_system")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No tool system provider registered")
+        provider = provider_cls()
+        result = provider.execute_tool(
+            name=tool_name,
+            tool_call_id=tool_call_id,
+            raw_params=params,
+            context=context,
+        )
+        return {"status": "ok", "result": result.to_dict()}
+
     return app
+
 
 
 class HeadlessService:

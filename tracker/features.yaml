@@ -117,6 +117,8 @@ features:
   evidence:
     files:
     - locus-extension/src/tools/index.ts
+    - sidecar/tool_system.py
+    - sidecar/providers/tool_system.py
     symbols:
     - file: locus-extension/src/tools/index.ts
       contains:
@@ -133,9 +135,21 @@ features:
       - locus_diagram
       - locus_capture
       - locus_schedule
+    - file: sidecar/tool_system.py
+      contains:
+      - ToolSystemProvider
+      - execute_tool
+      - list_tools
+    - file: sidecar/providers/tool_system.py
+      contains:
+      - BaseToolSystemProvider
+      - AgentTool
+      - AgentToolResult
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest -v tests/unit/test_tool_system.py
+    integration:
+    - py -3 -m pytest -v tests/integration/test_tool_system_service.py
   depends_on: []
 - id: F-0004
   title: Model Management & Escalation

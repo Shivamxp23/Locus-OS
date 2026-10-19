@@ -28,21 +28,33 @@ from sidecar.providers.life_os import (
     TaskScoreInput,
     TaskScoreResult,
 )
+from sidecar.providers.prompt_builder import BasePromptBuilderProvider, PromptOptions
+from sidecar.providers.tool_system import (
+    AgentTool,
+    AgentToolResult,
+    BaseToolSystemProvider,
+    ExecutionMode,
+)
 from sidecar.providers.trajectory import BaseTrajectoryRecorder, TrajectorySession, TurnRecord
 from sidecar.providers.vault_sync import BaseVaultSyncProvider, SyncState
 
 __all__ = [
+    "AgentTool",
+    "AgentToolResult",
     "ArchiveResult",
     "BaseChannelProvider",
     "BaseChatArchiverProvider",
     "BaseHarnessProvider",
     "BaseLifeOSProvider",
+    "BasePromptBuilderProvider",
+    "BaseToolSystemProvider",
     "BaseTrajectoryRecorder",
     "BaseVaultSyncProvider",
     "ChatTurn",
     "CheckInInput",
     "DCSResult",
     "DelegationResult",
+    "ExecutionMode",
     "FactionType",
     "GoalStackLevel",
     "HarnessType",
@@ -50,6 +62,7 @@ __all__ = [
     "NormalizedChat",
     "OperatingMode",
     "PostTaskLog",
+    "PromptOptions",
     "SyncState",
     "TaskBrief",
     "TaskScoreInput",
@@ -57,5 +70,3 @@ __all__ = [
     "TrajectorySession",
     "TurnRecord",
 ]
-
-
