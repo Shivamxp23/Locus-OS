@@ -13,7 +13,9 @@ from __future__ import annotations
 
 import datetime
 from dataclasses import dataclass, field
+import json
 import pathlib
+import sqlite3
 import time
 from typing import Any, Callable, Dict, List, Optional
 import yaml
@@ -37,10 +39,28 @@ class ResearchJob:
     budget_max_tokens: int = 100000
     destination: str = "04-Captures/Research"
     enabled: bool = True
+    next_run_time: Optional[str] = None
+    last_run_time: Optional[str] = None
+
+    def compute_next_run_time(self, base_time: Optional[datetime.datetime] = None) -> Optional[str]:
+        """Compute the next ISO execution timestamp using cron trigger."""
+        if not self.cron:
+            return None
+        try:
+            from apscheduler.triggers.cron import CronTrigger
+            trigger = CronTrigger.from_crontab(self.cron)
+            now = base_time or datetime.datetime.now(datetime.timezone.utc)
+            nxt = trigger.get_next_fire_time(None, now)
+            if nxt:
+                self.next_run_time = nxt.isoformat()
+                return self.next_run_time
+        except Exception:
+            pass
+        return None
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "ResearchJob":
-        return cls(
+        job = cls(
             id=str(data.get("id", "")).strip(),
             name=str(data.get("name", "")).strip(),
             cron=str(data.get("cron", "0 2 * * *")).strip(),
@@ -50,7 +70,27 @@ class ResearchJob:
             budget_max_tokens=int(data.get("budget_max_tokens", 100000)),
             destination=str(data.get("destination", "04-Captures/Research")).strip(),
             enabled=bool(data.get("enabled", True)),
+            next_run_time=data.get("next_run_time"),
+            last_run_time=data.get("last_run_time"),
         )
+        if not job.next_run_time:
+            job.compute_next_run_time()
+        return job
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "cron": self.cron,
+            "prompt": self.prompt,
+            "tier": self.tier,
+            "allowed_paths": self.allowed_paths,
+            "budget_max_tokens": self.budget_max_tokens,
+            "destination": self.destination,
+            "enabled": self.enabled,
+            "next_run_time": self.next_run_time,
+            "last_run_time": self.last_run_time,
+        }
 
 
 class SchedulerProvider:
@@ -99,11 +139,137 @@ class SchedulerProvider:
         p.mkdir(parents=True, exist_ok=True)
         return p
 
-    def load_jobs(self) -> Dict[str, ResearchJob]:
-        """Load all research job YAML files from LOCUS_HOME/jobs/."""
-        jobs_dir = self.get_jobs_dir()
-        loaded: Dict[str, ResearchJob] = {}
+    def get_db_path(self) -> pathlib.Path:
+        """Resolve path to SQLite job store."""
+        locus_home = config.get_locus_home()
+        locus_home.mkdir(parents=True, exist_ok=True)
+        return locus_home / "scheduler.db"
 
+    def _init_db(self) -> None:
+        """Initialize SQLite table for persistent job definitions and schedules."""
+        db_path = self.get_db_path()
+        with sqlite3.connect(str(db_path)) as conn:
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS jobs (
+                    id TEXT PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    cron TEXT NOT NULL,
+                    prompt TEXT NOT NULL,
+                    tier TEXT DEFAULT 'supervised',
+                    allowed_paths TEXT DEFAULT '[]',
+                    budget_max_tokens INTEGER DEFAULT 100000,
+                    destination TEXT DEFAULT '04-Captures/Research',
+                    enabled INTEGER DEFAULT 1,
+                    next_run_time TEXT,
+                    last_run_time TEXT,
+                    created_at TEXT,
+                    updated_at TEXT
+                )
+                """
+            )
+            conn.commit()
+
+    def save_job_to_db(self, job: ResearchJob) -> None:
+        """Persist or update a research job definition and schedule in SQLite."""
+        self._init_db()
+        db_path = self.get_db_path()
+        now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        with sqlite3.connect(str(db_path)) as conn:
+            conn.execute(
+                """
+                INSERT INTO jobs (
+                    id, name, cron, prompt, tier, allowed_paths,
+                    budget_max_tokens, destination, enabled,
+                    next_run_time, last_run_time, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(id) DO UPDATE SET
+                    name=excluded.name,
+                    cron=excluded.cron,
+                    prompt=excluded.prompt,
+                    tier=excluded.tier,
+                    allowed_paths=excluded.allowed_paths,
+                    budget_max_tokens=excluded.budget_max_tokens,
+                    destination=excluded.destination,
+                    enabled=excluded.enabled,
+                    next_run_time=excluded.next_run_time,
+                    last_run_time=coalesce(excluded.last_run_time, jobs.last_run_time),
+                    updated_at=excluded.updated_at
+                """,
+                (
+                    job.id,
+                    job.name,
+                    job.cron,
+                    job.prompt,
+                    job.tier,
+                    json.dumps(job.allowed_paths),
+                    job.budget_max_tokens,
+                    job.destination,
+                    1 if job.enabled else 0,
+                    job.next_run_time,
+                    job.last_run_time,
+                    now_iso,
+                ),
+            )
+            conn.commit()
+
+    def load_jobs_from_db(self) -> Dict[str, ResearchJob]:
+        """Load all job definitions and schedules from SQLite."""
+        self._init_db()
+        db_path = self.get_db_path()
+        loaded: Dict[str, ResearchJob] = {}
+        with sqlite3.connect(str(db_path)) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.execute("SELECT * FROM jobs")
+            for row in cursor.fetchall():
+                try:
+                    paths = json.loads(row["allowed_paths"]) if row["allowed_paths"] else []
+                except Exception:
+                    paths = []
+                job = ResearchJob(
+                    id=row["id"],
+                    name=row["name"],
+                    cron=row["cron"],
+                    prompt=row["prompt"],
+                    tier=row["tier"] or "supervised",
+                    allowed_paths=paths,
+                    budget_max_tokens=int(row["budget_max_tokens"] or 100000),
+                    destination=row["destination"] or "04-Captures/Research",
+                    enabled=bool(row["enabled"]),
+                    next_run_time=row["next_run_time"],
+                    last_run_time=row["last_run_time"],
+                )
+                loaded[job.id] = job
+        return loaded
+
+    def add_job(self, job: ResearchJob) -> None:
+        """Add or update a job in memory and persist to SQLite."""
+        if not job.next_run_time:
+            job.compute_next_run_time()
+        self._jobs[job.id] = job
+        self.save_job_to_db(job)
+
+    def get_job(self, job_id: str) -> Optional[ResearchJob]:
+        """Retrieve a job by ID from memory or DB."""
+        if job_id in self._jobs:
+            return self._jobs[job_id]
+        db_jobs = self.load_jobs_from_db()
+        return db_jobs.get(job_id)
+
+    def list_jobs(self) -> List[ResearchJob]:
+        """Return all managed jobs."""
+        return list(self._jobs.values())
+
+    def load_jobs(self) -> Dict[str, ResearchJob]:
+        """
+        Load research jobs from SQLite store and sync from YAML definitions in LOCUS_HOME/jobs/.
+        Persists all definitions in SQLite across service restarts.
+        """
+        self._init_db()
+        loaded = self.load_jobs_from_db()
+
+        # Sync from YAML files if present
+        jobs_dir = self.get_jobs_dir()
         for file_path in jobs_dir.glob("*.y*ml"):
             try:
                 content = file_path.read_text(encoding="utf-8")
@@ -111,11 +277,24 @@ class SchedulerProvider:
                 if isinstance(raw, dict) and "prompt" in raw:
                     job_id = str(raw.get("id") or file_path.stem).strip()
                     raw["id"] = job_id
-                    job = ResearchJob.from_dict(raw)
-                    loaded[job.id] = job
+                    yaml_job = ResearchJob.from_dict(raw)
+                    if job_id in loaded:
+                        db_job = loaded[job_id]
+                        yaml_job.last_run_time = db_job.last_run_time
+                        if db_job.next_run_time:
+                            yaml_job.next_run_time = db_job.next_run_time
+                    if not yaml_job.next_run_time:
+                        yaml_job.compute_next_run_time()
+                    loaded[job_id] = yaml_job
+                    self.save_job_to_db(yaml_job)
             except Exception:
-                # Corrupted job definition is skipped without crashing scheduler
                 continue
+
+        # Ensure all loaded jobs have a next_run_time
+        for job in loaded.values():
+            if not job.next_run_time:
+                job.compute_next_run_time()
+                self.save_job_to_db(job)
 
         self._jobs = loaded
         return loaded
@@ -246,12 +425,18 @@ class SchedulerProvider:
         # Deliver notification to paired owner on Telegram (never fatal)
         self._notify_owner(job, output_file, result_text)
 
+        # Update last run time, compute next schedule, and persist to SQLite
+        job.last_run_time = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        job.compute_next_run_time()
+        self.save_job_to_db(job)
+
         run_record = {
             "job_id": job.id,
             "status": "completed",
             "file": str(output_file),
             "chars": len(result_text),
             "timestamp": today_str,
+            "next_run_time": job.next_run_time,
         }
         self._execution_history.append(run_record)
         return run_record
