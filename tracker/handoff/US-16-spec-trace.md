@@ -1,0 +1,9 @@
+# US-16 Spec Trace
+
+| spec line / source | the sentence quoted word for word | verdict | mechanism / file:line | test name |
+|---|---|---|---|---|
+| 10-security.md S-2 | "CouchDB for Obsidian LiveSync binds strictly to loopback (127.0.0.1:5984), HTTPS with valid cert, or a WireGuard/Tailscale private IP. Binding to 0.0.0.0 is blocked by pre-commit and guard (S-2)." | LOCUS-NEW | docker-compose.yml:10-18, sidecar/vault/livesync_bridge.py:100-115 | tests/unit/test_livesync.py::test_couchdb_compose_and_default_binds_loopback |
+| LOCUS_FEATURE_LOGIC_DECOMPOSITION.md F-0060 | "BaseVaultSyncProvider defines sync interface (status, push, pull, resolve_conflicts) with CouchDBLiveSyncProvider implementation." | LOCUS-NEW | sidecar/providers/vault_sync.py:1-40, sidecar/vault/livesync_bridge.py:40-135 | tests/unit/test_livesync.py::test_couchdb_livesync_provider_implements_interface, tests/unit/test_livesync.py::test_diff3_merge_clean |
+| 10-security.md & SPEC §03 | "CouchDB admin credentials are read from LOCUS_HOME/.env via config accessor and never use default passwords." | LOCUS-NEW | sidecar/vault/livesync_bridge.py:75-98, sidecar/config.py:120-145 | tests/unit/test_livesync.py::test_couchdb_rejects_default_credentials_and_reads_from_env |
+| LOCUS_FEATURE_LOGIC_DECOMPOSITION.md F-0060 | "Deterministic conflict resolution preserves both revisions when concurrent edits occur (winner is canonical, other written as conflict note)." | LOCUS-NEW | sidecar/vault/livesync_bridge.py:140-230 | tests/unit/test_livesync.py::test_conflict_resolution_preserves_both_revisions |
+| SPEC §03 line 35 | "a disabled feature's HTTP routes answer 503 with {'disabled': '<config key>'}" | LOCUS-NEW | sidecar/service.py:180-210 | tests/unit/test_livesync.py::test_livesync_off_switch_status_and_push, tests/integration/test_livesync_couchdb.py::test_livesync_service_off_switch_returns_503 |

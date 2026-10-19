@@ -19,14 +19,38 @@ def get_environ() -> dict[str, str]:
     return dict(os.environ)
 
 
+def _load_env_file() -> dict[str, str]:
+    """Load key-value pairs from LOCUS_HOME/.env if present."""
+    env_path = get_locus_home() / ".env"
+    if not env_path.is_file():
+        return {}
+    res: dict[str, str] = {}
+    try:
+        lines = env_path.read_text(encoding="utf-8").splitlines()
+        for line in lines:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            res[k.strip()] = v.strip().strip("'\"")
+    except Exception:
+        pass
+    return res
+
+
 def get_env(key: str, default: str | None = None) -> str | None:
-    """Retrieve an environment variable via the config accessor."""
-    return os.environ.get(key, default)
+    """Retrieve an environment variable via the config accessor, checking os.environ then LOCUS_HOME/.env."""
+    if key in os.environ:
+        return os.environ[key]
+    if key == "LOCUS_HOME":
+        return None
+    file_env = _load_env_file()
+    return file_env.get(key, default)
 
 
 def get_locus_home() -> Path:
     """Return canonical LOCUS_HOME path (LOCUS_HOME env var or ~/.locus)."""
-    env_home = get_env("LOCUS_HOME")
+    env_home = os.environ.get("LOCUS_HOME")
     if env_home:
         return Path(env_home).expanduser().resolve()
     return (Path.home() / ".locus").resolve()
