@@ -85,6 +85,43 @@ def create_app(
             app.state.scheduler.shutdown()
         return {"status": "shutting_down"}
 
+    # Vault LiveSync routes (SPEC §27.2 / F-0060)
+    @app.get("/vault/sync/status")
+    def sync_status() -> Dict[str, Any]:
+        """Check status of vault synchronization."""
+        if not app.state.registry.is_feature_enabled("vault", "sync"):
+            return JSONResponse(status_code=503, content={"disabled": "locus.vault.sync.enabled"})
+        provider_cls = app.state.registry.get_active_provider("vault_sync", default_name="couchdb_livesync")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No vault sync provider registered")
+        try:
+            inst = provider_cls()
+            inst.initialize()
+            return {"status": "ok", "sync": inst.status()}
+        except Exception as e:
+            return {"status": "error", "error": str(e)}
+
+    @app.post("/vault/sync/push")
+    def sync_push(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Push note to vault sync store."""
+        if not app.state.registry.is_feature_enabled("vault", "sync"):
+            return JSONResponse(status_code=503, content={"disabled": "locus.vault.sync.enabled"})
+        provider_cls = app.state.registry.get_active_provider("vault_sync", default_name="couchdb_livesync")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No vault sync provider registered")
+        path = body.get("path")
+        if not path:
+            raise HTTPException(status_code=400, detail="Missing 'path' parameter")
+        try:
+            inst = provider_cls()
+            inst.initialize()
+            result = inst.push(path, body.get("mtime"))
+            return {"status": "ok", "result": result}
+        except FileNotFoundError as e:
+            raise HTTPException(status_code=404, detail=str(e))
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
     return app
 
 

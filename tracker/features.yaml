@@ -2161,13 +2161,23 @@ features:
   evidence:
     files:
     - sidecar/vault/livesync_bridge.py
-    - src/extensions/locus-extension.ts
+    - sidecar/providers/vault_sync.py
+    - locus-extension/src/tools/locus_vault.ts
     - docker-compose.yml
     - data/couchdb/local.ini
-    symbols: []
+    symbols:
+    - file: sidecar/vault/livesync_bridge.py
+      contains:
+      - "class CouchDBLiveSyncProvider"
+      - "def diff3_merge"
+    - file: sidecar/providers/vault_sync.py
+      contains:
+      - "class BaseVaultSyncProvider"
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: pytest tests/unit/test_livesync.py
+    integration:
+    - cmd: pytest tests/integration/test_livesync_couchdb.py
   depends_on: []
 - id: F-0061
   title: Rough Note Parser
