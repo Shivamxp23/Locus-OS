@@ -233,12 +233,16 @@ def prompt_vm_settings(existing_vm: Optional[Dict[str, Any]] = None) -> Dict[str
     cur = existing_vm or {}
     print("\nRemote VM Configuration (D-13 SSH Tunnel / Connect):")
     def_host = cur.get("host", "127.0.0.1")
-    host = input(f"Enter remote VM host/IP [{def_host}]: ").strip() or def_host
     def_user = cur.get("user", "ubuntu")
-    user = input(f"Enter remote SSH username [{def_user}]: ").strip() or def_user
     ssh_port = int(cur.get("ssh_port", 22))
     sidecar_port = int(cur.get("sidecar_port", 8420))
     local_port = int(cur.get("local_port", 8420))
+    try:
+        host = input(f"Enter remote VM host/IP [{def_host}]: ").strip() or def_host
+        user = input(f"Enter remote SSH username [{def_user}]: ").strip() or def_user
+    except EOFError:
+        host = def_host
+        user = def_user
     return {
         "host": host,
         "user": user,
@@ -405,7 +409,7 @@ def run_install(
     # Remote VM settings for VM and Hybrid topologies (D-13)
     if topology in ("vm", "hybrid") or "vm" in ans:
         vm_sec = locus_sec.setdefault("vm", {})
-        if not non_interactive and (reconf_section in (None, "all", "vm", "topology")):
+        if not non_interactive and (reconf_section in (None, "all", "vm")):
             vm_prompts = prompt_vm_settings(vm_sec)
             vm_sec.update(vm_prompts)
         elif "vm" in ans and isinstance(ans["vm"], dict):
