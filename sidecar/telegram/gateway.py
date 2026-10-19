@@ -1,9 +1,11 @@
 """
-SPEC §03 / §10 S-1 / F-0083 / US-04: Telegram Gateway Channel Provider.
+SPEC §03 / §10 S-1 / §17.1-17.11 / F-0046 / US-07: Telegram Gateway Channel Provider.
 Implements:
-- BaseChannelProvider interface
-- Strict fail-closed pairing enforcement via PairingManager
-- Rejection of unauthorized users with fixed response: "not configured"
+- BaseChannelProvider interface registered under ('channel', 'telegram') and ('channels', 'telegram')
+- Strict fail-closed pairing enforcement via PairingManager (S-1)
+- Rejection of unauthorized users with fixed response: "not configured" (no Pi turn)
+- Paired owner message invokes Pi turn via run_pi_turn with session_id telegram_<chat_id>
+- Response text exceeding 4096 characters is split into chunks without truncation
 - Group, forward, and inline query filtering
 - Webhook secret enforcement: refuses to start in webhook mode without TELEGRAM_WEBHOOK_SECRET
 """
@@ -13,19 +15,54 @@ import time
 from typing import Any, Callable
 
 from sidecar import config
+from sidecar.pi_bridge import run_pi_turn
 from sidecar.providers.channel import BaseChannelProvider
 from sidecar.registry import get_registry
 from sidecar.telegram.pairing import PairingManager
 
 
+def chunk_telegram_text(text: str, max_len: int = 4096) -> list[str]:
+    """
+    Split text into chunks of at most max_len characters.
+    Splits preferentially at newlines, then spaces, to preserve formatting.
+    """
+    if not text:
+        return [""]
+    if len(text) <= max_len:
+        return [text]
+
+    chunks: list[str] = []
+    remaining = text
+    while len(remaining) > max_len:
+        split_idx = remaining.rfind("\n", 0, max_len)
+        if split_idx <= 0:
+            split_idx = remaining.rfind(" ", 0, max_len)
+        if split_idx <= 0:
+            split_idx = max_len
+        chunk = remaining[:split_idx].rstrip()
+        if chunk:
+            chunks.append(chunk)
+        remaining = remaining[split_idx:].lstrip("\n")
+    if remaining:
+        chunks.append(remaining)
+    return chunks or [text[:max_len]]
+
+
 class TelegramGateway(BaseChannelProvider):
     """
-    Telegram Channel Gateway with secure first-run pairing and fail-closed access control.
+    Telegram Channel Gateway with secure first-run pairing, Pi turn execution,
+    and fail-closed access control.
     """
     FIXED_UNCONFIGURED_LINE: str = "not configured"
+    MAX_MESSAGE_LENGTH: int = 4096
 
-    def __init__(self, pairing_manager: PairingManager | None = None) -> None:
+    def __init__(
+        self,
+        pairing_manager: PairingManager | None = None,
+        pi_runner: Callable[..., Any] | None = None,
+    ) -> None:
         self.pairing_manager = pairing_manager or PairingManager()
+        self._pi_runner = pi_runner or run_pi_turn
         self._enabled: bool = True
         self._webhook_mode: bool = False
         self._token: str | None = None
@@ -37,6 +74,10 @@ class TelegramGateway(BaseChannelProvider):
         """Inject transport for testing (e.g. fake Telegram network transport)."""
         self._custom_transport = transport
 
+    def set_pi_runner(self, pi_runner: Callable[..., Any] | None) -> None:
+        """Inject a Pi runner callable for testing."""
+        self._pi_runner = pi_runner or run_pi_turn
+
     def initialize(self, options: dict[str, Any] | None = None) -> None:
         """
         Initialize the gateway with options.
@@ -47,6 +88,10 @@ class TelegramGateway(BaseChannelProvider):
         # If not explicitly configured in config, default to enabled if options say so or True
         if config.get("locus.channels.telegram.enabled") is None:
             self._enabled = opts.get("enabled", True)
+
+        if not self._enabled:
+            self._running = False
+            return
 
         self._webhook_mode = bool(
             opts.get("webhook", False) or config.is_enabled("locus.channels.telegram.webhook")
@@ -119,12 +164,13 @@ class TelegramGateway(BaseChannelProvider):
     def handle_update(self, update: dict[str, Any]) -> dict[str, Any] | None:
         """
         Handle an incoming Telegram update object.
-        Enforces S-1 security:
+        Enforces S-1 security and Pi turn routing:
         - Ignores groups, forwards, and inline queries
-        - Unpaired stranger messages receive ONE fixed line: 'not configured'
+        - Unpaired stranger messages receive ONE fixed line: 'not configured' and trigger NO Pi turn
         - Fail-closed if config is corrupted or unreadable
         - Handles /pair <code> command
-        - Executes nothing for strangers
+        - Paired owner message runs a Pi turn via run_pi_turn(prompt, session_id='telegram_<chat_id>')
+        - Responses > 4096 characters are split into multiple message chunks
         """
         if not self._enabled or not self._running:
             return None
@@ -160,25 +206,49 @@ class TelegramGateway(BaseChannelProvider):
         if self.pairing_manager.is_allowed_user(sender_id):
             if raw_text.startswith("/pair"):
                 reply = {"chat_id": chat_id, "text": "Already paired with owner."}
+                self.send_message(chat_id, reply["text"])
+                return reply
+
+            # Execute turn via Pi bridge
+            session_id = f"telegram_{chat_id}"
+            try:
+                proc = self._pi_runner(prompt=raw_text, session_id=session_id)
+            except Exception:
+                proc = None
+
+            if proc is not None and hasattr(proc, "stdout"):
+                if proc.stdout and proc.stdout.strip():
+                    reply_text = proc.stdout.strip()
+                elif getattr(proc, "returncode", 0) != 0:
+                    reply_text = f"Owner command: {raw_text}"
+                else:
+                    reply_text = "Turn completed with no output."
+            elif isinstance(proc, str):
+                reply_text = proc
+            elif proc is not None:
+                reply_text = str(proc)
             else:
-                reply = {"chat_id": chat_id, "text": f"Owner command: {raw_text}"}
-            self._outbox.append(reply)
-            return reply
+                reply_text = f"Owner command: {raw_text}"
+
+            chunks = chunk_telegram_text(reply_text, max_len=self.MAX_MESSAGE_LENGTH)
+            for chunk in chunks:
+                self.send_message(chat_id, chunk)
+
+            return {"chat_id": chat_id, "text": reply_text, "chunks": chunks}
 
         # Sender is NOT the owner
         if raw_text.startswith("/pair"):
             parts = raw_text.split(maxsplit=1)
             code = parts[1] if len(parts) > 1 else ""
             success, msg = self.pairing_manager.attempt_pair(code, int(sender_id))
-            reply = {"chat_id": chat_id, "text": msg}
-            self._outbox.append(reply)
-            return reply
+            self.send_message(chat_id, msg)
+            return {"chat_id": chat_id, "text": msg}
 
         # S-1 item 4: Until paired, the bot answers every message with one fixed line ("not configured") and executes nothing.
-        reply = {"chat_id": chat_id, "text": self.FIXED_UNCONFIGURED_LINE}
-        self._outbox.append(reply)
-        return reply
+        self.send_message(chat_id, self.FIXED_UNCONFIGURED_LINE)
+        return {"chat_id": chat_id, "text": self.FIXED_UNCONFIGURED_LINE}
 
 
-# Register default ChannelProvider under area 'channels' and name 'telegram' in universal registry
+# Register default ChannelProvider under area 'channels' and 'channel' in universal registry
 get_registry().register("channels", "telegram", TelegramGateway)
+get_registry().register("channel", "telegram", TelegramGateway)

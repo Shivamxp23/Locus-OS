@@ -1603,11 +1603,20 @@ features:
     '§17.1-17.11: Channel Adapters & Platform Registry': 3dcb11d7cd5698ec
   evidence:
     files:
-    - sidecar/gateway/
-    - gateway/
-    symbols: []
+    - sidecar/providers/channel.py
+    - sidecar/telegram/gateway.py
+    - sidecar/telegram/pairing.py
+    symbols:
+    - file: sidecar/providers/channel.py
+      name: BaseChannelProvider
+    - file: sidecar/telegram/gateway.py
+      name: TelegramGateway
+    - file: sidecar/telegram/pairing.py
+      name: PairingManager
     guard: []
-    unit: []
+    unit:
+    - cmd: pytest tests/unit/test_telegram_gateway.py
+    - cmd: pytest tests/unit/test_telegram_pairing.py
     integration: []
   depends_on: []
 - id: F-0047

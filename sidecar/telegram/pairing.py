@@ -130,3 +130,7 @@ class PairingManager:
             return int(val) if val is not None else None
         except Exception:
             return None
+
+    def save_owner_id(self, telegram_user_id: int) -> None:
+        """Save owner numeric ID to configuration."""
+        config.set_value("channels.telegram.allowed_user_id", int(telegram_user_id))

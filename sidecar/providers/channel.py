@@ -11,6 +11,18 @@ from typing import Any
 class BaseChannelProvider(ABC):
     """Abstract base class for all Locus channel providers."""
 
+    def __init__(self, name: str = "base") -> None:
+        self.name = name
+        self._connected: bool = False
+
+    def is_connected(self) -> bool:
+        """Return connection status of this channel provider."""
+        return self._connected
+
+    def format_recipient(self, recipient: str | int) -> str:
+        """Format and validate the recipient identifier."""
+        return str(recipient).strip()
+
     @abstractmethod
     def initialize(self, options: dict[str, Any] | None = None) -> None:
         """Initialize the channel provider with options."""
