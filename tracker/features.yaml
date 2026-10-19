@@ -180,10 +180,29 @@ features:
   evidence:
     files:
     - sidecar/life_os.py
-    symbols: []
+    - locus-extension/src/model-escalation.ts
+    - sidecar/model_escalation.py
+    - sidecar/providers/model_manager.py
+    symbols:
+    - file: locus-extension/src/model-escalation.ts
+      contains:
+      - evaluateTurnModel
+      - prepareNextTurnModelEscalation
+    - file: sidecar/model_escalation.py
+      contains:
+      - ModelEscalationProvider
+      - resolve_turn_model
+      - clamp_thinking_level
+    - file: sidecar/providers/model_manager.py
+      contains:
+      - BaseModelManagementProvider
+      - ModelDescriptor
+      - ModelTier
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest -v tests/unit/test_model_escalation.py
+    integration:
+    - py -3 -m pytest -v tests/integration/test_model_escalation_service.py
   depends_on: []
 - id: F-0005
   title: Extension Lifecycle

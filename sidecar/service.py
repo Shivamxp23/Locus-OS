@@ -492,6 +492,56 @@ def create_app(
         )
         return {"status": "ok", "result": result.to_dict()}
 
+    # Model Management & Escalation routes (SPEC §1.4 / F-0004 / US-23)
+    from sidecar.model_escalation import ModelEscalationProvider
+    active_registry.register("model_management", "default_model_management", ModelEscalationProvider)
+
+    def _is_model_escalation_enabled() -> bool:
+        val = config.get("locus.model_management_escalation.enabled")
+        if val is not None and not config.is_enabled("locus.model_management_escalation.enabled"):
+            return False
+        if not app.state.registry.is_feature_enabled("model_management"):
+            return False
+        return True
+
+    @app.get("/models/list")
+    def list_models_route() -> Dict[str, Any]:
+        """List model catalog with tiers, context windows, and capabilities."""
+        if not _is_model_escalation_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.model_management_escalation.enabled"})
+        provider_cls = app.state.registry.get_active_provider("model_management", default_name="default_model_management")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No model management provider registered")
+        provider = provider_cls()
+        models = provider.list_models()
+        return {
+            "status": "ok",
+            "models": [m.to_dict() for m in models],
+            "escalation_enabled": provider.is_escalation_enabled(),
+        }
+
+    @app.post("/models/resolve")
+    def resolve_model_route(body: Optional[Dict[str, Any]] = Body(None)) -> Dict[str, Any]:
+        """Resolve model tier for next turn based on complexity, tokens, or task type."""
+        if not _is_model_escalation_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.model_management_escalation.enabled"})
+        provider_cls = app.state.registry.get_active_provider("model_management", default_name="default_model_management")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No model management provider registered")
+        provider = provider_cls()
+        payload = body or {}
+        from sidecar.providers.model_manager import TurnEscalationRequest
+        req = TurnEscalationRequest(
+            task_type=payload.get("task_type", "general"),
+            estimated_tokens=int(payload.get("estimated_tokens", 1000)),
+            complexity_score=float(payload.get("complexity_score", 1.0)),
+            is_sunday_synthesis=bool(payload.get("is_sunday_synthesis", False)),
+            is_background=bool(payload.get("is_background", False)),
+            user_preferred_model=payload.get("user_preferred_model"),
+        )
+        decision = provider.resolve_turn_model(req)
+        return {"status": "ok", "decision": decision.to_dict()}
+
     return app
 
 

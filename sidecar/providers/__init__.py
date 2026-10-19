@@ -28,6 +28,13 @@ from sidecar.providers.life_os import (
     TaskScoreInput,
     TaskScoreResult,
 )
+from sidecar.providers.model_manager import (
+    BaseModelManagementProvider,
+    ModelDescriptor,
+    ModelTier,
+    TurnEscalationDecision,
+    TurnEscalationRequest,
+)
 from sidecar.providers.prompt_builder import BasePromptBuilderProvider, PromptOptions
 from sidecar.providers.tool_system import (
     AgentTool,
@@ -46,6 +53,7 @@ __all__ = [
     "BaseChatArchiverProvider",
     "BaseHarnessProvider",
     "BaseLifeOSProvider",
+    "BaseModelManagementProvider",
     "BasePromptBuilderProvider",
     "BaseToolSystemProvider",
     "BaseTrajectoryRecorder",
@@ -59,6 +67,8 @@ __all__ = [
     "GoalStackLevel",
     "HarnessType",
     "ModeConstraints",
+    "ModelDescriptor",
+    "ModelTier",
     "NormalizedChat",
     "OperatingMode",
     "PostTaskLog",
@@ -68,5 +78,7 @@ __all__ = [
     "TaskScoreInput",
     "TaskScoreResult",
     "TrajectorySession",
+    "TurnEscalationDecision",
+    "TurnEscalationRequest",
     "TurnRecord",
 ]
