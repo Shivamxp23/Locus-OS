@@ -1962,10 +1962,29 @@ features:
   evidence:
     files:
     - sidecar/life_os.py
-    symbols: []
+    - sidecar/life_os/dcs.py
+    - sidecar/life_os/factions.py
+    - sidecar/life_os/modes.py
+    - sidecar/life_os/tws.py
+    - sidecar/providers/life_os.py
+    symbols:
+    - file: sidecar/life_os.py
+      name: LifeOSProvider
+    - file: sidecar/providers/life_os.py
+      name: BaseLifeOSProvider
+    - file: sidecar/life_os/tws.py
+      name: calculate_tws
+    - file: sidecar/life_os/dcs.py
+      name: calculate_dcs
+    - file: sidecar/life_os/modes.py
+      name: resolve_operating_mode
+    - file: sidecar/life_os/factions.py
+      name: compute_faction_lag
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: pytest tests/unit/test_life_os.py
+    integration:
+    - cmd: pytest tests/integration/test_life_os_service.py
   depends_on: []
 - id: F-0056
   title: Operating Modes / Scheduler

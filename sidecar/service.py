@@ -244,6 +244,89 @@ def create_app(
         results = archiver.archive_all(source_dirs=source_dirs)
         return {"status": "ok", "count": len(results), "results": [r.to_dict() for r in results]}
 
+    # Life OS routes (SPEC §25.1-§25.4 / F-0055)
+    from sidecar.life_os import LifeOSProvider
+    active_registry.register("life_os", "default_life_os", LifeOSProvider)
+
+    @app.post("/life_os/tws")
+    def calculate_tws_route(body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Compute Task Weight Score (TWS) per SPEC §25.4 and D-1 Option A."""
+        if not app.state.registry.is_feature_enabled("life_os"):
+            return JSONResponse(status_code=503, content={"disabled": "locus.life_os.enabled"})
+        provider_cls = app.state.registry.get_active_provider("life_os", default_name="default_life_os")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No life_os provider registered")
+
+        provider = provider_cls()
+        provider.initialize()
+        payload = body or {}
+        from sidecar.providers.life_os import GoalStackLevel, TaskScoreInput
+
+        scale_val = payload.get("scale", "daily")
+        try:
+            scale_enum = GoalStackLevel(scale_val)
+        except ValueError:
+            scale_enum = GoalStackLevel.DAILY
+
+        task_input = TaskScoreInput(
+            priority=payload.get("priority", 5),
+            urgency=payload.get("urgency", 5),
+            difficulty=payload.get("difficulty", 5),
+            faction=payload.get("faction"),
+            faction_lag_hours=payload.get("faction_lag_hours", 0.0),
+            scale=scale_enum,
+            child_scores=payload.get("child_scores"),
+        )
+        res = provider.calculate_tws(task_input)
+        return {"status": "ok", "result": res.to_dict()}
+
+    @app.post("/life_os/dcs")
+    def calculate_dcs_route(body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Compute Daily Capacity Score (DCS) per SPEC §25.2."""
+        if not app.state.registry.is_feature_enabled("life_os"):
+            return JSONResponse(status_code=503, content={"disabled": "locus.life_os.enabled"})
+        provider_cls = app.state.registry.get_active_provider("life_os", default_name="default_life_os")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No life_os provider registered")
+
+        provider = provider_cls()
+        provider.initialize()
+        payload = body or {}
+        from sidecar.providers.life_os import CheckInInput
+
+        checkin = CheckInInput(
+            energy=payload.get("energy", 5),
+            mood=payload.get("mood", 5),
+            sleep=payload.get("sleep", 5),
+            stress=payload.get("stress", 5),
+            days_since_last_checkin=payload.get("days_since_last_checkin", 0),
+        )
+        res = provider.calculate_dcs(checkin)
+        return {"status": "ok", "result": res.to_dict()}
+
+    @app.get("/life_os/mode")
+    def resolve_mode_route(dcs: float = 5.0) -> Dict[str, Any]:
+        """Resolve operating mode given DCS score per SPEC §25.3."""
+        if not app.state.registry.is_feature_enabled("life_os"):
+            return JSONResponse(status_code=503, content={"disabled": "locus.life_os.enabled"})
+        provider_cls = app.state.registry.get_active_provider("life_os", default_name="default_life_os")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No life_os provider registered")
+
+        provider = provider_cls()
+        provider.initialize()
+        mode, constraints = provider.resolve_mode(dcs)
+        return {
+            "status": "ok",
+            "dcs": dcs,
+            "mode": mode.value,
+            "constraints": {
+                "max_difficulty": constraints.max_difficulty,
+                "max_discretionary_tasks": constraints.max_discretionary_tasks,
+                "description": constraints.description,
+            },
+        }
+
     return app
 
 
