@@ -23,7 +23,12 @@ from locus_cli.install import (
     check_node,
     check_prerequisites,
     check_python,
+    load_env_file,
+    prompt_keys,
+    prompt_topology,
     run_install,
+    save_env_file,
+    validate_key,
 )
 
 
@@ -153,3 +158,138 @@ def test_cli_invocation_with_answers_file(tmp_path: Path):
     assert config_file.is_file()
     cfg = yaml.safe_load(config_file.read_text(encoding="utf-8"))
     assert cfg["locus"]["topology"] == "local"
+
+
+def test_key_validation_live_and_mock():
+    """SPEC §1.12 / R3: Validates each entered key with a single live check (or mocked check) before writing to LOCUS_HOME/.env."""
+    # Empty check
+    empty_ok, empty_msg = validate_key("anthropic", "")
+    assert empty_ok is False
+    assert "empty" in empty_msg.lower()
+
+    # Mock key bypass
+    mock_ok, mock_msg = validate_key("openai", "mock-test-key-123")
+    assert mock_ok is True
+    assert "mock" in mock_msg.lower()
+
+    # Anthropic format
+    ant_bad_ok, _ = validate_key("anthropic", "invalid-key")
+    assert ant_bad_ok is False
+    # guard:allow-secret (test fixture key)
+    ant_good_ok, _ = validate_key("anthropic", "sk-ant-test1234567")
+    assert ant_good_ok is True
+
+    # Telegram format
+    tg_bad_ok, _ = validate_key("telegram", "not-a-token")
+    assert tg_bad_ok is False
+
+    # Google key format
+    goog_bad_ok, _ = validate_key("google", "short")
+    assert goog_bad_ok is False
+    # guard:allow-secret (test fixture key)
+    goog_good_ok, _ = validate_key("google", "AIzaSyD-mockgoog123")
+    assert goog_good_ok is True
+
+
+def test_interactive_mode_and_masked_keys(monkeypatch, tmp_path: Path):
+    """SPEC §1.12 / R2, R3: Interactive key collection prompts for LLM provider keys and Telegram bot token with masked input and records topology to config.yaml."""
+    target_dir = tmp_path / "interactive_env"
+
+    # Mock input for topology prompt (hybrid)
+    monkeypatch.setattr("builtins.input", lambda prompt="": "hybrid")
+
+    # Mock getpass for key collection
+    # guard:allow-secret (test fixture keys)
+    mock_keys = {
+        "Enter Anthropic key: ": "sk-ant-testanthropic1",
+        "Enter Openai key: ": "sk-testopenaikey1",
+        "Enter Telegram key: ": "123456789:BBdefGHIjklMNOpqrsTUVwxyz123456789",
+    }
+    monkeypatch.setattr("getpass.getpass", lambda prompt="": mock_keys.get(prompt, "mock-default-key"))
+
+    report = run_install(target_dir=target_dir, non_interactive=False)
+    assert report["status"] == "installed"
+    assert report["topology"] == "hybrid"
+
+    # Verify config.yaml
+    cfg = yaml.safe_load((target_dir / "config.yaml").read_text(encoding="utf-8"))
+    assert cfg["locus"]["topology"] == "hybrid"
+
+    # Verify .env
+    env_keys = load_env_file(target_dir / ".env")
+    assert "LOCUS_HOME" in env_keys
+    assert env_keys["ANTHROPIC_API_KEY"] == "sk-ant-testanthropic1"
+    assert env_keys["OPENAI_API_KEY"] == "sk-testopenaikey1"
+
+
+def test_safe_reconfigure_topology_and_keys(monkeypatch, tmp_path: Path):
+    """SPEC §1.12 / R8: Re-running the installer is safe: existing config and keys are preserved; --reconfigure <section> updates only that section."""
+    target_dir = tmp_path / "reconf_env"
+
+    # Initial non-interactive install with local topology and initial key
+    # guard:allow-secret (test fixture key)
+    initial_answers = {
+        "topology": "local",
+        "keys": {"OPENAI_API_KEY": "sk-initopenaikey1"},
+    }
+    run_install(target_dir=target_dir, answers=initial_answers, non_interactive=True)
+
+    # 1. Reconfigure topology only to 'vm'
+    monkeypatch.setattr("builtins.input", lambda prompt="": "vm")
+    run_install(target_dir=target_dir, non_interactive=False, reconfigure="topology")
+
+    cfg = yaml.safe_load((target_dir / "config.yaml").read_text(encoding="utf-8"))
+    assert cfg["locus"]["topology"] == "vm"
+    # Ensure existing key preserved
+    env_keys1 = load_env_file(target_dir / ".env")
+    assert env_keys1["OPENAI_API_KEY"] == "sk-initopenaikey1"
+
+    # 2. Reconfigure keys: add Anthropic key, press enter on existing OpenAI to keep it
+    def mock_getpass(prompt=""):
+        if "Anthropic" in prompt:
+            # guard:allow-secret (test fixture key)
+            return "sk-ant-newanthkey1"
+        return ""  # press enter to keep existing
+
+    monkeypatch.setattr("getpass.getpass", mock_getpass)
+    run_install(target_dir=target_dir, non_interactive=False, reconfigure="keys")
+
+    # Topology still vm
+    cfg2 = yaml.safe_load((target_dir / "config.yaml").read_text(encoding="utf-8"))
+    assert cfg2["locus"]["topology"] == "vm"
+
+    # Keys merged properly
+    env_keys2 = load_env_file(target_dir / ".env")
+    assert env_keys2["OPENAI_API_KEY"] == "sk-initopenaikey1"
+    assert env_keys2["ANTHROPIC_API_KEY"] == "sk-ant-newanthkey1"
+
+
+def test_cli_reconfigure_invocation(tmp_path: Path):
+    """SPEC §1.12 / US-12 demo: Run py -3 -m locus_cli.install --reconfigure topology --target-dir <temp_dir>: prompts for mode, records updated topology to config.yaml, and preserves existing .env keys."""
+    target_dir = tmp_path / "cli_reconf_target"
+    repo_root = Path(__file__).resolve().parents[2]
+
+    # Pre-seed initial config and .env
+    target_dir.mkdir(parents=True, exist_ok=True)
+    (target_dir / "config.yaml").write_text("locus:\n  topology: local\n", encoding="utf-8")
+    (target_dir / ".env").write_text("LOCUS_HOME=" + str(target_dir) + "\nSAVED_KEY=12345\n", encoding="utf-8")
+
+    cmd = [
+        sys.executable,
+        "-m",
+        "locus_cli.install",
+        "--reconfigure",
+        "topology",
+        "--target-dir",
+        str(target_dir),
+    ]
+    # Feed "hybrid\n" to stdin
+    proc = subprocess.run(cmd, cwd=str(repo_root), input="hybrid\n", capture_output=True, text=True)
+    assert proc.returncode == 0, f"Reconfigure failed with stderr: {proc.stderr}\nstdout: {proc.stdout}"
+
+    cfg = yaml.safe_load((target_dir / "config.yaml").read_text(encoding="utf-8"))
+    assert cfg["locus"]["topology"] == "hybrid"
+
+    env_content = (target_dir / ".env").read_text(encoding="utf-8")
+    assert "SAVED_KEY=12345" in env_content
+
