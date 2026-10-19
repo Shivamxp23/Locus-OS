@@ -9,3 +9,4 @@
 {"event":"closed","sprint":"S2","date":"2026-10-26","planned_points":6,"velocity":6,"done":["US-03","US-04","US-06"],"not_done":{}}
 {"event":"planned","sprint":"S3","start":"2026-10-27","end":"2026-10-30","goal":"A research job runs on the VM by itself and the owner hears about it on Telegram.","capacity":8,"points":6,"stories":["US-07","US-08"],"date":"2026-10-27"}
 {"event":"accepted","story":"US-07","feature":"F-0046","level":3,"note":"TelegramGateway implements BaseChannelProvider, verified with 18 unit tests, Pi bridge turns, and 4096-char chunking.","date":"2026-10-27","commit":"9afd64ce173a"}
+{"event":"accepted","story":"US-08","feature":"F-0058","level":3,"note":"SchedulerProvider implements research cron jobs per D-15, verified with unit tests, Pi turns, vault outputs, and error containment.","date":"2026-10-27","commit":"8589c35e2fd4"}
