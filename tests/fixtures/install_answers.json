@@ -1,0 +1,6 @@
+{
+  "topology": "local",
+  "telegram_enabled": true,
+  "scheduler_enabled": true,
+  "require_docker": false
+}
