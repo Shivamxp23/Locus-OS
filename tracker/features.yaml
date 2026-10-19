@@ -3038,9 +3038,18 @@ features:
   evidence:
     files:
     - docker-compose.yml
-    symbols: []
+    - data/couchdb/local.ini
+    symbols:
+    - file: docker-compose.yml
+      contains:
+      - "${COUCHDB_PASSWORD:?set it in .locus/.env}"
+      - "127.0.0.1:5984:5984"
+    - file: data/couchdb/local.ini
+      contains:
+      - "app://obsidian.md"
     guard: []
-    unit: []
+    unit:
+    - cmd: pytest tests/unit/test_docker_compose.py
     integration: []
   depends_on: []
 - id: F-0087

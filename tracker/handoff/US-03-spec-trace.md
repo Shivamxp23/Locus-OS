@@ -1,0 +1,9 @@
+# US-03 Spec Trace
+
+| spec line / source | the sentence quoted word for word | verdict | mechanism / file:line | test name |
+|---|---|---|---|---|
+| US-03 accept criteria 1 | "docker-compose.yml has no default password and uses ${COUCHDB_PASSWORD:?set it in .locus/.env}: docker compose config fails with that message when it is unset and succeeds when it is set." | LOCUS-NEW | docker-compose.yml:10 | tests/unit/test_docker_compose.py::test_docker_compose_couchdb_password_and_ports, test_docker_compose_config_fails_without_password |
+| US-03 accept criteria 2 | "Every published port (5984, 7687, 5432, 6379, 8420) is written as 127.0.0.1:port:port." | LOCUS-NEW | docker-compose.yml:14, 25, 36, 47, 58 | tests/unit/test_docker_compose.py::test_docker_compose_couchdb_password_and_ports |
+| US-03 accept criteria 3 | "data/couchdb/local.ini limits CORS origins to app://obsidian.md, capacitor://localhost and http://localhost." | LOCUS-NEW | data/couchdb/local.ini:6, docker-compose.yml:18 | tests/unit/test_docker_compose.py::test_couchdb_local_ini_cors |
+| US-03 accept criteria 4 | "The old default password string appears nowhere in the repo (the guard secrets check stays green) and a unit test parses docker-compose.yml to prove the three points above." | LOCUS-NEW | tools/guard/check.py, tests/unit/test_docker_compose.py | tests/unit/test_docker_compose.py::test_docker_compose_couchdb_password_and_ports |
+| US-03 accept criteria 5 | "Greenfield: no data directory exists yet. The handoff still gives the exact commands for rotating the admin password on a data directory that already exists (CouchDB applies COUCHDB_PASSWORD only when it creates the admin), and says that a first install needs none." | LOCUS-NEW | tracker/handoff/US-03.md (documented rotation commands) | N/A (Documentation/handoff) |

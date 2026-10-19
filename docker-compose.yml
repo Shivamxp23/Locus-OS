@@ -1,3 +1,57 @@
-version: "3.8"
 
-services: {}
+services:
+  couchdb:
+    image: couchdb:3.3
+    container_name: locus-couchdb
+    restart: unless-stopped
+    environment:
+      COUCHDB_USER: admin
+      COUCHDB_PASSWORD: ${COUCHDB_PASSWORD:?set it in .locus/.env}
+    ports:
+      - "127.0.0.1:5984:5984"
+    volumes:
+      - ./data/couchdb/data:/opt/couchdb/data
+      - ./data/couchdb/local.ini:/opt/couchdb/etc/local.ini:ro
+
+  neo4j:
+    image: neo4j:5.18-community
+    container_name: locus-neo4j
+    restart: unless-stopped
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-locus_dev}
+      NEO4J_PLUGINS: '["apoc"]'
+    ports:
+      - "127.0.0.1:7687:7687"
+    volumes:
+      - ./data/neo4j/data:/data
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: locus-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: locus
+      POSTGRES_USER: locus
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-locus_dev}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - ./data/postgres/data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: locus-redis
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - ./data/redis/data:/data
+
+  sidecar:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: locus-sidecar
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8420:8420"
