@@ -47,6 +47,12 @@ from sidecar.providers.model_manager import (
     TurnEscalationDecision,
     TurnEscalationRequest,
 )
+from sidecar.providers.post_turn import (
+    ALLOWED_REVIEW_TOOLS,
+    BasePostTurnProvider,
+    PostTurnReviewResult,
+    SkillUpdatePreference,
+)
 from sidecar.providers.prompt_builder import BasePromptBuilderProvider, PromptOptions
 from sidecar.providers.tool_system import (
     AgentTool,
@@ -58,6 +64,7 @@ from sidecar.providers.trajectory import BaseTrajectoryRecorder, TrajectorySessi
 from sidecar.providers.vault_sync import BaseVaultSyncProvider, SyncState
 
 __all__ = [
+    "ALLOWED_REVIEW_TOOLS",
     "AgentTool",
     "AgentToolResult",
     "ArchiveResult",
@@ -68,6 +75,7 @@ __all__ = [
     "BaseHarnessProvider",
     "BaseLifeOSProvider",
     "BaseModelManagementProvider",
+    "BasePostTurnProvider",
     "BasePromptBuilderProvider",
     "BaseToolSystemProvider",
     "BaseTrajectoryRecorder",
@@ -92,7 +100,9 @@ __all__ = [
     "NormalizedChat",
     "OperatingMode",
     "PostTaskLog",
+    "PostTurnReviewResult",
     "PromptOptions",
+    "SkillUpdatePreference",
     "SyncState",
     "TaskBrief",
     "TaskScoreInput",

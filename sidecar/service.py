@@ -696,6 +696,74 @@ def create_app(
             raise HTTPException(status_code=404, detail=f"CCR cache key '{cache_key}' not found or expired")
         return {"status": "ok", "cache_key": cache_key, "original": original}
 
+    # Post-Turn Background Review routes (SPEC §1.7 & §10.1 / F-0007 / US-26)
+    from sidecar.learning.reflector import PostTurnReviewer
+    from sidecar.providers.post_turn import ALLOWED_REVIEW_TOOLS
+    active_registry.register("post_turn_review", "default_post_turn_review", PostTurnReviewer)
+
+    def _is_post_turn_review_enabled() -> bool:
+        val = config.get("locus.post_turn_review.enabled")
+        if val is not None and not config.is_enabled("locus.post_turn_review.enabled"):
+            return False
+        if not app.state.registry.is_feature_enabled("post_turn_review"):
+            return False
+        return True
+
+    @app.post("/review/post-turn")
+    def post_turn_review_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Spawn daemon background review for memory and skill updates."""
+        if not _is_post_turn_review_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.post_turn_review.enabled"})
+        messages = body.get("messages") or []
+        session_id = body.get("session_id")
+        sync = bool(body.get("sync", False))
+
+        provider_cls = app.state.registry.get_active_provider("post_turn_review", default_name="default_post_turn_review")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No post-turn review provider registered")
+        provider = provider_cls()
+        result = provider.spawn_background_review(conversation_snapshot=messages, session_id=session_id, sync=sync)
+        return {"status": "ok", "result": result.to_dict()}
+
+    @app.get("/review/tools/allowed")
+    def allowed_review_tools_route() -> Dict[str, Any]:
+        """Return the strict tool whitelist permitted during post-turn review."""
+        if not _is_post_turn_review_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.post_turn_review.enabled"})
+        return {
+            "status": "ok",
+            "allowed_tools": ALLOWED_REVIEW_TOOLS,
+            "policy": "All unlisted tools strictly denied",
+        }
+
+    @app.get("/review/skills/preferences")
+    def skill_preferences_route() -> Dict[str, Any]:
+        """Return the 4-tier skill update preference hierarchy."""
+        if not _is_post_turn_review_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.post_turn_review.enabled"})
+        provider_cls = app.state.registry.get_active_provider("post_turn_review", default_name="default_post_turn_review")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No post-turn review provider registered")
+        provider = provider_cls()
+        return {
+            "status": "ok",
+            "preferences": provider.get_skill_preferences(),
+        }
+
+    @app.get("/review/result/{review_id}")
+    def get_review_result_route(review_id: str) -> Dict[str, Any]:
+        """Retrieve completed or dispatched review result by review_id."""
+        if not _is_post_turn_review_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.post_turn_review.enabled"})
+        provider_cls = app.state.registry.get_active_provider("post_turn_review", default_name="default_post_turn_review")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No post-turn review provider registered")
+        provider = provider_cls()
+        res = provider.get_review_result(review_id)
+        if not res:
+            raise HTTPException(status_code=404, detail=f"Review ID '{review_id}' not found")
+        return {"status": "ok", "result": res.to_dict()}
+
     return app
 
 

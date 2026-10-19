@@ -342,10 +342,35 @@ features:
   evidence:
     files:
     - sidecar/learning/reflector.py
-    symbols: []
+    - sidecar/providers/post_turn.py
+    - locus-extension/src/post-turn-reviewer.ts
+    symbols:
+    - file: sidecar/learning/reflector.py
+      contains:
+      - PostTurnReviewer
+      - is_enabled
+      - is_tool_allowed
+      - filter_tools
+      - get_skill_preferences
+      - build_review_prompt
+      - spawn_background_review
+    - file: sidecar/providers/post_turn.py
+      contains:
+      - BasePostTurnProvider
+      - PostTurnReviewResult
+      - SkillUpdatePreference
+      - ALLOWED_REVIEW_TOOLS
+    - file: locus-extension/src/post-turn-reviewer.ts
+      contains:
+      - isToolAllowedForReview
+      - filterToolsForReview
+      - buildReviewPrompt
+      - spawnBackgroundReview
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest -v tests/unit/test_post_turn_review.py
+    integration:
+    - py -3 -m pytest -v tests/integration/test_post_turn_review_service.py
   depends_on: []
 - id: F-0008
   title: Stream Diagnostics
