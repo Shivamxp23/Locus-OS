@@ -19,7 +19,7 @@ agent that touches it STOPS and asks; prompt P3 settles OPEN rows with the owner
 | D-10 | DECIDED | Where the `locus.*` config tree is stored | every feature (via the accessor) |
 | D-11 | DEFAULT | `inner_loop_audit` and `inner_loop_log` are two tables | F-0058 |
 | D-12 | DEFAULT | Registry / config file names and off conventions (03) | every feature |
-| D-13 | OPEN | How a hybrid TUI reaches the VM | hybrid mode (F-0085) |
+| D-13 | DECIDED | How a hybrid TUI reaches the VM: Option a SSH tunnel to loopback :8420 | hybrid mode (F-0085) |
 | D-14 | DEFAULT | `LOCUS_HOME` and timezone come from config | every path and schedule |
 | D-15 | DECIDED | Format of owner-defined research cron jobs | the "ultimate goal" |
 | D-16 | DECIDED | Runtime working directory for Pi | S-3 follow-up |
@@ -88,9 +88,8 @@ and the data-flow summary list `inner_loop_log` (one row per pass: tokens, suppr
 
 **D-12 Names and off behaviour (DEFAULT).** As written in 03-modularity.md.
 
-**D-13 Hybrid TUI transport (OPEN).** Spec 28.1 says the TUI and Telegram share one session and says nothing about a TUI on another machine.
-Options: **a** SSH tunnel to the VM's loopback :8420 (no new open port). **b** Tailscale/WireGuard. **c** HTTPS reverse proxy with auth.
-Recommendation: a first, b later.
+**D-13 Hybrid TUI transport (DECIDED by owner recommendation on 2026-11-04).** Option a: SSH tunnel to the VM's loopback :8420 (no new open port). Option b (Tailscale/WireGuard) may be added later.
+
 
 **D-14 Home and timezone (DEFAULT).** `LOCUS_HOME` (default `~/.locus`) replaces the spec's `C:\Users\soni8\.locus`. Times and the timezone
 (the spec writes IST everywhere) come from config; the owner's default is `Asia/Kolkata`.

@@ -219,6 +219,13 @@ stories:
     autopilot: false   # by hand: needs your real API keys
     addendum: [P4]
     depends_on: [US-11]
+    accept:
+      - "locus_cli/install.py prompts for deployment topology: local, vm, or hybrid (R2) and records it to config.yaml under locus.topology."
+      - "Interactive key collection prompts for LLM provider keys (Anthropic, OpenAI, etc.) and Telegram bot token with masked input (R3)."
+      - "Validates each entered key with a single live check (or mocked check) before writing to LOCUS_HOME/.env (file mode 0600) (R3)."
+      - "Re-running the installer is safe: existing config and keys are preserved; --reconfigure <section> updates only that section (R8)."
+      - "Unit tests with mock input and responses assert topology prompt, masked key entry, validation failure handling, and idempotent reconfigure."
+    demo: 'Run py -3 -m locus_cli.install --reconfigure topology --target-dir <temp_dir>: prompts for mode, records updated topology to config.yaml, and preserves existing .env keys.'
 
   - id: US-13
     epic: E4
@@ -229,6 +236,13 @@ stories:
     target_level: 3
     addendum: [P4]
     depends_on: [US-12]
+    accept:
+      - "locus_cli/doctor.py and locus doctor command execute diagnostic health checks, outputting exactly one PASS/FAIL line per check with remediation advice."
+      - "Diagnostic checks cover Python >= 3.10, Node >= 18, Git, Docker, default port availability (8420), sidecar /health, vault writability, keys present, and registered providers."
+      - "Exit code is 0 when all critical diagnostics pass, and non-zero when any check fails."
+      - "locus.bat and locus.cmd pass through arguments directly to Pi TUI setup when requested, keeping Pi's setup working unchanged (R5)."
+      - "Unit tests assert doctor report formatting, exit codes on passing and failing checks, and Pi setup delegation."
+    demo: 'Run py -3 -m locus_cli.doctor: prints diagnostic lines with [PASS]/[FAIL] status for Python, Node, Git, and vault writability, exiting 0.'
 
   - id: US-14
     epic: E4
@@ -240,6 +254,13 @@ stories:
     autopilot: false   # by hand: needs your real Telegram bot
     addendum: [P4]
     depends_on: [US-04, US-12]
+    accept:
+      - "Installer wizard offers interactive Telegram bot setup triggering pairing code generation via sidecar/pairing.py (R6, S-1)."
+      - "Telegram gateway implements /setup command initiating the Section 18 secret-reference flow for late key entry (R4)."
+      - "Secret reference token expires in 5 minutes, is cleaned up after 15 minutes, and is consumed upon successful persistence."
+      - "Messages containing secrets are deleted via Telegram API immediately after receipt, never logged or echoed."
+      - "Unit tests with mock Telegram transport test /setup flow, secret reference generation, expiration, message deletion request, and config persistence."
+    demo: 'Run tests for Telegram setup and /setup command: verifies pairing code generation, /setup secret reference issuance, expiration timer, and message deletion call.'
 
   - id: US-15
     epic: E4
@@ -252,6 +273,12 @@ stories:
     addendum: [P4]
     requires_decisions: [D-13]
     depends_on: [US-10, US-12]
+    accept:
+      - "Installer and config support hybrid mode: sidecar and backend run on VM, local CLI/TUI connects over loopback via SSH tunnel (errata D-13 Option a)."
+      - "sidecar/service.py binds only to loopback 127.0.0.1:8420 on VM, never exposing plain HTTP on 0.0.0.0 (10-security.md)."
+      - "CLI includes helper command (locus tunnel or locus connect) establishing an SSH tunnel to the VM's sidecar port."
+      - "Integration test asserts local client connects through tunnel mock to VM service mock, authenticates, and executes status query."
+    demo: 'Run hybrid tunnel test: asserts sidecar binds to loopback, tunnel helper establishes port forwarding, and local client communicates with remote sidecar endpoint.'
 
   # ------------------------------------------------------------------ E5 Memory, vault, audit (coarse)
   - id: US-16
@@ -262,6 +289,13 @@ stories:
     points: 3
     target_level: 3
     depends_on: [US-03]
+    accept:
+      - "docker-compose.yml configures CouchDB bound strictly to loopback (127.0.0.1:5984), never 0.0.0.0 (10-security.md S-2)."
+      - "sidecar/vault/livesync_bridge.py implements VaultSyncProvider with status(), push(), pull(), and conflict resolution."
+      - "CouchDB admin credentials are read from LOCUS_HOME/.env via config accessor and never use default passwords."
+      - "Deterministic conflict resolution preserves both revisions when concurrent edits occur (winner is canonical, other written as conflict note)."
+      - "Unit tests assert loopback binding in compose configuration, credential loading from .env, deterministic 3-way/sidecar merge resolution, and off-switch behavior."
+    demo: 'Run LiveSync unit tests: asserts CouchDB port binding is loopback-only, non-default credentials are required, and concurrent note conflicts resolve deterministically.'
 
   - id: US-17
     epic: E5
