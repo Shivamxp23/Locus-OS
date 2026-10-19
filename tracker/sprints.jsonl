@@ -66,3 +66,4 @@
 {"event":"planned","sprint":"S21","start":"2027-01-07","end":"2027-01-10","goal":"Every task at every scale gets a priority score; Locus drives other harnesses.","capacity":2,"points":2,"stories":["US-27"],"date":"2027-01-07"}
 {"event":"accepted","story":"US-27","feature":"F-0035","level":4,"note":"All 15 learning unit and integration tests passed; stability detector, profile generation, reward scoring, Hebbian plasticity, and 503 off-switch verified at Level 4 (INTEGRATED).","date":"2027-01-10","commit":"ddac6f9038eb"}
 {"event":"closed","sprint":"S21","date":"2027-01-10","planned_points":2,"velocity":2,"done":["US-27"],"not_done":{}}
+{"event":"planned","sprint":"S22","start":"2027-01-11","end":"2027-01-14","goal":"One layout, no known security hole, the guard shows 0 FAIL and the hooks are on.","capacity":2,"points":2,"stories":["US-28"],"date":"2027-01-11"}
