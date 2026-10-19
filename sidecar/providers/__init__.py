@@ -16,6 +16,12 @@ from sidecar.providers.harness import (
     HarnessType,
     TaskBrief,
 )
+from sidecar.providers.extension_lifecycle import (
+    BaseExtensionLifecycleProvider,
+    CANONICAL_LIFECYCLE_EVENTS,
+    ExtensionHookDescriptor,
+    LifecycleDispatchResult,
+)
 from sidecar.providers.life_os import (
     BaseLifeOSProvider,
     CheckInInput,
@@ -51,6 +57,7 @@ __all__ = [
     "ArchiveResult",
     "BaseChannelProvider",
     "BaseChatArchiverProvider",
+    "BaseExtensionLifecycleProvider",
     "BaseHarnessProvider",
     "BaseLifeOSProvider",
     "BaseModelManagementProvider",
@@ -58,14 +65,17 @@ __all__ = [
     "BaseToolSystemProvider",
     "BaseTrajectoryRecorder",
     "BaseVaultSyncProvider",
+    "CANONICAL_LIFECYCLE_EVENTS",
     "ChatTurn",
     "CheckInInput",
     "DCSResult",
     "DelegationResult",
     "ExecutionMode",
+    "ExtensionHookDescriptor",
     "FactionType",
     "GoalStackLevel",
     "HarnessType",
+    "LifecycleDispatchResult",
     "ModeConstraints",
     "ModelDescriptor",
     "ModelTier",

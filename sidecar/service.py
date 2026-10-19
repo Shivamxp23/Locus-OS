@@ -542,6 +542,84 @@ def create_app(
         decision = provider.resolve_turn_model(req)
         return {"status": "ok", "decision": decision.to_dict()}
 
+    # Extension Lifecycle routes (SPEC §1.5 / F-0005 / US-24)
+    from sidecar.extension_lifecycle import ExtensionLifecycleProvider
+    active_registry.register("extension_lifecycle", "default_extension_lifecycle", ExtensionLifecycleProvider)
+
+    def _is_extension_lifecycle_enabled() -> bool:
+        val = config.get("locus.extension_lifecycle.enabled")
+        if val is not None and not config.is_enabled("locus.extension_lifecycle.enabled"):
+            return False
+        if not app.state.registry.is_feature_enabled("extension_lifecycle"):
+            return False
+        return True
+
+    @app.get("/extensions/events")
+    def list_lifecycle_events_route() -> Dict[str, Any]:
+        """List 25+ canonical extension lifecycle events."""
+        if not _is_extension_lifecycle_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.extension_lifecycle.enabled"})
+        provider_cls = app.state.registry.get_active_provider("extension_lifecycle", default_name="default_extension_lifecycle")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No extension lifecycle provider registered")
+        provider = provider_cls()
+        events = provider.list_events()
+        return {"status": "ok", "count": len(events), "events": events}
+
+    @app.get("/extensions/list")
+    def list_extensions_route() -> Dict[str, Any]:
+        """List registered extension hooks and status."""
+        if not _is_extension_lifecycle_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.extension_lifecycle.enabled"})
+        provider_cls = app.state.registry.get_active_provider("extension_lifecycle", default_name="default_extension_lifecycle")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No extension lifecycle provider registered")
+        provider = provider_cls()
+        hooks = provider.list_hooks()
+        return {
+            "status": "ok",
+            "count": len(hooks),
+            "hooks": [h.to_dict() for h in hooks],
+        }
+
+    @app.post("/extensions/dispatch")
+    def dispatch_lifecycle_event_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Dispatch a lifecycle event across extensions with error containment."""
+        if not _is_extension_lifecycle_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.extension_lifecycle.enabled"})
+        event_name = body.get("event")
+        if not event_name:
+            raise HTTPException(status_code=400, detail="Missing 'event' parameter")
+        payload = body.get("payload") or {}
+
+        provider_cls = app.state.registry.get_active_provider("extension_lifecycle", default_name="default_extension_lifecycle")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No extension lifecycle provider registered")
+        provider = provider_cls()
+        result = provider.dispatch_event(event=event_name, payload=payload)
+        return {"status": "ok", "result": result.to_dict()}
+
+    @app.post("/extensions/toggle")
+    def toggle_extension_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Enable or disable an individual extension."""
+        if not _is_extension_lifecycle_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.extension_lifecycle.enabled"})
+        extension_id = body.get("extension_id")
+        if not extension_id:
+            raise HTTPException(status_code=400, detail="Missing 'extension_id' parameter")
+        enabled = bool(body.get("enabled", True))
+
+        provider_cls = app.state.registry.get_active_provider("extension_lifecycle", default_name="default_extension_lifecycle")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No extension lifecycle provider registered")
+        provider = provider_cls()
+        provider.set_extension_enabled(extension_id, enabled)
+        return {
+            "status": "ok",
+            "extension_id": extension_id,
+            "enabled": provider.is_extension_enabled(extension_id),
+        }
+
     return app
 
 

@@ -3,9 +3,18 @@
  */
 export const LOCUS_EXTENSION_VERSION = "0.1.0";
 
+export * from "./lifecycle";
+export * from "./model-escalation";
+export * from "./prompt-builder";
+export * from "./tools/index";
 export * from "./tools/locus_vault";
 export * from "./trajectory";
 
-export function activate(): void {
+export function activate(pi?: any): void {
   // Locus extension initialization
+  if (pi) {
+    import("./lifecycle").then(({ registerLocusLifecycleHooks }) => {
+      registerLocusLifecycleHooks(pi);
+    });
+  }
 }

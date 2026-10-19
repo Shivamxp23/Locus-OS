@@ -234,10 +234,29 @@ features:
   evidence:
     files:
     - locus-extension/index.ts
-    symbols: []
+    - locus-extension/src/lifecycle.ts
+    - sidecar/extension_lifecycle.py
+    - sidecar/providers/extension_lifecycle.py
+    symbols:
+    - file: locus-extension/src/lifecycle.ts
+      contains:
+      - LocusLifecycleDispatcher
+      - registerLocusLifecycleHooks
+    - file: sidecar/extension_lifecycle.py
+      contains:
+      - ExtensionLifecycleProvider
+      - dispatch_event
+      - register_hook
+    - file: sidecar/providers/extension_lifecycle.py
+      contains:
+      - BaseExtensionLifecycleProvider
+      - LifecycleDispatchResult
+      - ExtensionHookDescriptor
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest -v tests/unit/test_extension_lifecycle.py
+    integration:
+    - py -3 -m pytest -v tests/integration/test_extension_lifecycle_service.py
   depends_on: []
 - id: F-0006
   title: Context Window Management
