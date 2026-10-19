@@ -49,3 +49,5 @@
 {"event":"accepted","story":"US-21","feature":"F-0002","level":4,"note":"System prompt construction verified at Level 4 (INTEGRATED). SOUL personality, Context Forge and State Engine injections verified.","date":"2026-12-17","commit":"2f19bf28ba91"}
 {"event":"closed","sprint":"S15","date":"2026-12-17","planned_points":2,"velocity":2,"done":["US-21"],"not_done":{}}
 {"event":"planned","sprint":"S16","start":"2026-12-18","end":"2026-12-21","goal":"One layout, no known security hole, the guard shows 0 FAIL and the hooks are on.","capacity":2,"points":2,"stories":["US-22"],"date":"2026-12-18"}
+{"event":"accepted","story":"US-22","feature":"F-0003","level":4,"note":"13 canonical tools, lifecycle manager, and 503 off-switch verified at Level 4 (INTEGRATED)","date":"2026-12-21","commit":"96c28f7abeb8"}
+{"event":"closed","sprint":"S16","date":"2026-12-21","planned_points":2,"velocity":2,"done":["US-22"],"not_done":{}}
