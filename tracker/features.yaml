@@ -4379,11 +4379,11 @@ features:
   - '§4.16: Context Compression'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: UNKNOWN
+  category: core
+  verdict: AUGMENT
   source: null
-  provider: null
-  layer: unknown
+  provider: compaction
+  layer: context
   inherited: false
   manual: false
   claimed: null
@@ -4392,11 +4392,31 @@ features:
   spec_sha:
     '§4.16: Context Compression': 4db85e910e34f80c
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/compaction/context_engine.py
+    - sidecar/providers/compaction.py
+    - locus-extension/src/compaction.ts
+    symbols:
+    - file: sidecar/compaction/context_engine.py
+      contains:
+      - CompactionLock
+      - DefaultCompactionProvider
+      - DefaultContextEngine
+      - HermesContextCompressor
+    - file: sidecar/providers/compaction.py
+      contains:
+      - CompactionConfig
+      - CompactionProvider
+      - ContextEngine
+      - MemoryProviderHook
+    - file: locus-extension/src/compaction.ts
+      contains:
+      - ContextEngine
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest -v tests/unit/test_context_compression.py
+    integration:
+    - py -3 -m pytest -v tests/integration/test_context_compression_service.py
   depends_on: []
 - id: F-0111
   title: Emergency Task Injection

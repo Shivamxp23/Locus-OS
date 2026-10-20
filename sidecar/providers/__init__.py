@@ -183,6 +183,12 @@ from sidecar.providers.project_memory_decay import (
     ProjectDecayConfig,
     ProjectMemoryDecayProvider,
 )
+from sidecar.providers.compaction import (
+    CompactionConfig,
+    CompactionProvider,
+    ContextEngine,
+    MemoryProviderHook,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -497,4 +503,8 @@ __all__ = [
     "MemoryDecayProvider",
     "ProjectDecayConfig",
     "ProjectMemoryDecayProvider",
+    "CompactionConfig",
+    "CompactionProvider",
+    "ContextEngine",
+    "MemoryProviderHook",
 ]

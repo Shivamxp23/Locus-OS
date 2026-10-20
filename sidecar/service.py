@@ -3981,6 +3981,109 @@ def create_app(
         except FileNotFoundError:
             raise HTTPException(status_code=404, detail=f"No cold archive found for project {project_id}")
 
+    # Context Compression routes (SPEC §4.16 / F-0110 / US-55)
+    from sidecar.compaction.context_engine import (
+        CompactionConfig,
+        DefaultCompactionProvider,
+        DefaultContextEngine,
+        HermesContextCompressor,
+    )
+    active_registry.register("compaction", "default", DefaultCompactionProvider)
+    active_registry.register("compaction", "hermes_context_engine", DefaultCompactionProvider)
+    active_registry.register("context_compression_engine", "default", DefaultCompactionProvider)
+
+    _compaction_provider_instance: Optional[DefaultCompactionProvider] = None
+
+    def _get_compaction_provider() -> DefaultCompactionProvider:
+        nonlocal _compaction_provider_instance
+        if _compaction_provider_instance is None:
+            provider_cls = app.state.registry.get_active_provider("compaction", default_name="default")
+            if provider_cls:
+                _compaction_provider_instance = provider_cls()
+            else:
+                _compaction_provider_instance = DefaultCompactionProvider()
+        return _compaction_provider_instance
+
+    def _is_compaction_feature_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("compaction"):
+            return False
+        val = config.get("locus.context_compression.enabled")
+        if val is not None and not config.is_enabled("locus.context_compression.enabled"):
+            return False
+        val2 = config.get("locus.compaction.enabled")
+        if val2 is not None and not config.is_enabled("locus.compaction.enabled"):
+            return False
+        return True
+
+    @app.get("/compaction/config")
+    def get_compaction_config_route() -> Dict[str, Any]:
+        """Retrieve active configuration and status for Context Compression."""
+        if not _is_compaction_feature_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.context_compression.enabled"})
+        provider = _get_compaction_provider()
+        return {
+            "status": "ok",
+            "provider": provider.name,
+            "config": provider.config.to_dict(),
+            "threshold_tokens": provider.get_engine().threshold_tokens,
+            "compression_count": provider.get_engine().compression_count,
+        }
+
+    @app.post("/compaction/should-compress")
+    def should_compress_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Evaluate if prompt tokens exceed context compression threshold."""
+        if not _is_compaction_feature_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.context_compression.enabled"})
+        prompt_tokens = int(body.get("prompt_tokens", 0))
+        provider = _get_compaction_provider()
+        engine = provider.get_engine()
+        should = engine.should_compress(prompt_tokens)
+        return {
+            "status": "ok",
+            "prompt_tokens": prompt_tokens,
+            "threshold_tokens": engine.threshold_tokens,
+            "should_compress": should,
+        }
+
+    @app.post("/compaction/compress")
+    def compress_context_flow_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute Hermes 7-step context compression with session splitting."""
+        if not _is_compaction_feature_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.context_compression.enabled"})
+        messages = body.get("messages") or []
+        focus_topic = body.get("focus_topic")
+        old_session_id = body.get("session_id")
+
+        provider = _get_compaction_provider()
+        result = provider.compress_context(
+            messages=messages,
+            focus_topic=focus_topic,
+            old_session_id=old_session_id,
+        )
+        return {"status": "ok", "result": result}
+
+    @app.post("/compaction/engine/update-model")
+    def update_model_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Update active model parameters and recalculate threshold tokens."""
+        if not _is_compaction_feature_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.context_compression.enabled"})
+        model = str(body.get("model", "default"))
+        context_length = int(body.get("context_length", 128000))
+        threshold_percent = body.get("threshold_percent")
+        if threshold_percent is not None:
+            threshold_percent = float(threshold_percent)
+
+        provider = _get_compaction_provider()
+        engine = provider.get_engine()
+        engine.update_model(model, context_length, threshold_percent)
+        return {
+            "status": "ok",
+            "model": model,
+            "context_length": engine.context_length,
+            "threshold_percent": engine.threshold_percent,
+            "threshold_tokens": engine.threshold_tokens,
+        }
+
     return app
 
 
