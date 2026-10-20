@@ -29,6 +29,7 @@ export * from "./tool-result-classification";
 export * from "./tool-timeout-budget";
 export * from "./custom-locus-tools";
 export * from "./neo4j-memory";
+export * from "./memory-tree";
 export * from "./ui/setup-wizard";
 export * from "./tools/index";
 export * from "./tools/locus_vault";

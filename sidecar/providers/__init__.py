@@ -107,6 +107,12 @@ from sidecar.providers.memory import (
     POLEEntity,
     Relationship,
 )
+from sidecar.providers.memory_tree import (
+    BaseMemoryTreeProvider,
+    MemoryTreeConfig,
+    TreeNode,
+    TreeScopeConfig,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -361,4 +367,8 @@ __all__ = [
     "MemoryEntry",
     "POLEEntity",
     "Relationship",
+    "BaseMemoryTreeProvider",
+    "MemoryTreeConfig",
+    "TreeNode",
+    "TreeScopeConfig",
 ]

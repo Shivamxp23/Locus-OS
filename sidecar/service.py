@@ -2614,6 +2614,164 @@ def create_app(
         step_id = provider.record_reasoning_step(step_name=step_name, touched_entities=touched, tool_calls=tool_calls)
         return {"status": "ok", "step_id": step_id}
 
+    # -------------------------------------------------------------------------
+    # SPEC §4.5 / F-0088 / US-47: Memory Tree (Hierarchical Summarization Cascade)
+    # -------------------------------------------------------------------------
+    from sidecar.memory_tree import HierarchicalMemoryTreeProvider
+    from sidecar.providers.memory_tree import MemoryTreeConfig, TreeNode, TreeScopeConfig
+
+    active_registry.register("memory_tree", "default", HierarchicalMemoryTreeProvider)
+    active_registry.register(
+        "memory_tree_hierarchical_summarization_cascade", "default", HierarchicalMemoryTreeProvider
+    )
+
+    _memory_tree_instance: Optional[HierarchicalMemoryTreeProvider] = None
+
+    def _get_memory_tree_provider() -> Optional[HierarchicalMemoryTreeProvider]:
+        nonlocal _memory_tree_instance
+        provider_cls = app.state.registry.get_active_provider("memory_tree", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider(
+                "memory_tree_hierarchical_summarization_cascade", default_name="default"
+            )
+        if not provider_cls:
+            return None
+        if _memory_tree_instance is None or not isinstance(_memory_tree_instance, provider_cls):
+            tree_cfg = MemoryTreeConfig(
+                enabled=config.get("locus.memory.tree.enabled", config.get("locus.memory_tree_hierarchical_summarization_cascade.enabled", True)),
+                default_seal_gate=int(config.get("locus.memory.tree.seal_gate", 8)),
+                stale_flush_seconds=float(config.get("locus.memory.tree.stale_flush_seconds", 10800.0)),
+                db_path=config.get("locus.memory.tree.db_path", None),
+            )
+            _memory_tree_instance = provider_cls(config=tree_cfg)
+        return _memory_tree_instance
+
+    def _is_memory_tree_enabled() -> bool:
+        if config.get("locus.memory_tree_hierarchical_summarization_cascade.enabled") is False:
+            return False
+        if config.get("locus.memory.tree.enabled") is False:
+            return False
+        return True
+
+    @app.get("/memory/tree/config")
+    def get_memory_tree_config_route() -> Dict[str, Any]:
+        """Get Memory Tree subsystem configuration and health metrics."""
+        if not _is_memory_tree_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_tree_hierarchical_summarization_cascade.enabled"},
+            )
+        provider = _get_memory_tree_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory tree provider registered")
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": provider.__class__.__name__,
+            "health": provider.health(),
+        }
+
+    @app.get("/memory/tree/nodes")
+    def get_memory_tree_nodes_route(
+        tree_scope: Optional[str] = None,
+        level: Optional[int] = None,
+    ) -> Dict[str, Any]:
+        """Retrieve stored tree nodes with optional scope and level filtering."""
+        if not _is_memory_tree_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_tree_hierarchical_summarization_cascade.enabled"},
+            )
+        provider = _get_memory_tree_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory tree provider registered")
+        nodes = provider.get_nodes(tree_scope=tree_scope, level=level)
+        return {"status": "ok", "nodes": [n.to_dict() for n in nodes]}
+
+    @app.get("/memory/tree/search")
+    def search_memory_tree_route(
+        tree_scope: str = "default",
+        query: str = "",
+        max_results: int = 5,
+    ) -> Dict[str, Any]:
+        """Perform top-down relevance search descending through tree nodes."""
+        if not _is_memory_tree_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_tree_hierarchical_summarization_cascade.enabled"},
+            )
+        provider = _get_memory_tree_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory tree provider registered")
+        nodes = provider.search(tree_scope=tree_scope, query=query, max_results=max_results)
+        return {"status": "ok", "tree_scope": tree_scope, "query": query, "nodes": [n.to_dict() for n in nodes]}
+
+    @app.post("/memory/tree/leaf")
+    def append_memory_tree_leaf_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Append raw chunk to L0 buffer, auto-sealing if gate threshold is reached."""
+        if not _is_memory_tree_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_tree_hierarchical_summarization_cascade.enabled"},
+            )
+        provider = _get_memory_tree_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory tree provider registered")
+        tree_scope = body.get("tree_scope", "default")
+        content = body.get("content", "")
+        if not content:
+            raise HTTPException(status_code=400, detail="Missing required field: content")
+        source_id = body.get("source_id")
+        source_kind = body.get("source_kind")
+        node = provider.append_leaf(
+            tree_scope=tree_scope,
+            content=content,
+            source_id=source_id,
+            source_kind=source_kind,
+        )
+        return {"status": "ok", "node": node.to_dict()}
+
+    @app.post("/memory/tree/seal")
+    def seal_memory_tree_level_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Manually or conditionally seal a level in a tree scope."""
+        if not _is_memory_tree_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_tree_hierarchical_summarization_cascade.enabled"},
+            )
+        provider = _get_memory_tree_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory tree provider registered")
+        tree_scope = body.get("tree_scope", "default")
+        level = int(body.get("level", 0))
+        force = bool(body.get("force", False))
+        parent = provider.seal_level(tree_scope=tree_scope, level=level, force=force)
+        return {
+            "status": "ok",
+            "sealed": parent is not None,
+            "node": parent.to_dict() if parent else None,
+        }
+
+    @app.post("/memory/tree/topic_route")
+    def topic_route_memory_tree_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Route content chunk across matching topic trees."""
+        if not _is_memory_tree_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_tree_hierarchical_summarization_cascade.enabled"},
+            )
+        provider = _get_memory_tree_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory tree provider registered")
+        content = body.get("content", "")
+        if not content:
+            raise HTTPException(status_code=400, detail="Missing required field: content")
+        topics = body.get("topics", [])
+        if not isinstance(topics, list):
+            raise HTTPException(status_code=400, detail="Field 'topics' must be a list of strings")
+        matched = provider.topic_route(content=content, topics=topics)
+        return {"status": "ok", "matched_scopes": matched}
+
     return app
 
 
