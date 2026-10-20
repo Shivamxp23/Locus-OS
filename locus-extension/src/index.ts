@@ -37,6 +37,8 @@ export * from "./holographic";
 export * from "./memory/hrr-adapter";
 export * from "./stdp-reinforcement";
 export * from "./memory/stdp-updater";
+export * from "./spaced-repetition";
+export * from "./memory/spaced-repetition";
 export * from "./ui/setup-wizard";
 export * from "./tools/index";
 export * from "./tools/locus_vault";
