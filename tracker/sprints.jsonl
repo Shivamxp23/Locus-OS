@@ -114,3 +114,4 @@
 {"event":"planned","sprint":"S37","start":"2027-03-12","end":"2027-03-15","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-43"],"date":"2027-03-12"}
 {"event":"accepted","story":"US-43","feature":"F-0102","level":4,"note":"Verified Level 4 INTEGRATED (85%), bounded streaming accumulation, line and byte truncation, disk spillover, 12 tests passing, test attack passed","date":"2027-03-15","commit":"a5457aca06be"}
 {"event":"closed","sprint":"S37","date":"2027-03-15","planned_points":2,"velocity":2,"done":["US-43"],"not_done":{}}
+{"event":"planned","sprint":"S38","start":"2027-03-16","end":"2027-03-19","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-44"],"date":"2027-03-16"}
