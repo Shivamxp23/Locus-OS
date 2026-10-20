@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `58d85dd3a5` - 2026-10-20T13:49:30+0530 - with test runs
+- commit `696a08c71d` - 2026-10-20T14:09:19+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **35.7%** | old claimed average 71.4% over 86 rows
-- integrated or better: 47 | proven: 0 | overclaims (claimed >= verified + 25): 50 | no evidence: 72
-- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 35, 'NO_EVIDENCE': 72, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **36.4%** | old claimed average 71.4% over 86 rows
+- integrated or better: 48 | proven: 0 | overclaims (claimed >= verified + 25): 50 | no evidence: 71
+- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 36, 'NO_EVIDENCE': 71, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -120,7 +120,7 @@
 | F-0085 | VM Backend Setup | 100% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0086 | Deployment (systemd/Docker) | 65% | 65% | UNIT_VERIFIED |  | Add evidence.integration: a DIFFERENT test that crosses a boundary (sidecar<->Pi, extensio |
 | F-0087 | ARCH-6 Pi bridge (sidecar -> Pi CLI, used by | - | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING | Files claimed but absent: sidecar/cron_runner.py. Create them or correct the path. |
-| F-0088 | Memory Tree (Hierarchical Summarization Casc | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0088 | Memory Tree (Hierarchical Summarization Casc | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0089 | Memory Sync (Multi-Source Ingestion Pipeline | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0090 | Memory Queue (Async Job Pipeline) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0091 | Memory Diff (Snapshot-Based Change Tracking) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
