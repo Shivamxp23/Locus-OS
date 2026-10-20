@@ -1514,11 +1514,21 @@ features:
     '§11.1-11.5: Subagent Spawning, Archetypes, Depth Limiting': caa3928d95a201a2
   evidence:
     files:
-    - sidecar/delegation/
-    symbols: []
+    - sidecar/subagents.py
+    - sidecar/providers/subagents.py
+    - locus-extension/src/subagents.ts
+    symbols:
+    - file: sidecar/subagents.py
+      name: SubagentProvider
+    - file: sidecar/providers/subagents.py
+      name: BaseSubagentProvider
+    - file: sidecar/providers/subagents.py
+      name: SubagentArchetype
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest -v tests/unit/test_subagents_autoresearch.py
+    integration:
+    - py -3 -m pytest -v tests/integration/test_subagents_service.py
   depends_on: []
 - id: F-0037
   title: Injection Filter

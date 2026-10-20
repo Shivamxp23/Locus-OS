@@ -20,6 +20,7 @@ export * from "./routing";
 export * from "./sessions/title-gen";
 export * from "./state-engine";
 export * from "./streaming-sse";
+export * from "./subagents";
 export * from "./title-generator";
 export * from "./ui/setup-wizard";
 export * from "./tools/index";

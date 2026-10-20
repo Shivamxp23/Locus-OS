@@ -1633,7 +1633,119 @@ def create_app(
             "default_model": "openai/dall-e-3",
         }
 
+    # Subagents & AutoResearch routes (SPEC §11.1-11.5 + §3.7 / F-0036)
+    from sidecar.subagents import SubagentProvider
+    from sidecar.providers.subagents import (
+        SubagentSpawnRequest,
+        AutoResearchRequest,
+    )
+    active_registry.register("subagents", "default", SubagentProvider)
+    active_registry.register("subagent_archetype", "default", SubagentProvider)
+
+    def _is_subagents_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("subagents"):
+            return False
+        if config.get("locus.subagents_autoresearch.enabled", True) is False:
+            return False
+        if config.get("locus.subagents.enabled", True) is False:
+            return False
+        return True
+
+    @app.post("/subagents/spawn")
+    def spawn_subagent_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Spawn isolated subagent adhering to MAX_SPAWN_DEPTH = 3."""
+        if not _is_subagents_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.subagents_autoresearch.enabled"},
+            )
+        provider_cls = app.state.registry.get_active_provider("subagents", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No subagents provider registered")
+        provider = provider_cls()
+        req = SubagentSpawnRequest(
+            task=body.get("task", ""),
+            archetype=body.get("archetype", "planner"),
+            parent_session_id=body.get("parent_session_id"),
+            current_depth=body.get("current_depth", 0),
+            model_override=body.get("model_override"),
+            context_extra=body.get("context_extra"),
+            max_turns_override=body.get("max_turns_override"),
+        )
+        try:
+            result = provider.spawn_subagent(req)
+            return {"status": "ok", "result": result.to_dict()}
+        except ValueError as ve:
+            raise HTTPException(status_code=400, detail=str(ve))
+        except KeyError as ke:
+            raise HTTPException(status_code=404, detail=str(ke))
+        except RuntimeError as re:
+            raise HTTPException(status_code=500, detail=str(re))
+
+    @app.get("/subagents/archetypes")
+    def list_subagent_archetypes_route(category: Optional[str] = None) -> Dict[str, Any]:
+        """List registered subagent archetypes (factions and OpenHuman)."""
+        if not _is_subagents_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.subagents_autoresearch.enabled"},
+            )
+        provider_cls = app.state.registry.get_active_provider("subagents", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No subagents provider registered")
+        provider = provider_cls()
+        archetypes = [a.to_dict() for a in provider.list_archetypes(category=category)]
+        return {"status": "ok", "archetypes": archetypes}
+
+    @app.get("/subagents/config")
+    def get_subagents_config_route() -> Dict[str, Any]:
+        """Get subagents and AutoResearch configuration and status."""
+        if not _is_subagents_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.subagents_autoresearch.enabled"},
+            )
+        provider_cls = app.state.registry.get_active_provider("subagents", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No subagents provider registered")
+        provider = provider_cls()
+        health = provider.health_check()
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": provider_cls.__name__,
+            "max_spawn_depth": health.get("max_spawn_depth", 3),
+            "archetype_count": health.get("archetype_count", 0),
+        }
+
+    @app.post("/subagents/autoresearch")
+    def autoresearch_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute AutoResearch topic decomposition and hypothesis synthesis."""
+        if not _is_subagents_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.subagents_autoresearch.enabled"},
+            )
+        provider_cls = app.state.registry.get_active_provider("subagents", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No subagents provider registered")
+        provider = provider_cls()
+        req = AutoResearchRequest(
+            topic=body.get("topic", ""),
+            depth_mode=body.get("depth_mode", "quick"),
+            hypotheses=body.get("hypotheses", []),
+            parent_session_id=body.get("parent_session_id"),
+        )
+        try:
+            result = provider.execute_autoresearch(req)
+            return {"status": "ok", "result": result.to_dict()}
+        except ValueError as ve:
+            raise HTTPException(status_code=400, detail=str(ve))
+        except RuntimeError as re:
+            raise HTTPException(status_code=500, detail=str(re))
+
     return app
+
 
 
 

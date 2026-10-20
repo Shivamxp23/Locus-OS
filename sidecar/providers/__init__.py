@@ -146,10 +146,20 @@ from sidecar.providers.streaming_sse import (
     SSEEvent,
     StreamOptions,
 )
+from sidecar.providers.subagents import (
+    ArchetypeCategory,
+    AutoResearchRequest,
+    AutoResearchResult,
+    BaseSubagentProvider,
+    SubagentArchetype,
+    SubagentSpawnRequest,
+    SubagentSpawnResult,
+)
 from sidecar.providers.trajectory import BaseTrajectoryRecorder, TrajectorySession, TurnRecord
 from sidecar.providers.vault_sync import BaseVaultSyncProvider, SyncState
 
 __all__ = [
+
     "ALL_RETRIEVAL_SOURCES",
     "ALLOWED_REVIEW_TOOLS",
     "ANTI_HALLUCINATION_INSTRUCTION",
@@ -258,4 +268,11 @@ __all__ = [
     "TurnEscalationDecision",
     "TurnEscalationRequest",
     "TurnRecord",
+    "ArchetypeCategory",
+    "AutoResearchRequest",
+    "AutoResearchResult",
+    "BaseSubagentProvider",
+    "SubagentArchetype",
+    "SubagentSpawnRequest",
+    "SubagentSpawnResult",
 ]
