@@ -45,13 +45,6 @@ from sidecar.memory.cold_archiver import (
     list_cold_archives,
     load_cold_archive,
 )
-from sidecar.providers.project_memory_decay import (
-    BaseMemoryDecayProvider,
-    DefaultProjectMemoryDecayProvider,
-    MemoryDecayProvider,
-    ProjectDecayConfig,
-    ProjectMemoryDecayProvider,
-)
 
 __all__ = [
     "HolographicMemory",
@@ -81,9 +74,4 @@ __all__ = [
     "archive_cluster_to_cold_storage",
     "list_cold_archives",
     "load_cold_archive",
-    "BaseMemoryDecayProvider",
-    "DefaultProjectMemoryDecayProvider",
-    "MemoryDecayProvider",
-    "ProjectDecayConfig",
-    "ProjectMemoryDecayProvider",
 ]
