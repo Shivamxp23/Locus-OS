@@ -3155,6 +3155,196 @@ def create_app(
             raise HTTPException(status_code=404, detail=f"Job {job_id} not found")
         return {"status": "ok", "job": job.to_dict()}
 
+    # -------------------------------------------------------------------------
+    # SPEC §4.9 / F-0091 / US-50: Memory Diff (Snapshot-Based Change Tracking)
+    # -------------------------------------------------------------------------
+    from sidecar.memory_diff import SqliteMemoryDiffProvider
+    from sidecar.providers.memory_diff import MemoryDiffConfig
+
+    active_registry.register("memory_diff", "default", SqliteMemoryDiffProvider)
+    active_registry.register(
+        "memory_diff_snapshot_based_change_tracking", "default", SqliteMemoryDiffProvider
+    )
+
+    _memory_diff_instance: Optional[SqliteMemoryDiffProvider] = None
+
+    def _get_memory_diff_provider() -> Optional[SqliteMemoryDiffProvider]:
+        nonlocal _memory_diff_instance
+        provider_cls = app.state.registry.get_active_provider("memory_diff", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider(
+                "memory_diff_snapshot_based_change_tracking", default_name="default"
+            )
+        if not provider_cls:
+            return None
+        if _memory_diff_instance is None or not isinstance(_memory_diff_instance, provider_cls):
+            diff_cfg = MemoryDiffConfig(
+                enabled=config.get(
+                    "locus.memory.diff.enabled",
+                    config.get("locus.memory_diff_snapshot_based_change_tracking.enabled", True),
+                ),
+                db_path=config.get("locus.memory.diff.db_path", None),
+                auto_snapshot_post_sync=bool(
+                    config.get("locus.memory.diff.auto_snapshot_post_sync", True)
+                ),
+            )
+            _memory_diff_instance = provider_cls(config=diff_cfg)
+        return _memory_diff_instance
+
+    def _is_memory_diff_enabled() -> bool:
+        if config.get("locus.memory_diff_snapshot_based_change_tracking.enabled") is False:
+            return False
+        if config.get("locus.memory.diff.enabled") is False:
+            return False
+        return True
+
+    @app.get("/memory/diff/config")
+    def get_memory_diff_config_route() -> Dict[str, Any]:
+        """Get Memory Diff subsystem configuration and health."""
+        if not _is_memory_diff_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_diff_snapshot_based_change_tracking.enabled"},
+            )
+        provider = _get_memory_diff_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory diff provider registered")
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": provider.__class__.__name__,
+            "config": provider.config.to_dict(),
+        }
+
+    @app.get("/memory/diff/snapshots")
+    def list_memory_diff_snapshots_route(
+        source_scope: Optional[str] = None,
+        limit: int = 50,
+    ) -> Dict[str, Any]:
+        """List snapshots for a source scope, newest first."""
+        if not _is_memory_diff_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_diff_snapshot_based_change_tracking.enabled"},
+            )
+        provider = _get_memory_diff_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory diff provider registered")
+        snapshots = provider.list_snapshots(source_scope=source_scope, limit=limit)
+        return {"status": "ok", "snapshots": [s.to_dict() for s in snapshots]}
+
+    @app.post("/memory/diff/snapshot")
+    def take_memory_diff_snapshot_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Take a new snapshot of memory source items."""
+        if not _is_memory_diff_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_diff_snapshot_based_change_tracking.enabled"},
+            )
+        provider = _get_memory_diff_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory diff provider registered")
+        source_scope = body.get("source_scope", "default")
+        trigger = body.get("trigger", "manual")
+        items = body.get("items", [])
+        snapshot = provider.take_snapshot(source_scope=source_scope, trigger=trigger, items=items)
+        return {"status": "ok", "snapshot": snapshot.to_dict()}
+
+    @app.post("/memory/diff/compare")
+    def compare_memory_diff_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Compare two snapshots and return additions, removals, and modifications."""
+        if not _is_memory_diff_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_diff_snapshot_based_change_tracking.enabled"},
+            )
+        provider = _get_memory_diff_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory diff provider registered")
+        source_scope = body.get("source_scope", "default")
+        from_id = body.get("from_snapshot_id")
+        to_id = body.get("to_snapshot_id")
+        if not from_id or not to_id:
+            raise HTTPException(status_code=400, detail="Missing from_snapshot_id or to_snapshot_id")
+        diff_res = provider.diff(source_scope=source_scope, from_snapshot_id=from_id, to_snapshot_id=to_id)
+        return {"status": "ok", "diff": diff_res.to_dict()}
+
+    @app.post("/memory/diff/checkpoint")
+    def create_memory_diff_checkpoint_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Create a named baseline checkpoint across active source scopes."""
+        if not _is_memory_diff_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_diff_snapshot_based_change_tracking.enabled"},
+            )
+        provider = _get_memory_diff_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory diff provider registered")
+        name = body.get("name")
+        if not name:
+            raise HTTPException(status_code=400, detail="Missing required field: name")
+        scopes = body.get("scopes")
+        scope_items = body.get("scope_items")
+        checkpoint = provider.create_checkpoint(name=name, scopes=scopes, scope_items=scope_items)
+        return {"status": "ok", "checkpoint": checkpoint.to_dict()}
+
+    @app.post("/memory/diff/checkpoint/diff")
+    def diff_since_checkpoint_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Compute cross-source diff since a named checkpoint."""
+        if not _is_memory_diff_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_diff_snapshot_based_change_tracking.enabled"},
+            )
+        provider = _get_memory_diff_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory diff provider registered")
+        name = body.get("name")
+        if not name:
+            raise HTTPException(status_code=400, detail="Missing required field: name")
+        current_scope_items = body.get("current_scope_items")
+        try:
+            cross_diff = provider.diff_since_checkpoint(
+                name=name,
+                current_scope_items=current_scope_items,
+            )
+            return {"status": "ok", "cross_diff": cross_diff.to_dict()}
+        except ValueError as err:
+            raise HTTPException(status_code=404, detail=str(err))
+
+    @app.get("/memory/diff/what_changed")
+    def what_changed_memory_diff_route(
+        checkpoint_name: Optional[str] = None,
+        source_scope: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Agent tool endpoint returning human-readable diff summary."""
+        if not _is_memory_diff_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_diff_snapshot_based_change_tracking.enabled"},
+            )
+        provider = _get_memory_diff_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory diff provider registered")
+        summary_text = provider.what_changed(checkpoint_name=checkpoint_name, source_scope=source_scope)
+        return {"status": "ok", "summary": summary_text}
+
+    @app.get("/memory/diff/snapshots/{snapshot_id}")
+    def get_memory_diff_snapshot_route(snapshot_id: str) -> Dict[str, Any]:
+        """Retrieve single snapshot record by ID."""
+        if not _is_memory_diff_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_diff_snapshot_based_change_tracking.enabled"},
+            )
+        provider = _get_memory_diff_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory diff provider registered")
+        snapshot = provider.get_snapshot(snapshot_id=snapshot_id)
+        if not snapshot:
+            raise HTTPException(status_code=404, detail=f"Snapshot {snapshot_id} not found")
+        return {"status": "ok", "snapshot": snapshot.to_dict()}
+
     return app
 
 

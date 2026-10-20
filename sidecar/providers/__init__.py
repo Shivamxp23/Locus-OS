@@ -128,6 +128,19 @@ from sidecar.providers.memory_queue import (
     JobStatus,
     MemoryQueueConfig,
 )
+from sidecar.providers.memory_diff import (
+    BaseMemoryDiffProvider,
+    ChangeKind,
+    Checkpoint,
+    CrossSourceDiff,
+    DiffResult,
+    DiffSummary,
+    ItemChange,
+    MemoryDiffConfig,
+    Snapshot,
+    SnapshotItem,
+    SnapshotTrigger,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -397,4 +410,15 @@ __all__ = [
     "JobRecord",
     "JobStatus",
     "MemoryQueueConfig",
+    "BaseMemoryDiffProvider",
+    "ChangeKind",
+    "Checkpoint",
+    "CrossSourceDiff",
+    "DiffResult",
+    "DiffSummary",
+    "ItemChange",
+    "MemoryDiffConfig",
+    "Snapshot",
+    "SnapshotItem",
+    "SnapshotTrigger",
 ]
