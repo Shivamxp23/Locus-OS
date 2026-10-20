@@ -109,3 +109,5 @@
 {"event":"accepted","story":"US-41","feature":"F-0100","level":4,"note":"Verified Level 4 INTEGRATED (85%), schema validation, loop detection, stall guard, 17 tests passing, test attack passed","date":"2027-03-07","commit":"4f3276f477cd"}
 {"event":"closed","sprint":"S35","date":"2027-03-07","planned_points":2,"velocity":2,"done":["US-41"],"not_done":{}}
 {"event":"planned","sprint":"S36","start":"2027-03-08","end":"2027-03-11","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-42"],"date":"2027-03-08"}
+{"event":"accepted","story":"US-42","feature":"F-0101","level":4,"note":"Verified Level 4 INTEGRATED (85%), result classification into success failure partial, landed file mutations, 18 tests passing, test attack passed","date":"2027-03-11","commit":"34899a224239"}
+{"event":"closed","sprint":"S36","date":"2027-03-11","planned_points":2,"velocity":2,"done":["US-42"],"not_done":{}}
