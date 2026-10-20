@@ -4398,25 +4398,26 @@ features:
     - locus-extension/src/compaction.ts
     symbols:
     - file: sidecar/compaction/context_engine.py
-      contains:
-      - CompactionLock
-      - DefaultCompactionProvider
-      - DefaultContextEngine
-      - HermesContextCompressor
+      name: CompactionLock
+    - file: sidecar/compaction/context_engine.py
+      name: DefaultCompactionProvider
+    - file: sidecar/compaction/context_engine.py
+      name: DefaultContextEngine
+    - file: sidecar/compaction/context_engine.py
+      name: HermesContextCompressor
     - file: sidecar/providers/compaction.py
-      contains:
-      - CompactionConfig
-      - CompactionProvider
-      - ContextEngine
-      - MemoryProviderHook
+      name: CompactionConfig
+    - file: sidecar/providers/compaction.py
+      name: CompactionProvider
+    - file: sidecar/providers/compaction.py
+      name: ContextEngine
     - file: locus-extension/src/compaction.ts
-      contains:
-      - ContextEngine
+      name: ContextEngine
     guard: []
     unit:
-    - py -3 -m pytest -v tests/unit/test_context_compression.py
+    - py -3 -m pytest tests/unit/test_context_compression.py -q
     integration:
-    - py -3 -m pytest -v tests/integration/test_context_compression_service.py
+    - py -3 -m pytest tests/integration/test_context_compression_service.py -q
   depends_on: []
 - id: F-0111
   title: Emergency Task Injection

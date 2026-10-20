@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `55a0540bfc` - 2026-10-20T19:23:48+0530 - with test runs
-- guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **41.3%** | old claimed average 71.4% over 86 rows
-- integrated or better: 55 | proven: 0 | overclaims (claimed >= verified + 25): 46 | no evidence: 63
-- by level: {'FILES_PRESENT': 3, 'INHERITED_OK': 12, 'INTEGRATED': 43, 'NO_EVIDENCE': 63, 'UNIT_VERIFIED': 4}
+- commit `b945d91e17` (dirty working tree) - 2026-10-20T20:15:15+0530 - with test runs
+- guard: PASS {'FAIL': 0, 'WARN': 10, 'INFO': 0}
+- features: 125 | verified average **41.4%** | old claimed average 71.4% over 86 rows
+- integrated or better: 55 | proven: 0 | overclaims (claimed >= verified + 25): 46 | no evidence: 62
+- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 43, 'NO_EVIDENCE': 62, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -142,7 +142,7 @@
 | F-0107 | File Safety | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0108 | Autonomy Tiers | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0109 | Approval Gate | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
-| F-0110 | Context Compression | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0110 | Context Compression | - | 15% | FILES_PRESENT |  | sidecar/providers/compaction.py: `MemoryProviderHook` is a stub (empty / pass / not implem |
 | F-0111 | Emergency Task Injection | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0112 | Exhaustion Predictor | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0113 | Weekly Faction Rebalance | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
