@@ -3473,11 +3473,11 @@ features:
   - '§4.5: Memory Tree (Hierarchical Summarization Cascade)'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Memory
   verdict: AUGMENT
-  source: null
-  provider: null
-  layer: unknown
+  source: OpenHuman memory_tree/
+  provider: HierarchicalMemoryTreeProvider
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -3487,11 +3487,22 @@ features:
   spec_sha:
     '§4.5: Memory Tree (Hierarchical Summarization Cascade)': 5c641f6ae93c3fd9
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/providers/memory_tree.py
+    - sidecar/memory_tree.py
+    - locus-extension/src/memory-tree.ts
+    symbols:
+    - file: sidecar/providers/memory_tree.py
+      name: BaseMemoryTreeProvider
+    - file: sidecar/providers/memory_tree.py
+      name: TreeNode
+    - file: sidecar/memory_tree.py
+      name: HierarchicalMemoryTreeProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_memory_tree.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_memory_tree_service.py -q
   depends_on: []
 - id: F-0089
   title: Memory Sync (Multi-Source Ingestion Pipelines)
