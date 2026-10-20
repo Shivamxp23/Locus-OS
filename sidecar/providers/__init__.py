@@ -57,6 +57,13 @@ from sidecar.providers.extension_lifecycle import (
     ExtensionHookDescriptor,
     LifecycleDispatchResult,
 )
+from sidecar.providers.git_tools import (
+    BaseGitToolsProvider,
+    GitCommitResult,
+    GitDiffResult,
+    GitLogEntry,
+    GitStatusResult,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -275,4 +282,9 @@ __all__ = [
     "SubagentArchetype",
     "SubagentSpawnRequest",
     "SubagentSpawnResult",
+    "BaseGitToolsProvider",
+    "GitCommitResult",
+    "GitDiffResult",
+    "GitLogEntry",
+    "GitStatusResult",
 ]

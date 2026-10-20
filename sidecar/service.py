@@ -1744,7 +1744,143 @@ def create_app(
         except RuntimeError as re:
             raise HTTPException(status_code=500, detail=str(re))
 
+    # Git Tools routes (SPEC §3.7a / F-0099)
+    from sidecar.git_tools import GitToolsProvider
+    active_registry.register("git_tools", "default", GitToolsProvider)
+    active_registry.register("git", "default", GitToolsProvider)
+
+    def _is_git_tools_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("git_tools") and not app.state.registry.is_feature_enabled("git"):
+            return False
+        if config.get("locus.git_tools.enabled", True) is False:
+            return False
+        if config.get("locus.tools.git.enabled", True) is False:
+            return False
+        return True
+
+    @app.get("/git/status")
+    def get_git_status_route(repo_path: Optional[str] = None) -> Dict[str, Any]:
+        """Query working tree status, branch, staged/unstaged changes."""
+        if not _is_git_tools_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.git_tools.enabled"},
+            )
+        provider_cls = app.state.registry.get_active_provider("git_tools", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("git", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No git tools provider registered")
+        provider = provider_cls()
+        try:
+            result = provider.get_status(repo_path=repo_path)
+            return {"status": "ok", "result": result.to_dict()}
+        except ValueError as ve:
+            raise HTTPException(status_code=400, detail=str(ve))
+        except RuntimeError as re:
+            raise HTTPException(status_code=500, detail=str(re))
+
+    @app.post("/git/diff")
+    def get_git_diff_route(body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Retrieve git diff for working tree or staged changes."""
+        if not _is_git_tools_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.git_tools.enabled"},
+            )
+        provider_cls = app.state.registry.get_active_provider("git_tools", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("git", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No git tools provider registered")
+        provider = provider_cls()
+        payload = body or {}
+        staged = bool(payload.get("staged", False))
+        path = payload.get("path")
+        repo_path = payload.get("repo_path")
+        try:
+            result = provider.get_diff(repo_path=repo_path, staged=staged, path=path)
+            return {"status": "ok", "result": result.to_dict()}
+        except ValueError as ve:
+            raise HTTPException(status_code=400, detail=str(ve))
+        except RuntimeError as re:
+            raise HTTPException(status_code=500, detail=str(re))
+
+    @app.post("/git/commit")
+    def create_git_commit_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Create a new commit in the target repository."""
+        if not _is_git_tools_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.git_tools.enabled"},
+            )
+        provider_cls = app.state.registry.get_active_provider("git_tools", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("git", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No git tools provider registered")
+        provider = provider_cls()
+        message = body.get("message", "")
+        repo_path = body.get("repo_path")
+        files = body.get("files")
+        try:
+            result = provider.create_commit(message=message, repo_path=repo_path, files=files)
+            if not result.success:
+                raise HTTPException(status_code=400, detail=result.error or "Git commit failed")
+            return {"status": "ok", "result": result.to_dict()}
+        except ValueError as ve:
+            raise HTTPException(status_code=400, detail=str(ve))
+        except HTTPException:
+            raise
+        except RuntimeError as re:
+            raise HTTPException(status_code=500, detail=str(re))
+
+    @app.get("/git/log")
+    def get_git_log_route(max_count: int = 10, repo_path: Optional[str] = None) -> Dict[str, Any]:
+        """Query recent git commit history."""
+        if not _is_git_tools_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.git_tools.enabled"},
+            )
+        provider_cls = app.state.registry.get_active_provider("git_tools", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("git", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No git tools provider registered")
+        provider = provider_cls()
+        try:
+            log_entries = [entry.to_dict() for entry in provider.get_log(repo_path=repo_path, max_count=max_count)]
+            return {"status": "ok", "log": log_entries}
+        except ValueError as ve:
+            raise HTTPException(status_code=400, detail=str(ve))
+        except RuntimeError as re:
+            raise HTTPException(status_code=500, detail=str(re))
+
+    @app.get("/git/config")
+    def get_git_config_route() -> Dict[str, Any]:
+        """Get Git Tools configuration and status."""
+        if not _is_git_tools_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.git_tools.enabled"},
+            )
+        provider_cls = app.state.registry.get_active_provider("git_tools", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("git", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No git tools provider registered")
+        provider = provider_cls()
+        health = provider.health_check()
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": provider_cls.__name__,
+            "git_binary": health.get("git_binary"),
+        }
+
     return app
+
 
 
 

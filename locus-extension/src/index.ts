@@ -7,6 +7,7 @@ export * from "./anti-hallucination";
 export * from "./context-forge";
 export * from "./context-manager";
 export * from "./cost-tracker";
+export * from "./git-tools";
 export * from "./image-generation";
 export * from "./intent-classifier";
 export * from "./learning";

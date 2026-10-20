@@ -3886,11 +3886,11 @@ features:
   - '§3.7a: Git Tools'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Tools
   verdict: AUGMENT
-  source: null
-  provider: null
-  layer: unknown
+  source: Pi git.ts + Locus git_ops.py
+  provider: GitToolsProvider
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -3898,11 +3898,22 @@ features:
   spec_sha:
     '§3.7a: Git Tools': 5cfef52a9397edf2
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/git_tools.py
+    - sidecar/providers/git_tools.py
+    - locus-extension/src/git-tools.ts
+    symbols:
+    - file: sidecar/git_tools.py
+      name: GitToolsProvider
+    - file: sidecar/providers/git_tools.py
+      name: BaseGitToolsProvider
+    - file: sidecar/providers/git_tools.py
+      name: GitStatusResult
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest -v tests/unit/test_git_tools.py
+    integration:
+    - py -3 -m pytest -v tests/integration/test_git_tools_service.py
   depends_on: []
 - id: F-0100
   title: Tool Call Validation
