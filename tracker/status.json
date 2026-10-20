@@ -929,19 +929,51 @@
       "id": "F-0026",
       "title": "Headroom CCR",
       "verdict": "KEEP-PREBUILT",
-      "level": 1,
-      "label": "FILES_PRESENT",
-      "pct": 15,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 50.0,
-      "gap": 35.0,
+      "gap": -35.0,
       "flags": [
-        "OVERCLAIM"
+        "SPEC_REF_DANGLING"
       ],
       "reasons": [
-        "no symbols declared: file existence alone proves nothing"
+        "no recorded proof"
       ],
-      "next": "Declare evidence.symbols that prove the implementation exists.",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/unit/test_headroom_ccr.py -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".........                                                                [100%]\n9 passed in 0.54s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.5
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/integration/test_headroom_ccr_service.py -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "....                                                                     [100%]\n4 passed in 2.46s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 4.6
+          }
+        ]
+      }
     },
     "F-0027": {
       "id": "F-0027",
