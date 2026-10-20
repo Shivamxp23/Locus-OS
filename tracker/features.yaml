@@ -3728,24 +3728,56 @@ features:
   - '§2.7-2.8: Intelligent Model Routing + Quality-Based Fallback'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Core
   verdict: AUGMENT
-  source: null
-  provider: null
-  layer: unknown
+  source: OpenHuman routing/
+  provider: model_routing
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
   spec_targets:
-  - locus/core/routing/
+  - locus-extension/src/routing/
+  - sidecar/model_routing.py
   spec_sha:
     '§2.7-2.8: Intelligent Model Routing + Quality-Based Fallback': d6564ea8364220d5
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/model_routing.py
+    - sidecar/providers/model_routing.py
+    - locus-extension/src/routing/router.ts
+    - locus-extension/src/routing/policy.ts
+    - locus-extension/src/routing/quality.ts
+    - locus-extension/src/routing/health.ts
+    - locus-extension/src/routing/types.ts
+    symbols:
+    - file: sidecar/model_routing.py
+      contains:
+      - ModelRoutingProvider
+      - MIN_RESPONSE_BYTES
+      - EMPTY_NOISE_TOKENS
+      - REFUSAL_PATTERNS
+    - file: sidecar/providers/model_routing.py
+      contains:
+      - BaseModelRoutingProvider
+      - TaskCategory
+      - TargetBackend
+      - RoutingHints
+      - RoutingDecision
+      - RoutingRecord
+    - file: locus-extension/src/routing/policy.ts
+      contains:
+      - classify
+      - decide
+      - normalizeModelId
+    - file: locus-extension/src/routing/quality.ts
+      contains:
+      - isLowQuality
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - pytest tests/unit/test_model_routing.py
+    integration:
+    - pytest tests/integration/test_model_routing_service.py
   depends_on: []
 - id: F-0097
   title: Streaming (SSE)

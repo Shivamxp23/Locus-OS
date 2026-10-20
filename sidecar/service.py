@@ -49,6 +49,11 @@ from sidecar.providers.streaming_sse import (
     SSEEvent,
     StreamOptions,
 )
+import sidecar.model_routing  # ensures default model routing provider is registered
+from sidecar.providers.model_routing import (
+    BaseModelRoutingProvider,
+    RoutingHints,
+)
 
 logger = logging.getLogger("locus.service")
 
@@ -1467,6 +1472,95 @@ def create_app(
             "enabled": True,
             "provider": provider_cls.__name__,
             "media_type": "text/event-stream",
+        }
+
+    # -------------------------------------------------------------------------
+    # SPEC §2.7-2.8 / F-0096 / US-37: Intelligent Model Routing & Quality Fallback Routes
+    # -------------------------------------------------------------------------
+    def _is_model_routing_enabled() -> bool:
+        val = config.get("locus.intelligent_model_routing_quality_based_fallback.enabled")
+        if val is None:
+            val = config.get("locus.routing.enabled")
+        if val is None:
+            val = config.get("locus.brain.model_routing.enabled", True)
+        return bool(val)
+
+    @app.post("/routing/decide")
+    def route_decide_endpoint(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Compute model routing decision (primary, fallback, model) based on policy."""
+        if not _is_model_routing_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.intelligent_model_routing_quality_based_fallback.enabled"},
+            )
+        provider_cls = app.state.registry.get_active_provider("model_routing", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider(
+                "intelligent_model_routing_quality_based_fallback", default_name="default"
+            )
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No model routing provider registered")
+        provider = provider_cls()
+        model_string = body.get("model", "")
+        category = provider.classify(model_string)
+        hints_data = body.get("hints", {})
+        hints = RoutingHints.from_dict(hints_data)
+        has_tools = bool(body.get("tools"))
+        health = provider.check_local_health()
+        decision = provider.decide(
+            category=category,
+            local_healthy=health.healthy,
+            hints=hints,
+            has_tools=has_tools,
+        )
+        return {"status": "ok", "decision": decision.to_dict()}
+
+    @app.get("/routing/health")
+    def route_health_endpoint(force: bool = False) -> Dict[str, Any]:
+        """Check local model server health with cached 30s TTL."""
+        if not _is_model_routing_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.intelligent_model_routing_quality_based_fallback.enabled"},
+            )
+        provider_cls = app.state.registry.get_active_provider("model_routing", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No model routing provider registered")
+        provider = provider_cls()
+        health = provider.check_local_health(force_refresh=force)
+        return {"status": "ok", "health": health.to_dict()}
+
+    @app.post("/routing/quality-check")
+    def route_quality_check_endpoint(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Check if response text is low quality or refusal."""
+        if not _is_model_routing_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.intelligent_model_routing_quality_based_fallback.enabled"},
+            )
+        provider_cls = app.state.registry.get_active_provider("model_routing", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No model routing provider registered")
+        provider = provider_cls()
+        text = body.get("text", "")
+        low_quality = provider.is_low_quality(text)
+        return {"status": "ok", "low_quality": low_quality}
+
+    @app.get("/routing/config")
+    def route_config_endpoint() -> Dict[str, Any]:
+        """Get model routing configuration."""
+        if not _is_model_routing_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.intelligent_model_routing_quality_based_fallback.enabled"},
+            )
+        provider_cls = app.state.registry.get_active_provider("model_routing", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No model routing provider registered")
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": provider_cls.__name__,
         }
 
     return app

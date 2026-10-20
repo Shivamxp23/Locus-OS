@@ -15,6 +15,7 @@ export * from "./onboarding";
 export * from "./post-turn-reviewer";
 export * from "./prompt-builder";
 export * from "./rate-limiter";
+export * from "./routing";
 export * from "./sessions/title-gen";
 export * from "./state-engine";
 export * from "./streaming-sse";
