@@ -138,3 +138,4 @@
 {"event":"planned","sprint":"S45","start":"2027-04-13","end":"2027-04-16","goal":"Everything is recorded and backed up to the vault; Neo4j Agent Memory is the memory layer.","capacity":2,"points":2,"stories":["US-51"],"date":"2027-04-13"}
 {"event":"accepted","story":"US-51","feature":"F-0022","level":4,"note":"All 13 unit and integration tests passing, FFT circular convolution/correlation and state bundling verified at L4 INTEGRATED","date":"2027-04-16","commit":"9ff61dceaa79"}
 {"event":"closed","sprint":"S45","date":"2027-04-16","planned_points":2,"velocity":2,"done":["US-51"],"not_done":{}}
+{"event":"planned","sprint":"S46","start":"2027-04-17","end":"2027-04-20","goal":"Everything is recorded and backed up to the vault; Neo4j Agent Memory is the memory layer.","capacity":2,"points":2,"stories":["US-52"],"date":"2027-04-17"}
