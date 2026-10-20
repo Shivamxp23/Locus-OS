@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `fb278090f9` - 2026-10-20T16:24:07+0530 - with test runs
+- commit `46eb0fc917` - 2026-10-20T19:02:32+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **40.6%** | old claimed average 71.4% over 86 rows
-- integrated or better: 54 | proven: 0 | overclaims (claimed >= verified + 25): 47 | no evidence: 64
-- by level: {'FILES_PRESENT': 3, 'INHERITED_OK': 12, 'INTEGRATED': 42, 'NO_EVIDENCE': 64, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **41.3%** | old claimed average 71.4% over 86 rows
+- integrated or better: 55 | proven: 0 | overclaims (claimed >= verified + 25): 46 | no evidence: 63
+- by level: {'FILES_PRESENT': 3, 'INHERITED_OK': 12, 'INTEGRATED': 43, 'NO_EVIDENCE': 63, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -57,7 +57,7 @@
 | F-0022 | Holographic HRR | 30% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0023 | STDP Reinforcement | 40% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0024 | Spaced Repetition | 60% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0025 | Project Memory Decay | 25% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
+| F-0025 | Project Memory Decay | 25% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0026 | Headroom CCR | 50% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0027 | Session Management | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/memory.py, sidecar/session_export.py. Create them or cor |
 | F-0028 | Context References | 40% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
