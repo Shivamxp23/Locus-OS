@@ -3583,11 +3583,11 @@ features:
   - '§4.9: Memory Diff (Snapshot-Based Change Tracking)'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Memory
   verdict: LOCUS-NEW
-  source: null
-  provider: null
-  layer: unknown
+  source: OpenHuman memory_diff/
+  provider: SqliteMemoryDiffProvider
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -3597,11 +3597,22 @@ features:
   spec_sha:
     '§4.9: Memory Diff (Snapshot-Based Change Tracking)': e2860eb0c2bb961b
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/providers/memory_diff.py
+    - sidecar/memory_diff.py
+    - locus-extension/src/memory-diff.ts
+    symbols:
+    - file: sidecar/providers/memory_diff.py
+      name: BaseMemoryDiffProvider
+    - file: sidecar/providers/memory_diff.py
+      name: Snapshot
+    - file: sidecar/memory_diff.py
+      name: SqliteMemoryDiffProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_memory_diff.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_memory_diff_service.py -q
   depends_on: []
 - id: F-0092
   title: Query Router / Intent Classifier (Stage 2)
