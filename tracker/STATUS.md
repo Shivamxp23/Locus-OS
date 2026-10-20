@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `3d2f882c5a` - 2026-10-20T10:35:51+0530 - with test runs
+- commit `73a5c767d8` - 2026-10-20T10:55:19+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **28.9%** | old claimed average 71.4% over 86 rows
-- integrated or better: 37 | proven: 0 | overclaims (claimed >= verified + 25): 52 | no evidence: 82
-- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 25, 'NO_EVIDENCE': 82, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **29.6%** | old claimed average 71.4% over 86 rows
+- integrated or better: 38 | proven: 0 | overclaims (claimed >= verified + 25): 52 | no evidence: 81
+- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 26, 'NO_EVIDENCE': 81, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -128,7 +128,7 @@
 | F-0093 | State Engine (Stage 3) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0094 | Context Forge (Stage 6) — The 6-Layer Assemb | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0095 | Anti-Hallucination Guard (Stage 10) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0096 | Intelligent Model Routing + Quality-Based Fa | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0096 | Intelligent Model Routing + Quality-Based Fa | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0097 | Streaming (SSE) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0098 | Image Generation | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0099 | Git Tools | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
