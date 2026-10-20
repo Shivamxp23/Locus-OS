@@ -4082,24 +4082,38 @@ features:
   - '§3.12: Custom Locus Tools'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Tools
   verdict: LOCUS-NEW
-  source: null
-  provider: null
-  layer: unknown
+  source: Locus Custom Tools
+  provider: CustomLocusToolsProvider
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
-  spec_targets:
-  - locus-os/tools/
+  spec_targets: []
   spec_sha:
     '§3.12: Custom Locus Tools': 11453ad8cc43104d
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/providers/custom_locus_tools.py
+    - sidecar/custom_locus_tools.py
+    - locus-extension/src/custom-locus-tools.ts
+    symbols:
+    - file: sidecar/providers/custom_locus_tools.py
+      name: BaseCustomLocusToolsProvider
+    - file: sidecar/providers/custom_locus_tools.py
+      name: CustomToolSpec
+    - file: sidecar/providers/custom_locus_tools.py
+      name: CustomToolResult
+    - file: sidecar/providers/custom_locus_tools.py
+      name: CustomLocusToolsConfig
+    - file: sidecar/custom_locus_tools.py
+      name: CustomLocusToolsProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest -v tests/unit/test_custom_locus_tools.py
+    integration:
+    - py -3 -m pytest -v tests/integration/test_custom_locus_tools_service.py
   depends_on: []
 - id: F-0105
   title: Web Search (8 Providers)
