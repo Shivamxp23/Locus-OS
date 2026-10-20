@@ -120,3 +120,4 @@
 {"event":"planned","sprint":"S39","start":"2027-03-20","end":"2027-03-23","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-45"],"date":"2027-03-20"}
 {"event":"accepted","story":"US-45","feature":"F-0104","level":4,"note":"Verified Level 4 INTEGRATED (85%), default 8 tools registration, individual toggles, error containment, 18 tests passing, test attack passed","date":"2027-03-23","commit":"c0e01f2ce38f"}
 {"event":"closed","sprint":"S39","date":"2027-03-23","planned_points":2,"velocity":2,"done":["US-45"],"not_done":{}}
+{"event":"planned","sprint":"S40","start":"2027-03-24","end":"2027-03-27","goal":"Everything is recorded and backed up to the vault; Neo4j Agent Memory is the memory layer.","capacity":2,"points":2,"stories":["US-46"],"date":"2027-03-24"}
