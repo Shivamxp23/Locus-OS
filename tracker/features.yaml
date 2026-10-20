@@ -1221,11 +1221,30 @@ features:
     '§4.17: Token Compression (Headroom CCR)': 71814da0512a3235
   evidence:
     files:
+    - sidecar/context/headroom_pipeline.py
     - sidecar/context/headroom_adapter.py
-    symbols: []
+    - sidecar/providers/headroom_ccr.py
+    - locus-extension/src/headroom-ccr.ts
+    symbols:
+    - file: sidecar/context/headroom_pipeline.py
+      name: HeadroomPipeline
+    - file: sidecar/context/headroom_pipeline.py
+      name: SmartCrusher
+    - file: sidecar/context/headroom_pipeline.py
+      name: CodeCompressor
+    - file: sidecar/context/headroom_pipeline.py
+      name: ContentRouter
+    - file: sidecar/context/headroom_pipeline.py
+      name: CCRStore
+    - file: sidecar/providers/headroom_ccr.py
+      name: DefaultHeadroomCCRProvider
+    - file: locus-extension/src/headroom-ccr.ts
+      name: HeadroomCCRClient
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_headroom_ccr.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_headroom_ccr_service.py -q
   depends_on: []
 - id: F-0027
   title: Session Management

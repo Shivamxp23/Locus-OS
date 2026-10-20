@@ -189,6 +189,10 @@ from sidecar.providers.compaction import (
     ContextEngine,
     MemoryProviderHook,
 )
+from sidecar.providers.headroom_ccr import (
+    CompressionProvider,
+    DefaultHeadroomCCRProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -507,4 +511,6 @@ __all__ = [
     "CompactionProvider",
     "ContextEngine",
     "MemoryProviderHook",
+    "CompressionProvider",
+    "DefaultHeadroomCCRProvider",
 ]

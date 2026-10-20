@@ -4084,6 +4084,88 @@ def create_app(
             "threshold_tokens": engine.threshold_tokens,
         }
 
+    # Headroom CCR routes (SPEC §4.17: Token Compression (Headroom CCR) / F-0026 / US-56)
+    from sidecar.context.headroom_pipeline import CompressConfig, CompressResult, HeadroomPipeline
+    from sidecar.providers.headroom_ccr import DefaultHeadroomCCRProvider
+    active_registry.register("compression_headroom_ccr", "default_headroom_ccr", DefaultHeadroomCCRProvider)
+
+    def _is_headroom_ccr_enabled() -> bool:
+        val1 = config.get("locus.headroom_ccr.enabled")
+        if val1 is not None and not config.is_enabled("locus.headroom_ccr.enabled"):
+            return False
+        val2 = config.get("locus.compression.enabled")
+        if val2 is not None and not config.is_enabled("locus.compression.enabled"):
+            return False
+        return True
+
+    def _get_headroom_provider() -> DefaultHeadroomCCRProvider:
+        provider_cls = app.state.registry.get_active_provider(
+            "compression_headroom_ccr", default_name="default_headroom_ccr"
+        )
+        if not provider_cls:
+            return DefaultHeadroomCCRProvider()
+        try:
+            return provider_cls()
+        except Exception:
+            return DefaultHeadroomCCRProvider()
+
+    @app.get("/compression/headroom/config")
+    def get_headroom_ccr_config_route() -> Dict[str, Any]:
+        """SPEC §4.17 line 690: Get Headroom CCR configuration knobs."""
+        if not _is_headroom_ccr_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Headroom CCR is disabled", "disabled": "locus.headroom_ccr.enabled"},
+            )
+        provider = _get_headroom_provider()
+        return provider.get_config()
+
+    @app.post("/compression/headroom/compress")
+    def compress_headroom_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """SPEC §4.17 line 689: compress(messages, model, config) -> CompressResult"""
+        if not _is_headroom_ccr_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Headroom CCR is disabled", "disabled": "locus.headroom_ccr.enabled"},
+            )
+        messages = body.get("messages") or []
+        model = body.get("model")
+        cfg_data = body.get("config")
+        cfg = CompressConfig.from_dict(cfg_data) if isinstance(cfg_data, dict) else None
+
+        provider = _get_headroom_provider()
+        res = provider.compress(messages=messages, model=model, config=cfg)
+        return {"status": "ok", "result": res.to_dict()}
+
+    @app.get("/compression/headroom/retrieve/{cache_key}")
+    def retrieve_headroom_route(cache_key: str) -> Dict[str, Any]:
+        """SPEC §4.17 line 701: headroom_retrieve(cache_key) -> full original text."""
+        if not _is_headroom_ccr_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Headroom CCR is disabled", "disabled": "locus.headroom_ccr.enabled"},
+            )
+        provider = _get_headroom_provider()
+        original = provider.retrieve(cache_key)
+        if original is None:
+            raise HTTPException(status_code=404, detail=f"CCR cache key '{cache_key}' not found or expired")
+        return {"status": "ok", "cache_key": cache_key, "original": original}
+
+    @app.post("/compression/headroom/retrieve")
+    def retrieve_headroom_post_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Convenience POST endpoint for headroom_retrieve(cache_key)."""
+        if not _is_headroom_ccr_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Headroom CCR is disabled", "disabled": "locus.headroom_ccr.enabled"},
+            )
+        cache_key = str(body.get("cache_key", ""))
+        provider = _get_headroom_provider()
+        original = provider.retrieve(cache_key)
+        if original is None:
+            raise HTTPException(status_code=404, detail=f"CCR cache key '{cache_key}' not found or expired")
+        return {"status": "ok", "cache_key": cache_key, "original": original}
+
     return app
 
 
