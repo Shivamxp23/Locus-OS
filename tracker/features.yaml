@@ -1352,8 +1352,8 @@ features:
   category: Context
   verdict: AUGMENT
   source: Pi coding-context.ts
-  provider: null
-  layer: unknown
+  provider: CodingContextProvider
+  layer: context
   inherited: false
   manual: false
   claimed:
@@ -1364,17 +1364,32 @@ features:
     pct: 90
     remaining: 'Minor: add project-specific context'
     notes: Pi's coding context is functional
-    key_files_raw: null
+    key_files_raw: sidecar/context/coding_context.py
   spec_targets:
-  - locus-os/src/core/context/coding-context.ts
+  - locus-extension/src/context/coding-context.ts
   spec_sha:
     '§6.3: Coding Context Engine (Repo Map, AST Index, Active Diff)': e75dbc1f029134ac
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/context/coding_context.py
+    - sidecar/providers/coding_context.py
+    - locus-extension/src/context/coding-context.ts
+    symbols:
+    - file: sidecar/context/coding_context.py
+      name: CodingContextEngine
+    - file: sidecar/context/coding_context.py
+      name: WorkspaceCodingState
+    - file: sidecar/context/coding_context.py
+      name: ASTRepoMapGenerator
+    - file: sidecar/providers/coding_context.py
+      name: DefaultCodingContextProvider
+    - file: locus-extension/src/context/coding-context.ts
+      name: CodingContextProviderClient
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_coding_context.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_coding_context_service.py -q
   depends_on: []
 - id: F-0030
   title: TUI / Dashboard

@@ -4545,6 +4545,89 @@ def create_app(
         xml = provider.format_xml(refs)
         return {"status": "ok", "xml": xml}
 
+    # Coding Context Engine routes (SPEC §6.3: Coding Context Engine (Repo Map, AST Index, Active Diff) / F-0029 / US-60)
+    from sidecar.context.coding_context import CodingContextEngine, WorkspaceCodingState
+    from sidecar.providers.coding_context import BaseCodingContextProvider, DefaultCodingContextProvider
+
+    active_registry.register("coding_context", "default_coding_context", DefaultCodingContextProvider)
+
+    _coding_context_provider_instance: Optional[BaseCodingContextProvider] = None
+
+    def _is_coding_context_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("coding_context"):
+            return False
+        val1 = config.get("locus.coding_context.enabled")
+        if val1 is not None and not config.is_enabled("locus.coding_context.enabled"):
+            return False
+        val2 = config.get("locus.context.coding_map.enabled")
+        if val2 is not None and not config.is_enabled("locus.context.coding_map.enabled"):
+            return False
+        return True
+
+    def _get_coding_context_provider() -> BaseCodingContextProvider:
+        nonlocal _coding_context_provider_instance
+        if _coding_context_provider_instance is None:
+            provider_cls = app.state.registry.get_active_provider(
+                "coding_context", default_name="default_coding_context"
+            )
+            if provider_cls:
+                try:
+                    res = provider_cls()
+                    if isinstance(res, BaseCodingContextProvider):
+                        _coding_context_provider_instance = res
+                    else:
+                        _coding_context_provider_instance = DefaultCodingContextProvider()
+                except Exception:
+                    _coding_context_provider_instance = DefaultCodingContextProvider()
+            else:
+                _coding_context_provider_instance = DefaultCodingContextProvider()
+        return _coding_context_provider_instance
+
+    @app.get("/context/coding/config")
+    def get_coding_context_config_route() -> Dict[str, Any]:
+        """SPEC §6.3 line 2187: Get coding context configuration & enabled state."""
+        if not _is_coding_context_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Coding Context is disabled", "disabled": "locus.coding_context.enabled"},
+            )
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": "default_coding_context",
+        }
+
+    @app.post("/context/coding/state")
+    def get_coding_context_state_route(body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """SPEC §6.3 lines 2146-2172: Generate workspace coding state."""
+        if not _is_coding_context_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Coding Context is disabled", "disabled": "locus.coding_context.enabled"},
+            )
+        data = body or {}
+        token_budget = int(data.get("token_budget", 500))
+        provider = _get_coding_context_provider()
+        state = provider.get_coding_context(token_budget=token_budget)
+        return {
+            "status": "ok",
+            "state": state.to_dict(),
+        }
+
+    @app.post("/context/coding/format")
+    def format_coding_context_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """SPEC §6.3 lines 2174-2182: Format workspace coding state into text layer."""
+        if not _is_coding_context_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Coding Context is disabled", "disabled": "locus.coding_context.enabled"},
+            )
+        state_data = body.get("state") or {}
+        state = WorkspaceCodingState.from_dict(state_data)
+        provider = _get_coding_context_provider()
+        formatted = provider.format_layer(state)
+        return {"status": "ok", "formatted_layer": formatted}
+
     return app
 
 

@@ -206,6 +206,10 @@ from sidecar.providers.context_references import (
     BaseContextReferenceProvider,
     DefaultContextReferenceProvider,
 )
+from sidecar.providers.coding_context import (
+    BaseCodingContextProvider,
+    DefaultCodingContextProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -533,4 +537,6 @@ __all__ = [
     "DefaultSessionManagementProvider",
     "BaseContextReferenceProvider",
     "DefaultContextReferenceProvider",
+    "BaseCodingContextProvider",
+    "DefaultCodingContextProvider",
 ]

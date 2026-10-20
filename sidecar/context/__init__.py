@@ -23,6 +23,13 @@ from sidecar.context.references import (
     count_tokens,
     parse_path_and_lines,
 )
+from sidecar.context.coding_context import (
+    ASTRepoMapGenerator,
+    ASTTag,
+    CodingContextEngine,
+    GitMetadataCollector,
+    WorkspaceCodingState,
+)
 
 __all__ = [
     "HeadroomCCRAdapter",
@@ -41,4 +48,9 @@ __all__ = [
     "ResolvedReference",
     "count_tokens",
     "parse_path_and_lines",
+    "WorkspaceCodingState",
+    "ASTTag",
+    "GitMetadataCollector",
+    "ASTRepoMapGenerator",
+    "CodingContextEngine",
 ]
