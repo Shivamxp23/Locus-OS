@@ -132,3 +132,4 @@
 {"event":"planned","sprint":"S43","start":"2027-04-05","end":"2027-04-08","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-49"],"date":"2027-04-05"}
 {"event":"accepted","story":"US-49","feature":"F-0090","level":4,"note":"Verified Level 4 INTEGRATED (85%), SQLite mem_tree_jobs schema, atomic claim token leases, settlement token guards, stale lock recovery, scheduler helpers, 13 tests passing, test attack passed","date":"2027-04-08","commit":"a363894e117e"}
 {"event":"closed","sprint":"S43","date":"2027-04-08","planned_points":2,"velocity":2,"done":["US-49"],"not_done":{}}
+{"event":"planned","sprint":"S44","start":"2027-04-09","end":"2027-04-12","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-50"],"date":"2027-04-09"}
