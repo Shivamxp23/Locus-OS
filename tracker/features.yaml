@@ -4000,10 +4000,10 @@ features:
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
   category: null
-  verdict: KEEP-PI
-  source: null
-  provider: null
-  layer: unknown
+  verdict: AUGMENT
+  source: pi/output-accumulator.ts
+  provider: ToolOutputAccumulatorProvider
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4011,11 +4011,29 @@ features:
   spec_sha:
     '§3.10: Tool Output Accumulator': 2d14514d16667477
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/providers/tool_output_accumulator.py
+    - sidecar/tool_output_accumulator.py
+    - locus-extension/src/tool-output-accumulator.ts
+    - packages/coding-agent/src/core/tools/output-accumulator.ts
+    symbols:
+    - file: sidecar/providers/tool_output_accumulator.py
+      name: BaseToolOutputAccumulatorProvider
+    - file: sidecar/providers/tool_output_accumulator.py
+      name: FullOutputResult
+    - file: sidecar/providers/tool_output_accumulator.py
+      name: OutputAccumulatorConfig
+    - file: sidecar/providers/tool_output_accumulator.py
+      name: OutputSnapshot
+    - file: sidecar/providers/tool_output_accumulator.py
+      name: TruncationType
+    - file: sidecar/tool_output_accumulator.py
+      name: ToolOutputAccumulatorProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest -v tests/unit/test_tool_output_accumulator.py
+    integration:
+    - py -3 -m pytest -v tests/integration/test_tool_output_accumulator_service.py
   depends_on: []
 - id: F-0103
   title: Tool Timeout / Budget
