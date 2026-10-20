@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `73a5c767d8` - 2026-10-20T10:55:19+0530 - with test runs
+- commit `ac780ee667` - 2026-10-20T11:10:57+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **29.6%** | old claimed average 71.4% over 86 rows
-- integrated or better: 38 | proven: 0 | overclaims (claimed >= verified + 25): 52 | no evidence: 81
-- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 26, 'NO_EVIDENCE': 81, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **30.3%** | old claimed average 71.4% over 86 rows
+- integrated or better: 39 | proven: 0 | overclaims (claimed >= verified + 25): 52 | no evidence: 80
+- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 27, 'NO_EVIDENCE': 80, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -130,7 +130,7 @@
 | F-0095 | Anti-Hallucination Guard (Stage 10) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0096 | Intelligent Model Routing + Quality-Based Fa | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0097 | Streaming (SSE) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0098 | Image Generation | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0098 | Image Generation | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0099 | Git Tools | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0100 | Tool Call Validation | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0101 | Tool Result Classification | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
