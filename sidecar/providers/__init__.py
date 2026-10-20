@@ -141,6 +141,12 @@ from sidecar.providers.memory_diff import (
     SnapshotItem,
     SnapshotTrigger,
 )
+from sidecar.providers.holographic import (
+    BaseAssociativeMemoryProvider,
+    BaseHolographicProvider,
+    HolographicConfig,
+    HRRVector,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -421,4 +427,8 @@ __all__ = [
     "Snapshot",
     "SnapshotItem",
     "SnapshotTrigger",
+    "BaseAssociativeMemoryProvider",
+    "BaseHolographicProvider",
+    "HolographicConfig",
+    "HRRVector",
 ]
