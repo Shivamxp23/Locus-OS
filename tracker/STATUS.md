@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `cd26c9e986` - 2026-10-20T03:21:27+0530 - with test runs
+- commit `c52ed3fb4d` (dirty working tree) - 2026-10-20T10:06:58+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **27.6%** | old claimed average 71.4% over 86 rows
-- integrated or better: 35 | proven: 0 | overclaims (claimed >= verified + 25): 52 | no evidence: 84
-- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 23, 'NO_EVIDENCE': 84, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **28.2%** | old claimed average 71.4% over 86 rows
+- integrated or better: 36 | proven: 0 | overclaims (claimed >= verified + 25): 52 | no evidence: 83
+- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 24, 'NO_EVIDENCE': 83, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -127,7 +127,7 @@
 | F-0092 | Query Router / Intent Classifier (Stage 2) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0093 | State Engine (Stage 3) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0094 | Context Forge (Stage 6) — The 6-Layer Assemb | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0095 | Anti-Hallucination Guard (Stage 10) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0095 | Anti-Hallucination Guard (Stage 10) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0096 | Intelligent Model Routing + Quality-Based Fa | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0097 | Streaming (SSE) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0098 | Image Generation | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |

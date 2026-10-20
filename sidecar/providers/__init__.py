@@ -43,6 +43,14 @@ from sidecar.providers.context_forge import (
     RetrievalInput,
     SOURCE_PRIORITIES,
 )
+from sidecar.providers.anti_hallucination import (
+    BaseAntiHallucinationProvider,
+    BrainErrorLog,
+    CheckResult,
+    DEFAULT_CAVEAT_MESSAGE,
+    FactualClaim,
+    GuardMode,
+)
 from sidecar.providers.extension_lifecycle import (
     BaseExtensionLifecycleProvider,
     CANONICAL_LIFECYCLE_EVENTS,
@@ -125,11 +133,17 @@ __all__ = [
     "AgentToolResult",
     "ArchiveResult",
     "AssembledLayer",
+    "BaseAntiHallucinationProvider",
     "BaseChannelProvider",
     "BaseChatArchiverProvider",
     "BaseCompressionProvider",
     "BaseContextForgeProvider",
     "BaseCostTrackerProvider",
+    "BrainErrorLog",
+    "CheckResult",
+    "DEFAULT_CAVEAT_MESSAGE",
+    "FactualClaim",
+    "GuardMode",
     "BaseExtensionLifecycleProvider",
     "BaseHarnessProvider",
     "BaseLearningProvider",

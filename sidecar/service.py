@@ -38,6 +38,11 @@ from sidecar.providers.context_forge import (
     LayerBudgetConfig,
     RetrievalInput,
 )
+import sidecar.anti_hallucination  # ensures default anti-hallucination guard is registered
+from sidecar.providers.anti_hallucination import (
+    CheckResult,
+    GuardMode,
+)
 
 logger = logging.getLogger("locus.service")
 
@@ -1381,6 +1386,45 @@ def create_app(
             "status": "ok",
             "enabled": True,
             "budgets": budgets.to_dict(),
+        }
+
+    # -------------------------------------------------------------------------
+    # SPEC §2.6 / F-0095 / US-35: Anti-Hallucination Guard (Stage 10) Routes
+    # -------------------------------------------------------------------------
+    def _is_anti_hallucination_enabled() -> bool:
+        val = config.get("locus.brain.anti_hallucination.enabled")
+        if val is None:
+            val = config.get("locus.anti_hallucination.enabled", True)
+        return bool(val)
+
+    @app.post("/guard/check")
+    def check_hallucination_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Verify LLM response against Context Forge content with strict/warn modes."""
+        if not _is_anti_hallucination_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.brain.anti_hallucination.enabled"})
+        provider_cls = app.state.registry.get_active_provider("anti_hallucination", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No anti-hallucination provider registered")
+        provider = provider_cls()
+        llm_response = body.get("llm_response", "")
+        context_content = body.get("context_forge_content", "")
+        mode = body.get("mode")
+        result = provider.check(llm_response=llm_response, context_forge_content=context_content, mode=mode)
+        return {"status": "ok", "result": result.to_dict()}
+
+    @app.get("/guard/config")
+    def get_guard_config_route() -> Dict[str, Any]:
+        """Get current Anti-Hallucination Guard status and mode."""
+        if not _is_anti_hallucination_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.brain.anti_hallucination.enabled"})
+        provider_cls = app.state.registry.get_active_provider("anti_hallucination", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No anti-hallucination provider registered")
+        provider = provider_cls()
+        return {
+            "status": "ok",
+            "enabled": True,
+            "mode": provider.get_mode().value,
         }
 
     return app

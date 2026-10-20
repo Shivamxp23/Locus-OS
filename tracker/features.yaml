@@ -3682,24 +3682,45 @@ features:
   - '§2.6: Anti-Hallucination Guard (Stage 10)'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: UNKNOWN
+  category: Core
+  verdict: LOCUS-NEW
   source: null
-  provider: null
-  layer: unknown
+  provider: anti_hallucination
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
   spec_targets:
-  - locus/core/anti-hallucination.ts
+  - locus-extension/src/anti-hallucination.ts
+  - sidecar/anti_hallucination.py
   spec_sha:
     '§2.6: Anti-Hallucination Guard (Stage 10)': a542ebcf7334ec6d
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/anti_hallucination.py
+    - sidecar/providers/anti_hallucination.py
+    - locus-extension/src/anti-hallucination.ts
+    symbols:
+    - file: sidecar/anti_hallucination.py
+      contains:
+      - AntiHallucinationProvider
+      - anti_hallucination_check
+    - file: sidecar/providers/anti_hallucination.py
+      contains:
+      - BaseAntiHallucinationProvider
+      - CheckResult
+      - FactualClaim
+      - BrainErrorLog
+      - GuardMode
+    - file: locus-extension/src/anti-hallucination.ts
+      contains:
+      - AntiHallucinationGuard
+      - DEFAULT_ANTI_HALLUCINATION_CONFIG
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - pytest tests/unit/test_anti_hallucination.py
+    integration:
+    - pytest tests/integration/test_anti_hallucination_service.py
   depends_on: []
 - id: F-0096
   title: Intelligent Model Routing + Quality-Based Fallback
