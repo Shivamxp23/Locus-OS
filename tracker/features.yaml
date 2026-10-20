@@ -3753,23 +3753,44 @@ features:
   - '§2.6a: Streaming (SSE)'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: KEEP-PI
+  category: Core
+  verdict: AUGMENT
   source: null
-  provider: null
-  layer: unknown
+  provider: streaming_sse
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
-  spec_targets: []
+  spec_targets:
+  - locus-extension/src/streaming-sse.ts
+  - sidecar/streaming_sse.py
   spec_sha:
     '§2.6a: Streaming (SSE)': 99180ae504c12ae5
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/streaming_sse.py
+    - sidecar/providers/streaming_sse.py
+    - locus-extension/src/streaming-sse.ts
+    symbols:
+    - file: sidecar/streaming_sse.py
+      contains:
+      - StreamingSSEProvider
+      - is_streaming_enabled
+    - file: sidecar/providers/streaming_sse.py
+      contains:
+      - BaseStreamingSSEProvider
+      - SSEEvent
+      - StreamOptions
+    - file: locus-extension/src/streaming-sse.ts
+      contains:
+      - SSEFrameDecoder
+      - StreamingSSEConsumer
+      - DEFAULT_STREAMING_CONFIG
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - pytest tests/unit/test_streaming_sse.py
+    integration:
+    - pytest tests/integration/test_streaming_sse_service.py
   depends_on: []
 - id: F-0098
   title: Image Generation

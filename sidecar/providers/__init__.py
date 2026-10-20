@@ -122,6 +122,11 @@ from sidecar.providers.tool_system import (
     BaseToolSystemProvider,
     ExecutionMode,
 )
+from sidecar.providers.streaming_sse import (
+    BaseStreamingSSEProvider,
+    SSEEvent,
+    StreamOptions,
+)
 from sidecar.providers.trajectory import BaseTrajectoryRecorder, TrajectorySession, TurnRecord
 from sidecar.providers.vault_sync import BaseVaultSyncProvider, SyncState
 
@@ -155,6 +160,7 @@ __all__ = [
     "BaseQueryRouterProvider",
     "BaseRateLimitProvider",
     "BaseStateEngineProvider",
+    "BaseStreamingSSEProvider",
     "BaseTitleGeneratorProvider",
     "BaseToolSystemProvider",
     "BaseTrajectoryRecorder",
@@ -201,8 +207,10 @@ __all__ = [
     "RewardSignal",
     "RoutingManifest",
     "SOURCE_PRIORITIES",
+    "SSEEvent",
     "SkillUpdatePreference",
     "StableFacet",
+    "StreamOptions",
     "SyncState",
     "TaskBrief",
     "TaskScoreInput",

@@ -15,7 +15,7 @@ import time
 from typing import Any, Dict, Optional
 
 from fastapi import Body, FastAPI, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 
 from sidecar import config
 from sidecar.registry import ProviderRegistry, get_registry
@@ -42,6 +42,12 @@ import sidecar.anti_hallucination  # ensures default anti-hallucination guard is
 from sidecar.providers.anti_hallucination import (
     CheckResult,
     GuardMode,
+)
+import sidecar.streaming_sse  # ensures default streaming sse provider is registered
+from sidecar.providers.streaming_sse import (
+    BaseStreamingSSEProvider,
+    SSEEvent,
+    StreamOptions,
 )
 
 logger = logging.getLogger("locus.service")
@@ -1425,6 +1431,42 @@ def create_app(
             "status": "ok",
             "enabled": True,
             "mode": provider.get_mode().value,
+        }
+
+    # -------------------------------------------------------------------------
+    # SPEC §2.6a / F-0097 / US-36: Streaming (SSE) Routes
+    # -------------------------------------------------------------------------
+    def _is_streaming_sse_enabled() -> bool:
+        val = config.get("locus.streaming_sse.enabled")
+        if val is None:
+            val = config.get("locus.brain.streaming_sse.enabled", True)
+        return bool(val)
+
+    @app.get("/stream/events")
+    async def stream_events_route(text: str = "Hello, world!", chunk_size: int = 16):
+        """Stream simulated response chunks as Server-Sent Events."""
+        if not _is_streaming_sse_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.streaming_sse.enabled"})
+        provider_cls = app.state.registry.get_active_provider("streaming_sse", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No streaming SSE provider registered")
+        provider = provider_cls()
+        generator = provider.stream_text_chunks(text=text, chunk_size=chunk_size)
+        return StreamingResponse(generator, media_type="text/event-stream")
+
+    @app.get("/stream/config")
+    def get_streaming_config_route() -> Dict[str, Any]:
+        """Get current streaming SSE configuration."""
+        if not _is_streaming_sse_enabled():
+            return JSONResponse(status_code=503, content={"disabled": "locus.streaming_sse.enabled"})
+        provider_cls = app.state.registry.get_active_provider("streaming_sse", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No streaming SSE provider registered")
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": provider_cls.__name__,
+            "media_type": "text/event-stream",
         }
 
     return app
