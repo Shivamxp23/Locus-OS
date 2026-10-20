@@ -85,6 +85,13 @@ from sidecar.providers.tool_result_classification import (
     ToolResultClassification,
     ToolResultClassificationConfig,
 )
+from sidecar.providers.tool_timeout_budget import (
+    BaseToolTimeoutBudgetProvider,
+    ExecutionBudgetRecord,
+    TimeoutAction,
+    TimeoutResolution,
+    ToolTimeoutConfig,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -323,4 +330,9 @@ __all__ = [
     "ResultClassificationType",
     "ToolResultClassification",
     "ToolResultClassificationConfig",
+    "BaseToolTimeoutBudgetProvider",
+    "ExecutionBudgetRecord",
+    "TimeoutAction",
+    "TimeoutResolution",
+    "ToolTimeoutConfig",
 ]

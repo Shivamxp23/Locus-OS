@@ -4042,10 +4042,10 @@ features:
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
   category: null
-  verdict: LOCUS-NEW
-  source: null
-  provider: null
-  layer: unknown
+  verdict: AUGMENT
+  source: OpenHuman tool_timeout
+  provider: ToolTimeoutBudgetProvider
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4053,11 +4053,28 @@ features:
   spec_sha:
     '§3.11: Tool Timeout / Budget': 1e96cc2f9058ed64
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/providers/tool_timeout_budget.py
+    - sidecar/tool_timeout_budget.py
+    - locus-extension/src/tool-timeout-budget.ts
+    symbols:
+    - file: sidecar/providers/tool_timeout_budget.py
+      name: BaseToolTimeoutBudgetProvider
+    - file: sidecar/providers/tool_timeout_budget.py
+      name: ExecutionBudgetRecord
+    - file: sidecar/providers/tool_timeout_budget.py
+      name: TimeoutAction
+    - file: sidecar/providers/tool_timeout_budget.py
+      name: TimeoutResolution
+    - file: sidecar/providers/tool_timeout_budget.py
+      name: ToolTimeoutConfig
+    - file: sidecar/tool_timeout_budget.py
+      name: ToolTimeoutBudgetProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest -v tests/unit/test_tool_timeout_budget.py
+    integration:
+    - py -3 -m pytest -v tests/integration/test_tool_timeout_budget_service.py
   depends_on: []
 - id: F-0104
   title: Custom Locus Tools
