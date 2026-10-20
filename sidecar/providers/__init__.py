@@ -92,6 +92,12 @@ from sidecar.providers.tool_timeout_budget import (
     TimeoutResolution,
     ToolTimeoutConfig,
 )
+from sidecar.providers.custom_locus_tools import (
+    BaseCustomLocusToolsProvider,
+    CustomLocusToolsConfig,
+    CustomToolResult,
+    CustomToolSpec,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -335,4 +341,8 @@ __all__ = [
     "TimeoutAction",
     "TimeoutResolution",
     "ToolTimeoutConfig",
+    "BaseCustomLocusToolsProvider",
+    "CustomLocusToolsConfig",
+    "CustomToolResult",
+    "CustomToolSpec",
 ]

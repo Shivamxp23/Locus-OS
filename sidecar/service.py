@@ -2349,6 +2349,119 @@ def create_app(
             "health": health,
         }
 
+    # Custom Locus Tools routes (SPEC §3.12 / F-0104)
+    from sidecar.custom_locus_tools import CustomLocusToolsProvider
+    active_registry.register("custom_locus_tools", "default", CustomLocusToolsProvider)
+    active_registry.register("custom_tools", "default", CustomLocusToolsProvider)
+    active_registry.register("tools_custom", "default", CustomLocusToolsProvider)
+
+    _custom_locus_tools_instance: Optional[Any] = None
+
+    def _get_custom_locus_tools_provider() -> Optional[Any]:
+        nonlocal _custom_locus_tools_instance
+        provider_cls = app.state.registry.get_active_provider("custom_locus_tools", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("custom_tools", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("tools_custom", default_name="default")
+        if not provider_cls:
+            return None
+        if _custom_locus_tools_instance is None or not isinstance(_custom_locus_tools_instance, provider_cls):
+            _custom_locus_tools_instance = provider_cls()
+        return _custom_locus_tools_instance
+
+    def _is_custom_locus_tools_enabled() -> bool:
+        if config.get("locus.custom_locus_tools.enabled") is False:
+            return False
+        if config.get("locus.tools.custom.enabled") is False:
+            return False
+        return True
+
+    @app.get("/tools/custom/list")
+    def list_custom_tools_route(include_disabled: bool = False) -> Dict[str, Any]:
+        """List registered custom Locus tools."""
+        if not _is_custom_locus_tools_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.custom_locus_tools.enabled"},
+            )
+        provider = _get_custom_locus_tools_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No custom locus tools provider registered")
+        tools = provider.list_tools(include_disabled=include_disabled)
+        return {"status": "ok", "tools": [t.to_dict() for t in tools]}
+
+    @app.get("/tools/custom/config")
+    def get_custom_tools_config_route() -> Dict[str, Any]:
+        """Get custom tools configuration and health check."""
+        if not _is_custom_locus_tools_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.custom_locus_tools.enabled"},
+            )
+        provider = _get_custom_locus_tools_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No custom locus tools provider registered")
+        health = provider.health_check()
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": provider.__class__.__name__,
+            "config": provider.get_config().to_dict(),
+            "health": health,
+        }
+
+    @app.get("/tools/custom/{tool_name}")
+    def get_custom_tool_route(tool_name: str) -> Dict[str, Any]:
+        """Get custom tool specification by name."""
+        if not _is_custom_locus_tools_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.custom_locus_tools.enabled"},
+            )
+        provider = _get_custom_locus_tools_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No custom locus tools provider registered")
+        tool = provider.get_tool(tool_name)
+        if not tool:
+            raise HTTPException(status_code=404, detail=f"Custom tool '{tool_name}' not found")
+        return {"status": "ok", "tool": tool.to_dict()}
+
+    @app.post("/tools/custom/execute")
+    def execute_custom_tool_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute custom tool with parameters."""
+        if not _is_custom_locus_tools_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.custom_locus_tools.enabled"},
+            )
+        provider = _get_custom_locus_tools_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No custom locus tools provider registered")
+        tool_name = body.get("tool_name", "")
+        if not tool_name:
+            raise HTTPException(status_code=400, detail="Missing required field: tool_name")
+        params = body.get("parameters", {})
+        result = provider.execute_tool(tool_name, params)
+        return {"status": "ok", "result": result.to_dict()}
+
+    @app.post("/tools/custom/{tool_name}/toggle")
+    def toggle_custom_tool_route(tool_name: str, body: Dict[str, Any]) -> Dict[str, Any]:
+        """Toggle enabled state of a specific custom tool."""
+        if not _is_custom_locus_tools_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.custom_locus_tools.enabled"},
+            )
+        provider = _get_custom_locus_tools_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No custom locus tools provider registered")
+        enabled = body.get("enabled", True)
+        try:
+            provider.set_tool_enabled(tool_name, enabled)
+            return {"status": "ok", "tool_name": tool_name, "enabled": enabled}
+        except KeyError as ke:
+            raise HTTPException(status_code=404, detail=str(ke))
     return app
 
 
