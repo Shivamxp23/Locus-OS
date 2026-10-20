@@ -24,6 +24,7 @@ export * from "./streaming-sse";
 export * from "./subagents";
 export * from "./title-generator";
 export * from "./tool-call-validation";
+export * from "./tool-result-classification";
 export * from "./ui/setup-wizard";
 export * from "./tools/index";
 export * from "./tools/locus_vault";

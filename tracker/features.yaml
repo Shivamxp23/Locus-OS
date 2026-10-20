@@ -3961,10 +3961,10 @@ features:
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
   category: null
-  verdict: LOCUS-NEW
-  source: null
-  provider: null
-  layer: unknown
+  verdict: AUGMENT
+  source: Hermes tool_result_classification.py
+  provider: ToolResultClassificationProvider
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -3972,11 +3972,26 @@ features:
   spec_sha:
     '§3.9: Tool Result Classification': f36faf9c7c05c0d2
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/providers/tool_result_classification.py
+    - sidecar/tool_result_classification.py
+    - locus-extension/src/tool-result-classification.ts
+    symbols:
+    - file: sidecar/providers/tool_result_classification.py
+      name: BaseToolResultClassificationProvider
+    - file: sidecar/providers/tool_result_classification.py
+      name: ResultClassificationType
+    - file: sidecar/providers/tool_result_classification.py
+      name: ToolResultClassification
+    - file: sidecar/providers/tool_result_classification.py
+      name: ToolResultClassificationConfig
+    - file: sidecar/tool_result_classification.py
+      name: ToolResultClassificationProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest -v tests/unit/test_tool_result_classification.py
+    integration:
+    - py -3 -m pytest -v tests/integration/test_tool_result_classification_service.py
   depends_on: []
 - id: F-0102
   title: Tool Output Accumulator

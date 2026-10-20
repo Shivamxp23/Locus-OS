@@ -1986,6 +1986,83 @@ def create_app(
             "health": health,
         }
 
+    # Tool Result Classification routes (SPEC §3.9 / F-0101)
+    from sidecar.tool_result_classification import ToolResultClassificationProvider
+    active_registry.register("tool_result_classification", "default", ToolResultClassificationProvider)
+    active_registry.register("result_classification", "default", ToolResultClassificationProvider)
+
+    _tool_result_classification_instance: Optional[Any] = None
+
+    def _get_tool_result_classification_provider() -> Optional[Any]:
+        nonlocal _tool_result_classification_instance
+        provider_cls = app.state.registry.get_active_provider("tool_result_classification", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("result_classification", default_name="default")
+        if not provider_cls:
+            return None
+        if _tool_result_classification_instance is None or not isinstance(_tool_result_classification_instance, provider_cls):
+            _tool_result_classification_instance = provider_cls()
+        return _tool_result_classification_instance
+
+    def _is_tool_result_classification_enabled() -> bool:
+        if config.get("locus.tool_result_classification.enabled") is False:
+            return False
+        if config.get("locus.tools.result_classification.enabled") is False:
+            return False
+        if config.get("locus.brain.tool_result_classification.enabled") is False:
+            return False
+        return True
+
+    @app.post("/tools/classify-result")
+    def classify_tool_result_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Classify tool result into success, failure, or partial."""
+        if not _is_tool_result_classification_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_result_classification.enabled"},
+            )
+        provider = _get_tool_result_classification_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool result classification provider registered")
+        tool_name = body.get("tool_name", "")
+        if not tool_name:
+            raise HTTPException(status_code=400, detail="Missing required field: tool_name")
+        result = body.get("result")
+        error = body.get("error")
+        exit_code = body.get("exit_code")
+        params = body.get("params")
+        try:
+            classification = provider.classify_result(
+                tool_name=tool_name,
+                result=result,
+                error=error,
+                exit_code=exit_code,
+                params=params,
+            )
+            return {"status": "ok", "classification": classification.to_dict()}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @app.get("/tools/classification/config")
+    def get_tool_classification_config_route() -> Dict[str, Any]:
+        """Get Tool Result Classification configuration and health."""
+        if not _is_tool_result_classification_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_result_classification.enabled"},
+            )
+        provider = _get_tool_result_classification_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool result classification provider registered")
+        health = provider.health_check()
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": provider.__class__.__name__,
+            "config": provider.get_config().to_dict(),
+            "health": health,
+        }
+
     return app
 
 

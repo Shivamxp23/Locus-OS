@@ -72,6 +72,12 @@ from sidecar.providers.tool_call_validation import (
     ValidationDecision,
     ValidationObservation,
 )
+from sidecar.providers.tool_result_classification import (
+    BaseToolResultClassificationProvider,
+    ResultClassificationType,
+    ToolResultClassification,
+    ToolResultClassificationConfig,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -301,4 +307,8 @@ __all__ = [
     "ValidationAction",
     "ValidationDecision",
     "ValidationObservation",
+    "BaseToolResultClassificationProvider",
+    "ResultClassificationType",
+    "ToolResultClassification",
+    "ToolResultClassificationConfig",
 ]
