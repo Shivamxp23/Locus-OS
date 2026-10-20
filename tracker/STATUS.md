@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `92816bf3e7` (dirty working tree) - 2026-10-20T11:50:07+0530 - with test runs
-- guard: PASS {'FAIL': 0, 'WARN': 11, 'INFO': 0}
-- features: 125 | verified average **31.6%** | old claimed average 71.4% over 86 rows
-- integrated or better: 41 | proven: 0 | overclaims (claimed >= verified + 25): 51 | no evidence: 78
-- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 29, 'NO_EVIDENCE': 78, 'UNIT_VERIFIED': 4}
+- commit `4f3276f477` - 2026-10-20T12:12:28+0530 - with test runs
+- guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
+- features: 125 | verified average **32.3%** | old claimed average 71.4% over 86 rows
+- integrated or better: 42 | proven: 0 | overclaims (claimed >= verified + 25): 51 | no evidence: 77
+- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 30, 'NO_EVIDENCE': 77, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -132,7 +132,7 @@
 | F-0097 | Streaming (SSE) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0098 | Image Generation | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0099 | Git Tools | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0100 | Tool Call Validation | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0100 | Tool Call Validation | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0101 | Tool Result Classification | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0102 | Tool Output Accumulator | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0103 | Tool Timeout / Budget | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
