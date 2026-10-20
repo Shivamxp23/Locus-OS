@@ -45,6 +45,11 @@ from sidecar.memory.cold_archiver import (
     list_cold_archives,
     load_cold_archive,
 )
+from sidecar.memory.provider_interface import (
+    DefaultMemoryProvider,
+    MemoryManager,
+    MemoryProvider,
+)
 
 __all__ = [
     "HolographicMemory",
@@ -74,4 +79,7 @@ __all__ = [
     "archive_cluster_to_cold_storage",
     "list_cold_archives",
     "load_cold_archive",
+    "DefaultMemoryProvider",
+    "MemoryManager",
+    "MemoryProvider",
 ]

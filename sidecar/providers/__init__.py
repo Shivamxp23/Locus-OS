@@ -193,6 +193,11 @@ from sidecar.providers.headroom_ccr import (
     CompressionProvider,
     DefaultHeadroomCCRProvider,
 )
+from sidecar.providers.memory_provider import (
+    DefaultMemoryProvider,
+    MemoryManager,
+    MemoryProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -513,4 +518,7 @@ __all__ = [
     "MemoryProviderHook",
     "CompressionProvider",
     "DefaultHeadroomCCRProvider",
+    "DefaultMemoryProvider",
+    "MemoryManager",
+    "MemoryProvider",
 ]

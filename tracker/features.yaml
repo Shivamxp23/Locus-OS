@@ -4619,24 +4619,37 @@ features:
   - '§4.18: Memory Provider Interface'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: UNKNOWN
-  source: null
-  provider: null
-  layer: unknown
+  category: core
+  verdict: AUGMENT
+  source: Hermes at agent/memory_provider.py + agent/memory_manager.py
+  provider: MemoryProvider
+  layer: memory
   inherited: false
   manual: false
   claimed: null
   spec_targets:
-  - locus/providers/memory/interface.ts
+  - locus-extension/src/memory/interface.ts
   spec_sha:
     '§4.18: Memory Provider Interface': c25ef100889b096f
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/memory/provider_interface.py
+    - sidecar/providers/memory_provider.py
+    - locus-extension/src/memory/interface.ts
+    symbols:
+    - file: sidecar/memory/provider_interface.py
+      name: MemoryProvider
+    - file: sidecar/memory/provider_interface.py
+      name: DefaultMemoryProvider
+    - file: sidecar/memory/provider_interface.py
+      name: MemoryManager
+    - file: locus-extension/src/memory/interface.ts
+      name: MemoryProviderClient
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_memory_provider.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_memory_provider_service.py -q
   depends_on: []
 - id: F-0119
   title: Skill System & Multi-Source Marketplace

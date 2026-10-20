@@ -4166,6 +4166,122 @@ def create_app(
             raise HTTPException(status_code=404, detail=f"CCR cache key '{cache_key}' not found or expired")
         return {"status": "ok", "cache_key": cache_key, "original": original}
 
+    # Memory Provider Interface & Stackable Memory Manager routes (SPEC §4.18 / F-0118 / US-57)
+    from sidecar.memory.provider_interface import (
+        DefaultMemoryProvider,
+        MemoryManager,
+        MemoryProvider,
+    )
+    _memory_manager_instance = MemoryManager()
+    default_mem_provider = DefaultMemoryProvider(name="default_memory")
+    _memory_manager_instance.register_provider(default_mem_provider, is_primary=True)
+    active_registry.register("memory_provider_manager", "default_memory_manager", lambda **kw: _memory_manager_instance)
+
+    def _is_memory_provider_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("memory_provider_manager"):
+            return False
+        val1 = config.get("locus.memory_provider.enabled")
+        if val1 is not None and not config.is_enabled("locus.memory_provider.enabled"):
+            return False
+        val2 = config.get("locus.memory.enabled")
+        if val2 is not None and not config.is_enabled("locus.memory.enabled"):
+            return False
+        return True
+
+    def _get_memory_manager() -> MemoryManager:
+        provider_cls = app.state.registry.get_active_provider(
+            "memory_provider_manager", default_name="default_memory_manager"
+        )
+        if not provider_cls:
+            return _memory_manager_instance
+        try:
+            res = provider_cls()
+            if isinstance(res, MemoryManager):
+                return res
+            return _memory_manager_instance
+        except Exception:
+            return _memory_manager_instance
+
+    @app.get("/memory/provider/config")
+    def get_memory_provider_config_route() -> Dict[str, Any]:
+        """SPEC §4.18 line 5253: Return active memory providers and status."""
+        if not _is_memory_provider_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Memory provider is disabled", "disabled": "locus.memory_provider.enabled"},
+            )
+        mgr = _get_memory_manager()
+        active = mgr.get_active_providers()
+        primary = mgr.get_primary_provider()
+        return {
+            "status": "ok",
+            "enabled": True,
+            "primary": primary.name if primary else None,
+            "active_providers": [p.name for p in active],
+            "count": len(active),
+        }
+
+    @app.post("/memory/provider/prefetch")
+    def prefetch_memory_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """SPEC §4.18 lines 5260, 5292: prefetch_all(query)."""
+        if not _is_memory_provider_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Memory provider is disabled", "disabled": "locus.memory_provider.enabled"},
+            )
+        query = str(body.get("query", ""))
+        session_id = body.get("session_id")
+        mgr = _get_memory_manager()
+        context = mgr.prefetch_all(query=query, session_id=session_id)
+        return {"status": "ok", "query": query, "context": context}
+
+    @app.post("/memory/provider/sync-turn")
+    def sync_turn_memory_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """SPEC §4.18 lines 5267, 5298: sync_turn_all(user, assistant)."""
+        if not _is_memory_provider_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Memory provider is disabled", "disabled": "locus.memory_provider.enabled"},
+            )
+        user_content = str(body.get("user_content", ""))
+        assistant_content = str(body.get("assistant_content", ""))
+        session_id = body.get("session_id")
+        messages = body.get("messages")
+        mgr = _get_memory_manager()
+        mgr.sync_turn_all(
+            user_content=user_content,
+            assistant_content=assistant_content,
+            session_id=session_id,
+            messages=messages,
+        )
+        return {"status": "ok", "synced": True}
+
+    @app.get("/memory/provider/tools")
+    def get_memory_provider_tools_route() -> Dict[str, Any]:
+        """SPEC §4.18 line 5270: get_tool_schemas() -> [tool_schema]."""
+        if not _is_memory_provider_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Memory provider is disabled", "disabled": "locus.memory_provider.enabled"},
+            )
+        mgr = _get_memory_manager()
+        tools = mgr.get_all_tool_schemas()
+        return {"status": "ok", "tools": tools}
+
+    @app.post("/memory/provider/tool-call")
+    def handle_memory_provider_tool_call_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """SPEC §4.18 line 5271: handle_tool_call(tool_name, args) -> json_string."""
+        if not _is_memory_provider_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Memory provider is disabled", "disabled": "locus.memory_provider.enabled"},
+            )
+        tool_name = str(body.get("tool_name", ""))
+        args = body.get("args") or {}
+        mgr = _get_memory_manager()
+        res_str = mgr.handle_tool_call(tool_name=tool_name, args=args)
+        return {"status": "ok", "result": res_str}
+
     return app
 
 
