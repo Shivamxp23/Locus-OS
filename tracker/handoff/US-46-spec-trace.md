@@ -1,0 +1,13 @@
+# US-46 Spec Trace: Neo4j Agent Memory (POLE+O) (§4.1-4.2)
+
+| Spec Line | Spec Sentence (Verbatim) | Verdict | Implementation File:Line | Test / Status |
+|---|---|---|---|---|
+| 586 | `## Feature §4.1-4.2: Graph-Native Memory (Neo4j Agent Memory)` | KEEP-PREBUILT / INTEGRATED | `sidecar/providers/memory.py:1` | `tests/unit/test_neo4j_memory.py:18` |
+| 604 | `- **Long-term** (knowledge graph): Entity + Preference + Fact nodes, in the **POLE+O** entity-type taxonomy (Person / Object / Location / Event / Organization).` | INTEGRATED | `sidecar/providers/memory.py:16`, `sidecar/neo4j_memory.py:40` | `tests/unit/test_neo4j_memory.py:20` |
+| 605 | `- **Reasoning** (learn from past decisions): ReasoningTrace + ReasoningStep + Tool + ToolCall nodes, with explicit :TOUCHED audit edges from reasoning steps to the entities they used.` | INTEGRATED | `sidecar/neo4j_memory.py:165`, `sidecar/service.py:2600` | `tests/unit/test_neo4j_memory.py:80`, `tests/integration/test_neo4j_memory_service.py:90` |
+| 610 | `Retrieval path: get_context(query) → hybrid (vector similarity over embeddings + text search + graph traversal) → a single formatted context string for the LLM prompt.` | INTEGRATED | `sidecar/neo4j_memory.py:210`, `sidecar/service.py:2545` | `tests/unit/test_neo4j_memory.py:95`, `tests/integration/test_neo4j_memory_service.py:45` |
+| 635 | `Provider Interface: implements MemoryProvider; get_context(query) feeds Context Forge Layer 4 (Graph, 150t).` | INTEGRATED | `sidecar/providers/memory.py:100`, `locus-extension/src/neo4j-memory.ts:35` | `tests/unit/test_neo4j_memory.py:95` |
+| 638 | `Swappable / off state: locus.memory.provider can be mem0 / supermemory / honcho / mastra / cognee / custom; locus.memory.enabled=false disables the whole subsystem.` | INTEGRATED | `sidecar/neo4j_memory.py:25`, `sidecar/service.py:2490` | `tests/unit/test_neo4j_memory.py:120`, `tests/integration/test_neo4j_memory_service.py:110` |
+| Criteria 1 | `Specification for Neo4j Agent Memory (POLE+O) per §4.1-4.2: Graph-Native Memory (Neo4j Agent Memory) validated against active schema.` | INTEGRATED | `sidecar/providers/memory.py:16`, `sidecar/neo4j_memory.py:35` | `tests/unit/test_neo4j_memory.py:20` |
+| Criteria 2 | `Modular provider interface defined and registered with off-switch behavior.` | INTEGRATED | `sidecar/providers/memory.py:100`, `sidecar/service.py:2465` | `tests/unit/test_neo4j_memory.py:120`, `tests/integration/test_neo4j_memory_service.py:110` |
+| Criteria 3 | `Live verification requires owner real keys, external accounts, hardware, or dedicated service.` | INTEGRATED | `sidecar/neo4j_memory.py:270` | `tests/unit/test_neo4j_memory.py:110` |

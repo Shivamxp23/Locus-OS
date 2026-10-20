@@ -927,9 +927,9 @@ features:
   mapping: grouped
   origin: legacy-tracker
   category: Memory
-  verdict: KEEP-PREBUILT
+  verdict: INTEGRATED
   source: neo4j-labs/agent-memory
-  provider: MemoryProvider
+  provider: Neo4jMemoryProvider
   layer: sidecar
   inherited: false
   manual: false
@@ -948,11 +948,31 @@ features:
     '§4.1-4.2: Graph-Native Memory (Neo4j Agent Memory)': 20566a0867575d97
   evidence:
     files:
+    - sidecar/providers/memory.py
     - sidecar/neo4j_memory.py
-    symbols: []
+    - locus-extension/src/neo4j-memory.ts
+    symbols:
+    - file: sidecar/providers/memory.py
+      name: BaseMemoryProvider
+    - file: sidecar/providers/memory.py
+      name: EntityType
+    - file: sidecar/providers/memory.py
+      name: POLEEntity
+    - file: sidecar/providers/memory.py
+      name: Relationship
+    - file: sidecar/providers/memory.py
+      name: MemoryEntry
+    - file: sidecar/providers/memory.py
+      name: GraphQueryResult
+    - file: sidecar/providers/memory.py
+      name: MemoryConfig
+    - file: sidecar/neo4j_memory.py
+      name: Neo4jMemoryProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest -v tests/unit/test_neo4j_memory.py
+    integration:
+    - py -3 -m pytest -v tests/integration/test_neo4j_memory_service.py
   depends_on: []
 - id: F-0022
   title: Holographic HRR
