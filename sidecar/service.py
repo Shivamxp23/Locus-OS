@@ -3832,6 +3832,155 @@ def create_app(
         provider.save_node_state(node)
         return {"status": "ok", "node": node.to_dict()}
 
+    # SPEC §4.14 / F-0025 / US-54: Project-Specific Memory Decay Engine
+    from sidecar.providers.project_memory_decay import (
+        DefaultProjectMemoryDecayProvider,
+        MemoryDecayProvider,
+        ProjectDecayConfig,
+        ProjectMemoryDecayProvider,
+    )
+    from sidecar.memory.project_decay import (
+        ProjectNode,
+        ProjectRecord,
+        calculate_retention_strength,
+    )
+
+    active_registry.register("project_memory_decay", "default", DefaultProjectMemoryDecayProvider)
+    active_registry.register("memory_decay", "default", DefaultProjectMemoryDecayProvider)
+
+    _decay_instance: Optional[MemoryDecayProvider] = None
+
+    def _get_decay_provider() -> Optional[MemoryDecayProvider]:
+        nonlocal _decay_instance
+        provider_cls = app.state.registry.get_active_provider("project_memory_decay", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("memory_decay", default_name="default")
+        if not provider_cls:
+            return None
+        if _decay_instance is None or (isinstance(provider_cls, type) and not isinstance(_decay_instance, provider_cls)):
+            cfg = ProjectDecayConfig(
+                enabled=config.get("locus.project_memory_decay.enabled", config.get("locus.memory.decay.enabled", True)),
+                cold_storage_threshold=float(config.get("locus.memory.decay.cold_storage_threshold", 0.10)),
+                storage_dir=config.get("locus.memory.decay.storage_dir", None),
+            )
+            if isinstance(provider_cls, type):
+                _decay_instance = provider_cls(config=cfg)
+            elif callable(provider_cls):
+                _decay_instance = provider_cls()
+            else:
+                _decay_instance = provider_cls
+        return _decay_instance
+
+    def _is_decay_enabled() -> bool:
+        if config.get("locus.project_memory_decay.enabled") is False:
+            return False
+        if config.get("locus.memory.decay.enabled") is False:
+            return False
+        return True
+
+    @app.get("/memory/decay/config")
+    def get_decay_config_route() -> Dict[str, Any]:
+        """Get Project Memory Decay configuration and status."""
+        if not _is_decay_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.project_memory_decay.enabled"},
+            )
+        provider = _get_decay_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No Memory Decay provider registered")
+        return {"status": "ok", "config": provider.config.to_dict()}
+
+    @app.post("/memory/decay/calculate")
+    def calculate_decay_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Calculate retention strength S(t) for a project state and days inactive."""
+        if not _is_decay_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.project_memory_decay.enabled"},
+            )
+        provider = _get_decay_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No Memory Decay provider registered")
+        project_state = str(body.get("project_state", "ACTIVE"))
+        days = float(body.get("days_since_last_touch", body.get("days_inactive", 0.0)))
+        s_0 = float(body.get("s_0", 1.0))
+        strength = provider.calculate_retention(project_state=project_state, days_since_last_touch=days, s_0=s_0)
+        return {
+            "status": "ok",
+            "project_state": project_state.upper(),
+            "days_since_last_touch": days,
+            "retention_strength": strength,
+            "cold_archive_candidate": bool(strength < provider.config.cold_storage_threshold),
+        }
+
+    @app.post("/memory/decay/projects")
+    def register_decay_project_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Register or update a project and its associated nodes."""
+        if not _is_decay_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.project_memory_decay.enabled"},
+            )
+        provider = _get_decay_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No Memory Decay provider registered")
+        proj = ProjectRecord.from_dict(body)
+        provider.register_project(proj)
+        nodes_data = body.get("nodes", [])
+        for nd in nodes_data:
+            node = ProjectNode.from_dict({**nd, "project_id": proj.project_id})
+            provider.add_project_node(node)
+        return {"status": "ok", "project": proj.to_dict(), "node_count": len(nodes_data)}
+
+    @app.post("/memory/decay/sweep")
+    def run_decay_sweep_route(body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Execute project memory decay sweep and trigger cold archive."""
+        if not _is_decay_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.project_memory_decay.enabled"},
+            )
+        provider = _get_decay_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No Memory Decay provider registered")
+        b = body or {}
+        ts = b.get("timestamp")
+        dry_run = bool(b.get("dry_run", False))
+        res = provider.sweep(current_timestamp=float(ts) if ts is not None else None, dry_run=dry_run)
+        return {"status": "ok", "result": res}
+
+    @app.get("/memory/decay/archives")
+    def list_decay_archives_route() -> Dict[str, Any]:
+        """List all cold archives in .locus/memory/cold_archive/."""
+        if not _is_decay_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.project_memory_decay.enabled"},
+            )
+        provider = _get_decay_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No Memory Decay provider registered")
+        archives = provider.list_archives()
+        return {"status": "ok", "count": len(archives), "archives": archives}
+
+    @app.get("/memory/decay/archives/{project_id}")
+    def get_decay_archive_route(project_id: str) -> Dict[str, Any]:
+        """Read and decompress cold archived memory cluster for a project."""
+        if not _is_decay_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.project_memory_decay.enabled"},
+            )
+        provider = _get_decay_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No Memory Decay provider registered")
+        try:
+            archive = provider.get_archive(project_id)
+            return {"status": "ok", "archive": archive}
+        except FileNotFoundError:
+            raise HTTPException(status_code=404, detail=f"No cold archive found for project {project_id}")
+
     return app
 
 

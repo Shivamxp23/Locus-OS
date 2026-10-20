@@ -176,6 +176,13 @@ from sidecar.providers.spaced_repetition import (
     MemoryNodeState,
     SpacedRepetitionConfig,
 )
+from sidecar.providers.project_memory_decay import (
+    BaseMemoryDecayProvider,
+    DefaultProjectMemoryDecayProvider,
+    MemoryDecayProvider,
+    ProjectDecayConfig,
+    ProjectMemoryDecayProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -485,4 +492,9 @@ __all__ = [
     "MemoryConsolidationProvider",
     "MemoryNodeState",
     "SpacedRepetitionConfig",
+    "BaseMemoryDecayProvider",
+    "DefaultProjectMemoryDecayProvider",
+    "MemoryDecayProvider",
+    "ProjectDecayConfig",
+    "ProjectMemoryDecayProvider",
 ]

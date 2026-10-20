@@ -31,6 +31,28 @@ from sidecar.providers.spaced_repetition import (
     MemoryConsolidationProvider,
 )
 
+from sidecar.memory.project_decay import (
+    COLD_STORAGE_THRESHOLD,
+    DEFAULT_HALF_LIFE,
+    HALF_LIFE_DAYS,
+    ProjectDecayEngine,
+    ProjectNode,
+    ProjectRecord,
+    calculate_retention_strength,
+)
+from sidecar.memory.cold_archiver import (
+    archive_cluster_to_cold_storage,
+    list_cold_archives,
+    load_cold_archive,
+)
+from sidecar.providers.project_memory_decay import (
+    BaseMemoryDecayProvider,
+    DefaultProjectMemoryDecayProvider,
+    MemoryDecayProvider,
+    ProjectDecayConfig,
+    ProjectMemoryDecayProvider,
+)
+
 __all__ = [
     "HolographicMemory",
     "HolographicMemoryBackend",
@@ -49,4 +71,19 @@ __all__ = [
     "MemoryNodeState",
     "SpacedRepetitionConfig",
     "MemoryConsolidationProvider",
+    "COLD_STORAGE_THRESHOLD",
+    "DEFAULT_HALF_LIFE",
+    "HALF_LIFE_DAYS",
+    "ProjectDecayEngine",
+    "ProjectNode",
+    "ProjectRecord",
+    "calculate_retention_strength",
+    "archive_cluster_to_cold_storage",
+    "list_cold_archives",
+    "load_cold_archive",
+    "BaseMemoryDecayProvider",
+    "DefaultProjectMemoryDecayProvider",
+    "MemoryDecayProvider",
+    "ProjectDecayConfig",
+    "ProjectMemoryDecayProvider",
 ]

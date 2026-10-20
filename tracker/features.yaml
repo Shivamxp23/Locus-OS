@@ -1174,11 +1174,24 @@ features:
   spec_sha:
     '§4.14: Project-Specific Memory Decay Engine': e40cf51381a79282
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/memory/project_decay.py
+    - sidecar/memory/cold_archiver.py
+    - sidecar/providers/project_memory_decay.py
+    symbols:
+    - file: sidecar/memory/project_decay.py
+      name: calculate_retention_strength
+    - file: sidecar/memory/project_decay.py
+      name: ProjectDecayEngine
+    - file: sidecar/memory/cold_archiver.py
+      name: archive_cluster_to_cold_storage
+    - file: sidecar/providers/project_memory_decay.py
+      name: MemoryDecayProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_project_decay.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_project_decay_service.py -q
   depends_on: []
 - id: F-0026
   title: Headroom CCR
