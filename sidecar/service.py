@@ -2223,6 +2223,132 @@ def create_app(
             "health": health,
         }
 
+    # Tool Timeout / Budget routes (SPEC §3.11 / F-0103)
+    from sidecar.tool_timeout_budget import ToolTimeoutBudgetProvider
+    active_registry.register("tool_timeout_budget", "default", ToolTimeoutBudgetProvider)
+    active_registry.register("tool_timeout", "default", ToolTimeoutBudgetProvider)
+    active_registry.register("timeout_budget", "default", ToolTimeoutBudgetProvider)
+
+    _tool_timeout_budget_instance: Optional[Any] = None
+
+    def _get_tool_timeout_budget_provider() -> Optional[Any]:
+        nonlocal _tool_timeout_budget_instance
+        provider_cls = app.state.registry.get_active_provider("tool_timeout_budget", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("tool_timeout", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("timeout_budget", default_name="default")
+        if not provider_cls:
+            return None
+        if _tool_timeout_budget_instance is None or not isinstance(_tool_timeout_budget_instance, provider_cls):
+            _tool_timeout_budget_instance = provider_cls()
+        return _tool_timeout_budget_instance
+
+    def _is_tool_timeout_budget_enabled() -> bool:
+        if config.get("locus.tool_timeout_budget.enabled") is False:
+            return False
+        if config.get("locus.tools.timeout.enabled") is False:
+            return False
+        if config.get("locus.brain.tool_timeout_budget.enabled") is False:
+            return False
+        return True
+
+    @app.post("/tools/timeout/resolve")
+    def resolve_tool_timeout_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Resolve effective execution timeout for a tool."""
+        if not _is_tool_timeout_budget_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_timeout_budget.enabled"},
+            )
+        provider = _get_tool_timeout_budget_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool timeout budget provider registered")
+        tool_name = body.get("tool_name", "")
+        if not tool_name:
+            raise HTTPException(status_code=400, detail="Missing required field: tool_name")
+        requested_timeout = body.get("requested_timeout")
+        try:
+            resolution = provider.resolve_timeout(
+                tool_name=tool_name,
+                requested_timeout=requested_timeout,
+            )
+            return {"status": "ok", "resolution": resolution.to_dict()}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @app.post("/tools/timeout/record")
+    def record_tool_execution_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Record completed tool execution duration and update turn budget."""
+        if not _is_tool_timeout_budget_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_timeout_budget.enabled"},
+            )
+        provider = _get_tool_timeout_budget_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool timeout budget provider registered")
+        tool_name = body.get("tool_name", "")
+        if not tool_name:
+            raise HTTPException(status_code=400, detail="Missing required field: tool_name")
+        elapsed_secs = body.get("elapsed_secs", 0.0)
+        timed_out = body.get("timed_out", False)
+        provider.record_execution(
+            tool_name=tool_name,
+            elapsed_secs=elapsed_secs,
+            timed_out=timed_out,
+        )
+        return {"status": "ok", "recorded": True}
+
+    @app.get("/tools/timeout/remaining")
+    def get_remaining_timeout_budget_route() -> Dict[str, Any]:
+        """Get remaining turn budget in seconds."""
+        if not _is_tool_timeout_budget_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_timeout_budget.enabled"},
+            )
+        provider = _get_tool_timeout_budget_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool timeout budget provider registered")
+        rem = provider.get_remaining_turn_budget()
+        return {"status": "ok", "remaining_turn_budget_secs": rem}
+
+    @app.post("/tools/timeout/reset")
+    def reset_tool_timeout_budget_route(body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Reset elapsed time and optionally configure new turn budget."""
+        if not _is_tool_timeout_budget_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_timeout_budget.enabled"},
+            )
+        provider = _get_tool_timeout_budget_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool timeout budget provider registered")
+        payload = body or {}
+        provider.reset_turn_budget(total_budget_secs=payload.get("total_budget_secs"))
+        return {"status": "ok", "reset": True}
+
+    @app.get("/tools/timeout/config")
+    def get_tool_timeout_config_route() -> Dict[str, Any]:
+        """Get Tool Timeout / Budget configuration and health."""
+        if not _is_tool_timeout_budget_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_timeout_budget.enabled"},
+            )
+        provider = _get_tool_timeout_budget_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool timeout budget provider registered")
+        health = provider.health_check()
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": provider.__class__.__name__,
+            "config": provider.get_config().to_dict(),
+            "health": health,
+        }
+
     return app
 
 

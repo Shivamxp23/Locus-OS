@@ -26,6 +26,7 @@ export * from "./title-generator";
 export * from "./tool-call-validation";
 export * from "./tool-output-accumulator";
 export * from "./tool-result-classification";
+export * from "./tool-timeout-budget";
 export * from "./ui/setup-wizard";
 export * from "./tools/index";
 export * from "./tools/locus_vault";
