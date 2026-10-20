@@ -1,10 +1,13 @@
 # Tracker status (computed, not written)
 
-- commit `560d1e835b` - 2026-10-20T15:07:27+0530 - with test runs
+- commit `d4e08d5d9f` - 2026-10-20T15:34:00+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **38.4%** | old claimed average 71.4% over 86 rows
-- integrated or better: 51 | proven: 0 | overclaims (claimed >= verified + 25): 50 | no evidence: 68
-- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 39, 'NO_EVIDENCE': 68, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **38.8%** | old claimed average 71.4% over 86 rows
+- integrated or better: 51 | proven: 0 | overclaims (claimed >= verified + 25): 49 | no evidence: 67
+- by level: {'FILES_PRESENT': 2, 'IMPLEMENTED': 1, 'INHERITED_OK': 12, 'INTEGRATED': 39, 'NO_EVIDENCE': 67, 'UNIT_VERIFIED': 4}
+
+## REGRESSIONS since last run
+- F-0125 Modularity foundation: provider registry: 85% -> 40%
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -54,7 +57,7 @@
 | F-0019 | File/Shell/Search Tools | 100% | 100% | INHERITED_OK |  |  |
 | F-0020 | Harness Delegation | 65% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0021 | Neo4j Agent Memory (POLE+O) | 80% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0022 | Holographic HRR | 30% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/holographic/. Create them or correct the path. |
+| F-0022 | Holographic HRR | 30% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0023 | STDP Reinforcement | 40% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/patterns/hebbian.py. Create them or correct the path. |
 | F-0024 | Spaced Repetition | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/spaced_rep.py. Create them or correct the path. |
 | F-0025 | Project Memory Decay | 25% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
@@ -157,4 +160,4 @@
 | F-0122 | LOCUS_SHORTHAND 4× Text Compressor | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0123 | 3-Level Tag Hierarchy & Semantic Indexing | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0124 | Auxiliary LLM Client | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
-| F-0125 | Modularity foundation: provider registry + c | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0125 | Modularity foundation: provider registry + c | - | 40% | IMPLEMENTED |  | Add evidence.unit (a pytest/vitest command over a test that mentions the feature, with rea |
