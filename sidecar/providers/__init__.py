@@ -113,6 +113,14 @@ from sidecar.providers.memory_tree import (
     TreeNode,
     TreeScopeConfig,
 )
+from sidecar.providers.memory_sync import (
+    BaseMemorySyncProvider,
+    BaseSyncPipeline,
+    MemorySyncConfig,
+    SourceScope,
+    SyncOutcome,
+    SyncPipelineKind,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -371,4 +379,10 @@ __all__ = [
     "MemoryTreeConfig",
     "TreeNode",
     "TreeScopeConfig",
+    "BaseMemorySyncProvider",
+    "BaseSyncPipeline",
+    "MemorySyncConfig",
+    "SourceScope",
+    "SyncOutcome",
+    "SyncPipelineKind",
 ]

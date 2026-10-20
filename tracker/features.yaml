@@ -3510,11 +3510,11 @@ features:
   - '§4.7: Memory Sync (Multi-Source Ingestion Pipelines)'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Memory
   verdict: AUGMENT
-  source: null
-  provider: null
-  layer: unknown
+  source: OpenHuman memory_sync/
+  provider: MemorySyncManager
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -3523,11 +3523,22 @@ features:
   spec_sha:
     '§4.7: Memory Sync (Multi-Source Ingestion Pipelines)': 285830d927f1d5bc
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/providers/memory_sync.py
+    - sidecar/memory_sync.py
+    - locus-extension/src/memory-sync.ts
+    symbols:
+    - file: sidecar/providers/memory_sync.py
+      name: BaseMemorySyncProvider
+    - file: sidecar/providers/memory_sync.py
+      name: BaseSyncPipeline
+    - file: sidecar/memory_sync.py
+      name: MemorySyncManager
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_memory_sync.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_memory_sync_service.py -q
   depends_on: []
 - id: F-0090
   title: Memory Queue (Async Job Pipeline)

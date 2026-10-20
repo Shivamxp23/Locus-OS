@@ -2772,6 +2772,133 @@ def create_app(
         matched = provider.topic_route(content=content, topics=topics)
         return {"status": "ok", "matched_scopes": matched}
 
+    # -------------------------------------------------------------------------
+    # SPEC §4.7 / F-0089 / US-48: Memory Sync (Multi-Source Ingestion Pipelines)
+    # -------------------------------------------------------------------------
+    from sidecar.memory_sync import MemorySyncManager
+    from sidecar.providers.memory_sync import MemorySyncConfig, SourceScope, SyncOutcome, SyncPipelineKind
+
+    active_registry.register("memory_sync", "default", MemorySyncManager)
+    active_registry.register(
+        "memory_sync_multi_source_ingestion_pipelines", "default", MemorySyncManager
+    )
+
+    _memory_sync_instance: Optional[MemorySyncManager] = None
+
+    def _get_memory_sync_provider() -> Optional[MemorySyncManager]:
+        nonlocal _memory_sync_instance
+        provider_cls = app.state.registry.get_active_provider("memory_sync", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider(
+                "memory_sync_multi_source_ingestion_pipelines", default_name="default"
+            )
+        if not provider_cls:
+            return None
+        if _memory_sync_instance is None or not isinstance(_memory_sync_instance, provider_cls):
+            sync_cfg = MemorySyncConfig(
+                enabled=config.get(
+                    "locus.memory.sync.enabled",
+                    config.get("locus.memory_sync_multi_source_ingestion_pipelines.enabled", True),
+                ),
+                periodic_interval_seconds=float(config.get("locus.memory.sync.periodic_interval_seconds", 1200.0)),
+                queue_scheduler_interval_seconds=float(
+                    config.get("locus.memory.sync.queue_scheduler_interval_seconds", 10800.0)
+                ),
+                daily_budget_cap=int(config.get("locus.memory.sync.daily_budget_cap", 1000)),
+                state_db_path=config.get("locus.memory.sync.state_db_path", None),
+            )
+            _memory_sync_instance = provider_cls(config=sync_cfg)
+        return _memory_sync_instance
+
+    def _is_memory_sync_enabled() -> bool:
+        if config.get("locus.memory_sync_multi_source_ingestion_pipelines.enabled") is False:
+            return False
+        if config.get("locus.memory.sync.enabled") is False:
+            return False
+        return True
+
+    @app.get("/memory/sync/config")
+    def get_memory_sync_config_route() -> Dict[str, Any]:
+        """Get Multi-Source Ingestion Sync subsystem configuration and health."""
+        if not _is_memory_sync_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_sync_multi_source_ingestion_pipelines.enabled"},
+            )
+        provider = _get_memory_sync_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory sync provider registered")
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": provider.__class__.__name__,
+            "health": provider.health(),
+        }
+
+    @app.get("/memory/sync/pipelines")
+    def list_memory_sync_pipelines_route() -> Dict[str, Any]:
+        """List all registered ingestion pipelines across Composio, Workspace, and MCP."""
+        if not _is_memory_sync_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_sync_multi_source_ingestion_pipelines.enabled"},
+            )
+        provider = _get_memory_sync_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory sync provider registered")
+        return {"status": "ok", "pipelines": provider.list_pipelines()}
+
+    @app.post("/memory/sync/tick_all")
+    def tick_all_memory_sync_route() -> Dict[str, Any]:
+        """Execute sync step across all active pipelines."""
+        if not _is_memory_sync_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_sync_multi_source_ingestion_pipelines.enabled"},
+            )
+        provider = _get_memory_sync_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory sync provider registered")
+        outcomes = provider.tick_all()
+        return {"status": "ok", "outcomes": {k: v.to_dict() for k, v in outcomes.items()}}
+
+    @app.post("/memory/sync/heal")
+    def heal_memory_sync_source_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Self-healing raw-archive set difference reconciliation per Spec §4.7 line 887."""
+        if not _is_memory_sync_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_sync_multi_source_ingestion_pipelines.enabled"},
+            )
+        provider = _get_memory_sync_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory sync provider registered")
+        src_data = body.get("source", {})
+        on_disk_files = body.get("on_disk_files", [])
+        if not isinstance(on_disk_files, list):
+            raise HTTPException(status_code=400, detail="Field 'on_disk_files' must be a list of file paths/IDs")
+        source = SourceScope(
+            tree_scope=src_data.get("tree_scope", "default"),
+            raw_archive_id=src_data.get("raw_archive_id", "default"),
+            provider=src_data.get("provider", "generic"),
+        )
+        healed = provider.check_and_rebuild_tree(source=source, on_disk_files=on_disk_files)
+        return {"status": "ok", "healed_count": len(healed), "healed_files": healed}
+
+    @app.post("/memory/sync/tick/{pipeline_id}")
+    def tick_single_memory_sync_route(pipeline_id: str) -> Dict[str, Any]:
+        """Execute single pipeline tick by ID."""
+        if not _is_memory_sync_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_sync_multi_source_ingestion_pipelines.enabled"},
+            )
+        provider = _get_memory_sync_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory sync provider registered")
+        outcome = provider.tick_pipeline(pipeline_id)
+        return {"status": "ok", "pipeline_id": pipeline_id, "outcome": outcome.to_dict()}
+
     return app
 
 
