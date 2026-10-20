@@ -1029,20 +1029,51 @@
       "id": "F-0028",
       "title": "Context References",
       "verdict": "AUGMENT",
-      "level": 0,
-      "label": "NO_EVIDENCE",
-      "pct": 0,
+      "level": 4,
+      "label": "INTEGRATED",
+      "pct": 85,
       "claimed_pct": 40.0,
-      "gap": 40.0,
+      "gap": -45.0,
       "flags": [
-        "NO_FILES_NAMED",
-        "OVERCLAIM"
+        "SPEC_REF_DANGLING"
       ],
       "reasons": [
-        "no evidence files declared"
+        "no recorded proof"
       ],
-      "next": "Name the files this feature lives in (evidence.files).",
-      "checks": {}
+      "next": "Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff.yaml.",
+      "checks": {
+        "symbols": {
+          "ok": true,
+          "problems": []
+        },
+        "unit": [
+          {
+            "cmd": "py -3 -m pytest tests/unit/test_context_references.py -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": ".......                                                                  [100%]\n7 passed in 0.61s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 2.6
+          }
+        ],
+        "guard": [],
+        "integration": [
+          {
+            "cmd": "py -3 -m pytest tests/integration/test_context_references_service.py -q",
+            "runner": "pytest",
+            "ran": true,
+            "ok": true,
+            "exit": 0,
+            "tail": "....                                                                     [100%]\n4 passed in 2.16s\n",
+            "vacuous": false,
+            "why_vacuous": "",
+            "seconds": 4.2
+          }
+        ]
+      }
     },
     "F-0029": {
       "id": "F-0029",
