@@ -54,6 +54,11 @@ from sidecar.providers.model_routing import (
     BaseModelRoutingProvider,
     RoutingHints,
 )
+import sidecar.image_generation  # ensures default image generation provider is registered
+from sidecar.providers.image_generation import (
+    BaseImageGenerationProvider,
+    ImageGenerationRequest,
+)
 
 logger = logging.getLogger("locus.service")
 
@@ -1561,6 +1566,71 @@ def create_app(
             "status": "ok",
             "enabled": True,
             "provider": provider_cls.__name__,
+        }
+
+    # -------------------------------------------------------------------------
+    # SPEC §2.9 / F-0098 / US-38: Image Generation Routes
+    # -------------------------------------------------------------------------
+    def _is_image_generation_enabled() -> bool:
+        val = config.get("locus.image_generation.enabled")
+        if val is None:
+            val = config.get("locus.images.enabled", True)
+        return bool(val)
+
+    @app.post("/images/generate")
+    def generate_image_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate image from prompt and model parameters."""
+        if not _is_image_generation_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.image_generation.enabled"},
+            )
+        provider_cls = app.state.registry.get_active_provider("image_generation", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("images", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No image generation provider registered")
+        provider = provider_cls()
+        req = ImageGenerationRequest.from_dict(body)
+        try:
+            result = provider.generate_image(req)
+            return {"status": "ok", "result": result.to_dict()}
+        except ValueError as ve:
+            raise HTTPException(status_code=400, detail=str(ve))
+        except RuntimeError as re:
+            raise HTTPException(status_code=500, detail=str(re))
+
+    @app.get("/images/models")
+    def list_image_models_route() -> Dict[str, Any]:
+        """List registered image generation models."""
+        if not _is_image_generation_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.image_generation.enabled"},
+            )
+        provider_cls = app.state.registry.get_active_provider("image_generation", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No image generation provider registered")
+        provider = provider_cls()
+        models = [m.to_dict() for m in provider.list_models()]
+        return {"status": "ok", "models": models}
+
+    @app.get("/images/config")
+    def get_image_config_route() -> Dict[str, Any]:
+        """Get image generation configuration and status."""
+        if not _is_image_generation_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.image_generation.enabled"},
+            )
+        provider_cls = app.state.registry.get_active_provider("image_generation", default_name="default")
+        if not provider_cls:
+            raise HTTPException(status_code=404, detail="No image generation provider registered")
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": provider_cls.__name__,
+            "default_model": "openai/dall-e-3",
         }
 
     return app

@@ -3830,23 +3830,45 @@ features:
   - '§2.9: Image Generation'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Core
   verdict: KEEP-PI
-  source: null
-  provider: null
-  layer: unknown
+  source: pi/images.ts
+  provider: image_generation
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
-  spec_targets: []
+  spec_targets:
+  - sidecar/image_generation.py
+  - locus-extension/src/image-generation.ts
   spec_sha:
     '§2.9: Image Generation': 0d212844c386c27e
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/image_generation.py
+    - sidecar/providers/image_generation.py
+    - locus-extension/src/image-generation.ts
+    symbols:
+    - file: sidecar/image_generation.py
+      contains:
+      - ImageGenerationProvider
+      - DEFAULT_IMAGE_MODELS
+      - TINY_PNG_B64
+    - file: sidecar/providers/image_generation.py
+      contains:
+      - BaseImageGenerationProvider
+      - ImageGenerationRequest
+      - ImageGenerationResult
+      - ImageModelDescriptor
+    - file: locus-extension/src/image-generation.ts
+      contains:
+      - ImageGenerationClient
+      - DEFAULT_IMAGE_CONFIG
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - pytest tests/unit/test_image_generation.py
+    integration:
+    - pytest tests/integration/test_image_generation_service.py
   depends_on: []
 - id: F-0099
   title: Git Tools

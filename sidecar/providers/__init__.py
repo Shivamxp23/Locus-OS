@@ -57,6 +57,12 @@ from sidecar.providers.extension_lifecycle import (
     ExtensionHookDescriptor,
     LifecycleDispatchResult,
 )
+from sidecar.providers.image_generation import (
+    BaseImageGenerationProvider,
+    ImageGenerationRequest,
+    ImageGenerationResult,
+    ImageModelDescriptor,
+)
 from sidecar.providers.life_os import (
     BaseLifeOSProvider,
     CheckInInput,
@@ -164,6 +170,7 @@ __all__ = [
     "GuardMode",
     "BaseExtensionLifecycleProvider",
     "BaseHarnessProvider",
+    "BaseImageGenerationProvider",
     "BaseLearningProvider",
     "BaseLifeOSProvider",
     "BaseModelManagementProvider",
@@ -202,6 +209,9 @@ __all__ = [
     "GoalStackLevel",
     "HarnessType",
     "HealthCheckResult",
+    "ImageGenerationRequest",
+    "ImageGenerationResult",
+    "ImageModelDescriptor",
     "IntentType",
     "LatencyBudget",
     "LayerBudgetConfig",
