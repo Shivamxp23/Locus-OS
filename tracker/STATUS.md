@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `ac780ee667` - 2026-10-20T11:10:57+0530 - with test runs
-- guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **30.3%** | old claimed average 71.4% over 86 rows
-- integrated or better: 39 | proven: 0 | overclaims (claimed >= verified + 25): 52 | no evidence: 80
-- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 27, 'NO_EVIDENCE': 80, 'UNIT_VERIFIED': 4}
+- commit `48d84ac5dd` (dirty working tree) - 2026-10-20T11:32:36+0530 - with test runs
+- guard: PASS {'FAIL': 0, 'WARN': 11, 'INFO': 0}
+- features: 125 | verified average **31.0%** | old claimed average 71.4% over 86 rows
+- integrated or better: 40 | proven: 0 | overclaims (claimed >= verified + 25): 51 | no evidence: 79
+- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 28, 'NO_EVIDENCE': 79, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -68,7 +68,7 @@
 | F-0033 | ACP Protocol | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/acp_server.py. Create them or correct the path. |
 | F-0034 | Plugin LLM | 10% | 0% | NO_EVIDENCE | NO_FILES_NAMED | Name the files this feature lives in (evidence.files). |
 | F-0035 | Learning / Profiling / Reward Model | 70% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0036 | Subagents / AutoResearch | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/delegation/. Create them or correct the path. |
+| F-0036 | Subagents / AutoResearch | 60% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0037 | Injection Filter | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/injection_filter.py. Create them or correct the |
 | F-0038 | Shell Sandbox | 100% | 100% | INHERITED_OK |  |  |
 | F-0039 | Project Trust | 100% | 100% | INHERITED_OK |  |  |
