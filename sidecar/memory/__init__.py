@@ -16,6 +16,21 @@ from sidecar.memory.hrr_codebook import (
     generate_unitary_vector,
 )
 
+from sidecar.memory.spaced_repetition import (
+    calculate_next_review,
+    calculate_retention_probability,
+    evaluate_node_retention,
+)
+from sidecar.memory.memory_scheduler import (
+    SpacedRepetitionMemoryScheduler,
+    MemoryScheduler,
+)
+from sidecar.providers.spaced_repetition import (
+    MemoryNodeState,
+    SpacedRepetitionConfig,
+    MemoryConsolidationProvider,
+)
+
 __all__ = [
     "HolographicMemory",
     "HolographicMemoryBackend",
@@ -26,4 +41,12 @@ __all__ = [
     "cleanup_memory",
     "HRRCodebook",
     "generate_unitary_vector",
+    "calculate_next_review",
+    "calculate_retention_probability",
+    "evaluate_node_retention",
+    "SpacedRepetitionMemoryScheduler",
+    "MemoryScheduler",
+    "MemoryNodeState",
+    "SpacedRepetitionConfig",
+    "MemoryConsolidationProvider",
 ]

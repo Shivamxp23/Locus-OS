@@ -1115,10 +1115,34 @@ features:
   evidence:
     files:
     - sidecar/spaced_rep.py
-    symbols: []
+    - sidecar/memory/spaced_repetition.py
+    - sidecar/memory/memory_scheduler.py
+    - sidecar/providers/spaced_repetition.py
+    - sidecar/brain/inner_loop.py
+    - locus-extension/src/memory/spaced-repetition.ts
+    - locus-extension/src/spaced-repetition.ts
+    symbols:
+    - file: sidecar/memory/spaced_repetition.py
+      name: calculate_next_review
+    - file: sidecar/memory/spaced_repetition.py
+      name: calculate_retention_probability
+    - file: sidecar/memory/spaced_repetition.py
+      name: evaluate_node_retention
+    - file: sidecar/memory/memory_scheduler.py
+      name: SpacedRepetitionMemoryScheduler
+    - file: sidecar/providers/spaced_repetition.py
+      name: MemoryNodeState
+    - file: sidecar/providers/spaced_repetition.py
+      name: SpacedRepetitionConfig
+    - file: sidecar/providers/spaced_repetition.py
+      name: MemoryConsolidationProvider
+    - file: sidecar/brain/inner_loop.py
+      name: ProactiveInnerLoopMemoryBridge
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_spaced_repetition.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_spaced_repetition_service.py -q
   depends_on: []
 - id: F-0025
   title: Project Memory Decay

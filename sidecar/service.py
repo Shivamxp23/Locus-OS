@@ -3658,6 +3658,180 @@ def create_app(
         provider.set_edge_weight(edge_id, w)
         return {"status": "ok", "edge_id": edge_id, "weight": provider.get_edge_weight(edge_id)}
 
+    # SPEC §4.13 / F-0024 / US-53: Spaced Repetition Memory Consolidation (FSRS / SM-2)
+    from sidecar.memory.memory_scheduler import SpacedRepetitionMemoryScheduler
+    from sidecar.providers.spaced_repetition import (
+        MemoryConsolidationProvider,
+        MemoryNodeState,
+        SpacedRepetitionConfig,
+    )
+
+    active_registry.register("spaced_repetition", "default", SpacedRepetitionMemoryScheduler)
+    active_registry.register("memory_consolidation", "default", SpacedRepetitionMemoryScheduler)
+
+    _sr_instance: Optional[MemoryConsolidationProvider] = None
+
+    def _get_sr_provider() -> Optional[MemoryConsolidationProvider]:
+        nonlocal _sr_instance
+        provider_cls = app.state.registry.get_active_provider("spaced_repetition", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("memory_consolidation", default_name="default")
+        if not provider_cls:
+            return None
+        if _sr_instance is None or (isinstance(provider_cls, type) and not isinstance(_sr_instance, provider_cls)):
+            db_path = config.get("locus.memory.spaced_repetition.db_path", None)
+            sr_cfg = SpacedRepetitionConfig(
+                enabled=config.get("locus.spaced_repetition.enabled", config.get("locus.memory.spaced_repetition.enabled", True)),
+                default_ease_factor=float(config.get("locus.memory.spaced_repetition.default_ease_factor", 2.50)),
+                min_ease_factor=float(config.get("locus.memory.spaced_repetition.min_ease_factor", 1.30)),
+                initial_interval_first=int(config.get("locus.memory.spaced_repetition.initial_interval_first", 1)),
+                initial_interval_second=int(config.get("locus.memory.spaced_repetition.initial_interval_second", 6)),
+                core_fact_min_repetitions=int(config.get("locus.memory.spaced_repetition.core_fact_min_repetitions", 5)),
+                core_fact_min_ease=float(config.get("locus.memory.spaced_repetition.core_fact_min_ease", 2.50)),
+                max_batch_size=int(config.get("locus.memory.spaced_repetition.max_batch_size", 50)),
+                storage_path=db_path,
+            )
+            if isinstance(provider_cls, type):
+                _sr_instance = provider_cls(config=sr_cfg, db_path=db_path)
+            else:
+                _sr_instance = provider_cls()
+        return _sr_instance
+
+    def _is_sr_enabled() -> bool:
+        if config.get("locus.spaced_repetition.enabled") is False:
+            return False
+        if config.get("locus.memory.spaced_repetition.enabled") is False:
+            return False
+        return True
+
+    @app.get("/memory/spaced_repetition/config")
+    def get_sr_config_route() -> Dict[str, Any]:
+        """Get Spaced Repetition configuration and status."""
+        if not _is_sr_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.spaced_repetition.enabled"},
+            )
+        provider = _get_sr_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No Spaced Repetition provider registered")
+        return {"status": "ok", "config": provider.config.to_dict()}
+
+    @app.post("/memory/spaced_repetition/calculate")
+    def calculate_sr_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Statelessly compute next SM-2 review interval without mutating store."""
+        if not _is_sr_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.spaced_repetition.enabled"},
+            )
+        provider = _get_sr_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No Spaced Repetition provider registered")
+        raw_state = body.get("state", {})
+        state = MemoryNodeState.from_dict(raw_state)
+        grade = int(body.get("quality_grade", 3))
+        ts = body.get("timestamp")
+        timestamp = float(ts) if ts is not None else None
+        next_state = provider.calculate_next_review(state, grade, timestamp=timestamp)
+        return next_state.to_dict()
+
+    @app.post("/memory/spaced_repetition/review")
+    def record_sr_review_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Record review outcome for a node and advance its schedule."""
+        if not _is_sr_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.spaced_repetition.enabled"},
+            )
+        provider = _get_sr_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No Spaced Repetition provider registered")
+        node_id = str(body.get("node_id", ""))
+        grade = int(body.get("quality_grade", 3))
+        ts = body.get("timestamp")
+        timestamp = float(ts) if ts is not None else None
+        updated = provider.record_review(node_id, grade, timestamp=timestamp)
+        return updated.to_dict()
+
+    @app.get("/memory/spaced_repetition/due")
+    def get_sr_due_nodes_route(limit: int = 50, timestamp: Optional[float] = None) -> Dict[str, Any]:
+        """Fetch nodes currently due for memory review."""
+        if not _is_sr_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.spaced_repetition.enabled"},
+            )
+        provider = _get_sr_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No Spaced Repetition provider registered")
+        due = provider.get_due_nodes(limit=limit, timestamp=timestamp)
+        return {"status": "ok", "count": len(due), "nodes": [n.to_dict() for n in due]}
+
+    @app.post("/memory/spaced_repetition/consolidate")
+    def run_sr_consolidation_route(body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Run nightly memory consolidation worker over due nodes."""
+        if not _is_sr_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.spaced_repetition.enabled"},
+            )
+        provider = _get_sr_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No Spaced Repetition provider registered")
+        b = body or {}
+        limit = int(b.get("limit", 50))
+        simulated_grades = b.get("simulated_grades")
+        ts = b.get("timestamp")
+        timestamp = float(ts) if ts is not None else None
+        res = provider.run_consolidation(limit=limit, simulated_grades=simulated_grades, timestamp=timestamp)
+        return {"status": "ok", "result": res}
+
+    @app.get("/memory/spaced_repetition/core_facts")
+    def list_sr_core_facts_route() -> Dict[str, Any]:
+        """List all nodes promoted to permanent core facts."""
+        if not _is_sr_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.spaced_repetition.enabled"},
+            )
+        provider = _get_sr_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No Spaced Repetition provider registered")
+        facts = provider.list_core_facts()
+        return {"status": "ok", "count": len(facts), "core_facts": [f.to_dict() for f in facts]}
+
+    @app.get("/memory/spaced_repetition/nodes/{node_id}")
+    def get_sr_node_route(node_id: str) -> Dict[str, Any]:
+        """Get state for a memory node."""
+        if not _is_sr_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.spaced_repetition.enabled"},
+            )
+        provider = _get_sr_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No Spaced Repetition provider registered")
+        node = provider.get_node_state(node_id)
+        if not node:
+            raise HTTPException(status_code=404, detail=f"Node {node_id} not found")
+        return node.to_dict()
+
+    @app.post("/memory/spaced_repetition/nodes/{node_id}")
+    def save_sr_node_route(node_id: str, body: Dict[str, Any]) -> Dict[str, Any]:
+        """Initialize or update state for a memory node."""
+        if not _is_sr_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.spaced_repetition.enabled"},
+            )
+        provider = _get_sr_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No Spaced Repetition provider registered")
+        node = MemoryNodeState.from_dict({**body, "node_id": node_id})
+        provider.save_node_state(node)
+        return {"status": "ok", "node": node.to_dict()}
+
     return app
 
 

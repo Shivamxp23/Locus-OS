@@ -163,6 +163,19 @@ from sidecar.providers.stdp_reinforcement import (
     W_MAX,
     W_MIN,
 )
+from sidecar.providers.spaced_repetition import (
+    BaseSpacedRepetitionProvider,
+    CORE_FACT_MIN_EASE,
+    CORE_FACT_MIN_REPETITIONS,
+    DEFAULT_EASE_FACTOR,
+    DEFAULT_STABILITY,
+    INITIAL_INTERVAL_FIRST,
+    INITIAL_INTERVAL_SECOND,
+    MIN_EASE_FACTOR,
+    MemoryConsolidationProvider,
+    MemoryNodeState,
+    SpacedRepetitionConfig,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -461,4 +474,15 @@ __all__ = [
     "TurnAuditLog",
     "W_MAX",
     "W_MIN",
+    "BaseSpacedRepetitionProvider",
+    "CORE_FACT_MIN_EASE",
+    "CORE_FACT_MIN_REPETITIONS",
+    "DEFAULT_EASE_FACTOR",
+    "DEFAULT_STABILITY",
+    "INITIAL_INTERVAL_FIRST",
+    "INITIAL_INTERVAL_SECOND",
+    "MIN_EASE_FACTOR",
+    "MemoryConsolidationProvider",
+    "MemoryNodeState",
+    "SpacedRepetitionConfig",
 ]
