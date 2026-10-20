@@ -142,3 +142,5 @@
 {"event":"accepted","story":"US-52","feature":"F-0023","level":4,"note":"All 12 unit and integration tests passing, exponential STDP LTP/LTD updates, clamping [0.05, 1.0], and prune tagging verified at L4 INTEGRATED","date":"2027-04-20","commit":"d403497606f1"}
 {"event":"closed","sprint":"S46","date":"2027-04-20","planned_points":2,"velocity":2,"done":["US-52"],"not_done":{}}
 {"event":"planned","sprint":"S47","start":"2027-04-21","end":"2027-04-24","goal":"Everything is recorded and backed up to the vault; Neo4j Agent Memory is the memory layer.","capacity":2,"points":2,"stories":["US-53"],"date":"2027-04-21"}
+{"event":"accepted","story":"US-53","feature":"F-0024","level":4,"note":"All 15 unit and integration tests passing, SM-2 interval progression (1d->6d->I*EF), ease factor update with 1.30 clamp, FSRS stability, and nightly consolidation verified at L4 INTEGRATED","date":"2027-04-24","commit":"489def823376"}
+{"event":"closed","sprint":"S47","date":"2027-04-24","planned_points":2,"velocity":2,"done":["US-53"],"not_done":{}}
