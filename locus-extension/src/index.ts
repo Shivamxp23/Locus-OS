@@ -35,6 +35,8 @@ export * from "./memory-queue";
 export * from "./memory-diff";
 export * from "./holographic";
 export * from "./memory/hrr-adapter";
+export * from "./stdp-reinforcement";
+export * from "./memory/stdp-updater";
 export * from "./ui/setup-wizard";
 export * from "./tools/index";
 export * from "./tools/locus_vault";

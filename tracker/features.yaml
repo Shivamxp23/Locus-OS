@@ -1037,7 +1037,7 @@ features:
   category: Memory
   verdict: LOCUS-NEW
   source: Locus design spec
-  provider: null
+  provider: GraphPlasticityProvider
   layer: sidecar
   inherited: false
   manual: false
@@ -1059,11 +1059,29 @@ features:
     '§4.12: STDP Reinforcement (Spike-Timing-Dependent Plasticity)': 47739408cc3c9631
   evidence:
     files:
+    - sidecar/providers/stdp_reinforcement.py
+    - sidecar/memory/stdp_updater.py
+    - sidecar/memory/graph_reinforcement.py
+    - locus-extension/src/memory/stdp-updater.ts
+    - locus-extension/src/stdp-reinforcement.ts
     - sidecar/patterns/hebbian.py
-    symbols: []
+    - sidecar/brain/reward_model.py
+    symbols:
+    - file: sidecar/providers/stdp_reinforcement.py
+      name: BaseGraphPlasticityProvider
+    - file: sidecar/providers/stdp_reinforcement.py
+      name: RetrievalEvent
+    - file: sidecar/providers/stdp_reinforcement.py
+      name: OutcomeEvent
+    - file: sidecar/memory/stdp_updater.py
+      name: apply_stdp_update
+    - file: sidecar/memory/graph_reinforcement.py
+      name: GraphPlasticityProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_stdp_reinforcement.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_stdp_reinforcement_service.py -q
   depends_on: []
 - id: F-0024
   title: Spaced Repetition

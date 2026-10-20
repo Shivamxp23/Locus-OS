@@ -3525,6 +3525,139 @@ def create_app(
             raise HTTPException(status_code=404, detail=f"Symbol {symbol} not found in codebook")
         return {"status": "ok", "symbol": symbol, "vector": vec.to_dict()}
 
+    # SPEC §4.12 / F-0023 / US-52: STDP Reinforcement (Spike-Timing-Dependent Plasticity)
+    from sidecar.memory.graph_reinforcement import GraphPlasticityProvider
+    from sidecar.providers.stdp_reinforcement import (
+        OutcomeEvent,
+        RetrievalEvent,
+        STDPConfig,
+        TraversedEdgeRecord,
+        TurnAuditLog,
+    )
+
+    active_registry.register("stdp_reinforcement", "default", GraphPlasticityProvider)
+    active_registry.register("graph_plasticity", "default", GraphPlasticityProvider)
+
+    _stdp_instance: Optional[GraphPlasticityProvider] = None
+
+    def _get_stdp_provider() -> Optional[GraphPlasticityProvider]:
+        nonlocal _stdp_instance
+        provider_cls = app.state.registry.get_active_provider("stdp_reinforcement", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("graph_plasticity", default_name="default")
+        if not provider_cls:
+            return None
+        if _stdp_instance is None or not isinstance(_stdp_instance, provider_cls):
+            db_path = config.get("locus.memory.stdp.db_path", None)
+            stdp_cfg = STDPConfig(
+                enabled=config.get("locus.stdp_reinforcement.enabled", config.get("locus.memory.stdp.enabled", True)),
+                a_plus=float(config.get("locus.memory.stdp.a_plus", 0.15)),
+                a_minus=float(config.get("locus.memory.stdp.a_minus", 0.12)),
+                tau_plus=float(config.get("locus.memory.stdp.tau_plus", 300.0)),
+                tau_minus=float(config.get("locus.memory.stdp.tau_minus", 600.0)),
+                w_min=float(config.get("locus.memory.stdp.w_min", 0.05)),
+                w_max=float(config.get("locus.memory.stdp.w_max", 1.00)),
+                prune_threshold=float(config.get("locus.memory.stdp.prune_threshold", 0.08)),
+                storage_path=db_path,
+            )
+            _stdp_instance = provider_cls(config=stdp_cfg, db_path=db_path)
+        return _stdp_instance
+
+    def _is_stdp_enabled() -> bool:
+        if config.get("locus.stdp_reinforcement.enabled") is False:
+            return False
+        if config.get("locus.memory.stdp.enabled") is False:
+            return False
+        return True
+
+    @app.get("/memory/stdp/config")
+    def get_stdp_config_route() -> Dict[str, Any]:
+        """Get STDP Reinforcement configuration and status."""
+        if not _is_stdp_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.stdp_reinforcement.enabled"},
+            )
+        provider = _get_stdp_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No STDP provider registered")
+        return {"status": "ok", "config": provider.config.to_dict()}
+
+    @app.post("/memory/stdp/update")
+    def calculate_stdp_update_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Compute single edge STDP update."""
+        if not _is_stdp_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.stdp_reinforcement.enabled"},
+            )
+        provider = _get_stdp_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No STDP provider registered")
+        retrieval = RetrievalEvent.from_dict(body.get("retrieval", {}))
+        outcome = OutcomeEvent.from_dict(body.get("outcome", {}))
+        current_w = float(body.get("current_weight", 0.50))
+        new_w = provider.apply_stdp_update(retrieval, outcome, current_w)
+        return {"status": "ok", "updated_weight": new_w}
+
+    @app.post("/memory/stdp/process_turn")
+    def process_turn_stdp_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Batch graph reinforcement cycle for turn audit log."""
+        if not _is_stdp_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.stdp_reinforcement.enabled"},
+            )
+        provider = _get_stdp_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No STDP provider registered")
+        turn_log = TurnAuditLog.from_dict(body)
+        res = provider.process_turn_stdp(turn_log)
+        return {"status": "ok", "result": res}
+
+    @app.get("/memory/stdp/prune_candidates")
+    def list_stdp_prune_candidates_route() -> Dict[str, Any]:
+        """List edges tagged or eligible for pruning."""
+        if not _is_stdp_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.stdp_reinforcement.enabled"},
+            )
+        provider = _get_stdp_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No STDP provider registered")
+        candidates = provider.list_prune_candidates()
+        return {"status": "ok", "candidates": candidates}
+
+    @app.get("/memory/stdp/weights/{edge_id}")
+    def get_stdp_edge_weight_route(edge_id: str) -> Dict[str, Any]:
+        """Get weight for an edge."""
+        if not _is_stdp_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.stdp_reinforcement.enabled"},
+            )
+        provider = _get_stdp_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No STDP provider registered")
+        w = provider.get_edge_weight(edge_id)
+        return {"status": "ok", "edge_id": edge_id, "weight": w}
+
+    @app.post("/memory/stdp/weights/{edge_id}")
+    def set_stdp_edge_weight_route(edge_id: str, body: Dict[str, Any]) -> Dict[str, Any]:
+        """Set weight for an edge."""
+        if not _is_stdp_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.stdp_reinforcement.enabled"},
+            )
+        provider = _get_stdp_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No STDP provider registered")
+        w = float(body.get("weight", 0.50))
+        provider.set_edge_weight(edge_id, w)
+        return {"status": "ok", "edge_id": edge_id, "weight": provider.get_edge_weight(edge_id)}
+
     return app
 
 
