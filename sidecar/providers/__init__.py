@@ -198,6 +198,10 @@ from sidecar.providers.memory_provider import (
     MemoryManager,
     MemoryProvider,
 )
+from sidecar.providers.session_management import (
+    BaseSessionManagementProvider,
+    DefaultSessionManagementProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -521,4 +525,6 @@ __all__ = [
     "DefaultMemoryProvider",
     "MemoryManager",
     "MemoryProvider",
+    "BaseSessionManagementProvider",
+    "DefaultSessionManagementProvider",
 ]

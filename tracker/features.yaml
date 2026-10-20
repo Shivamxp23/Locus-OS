@@ -1255,7 +1255,7 @@ features:
   category: Sessions
   verdict: AUGMENT
   source: Pi session-manager.ts + Locus
-  provider: null
+  provider: SessionManagementProvider
   layer: sidecar
   inherited: false
   manual: false
@@ -1267,19 +1267,33 @@ features:
     pct: 80
     remaining: Bridge Pi sessions with sidecar sessions
     notes: Two session systems coexist
-    key_files_raw: sidecar/memory.py, sidecar/session_export.py
+    key_files_raw: sidecar/sessions/session_manager.py, sidecar/session_export.py
   spec_targets:
-  - locus/core/session-bridge.ts
+  - locus-extension/src/session-bridge.ts
   spec_sha:
     '§5.1-5.8: Session Management & Telegram Bridge': c87e52a20fd82846
   evidence:
     files:
-    - sidecar/memory.py
+    - sidecar/sessions/session_manager.py
     - sidecar/session_export.py
-    symbols: []
+    - sidecar/providers/session_management.py
+    - locus-extension/src/session-bridge.ts
+    symbols:
+    - file: sidecar/sessions/session_manager.py
+      name: SessionManager
+    - file: sidecar/sessions/session_manager.py
+      name: TelegramSessionBridge
+    - file: sidecar/session_export.py
+      name: export_session
+    - file: sidecar/providers/session_management.py
+      name: DefaultSessionManagementProvider
+    - file: locus-extension/src/session-bridge.ts
+      name: SessionBridgeClient
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_session_management.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_session_management_service.py -q
   depends_on: []
 - id: F-0028
   title: Context References

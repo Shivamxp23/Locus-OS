@@ -4282,6 +4282,183 @@ def create_app(
         res_str = mgr.handle_tool_call(tool_name=tool_name, args=args)
         return {"status": "ok", "result": res_str}
 
+    # Session Management & Telegram Bridge routes (SPEC §5.1-5.8: Session Management & Telegram Bridge / F-0027 / US-58)
+    from sidecar.sessions.session_manager import SessionManager, TelegramSessionBridge, SessionEntry
+    from sidecar.session_export import export_session
+    from sidecar.providers.session_management import BaseSessionManagementProvider, DefaultSessionManagementProvider
+
+    active_registry.register("session_management", "default_session_management", DefaultSessionManagementProvider)
+    active_registry.register("sessions", "default_sessions", DefaultSessionManagementProvider)
+
+    _session_provider_instance: Optional[BaseSessionManagementProvider] = None
+
+    def _is_session_management_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("session_management"):
+            return False
+        val1 = config.get("locus.session_management.enabled")
+        if val1 is not None and not config.is_enabled("locus.session_management.enabled"):
+            return False
+        val2 = config.get("locus.sessions.enabled")
+        if val2 is not None and not config.is_enabled("locus.sessions.enabled"):
+            return False
+        return True
+
+    def _get_session_provider() -> BaseSessionManagementProvider:
+        nonlocal _session_provider_instance
+        if _session_provider_instance is None:
+            provider_cls = app.state.registry.get_active_provider(
+                "session_management", default_name="default_session_management"
+            )
+            if provider_cls:
+                try:
+                    res = provider_cls()
+                    if isinstance(res, BaseSessionManagementProvider):
+                        _session_provider_instance = res
+                    else:
+                        _session_provider_instance = DefaultSessionManagementProvider()
+                except Exception:
+                    _session_provider_instance = DefaultSessionManagementProvider()
+            else:
+                _session_provider_instance = DefaultSessionManagementProvider()
+        return _session_provider_instance
+
+    @app.get("/sessions/config")
+    def get_sessions_config_route() -> Dict[str, Any]:
+        """SPEC §5.1-5.8: Get Session Management configuration & enabled state."""
+        if not _is_session_management_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Session Management is disabled", "disabled": "locus.session_management.enabled"},
+            )
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": "default_session_management",
+            "sessions_dir": str(_get_session_provider().session_manager.sessions_dir if hasattr(_get_session_provider(), "session_manager") else ""),
+        }
+
+    @app.post("/sessions/create")
+    def create_session_route(body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """SPEC §5.1-5.8 line 5747: create_session()."""
+        if not _is_session_management_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Session Management is disabled", "disabled": "locus.session_management.enabled"},
+            )
+        data = body or {}
+        session_id = data.get("session_id")
+        parent_id = data.get("parent_id")
+        fork_point = data.get("fork_point")
+        provider = _get_session_provider()
+        session = provider.create_session(session_id=session_id, parent_id=parent_id, fork_point=fork_point)
+        return {
+            "status": "ok",
+            "session_id": session.session_id,
+            "parent_session_id": session.parent_session_id,
+            "fork_point": session.fork_point,
+            "entries_count": len(session.entries),
+            "storage_path": str(session.storage_path),
+        }
+
+    @app.get("/sessions/{session_id}")
+    def get_session_route(session_id: str) -> Dict[str, Any]:
+        """SPEC §5.1-5.8 line 5762: load_session(session_id)."""
+        if not _is_session_management_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Session Management is disabled", "disabled": "locus.session_management.enabled"},
+            )
+        provider = _get_session_provider()
+        try:
+            session = provider.load_session(session_id)
+        except FileNotFoundError:
+            raise HTTPException(status_code=404, detail=f"Session {session_id} not found")
+        return {
+            "status": "ok",
+            "session_id": session.session_id,
+            "parent_session_id": session.parent_session_id,
+            "fork_point": session.fork_point,
+            "entries_count": len(session.entries),
+            "entries": [e.to_dict() for e in session.entries],
+        }
+
+    @app.post("/sessions/{session_id}/fork")
+    def fork_session_route(session_id: str, body: Dict[str, Any]) -> Dict[str, Any]:
+        """SPEC §5.1-5.8 lines 5746-5758: fork_session(parent_session_id, fork_point)."""
+        if not _is_session_management_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Session Management is disabled", "disabled": "locus.session_management.enabled"},
+            )
+        fork_point = str(body.get("fork_point", ""))
+        summary = body.get("summary")
+        provider = _get_session_provider()
+        try:
+            new_session = provider.fork_session(
+                parent_session_id=session_id,
+                fork_point=fork_point,
+                summary=summary,
+            )
+        except FileNotFoundError:
+            raise HTTPException(status_code=404, detail=f"Parent session {session_id} not found")
+        return {
+            "status": "ok",
+            "session_id": new_session.session_id,
+            "parent_session_id": new_session.parent_session_id,
+            "fork_point": new_session.fork_point,
+            "entries_count": len(new_session.entries),
+            "storage_path": str(new_session.storage_path),
+        }
+
+    @app.post("/sessions/{session_id}/resume")
+    def resume_session_route(session_id: str) -> Dict[str, Any]:
+        """SPEC §5.1-5.8 lines 5761-5769: resume_session(session_id)."""
+        if not _is_session_management_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Session Management is disabled", "disabled": "locus.session_management.enabled"},
+            )
+        provider = _get_session_provider()
+        try:
+            result = provider.resume_session(session_id)
+        except FileNotFoundError:
+            raise HTTPException(status_code=404, detail=f"Session {session_id} not found")
+        return {"status": "ok", **result}
+
+    @app.post("/sessions/{session_id}/export")
+    def export_session_route(session_id: str, body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """SPEC §5.1-5.8: Export session to markdown, json, or jsonl."""
+        if not _is_session_management_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Session Management is disabled", "disabled": "locus.session_management.enabled"},
+            )
+        data = body or {}
+        fmt = str(data.get("format", "markdown"))
+        provider = _get_session_provider()
+        try:
+            return provider.export_session(session_id, format=fmt)
+        except FileNotFoundError:
+            raise HTTPException(status_code=404, detail=f"Session {session_id} not found")
+        except ValueError as ve:
+            raise HTTPException(status_code=400, detail=str(ve))
+
+    @app.post("/sessions/telegram/bridge")
+    def telegram_bridge_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """SPEC §5.1-5.8 lines 5771-5792: bridge_telegram_to_session(telegram_chat_id, user_message)."""
+        if not _is_session_management_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Session Management is disabled", "disabled": "locus.session_management.enabled"},
+            )
+        chat_id = body.get("telegram_chat_id")
+        user_message = body.get("user_message", "")
+        if chat_id is None:
+            raise HTTPException(status_code=400, detail="Missing required field: telegram_chat_id")
+        provider = _get_session_provider()
+        res = provider.bridge_telegram(telegram_chat_id=chat_id, user_message=str(user_message))
+        return res
+
     return app
 
 
