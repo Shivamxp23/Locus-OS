@@ -2462,6 +2462,158 @@ def create_app(
             return {"status": "ok", "tool_name": tool_name, "enabled": enabled}
         except KeyError as ke:
             raise HTTPException(status_code=404, detail=str(ke))
+
+    # -------------------------------------------------------------------------
+    # SPEC §4.1-4.2 / F-0021 / US-46: Graph-Native Memory (Neo4j POLE+O) Routes
+    # -------------------------------------------------------------------------
+    from sidecar.neo4j_memory import Neo4jMemoryProvider
+    from sidecar.providers.memory import POLEEntity, Relationship
+    active_registry.register("memory", "default", Neo4jMemoryProvider)
+    active_registry.register("neo4j_memory", "default", Neo4jMemoryProvider)
+    active_registry.register("graph_memory", "default", Neo4jMemoryProvider)
+
+    _memory_provider_instance: Optional[Any] = None
+
+    def _get_memory_provider() -> Optional[Any]:
+        nonlocal _memory_provider_instance
+        provider_cls = app.state.registry.get_active_provider("memory", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("neo4j_memory", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("graph_memory", default_name="default")
+        if not provider_cls:
+            return None
+        if _memory_provider_instance is None or not isinstance(_memory_provider_instance, provider_cls):
+            _memory_provider_instance = provider_cls()
+        return _memory_provider_instance
+
+    def _is_memory_enabled() -> bool:
+        if config.get("locus.memory.enabled") is False:
+            return False
+        return True
+
+    @app.post("/memory/store")
+    def store_memory_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Store conversation turn or content, extracting POLE+O entities."""
+        if not _is_memory_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory.enabled"},
+            )
+        provider = _get_memory_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory provider registered")
+        content = body.get("content", "")
+        if not content:
+            raise HTTPException(status_code=400, detail="Missing required field: content")
+        entry_type = body.get("entry_type", "long_term")
+        metadata = body.get("metadata")
+        entry = provider.store(content=content, entry_type=entry_type, metadata=metadata)
+        return {"status": "ok", "entry": entry.to_dict()}
+
+    @app.post("/memory/query")
+    def query_memory_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute hybrid search and graph traversal over POLE+O entities."""
+        if not _is_memory_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory.enabled"},
+            )
+        provider = _get_memory_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory provider registered")
+        query_text = body.get("query", "")
+        limit = body.get("limit", 10)
+        depth = body.get("depth", 2)
+        result = provider.query(query=query_text, limit=limit, depth=depth)
+        return {"status": "ok", "result": result.to_dict()}
+
+    @app.post("/memory/context")
+    def get_memory_context_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Retrieve formatted graph pathways block for Context Forge Layer 4."""
+        if not _is_memory_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory.enabled"},
+            )
+        provider = _get_memory_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory provider registered")
+        query_text = body.get("query", "")
+        max_tokens = body.get("max_tokens", 150)
+        ctx_str = provider.get_context(query=query_text, max_tokens=max_tokens)
+        return {"status": "ok", "context": ctx_str}
+
+    @app.get("/memory/config")
+    def get_memory_config_route() -> Dict[str, Any]:
+        """Get graph memory diagnostics and POLE+O schema status."""
+        if not _is_memory_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory.enabled"},
+            )
+        provider = _get_memory_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory provider registered")
+        health = provider.health_check()
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": provider.__class__.__name__,
+            "config": provider.get_config().to_dict(),
+            "health": health,
+        }
+
+    @app.post("/memory/entity")
+    def add_memory_entity_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Add or merge a POLE+O entity."""
+        if not _is_memory_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory.enabled"},
+            )
+        provider = _get_memory_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory provider registered")
+        entity = POLEEntity.from_dict(body)
+        success = provider.add_entity(entity)
+        return {"status": "ok", "success": success, "entity_id": entity.id}
+
+    @app.get("/memory/entity/{entity_id}")
+    def get_memory_entity_route(entity_id: str) -> Dict[str, Any]:
+        """Get POLE+O entity by id or name."""
+        if not _is_memory_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory.enabled"},
+            )
+        provider = _get_memory_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory provider registered")
+        ent = provider.get_entity(entity_id)
+        if not ent:
+            raise HTTPException(status_code=404, detail=f"Entity '{entity_id}' not found")
+        return {"status": "ok", "entity": ent.to_dict()}
+
+    @app.post("/memory/reasoning")
+    def record_memory_reasoning_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Record reasoning step and create :TOUCHED audit edges."""
+        if not _is_memory_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory.enabled"},
+            )
+        provider = _get_memory_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory provider registered")
+        step_name = body.get("step_name", "")
+        if not step_name:
+            raise HTTPException(status_code=400, detail="Missing required field: step_name")
+        touched = body.get("touched_entities", [])
+        tool_calls = body.get("tool_calls")
+        step_id = provider.record_reasoning_step(step_name=step_name, touched_entities=touched, tool_calls=tool_calls)
+        return {"status": "ok", "step_id": step_id}
+
     return app
 
 

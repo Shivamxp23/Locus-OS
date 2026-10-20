@@ -98,6 +98,15 @@ from sidecar.providers.custom_locus_tools import (
     CustomToolResult,
     CustomToolSpec,
 )
+from sidecar.providers.memory import (
+    BaseMemoryProvider,
+    EntityType,
+    GraphQueryResult,
+    MemoryConfig,
+    MemoryEntry,
+    POLEEntity,
+    Relationship,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -345,4 +354,11 @@ __all__ = [
     "CustomLocusToolsConfig",
     "CustomToolResult",
     "CustomToolSpec",
+    "BaseMemoryProvider",
+    "EntityType",
+    "GraphQueryResult",
+    "MemoryConfig",
+    "MemoryEntry",
+    "POLEEntity",
+    "Relationship",
 ]
