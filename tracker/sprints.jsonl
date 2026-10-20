@@ -103,3 +103,5 @@
 {"event":"accepted","story":"US-39","feature":"F-0036","level":4,"note":"Verified Level 4 INTEGRATED (85%), 4 factions + 15 OpenHuman archetypes, depth limits, 19 tests passing","date":"2026-10-20","commit":"48d84ac5dd53"}
 {"event":"closed","sprint":"S33","date":"2027-02-27","planned_points":2,"velocity":2,"done":["US-39"],"not_done":{}}
 {"event":"planned","sprint":"S34","start":"2027-02-28","end":"2027-03-03","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-40"],"date":"2027-02-28"}
+{"event":"accepted","story":"US-40","feature":"F-0099","level":4,"note":"Verified Level 4 INTEGRATED (85%), git status/diff/commit/log, 15 tests passing, test attack passed","date":"2027-03-03","commit":"92816bf3e71a"}
+{"event":"closed","sprint":"S34","date":"2027-03-03","planned_points":2,"velocity":2,"done":["US-40"],"not_done":{}}

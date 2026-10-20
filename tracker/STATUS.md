@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `48d84ac5dd` (dirty working tree) - 2026-10-20T11:32:36+0530 - with test runs
+- commit `92816bf3e7` (dirty working tree) - 2026-10-20T11:50:07+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 11, 'INFO': 0}
-- features: 125 | verified average **31.0%** | old claimed average 71.4% over 86 rows
-- integrated or better: 40 | proven: 0 | overclaims (claimed >= verified + 25): 51 | no evidence: 79
-- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 28, 'NO_EVIDENCE': 79, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **31.6%** | old claimed average 71.4% over 86 rows
+- integrated or better: 41 | proven: 0 | overclaims (claimed >= verified + 25): 51 | no evidence: 78
+- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 29, 'NO_EVIDENCE': 78, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -131,7 +131,7 @@
 | F-0096 | Intelligent Model Routing + Quality-Based Fa | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0097 | Streaming (SSE) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0098 | Image Generation | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0099 | Git Tools | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0099 | Git Tools | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0100 | Tool Call Validation | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0101 | Tool Result Classification | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0102 | Tool Output Accumulator | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
