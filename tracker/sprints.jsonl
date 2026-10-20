@@ -124,3 +124,5 @@
 {"event":"accepted","story":"US-46","feature":"F-0021","level":4,"note":"Verified Level 4 INTEGRATED (85%), POLE+O taxonomy, :TOUCHED reasoning edges, Layer 4 context formatting, 15 tests passing, test attack passed","date":"2027-03-27","commit":"95a3e5b5f840"}
 {"event":"closed","sprint":"S40","date":"2027-03-27","planned_points":2,"velocity":2,"done":["US-46"],"not_done":{}}
 {"event":"planned","sprint":"S41","start":"2027-03-28","end":"2027-03-31","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-47"],"date":"2027-03-28"}
+{"event":"accepted","story":"US-47","feature":"F-0088","level":4,"note":"Verified Level 4 INTEGRATED (85%), bucket-seal cascade L0->L1->L2, top-down search, topic routing, SQLite schema, 13 tests passing, test attack passed","date":"2027-03-31","commit":"9e80d4e0e22e"}
+{"event":"closed","sprint":"S41","date":"2027-03-31","planned_points":2,"velocity":2,"done":["US-47"],"not_done":{}}
