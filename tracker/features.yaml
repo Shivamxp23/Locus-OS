@@ -3921,11 +3921,11 @@ features:
   - '§3.8: Tool Call Validation'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Tools
   verdict: AUGMENT
-  source: null
-  provider: null
-  layer: unknown
+  source: Pi tool-definition-wrapper.ts + Hermes tool_guardrails.py
+  provider: ToolCallValidationProvider
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -3933,11 +3933,26 @@ features:
   spec_sha:
     '§3.8: Tool Call Validation': 201989bf91de614f
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/providers/tool_call_validation.py
+    - sidecar/tool_call_validation.py
+    - locus-extension/src/tool-call-validation.ts
+    symbols:
+    - file: sidecar/providers/tool_call_validation.py
+      name: BaseToolCallValidationProvider
+    - file: sidecar/providers/tool_call_validation.py
+      name: ToolCallGuardrailConfig
+    - file: sidecar/providers/tool_call_validation.py
+      name: ValidationDecision
+    - file: sidecar/providers/tool_call_validation.py
+      name: ValidationObservation
+    - file: sidecar/tool_call_validation.py
+      name: ToolCallValidationProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest -v tests/unit/test_tool_call_validation.py
+    integration:
+    - py -3 -m pytest -v tests/integration/test_tool_call_validation_service.py
   depends_on: []
 - id: F-0101
   title: Tool Result Classification
