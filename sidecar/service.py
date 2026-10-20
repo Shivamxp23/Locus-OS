@@ -2899,6 +2899,262 @@ def create_app(
         outcome = provider.tick_pipeline(pipeline_id)
         return {"status": "ok", "pipeline_id": pipeline_id, "outcome": outcome.to_dict()}
 
+    # -------------------------------------------------------------------------
+    # SPEC §4.8 / F-0090 / US-49: Memory Queue (Async Job Pipeline)
+    # -------------------------------------------------------------------------
+    from sidecar.memory_queue import SqliteMemoryQueue
+    from sidecar.providers.memory_queue import JobRecord, MemoryQueueConfig
+
+    active_registry.register("memory_queue", "default", SqliteMemoryQueue)
+    active_registry.register(
+        "memory_queue_async_job_pipeline", "default", SqliteMemoryQueue
+    )
+
+    _memory_queue_instance: Optional[SqliteMemoryQueue] = None
+
+    def _get_memory_queue_provider() -> Optional[SqliteMemoryQueue]:
+        nonlocal _memory_queue_instance
+        provider_cls = app.state.registry.get_active_provider("memory_queue", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider(
+                "memory_queue_async_job_pipeline", default_name="default"
+            )
+        if not provider_cls:
+            return None
+        if _memory_queue_instance is None or not isinstance(_memory_queue_instance, provider_cls):
+            queue_cfg = MemoryQueueConfig(
+                workers=int(config.get("locus.memory.queue.workers", 2)),
+                enabled=config.get(
+                    "locus.memory.queue.enabled",
+                    config.get("locus.memory_queue_async_job_pipeline.enabled", True),
+                ),
+                db_path=config.get("locus.memory.queue.db_path", None),
+                lock_duration_ms=int(config.get("locus.memory.queue.lock_duration_ms", 300_000)),
+                llm_concurrency=int(config.get("locus.memory.queue.llm_concurrency", 3)),
+                throttle_gate_enabled=bool(config.get("locus.memory.queue.throttle_gate_enabled", True)),
+            )
+            _memory_queue_instance = provider_cls(config=queue_cfg)
+        return _memory_queue_instance
+
+    def _is_memory_queue_enabled() -> bool:
+        if config.get("locus.memory_queue_async_job_pipeline.enabled") is False:
+            return False
+        if config.get("locus.memory.queue.enabled") is False:
+            return False
+        workers = config.get("locus.memory.queue.workers")
+        if workers is not None and int(workers) <= 0:
+            return False
+        return True
+
+    @app.get("/memory/queue/config")
+    def get_memory_queue_config_route() -> Dict[str, Any]:
+        """Get Memory Queue subsystem configuration and health."""
+        if not _is_memory_queue_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_queue_async_job_pipeline.enabled"},
+            )
+        provider = _get_memory_queue_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory queue provider registered")
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": provider.__class__.__name__,
+            "config": provider.config.to_dict(),
+        }
+
+    @app.get("/memory/queue/stats")
+    def get_memory_queue_stats_route() -> Dict[str, Any]:
+        """Get memory queue status counts and concurrency statistics."""
+        if not _is_memory_queue_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_queue_async_job_pipeline.enabled"},
+            )
+        provider = _get_memory_queue_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory queue provider registered")
+        return {"status": "ok", "stats": provider.stats()}
+
+    @app.get("/memory/queue/jobs")
+    def list_memory_queue_jobs_route(
+        status: Optional[str] = None,
+        limit: int = 50,
+    ) -> Dict[str, Any]:
+        """List memory queue jobs optionally filtered by status."""
+        if not _is_memory_queue_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_queue_async_job_pipeline.enabled"},
+            )
+        provider = _get_memory_queue_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory queue provider registered")
+        jobs = provider.list_jobs(status=status, limit=limit)
+        return {"status": "ok", "jobs": [j.to_dict() for j in jobs]}
+
+    @app.post("/memory/queue/enqueue")
+    def enqueue_memory_queue_job_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Enqueue memory processing job with deduplication key support."""
+        if not _is_memory_queue_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_queue_async_job_pipeline.enabled"},
+            )
+        provider = _get_memory_queue_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory queue provider registered")
+        kind = body.get("kind")
+        if not kind:
+            raise HTTPException(status_code=400, detail="Missing required field: kind")
+        payload = body.get("payload", {})
+        dedupe_key = body.get("dedupe_key")
+        job_id = provider.enqueue(kind=kind, payload=payload, dedupe_key=dedupe_key)
+        return {
+            "status": "ok",
+            "job_id": job_id,
+            "suppressed": job_id is None,
+        }
+
+    @app.post("/memory/queue/claim")
+    def claim_memory_queue_job_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Claim next ready job atomically with lease token."""
+        if not _is_memory_queue_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_queue_async_job_pipeline.enabled"},
+            )
+        provider = _get_memory_queue_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory queue provider registered")
+        worker_id = body.get("worker_id", "worker-1")
+        job = provider.claim_next(worker_id=worker_id)
+        return {"status": "ok", "job": job.to_dict() if job else None}
+
+    @app.post("/memory/queue/settle")
+    def settle_memory_queue_job_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Settle job (done or failed) with lease claim token verification."""
+        if not _is_memory_queue_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_queue_async_job_pipeline.enabled"},
+            )
+        provider = _get_memory_queue_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory queue provider registered")
+        job_id = body.get("job_id")
+        claim_token = body.get("claim_token")
+        if job_id is None or not claim_token:
+            raise HTTPException(status_code=400, detail="Missing job_id or claim_token")
+        success = bool(body.get("success", True))
+        error_msg = body.get("error_message", "")
+        if success:
+            settled = provider.mark_done(job_id=int(job_id), claim_token=claim_token)
+        else:
+            settled = provider.mark_failed(job_id=int(job_id), claim_token=claim_token, error_message=error_msg)
+        return {"status": "ok", "settled": settled}
+
+    @app.post("/memory/queue/recover_stale")
+    def recover_stale_memory_queue_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Recover expired running leases back to ready."""
+        if not _is_memory_queue_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_queue_async_job_pipeline.enabled"},
+            )
+        provider = _get_memory_queue_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory queue provider registered")
+        lock_duration_ms = body.get("lock_duration_ms")
+        count = provider.recover_stale_locks(
+            lock_duration_ms=int(lock_duration_ms) if lock_duration_ms else None
+        )
+        return {"status": "ok", "recovered_count": count}
+
+    @app.post("/memory/queue/trigger_digest")
+    def trigger_digest_memory_queue_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Manual helper to trigger single digest_daily job."""
+        if not _is_memory_queue_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_queue_async_job_pipeline.enabled"},
+            )
+        provider = _get_memory_queue_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory queue provider registered")
+        date_str = body.get("date")
+        if not date_str:
+            raise HTTPException(status_code=400, detail="Missing required field: date")
+        job_id = provider.trigger_digest(date_str=date_str)
+        return {"status": "ok", "job_id": job_id}
+
+    @app.post("/memory/queue/backfill_digests")
+    def backfill_digests_memory_queue_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Manual helper to batch enqueue digest jobs across date range."""
+        if not _is_memory_queue_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_queue_async_job_pipeline.enabled"},
+            )
+        provider = _get_memory_queue_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory queue provider registered")
+        from_date = body.get("from_date")
+        to_date = body.get("to_date")
+        if not from_date or not to_date:
+            raise HTTPException(status_code=400, detail="Missing required fields: from_date, to_date")
+        enqueued_ids = provider.backfill_missing_digests(from_date_str=from_date, to_date_str=to_date)
+        return {"status": "ok", "enqueued_ids": enqueued_ids}
+
+    @app.post("/memory/queue/flush_stale")
+    def flush_stale_memory_queue_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Enqueue flush stale job for time-stale buffers (>3h)."""
+        if not _is_memory_queue_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_queue_async_job_pipeline.enabled"},
+            )
+        provider = _get_memory_queue_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory queue provider registered")
+        date_str = body.get("date")
+        if not date_str:
+            raise HTTPException(status_code=400, detail="Missing required field: date")
+        job_id = provider.flush_stale_daily(date_str=date_str)
+        return {"status": "ok", "job_id": job_id}
+
+    @app.post("/memory/queue/daily_tick")
+    def daily_tick_memory_queue_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Run daily scheduler tick (enqueues DigestDaily(yesterday) + FlushStale(today))."""
+        if not _is_memory_queue_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_queue_async_job_pipeline.enabled"},
+            )
+        provider = _get_memory_queue_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory queue provider registered")
+        date_str = body.get("date")
+        digest_id, flush_id = provider.daily_tick(today_date_str=date_str)
+        return {"status": "ok", "digest_job_id": digest_id, "flush_job_id": flush_id}
+
+    @app.get("/memory/queue/jobs/{job_id}")
+    def get_memory_queue_job_route(job_id: int) -> Dict[str, Any]:
+        """Get single job record by ID."""
+        if not _is_memory_queue_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.memory_queue_async_job_pipeline.enabled"},
+            )
+        provider = _get_memory_queue_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No memory queue provider registered")
+        job = provider.get_job(job_id=job_id)
+        if not job:
+            raise HTTPException(status_code=404, detail=f"Job {job_id} not found")
+        return {"status": "ok", "job": job.to_dict()}
+
     return app
 
 

@@ -121,6 +121,13 @@ from sidecar.providers.memory_sync import (
     SyncOutcome,
     SyncPipelineKind,
 )
+from sidecar.providers.memory_queue import (
+    BaseMemoryQueueProvider,
+    JobKind,
+    JobRecord,
+    JobStatus,
+    MemoryQueueConfig,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -385,4 +392,9 @@ __all__ = [
     "SourceScope",
     "SyncOutcome",
     "SyncPipelineKind",
+    "BaseMemoryQueueProvider",
+    "JobKind",
+    "JobRecord",
+    "JobStatus",
+    "MemoryQueueConfig",
 ]

@@ -31,6 +31,7 @@ export * from "./custom-locus-tools";
 export * from "./neo4j-memory";
 export * from "./memory-tree";
 export * from "./memory-sync";
+export * from "./memory-queue";
 export * from "./ui/setup-wizard";
 export * from "./tools/index";
 export * from "./tools/locus_vault";
