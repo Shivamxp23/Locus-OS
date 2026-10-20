@@ -145,3 +145,5 @@
 {"event":"accepted","story":"US-53","feature":"F-0024","level":4,"note":"All 15 unit and integration tests passing, SM-2 interval progression (1d->6d->I*EF), ease factor update with 1.30 clamp, FSRS stability, and nightly consolidation verified at L4 INTEGRATED","date":"2027-04-24","commit":"489def823376"}
 {"event":"closed","sprint":"S47","date":"2027-04-24","planned_points":2,"velocity":2,"done":["US-53"],"not_done":{}}
 {"event":"planned","sprint":"S48","start":"2027-04-25","end":"2027-04-28","goal":"Project Memory Decay: time-weighted memory relevance scoring and automatic decay","capacity":2,"points":2,"stories":["US-54"],"date":"2027-04-25"}
+{"event":"accepted","story":"US-54","feature":"F-0025","level":4,"note":"All 13 unit and integration tests passing, exponential decay S(t) = S0 * 2^(-t/half_life), state half-lives, cold archiving to .jsonl.gz, provider interface and 503 off-switch verified at L4 INTEGRATED","date":"2027-04-28","commit":"ec7ecaf9d5b1"}
+{"event":"closed","sprint":"S48","date":"2027-04-28","planned_points":2,"velocity":2,"done":["US-54"],"not_done":{}}
