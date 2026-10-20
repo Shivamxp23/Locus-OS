@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `cb33445c6a` - 2026-10-20T12:29:32+0530 - with test runs
+- commit `7b375266c9` - 2026-10-20T12:47:06+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **33.0%** | old claimed average 71.4% over 86 rows
-- integrated or better: 43 | proven: 0 | overclaims (claimed >= verified + 25): 51 | no evidence: 76
-- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 31, 'NO_EVIDENCE': 76, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **33.7%** | old claimed average 71.4% over 86 rows
+- integrated or better: 44 | proven: 0 | overclaims (claimed >= verified + 25): 51 | no evidence: 75
+- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 32, 'NO_EVIDENCE': 75, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -134,7 +134,7 @@
 | F-0099 | Git Tools | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0100 | Tool Call Validation | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0101 | Tool Result Classification | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0102 | Tool Output Accumulator | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0102 | Tool Output Accumulator | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0103 | Tool Timeout / Budget | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0104 | Custom Locus Tools | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0105 | Web Search (8 Providers) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
