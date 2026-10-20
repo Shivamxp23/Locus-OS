@@ -3546,11 +3546,11 @@ features:
   - '§4.8: Memory Queue (Async Job Pipeline)'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Memory
   verdict: AUGMENT
-  source: null
-  provider: null
-  layer: unknown
+  source: OpenHuman memory_queue/
+  provider: SqliteMemoryQueue
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -3560,11 +3560,22 @@ features:
   spec_sha:
     '§4.8: Memory Queue (Async Job Pipeline)': a44808a7a3e91430
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/providers/memory_queue.py
+    - sidecar/memory_queue.py
+    - locus-extension/src/memory-queue.ts
+    symbols:
+    - file: sidecar/providers/memory_queue.py
+      name: BaseMemoryQueueProvider
+    - file: sidecar/providers/memory_queue.py
+      name: JobRecord
+    - file: sidecar/memory_queue.py
+      name: SqliteMemoryQueue
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_memory_queue.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_memory_queue_service.py -q
   depends_on: []
 - id: F-0091
   title: Memory Diff (Snapshot-Based Change Tracking)
