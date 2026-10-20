@@ -97,3 +97,5 @@
 {"event":"accepted","story":"US-37","feature":"F-0096","level":4,"note":"OpenHuman-derived model routing, refusal DFA, quality fallback, unit and integration tests pass.","date":"2027-02-16","commit":"4b99cd92c1e6"}
 {"event":"closed","sprint":"S31","date":"2027-02-19","planned_points":2,"velocity":2,"done":["US-37"],"not_done":{}}
 {"event":"planned","sprint":"S32","start":"2027-02-20","end":"2027-02-23","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-38"],"date":"2027-02-20"}
+{"event":"accepted","story":"US-38","feature":"F-0098","level":4,"note":"Image generation provider registered, model catalog, unit and integration tests pass.","date":"2027-02-20","commit":"47b0058d68de"}
+{"event":"closed","sprint":"S32","date":"2027-02-23","planned_points":2,"velocity":2,"done":["US-38"],"not_done":{}}
