@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `1d04a44ec5` - 2026-10-20T13:22:32+0530 - with test runs
+- commit `58d85dd3a5` - 2026-10-20T13:49:30+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **35.0%** | old claimed average 71.4% over 86 rows
-- integrated or better: 46 | proven: 0 | overclaims (claimed >= verified + 25): 51 | no evidence: 73
-- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 34, 'NO_EVIDENCE': 73, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **35.7%** | old claimed average 71.4% over 86 rows
+- integrated or better: 47 | proven: 0 | overclaims (claimed >= verified + 25): 50 | no evidence: 72
+- by level: {'FILES_PRESENT': 2, 'INHERITED_OK': 12, 'INTEGRATED': 35, 'NO_EVIDENCE': 72, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -16,7 +16,6 @@
 | F-0056 | Operating Modes / Scheduler | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/scheduler/. Create them or correct the path. |
 | F-0059 | PageIndex Retrieval | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/search/pageindex.py. Create them or correct the path. |
 | F-0064 | Dual Interface / Check-ins | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/. Create them or correct the path. |
-| F-0021 | Neo4j Agent Memory (POLE+O) | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/neo4j_memory.py. Create them or correct the path. |
 | F-0027 | Session Management | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/memory.py, sidecar/session_export.py. Create them or cor |
 | F-0037 | Injection Filter | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/injection_filter.py. Create them or correct the |
 | F-0041 | Data Redaction | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/redact.py. Create them or correct the path. |
@@ -29,6 +28,7 @@
 | F-0063 | Excalidraw MCP Skill | 70% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/display/excalidraw_builder.py. Create them or correct th |
 | F-0054 | CI/CD / Docker | 65% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/deployment/. Create them or correct the path. |
 | F-0067 | Notifications | 65% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/. Create them or correct the path. |
+| F-0024 | Spaced Repetition | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/spaced_rep.py. Create them or correct the path. |
 
 ## All features
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -53,7 +53,7 @@
 | F-0018 | Model Selection | 100% | 100% | INHERITED_OK |  |  |
 | F-0019 | File/Shell/Search Tools | 100% | 100% | INHERITED_OK |  |  |
 | F-0020 | Harness Delegation | 65% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0021 | Neo4j Agent Memory (POLE+O) | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/neo4j_memory.py. Create them or correct the path. |
+| F-0021 | Neo4j Agent Memory (POLE+O) | 80% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0022 | Holographic HRR | 30% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/holographic/. Create them or correct the path. |
 | F-0023 | STDP Reinforcement | 40% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/patterns/hebbian.py. Create them or correct the path. |
 | F-0024 | Spaced Repetition | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/spaced_rep.py. Create them or correct the path. |
