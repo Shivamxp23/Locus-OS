@@ -54,10 +54,7 @@ class HRRCodebook:
         cache_path: Optional[str] = None,
     ) -> None:
         self.dimension = dimension
-        self.cache_path = cache_path or os.environ.get(
-            "LOCUS_HRR_CODEBOOK_PATH",
-            ".locus/memory/hrr_codebook.bin",
-        )
+        self.cache_path = cache_path or ".locus/memory/hrr_codebook.bin"
         self._symbols: Dict[str, np.ndarray] = {}
         self._lock = threading.RLock()
 
