@@ -123,3 +123,4 @@
 {"event":"planned","sprint":"S40","start":"2027-03-24","end":"2027-03-27","goal":"Everything is recorded and backed up to the vault; Neo4j Agent Memory is the memory layer.","capacity":2,"points":2,"stories":["US-46"],"date":"2027-03-24"}
 {"event":"accepted","story":"US-46","feature":"F-0021","level":4,"note":"Verified Level 4 INTEGRATED (85%), POLE+O taxonomy, :TOUCHED reasoning edges, Layer 4 context formatting, 15 tests passing, test attack passed","date":"2027-03-27","commit":"95a3e5b5f840"}
 {"event":"closed","sprint":"S40","date":"2027-03-27","planned_points":2,"velocity":2,"done":["US-46"],"not_done":{}}
+{"event":"planned","sprint":"S41","start":"2027-03-28","end":"2027-03-31","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-47"],"date":"2027-03-28"}
