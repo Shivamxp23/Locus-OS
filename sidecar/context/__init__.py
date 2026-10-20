@@ -16,6 +16,13 @@ from sidecar.context.headroom_pipeline import (
     KompressCompressor,
     SmartCrusher,
 )
+from sidecar.context.references import (
+    ContextRefType,
+    ContextReferenceResolver,
+    ResolvedReference,
+    count_tokens,
+    parse_path_and_lines,
+)
 
 __all__ = [
     "HeadroomCCRAdapter",
@@ -29,4 +36,9 @@ __all__ = [
     "CodeCompressor",
     "KompressCompressor",
     "CCRStore",
+    "ContextRefType",
+    "ContextReferenceResolver",
+    "ResolvedReference",
+    "count_tokens",
+    "parse_path_and_lines",
 ]

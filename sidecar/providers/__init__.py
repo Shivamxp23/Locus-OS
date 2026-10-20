@@ -202,6 +202,10 @@ from sidecar.providers.session_management import (
     BaseSessionManagementProvider,
     DefaultSessionManagementProvider,
 )
+from sidecar.providers.context_references import (
+    BaseContextReferenceProvider,
+    DefaultContextReferenceProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -527,4 +531,6 @@ __all__ = [
     "MemoryProvider",
     "BaseSessionManagementProvider",
     "DefaultSessionManagementProvider",
+    "BaseContextReferenceProvider",
+    "DefaultContextReferenceProvider",
 ]

@@ -1304,8 +1304,8 @@ features:
   category: Context
   verdict: AUGMENT
   source: Pi context-references.ts
-  provider: null
-  layer: unknown
+  provider: ContextReferenceResolver
+  layer: context
   inherited: false
   manual: false
   claimed:
@@ -1316,17 +1316,32 @@ features:
     pct: 40
     remaining: Implement Locus-specific context injection
     notes: Pi's context references work; Locus additions needed
-    key_files_raw: null
+    key_files_raw: sidecar/context/references.py
   spec_targets:
-  - locus-os/src/core/context/references.ts
+  - locus-extension/src/context/references.ts
   spec_sha:
     '§6.2: Dynamic Context References (@file, @symbol, @git, @diff)': 7fdc99d63dce7d1d
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/context/references.py
+    - sidecar/providers/context_references.py
+    - locus-extension/src/context/references.ts
+    symbols:
+    - file: sidecar/context/references.py
+      name: ContextReferenceResolver
+    - file: sidecar/context/references.py
+      name: ContextRefType
+    - file: sidecar/context/references.py
+      name: ResolvedReference
+    - file: sidecar/providers/context_references.py
+      name: DefaultContextReferenceProvider
+    - file: locus-extension/src/context/references.ts
+      name: ContextReferenceResolverClient
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_context_references.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_context_references_service.py -q
   depends_on: []
 - id: F-0029
   title: Coding Context

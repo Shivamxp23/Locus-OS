@@ -4459,6 +4459,92 @@ def create_app(
         res = provider.bridge_telegram(telegram_chat_id=chat_id, user_message=str(user_message))
         return res
 
+    # Context References routes (SPEC §6.2: Dynamic Context References (@file, @symbol, @git, @diff) / F-0028 / US-59)
+    from sidecar.context.references import ContextReferenceResolver, ResolvedReference
+    from sidecar.providers.context_references import BaseContextReferenceProvider, DefaultContextReferenceProvider
+
+    active_registry.register("context_references", "default_context_references", DefaultContextReferenceProvider)
+
+    _context_ref_provider_instance: Optional[BaseContextReferenceProvider] = None
+
+    def _is_context_references_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("context_references"):
+            return False
+        val1 = config.get("locus.context_references.enabled")
+        if val1 is not None and not config.is_enabled("locus.context_references.enabled"):
+            return False
+        val2 = config.get("locus.context.references.enabled")
+        if val2 is not None and not config.is_enabled("locus.context.references.enabled"):
+            return False
+        return True
+
+    def _get_context_references_provider() -> BaseContextReferenceProvider:
+        nonlocal _context_ref_provider_instance
+        if _context_ref_provider_instance is None:
+            provider_cls = app.state.registry.get_active_provider(
+                "context_references", default_name="default_context_references"
+            )
+            if provider_cls:
+                try:
+                    res = provider_cls()
+                    if isinstance(res, BaseContextReferenceProvider):
+                        _context_ref_provider_instance = res
+                    else:
+                        _context_ref_provider_instance = DefaultContextReferenceProvider()
+                except Exception:
+                    _context_ref_provider_instance = DefaultContextReferenceProvider()
+            else:
+                _context_ref_provider_instance = DefaultContextReferenceProvider()
+        return _context_ref_provider_instance
+
+    @app.get("/context/references/config")
+    def get_context_references_config_route() -> Dict[str, Any]:
+        """SPEC §6.2 line 2115: Get context references configuration & enabled state."""
+        if not _is_context_references_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Context References is disabled", "disabled": "locus.context_references.enabled"},
+            )
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": "default_context_references",
+        }
+
+    @app.post("/context/references/resolve")
+    def resolve_context_references_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """SPEC §6.2 lines 2062-2101: Extract and resolve references from prompt."""
+        if not _is_context_references_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Context References is disabled", "disabled": "locus.context_references.enabled"},
+            )
+        prompt = str(body.get("prompt", ""))
+        max_budget = int(body.get("max_budget", 1500))
+        provider = _get_context_references_provider()
+        clean_prompt, refs = provider.resolve_references(prompt, max_budget=max_budget)
+        xml = provider.format_xml(refs)
+        return {
+            "status": "ok",
+            "clean_prompt": clean_prompt,
+            "references": [r.to_dict() for r in refs],
+            "xml_enclosure": xml,
+        }
+
+    @app.post("/context/references/format-xml")
+    def format_context_references_xml_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """SPEC §6.2 lines 2104-2110: Format references into <context_ref> XML."""
+        if not _is_context_references_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Context References is disabled", "disabled": "locus.context_references.enabled"},
+            )
+        raw_refs = body.get("references") or []
+        refs = [ResolvedReference.from_dict(r) for r in raw_refs]
+        provider = _get_context_references_provider()
+        xml = provider.format_xml(refs)
+        return {"status": "ok", "xml": xml}
+
     return app
 
 
