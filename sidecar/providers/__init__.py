@@ -72,6 +72,13 @@ from sidecar.providers.tool_call_validation import (
     ValidationDecision,
     ValidationObservation,
 )
+from sidecar.providers.tool_output_accumulator import (
+    BaseToolOutputAccumulatorProvider,
+    FullOutputResult,
+    OutputAccumulatorConfig,
+    OutputSnapshot,
+    TruncationType,
+)
 from sidecar.providers.tool_result_classification import (
     BaseToolResultClassificationProvider,
     ResultClassificationType,
@@ -307,6 +314,11 @@ __all__ = [
     "ValidationAction",
     "ValidationDecision",
     "ValidationObservation",
+    "BaseToolOutputAccumulatorProvider",
+    "FullOutputResult",
+    "OutputAccumulatorConfig",
+    "OutputSnapshot",
+    "TruncationType",
     "BaseToolResultClassificationProvider",
     "ResultClassificationType",
     "ToolResultClassification",

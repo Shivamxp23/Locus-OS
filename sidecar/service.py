@@ -2063,6 +2063,166 @@ def create_app(
             "health": health,
         }
 
+    # Tool Output Accumulator routes (SPEC §3.10 / F-0102)
+    from sidecar.tool_output_accumulator import ToolOutputAccumulatorProvider
+    active_registry.register("tool_output_accumulator", "default", ToolOutputAccumulatorProvider)
+    active_registry.register("output_accumulator", "default", ToolOutputAccumulatorProvider)
+
+    _tool_output_accumulator_instance: Optional[Any] = None
+
+    def _get_tool_output_accumulator_provider() -> Optional[Any]:
+        nonlocal _tool_output_accumulator_instance
+        provider_cls = app.state.registry.get_active_provider("tool_output_accumulator", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("output_accumulator", default_name="default")
+        if not provider_cls:
+            return None
+        if _tool_output_accumulator_instance is None or not isinstance(_tool_output_accumulator_instance, provider_cls):
+            _tool_output_accumulator_instance = provider_cls()
+        return _tool_output_accumulator_instance
+
+    def _is_tool_output_accumulator_enabled() -> bool:
+        if config.get("locus.tool_output_accumulator.enabled") is False:
+            return False
+        if config.get("locus.tools.output_accumulator.enabled") is False:
+            return False
+        if config.get("locus.brain.tool_output_accumulator.enabled") is False:
+            return False
+        return True
+
+    @app.post("/tools/accumulator/create")
+    def create_accumulator_route(body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Create a new streaming accumulator session."""
+        if not _is_tool_output_accumulator_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_output_accumulator.enabled"},
+            )
+        provider = _get_tool_output_accumulator_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool output accumulator provider registered")
+        payload = body or {}
+        acc_id = provider.create_accumulator(
+            accumulator_id=payload.get("accumulator_id"),
+            max_lines=payload.get("max_lines"),
+            max_bytes=payload.get("max_bytes"),
+            temp_file_prefix=payload.get("temp_file_prefix"),
+        )
+        return {"status": "ok", "accumulator_id": acc_id}
+
+    @app.post("/tools/accumulator/{acc_id}/append")
+    def append_accumulator_route(acc_id: str, body: Dict[str, Any]) -> Dict[str, Any]:
+        """Append data to an active output accumulator."""
+        if not _is_tool_output_accumulator_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_output_accumulator.enabled"},
+            )
+        provider = _get_tool_output_accumulator_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool output accumulator provider registered")
+        data = body.get("data", "")
+        try:
+            snapshot = provider.append(accumulator_id=acc_id, data=data)
+            return {"status": "ok", "snapshot": snapshot.to_dict()}
+        except KeyError:
+            raise HTTPException(status_code=404, detail=f"Accumulator '{acc_id}' not found")
+        except RuntimeError as e:
+            raise HTTPException(status_code=400, detail=str(e))
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @app.get("/tools/accumulator/{acc_id}/snapshot")
+    def snapshot_accumulator_route(acc_id: str, persist: bool = True) -> Dict[str, Any]:
+        """Fetch snapshot of accumulated output."""
+        if not _is_tool_output_accumulator_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_output_accumulator.enabled"},
+            )
+        provider = _get_tool_output_accumulator_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool output accumulator provider registered")
+        try:
+            snapshot = provider.snapshot(accumulator_id=acc_id, persist_if_truncated=persist)
+            return {"status": "ok", "snapshot": snapshot.to_dict()}
+        except KeyError:
+            raise HTTPException(status_code=404, detail=f"Accumulator '{acc_id}' not found")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @app.post("/tools/accumulator/{acc_id}/finish")
+    def finish_accumulator_route(acc_id: str) -> Dict[str, Any]:
+        """Finish accumulation and flush buffers."""
+        if not _is_tool_output_accumulator_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_output_accumulator.enabled"},
+            )
+        provider = _get_tool_output_accumulator_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool output accumulator provider registered")
+        try:
+            snapshot = provider.finish(accumulator_id=acc_id)
+            return {"status": "ok", "snapshot": snapshot.to_dict()}
+        except KeyError:
+            raise HTTPException(status_code=404, detail=f"Accumulator '{acc_id}' not found")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @app.get("/tools/accumulator/{acc_id}/full")
+    def read_full_accumulator_route(acc_id: str, max_bytes: int = 50000) -> Dict[str, Any]:
+        """Read full output up to max_bytes with omission markers if truncated."""
+        if not _is_tool_output_accumulator_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_output_accumulator.enabled"},
+            )
+        provider = _get_tool_output_accumulator_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool output accumulator provider registered")
+        try:
+            full_out = provider.read_full_output(accumulator_id=acc_id, max_bytes=max_bytes)
+            return {"status": "ok", "full_output": full_out.to_dict()}
+        except KeyError:
+            raise HTTPException(status_code=404, detail=f"Accumulator '{acc_id}' not found")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @app.delete("/tools/accumulator/{acc_id}")
+    def delete_accumulator_route(acc_id: str) -> Dict[str, Any]:
+        """Close and discard accumulator session."""
+        if not _is_tool_output_accumulator_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_output_accumulator.enabled"},
+            )
+        provider = _get_tool_output_accumulator_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool output accumulator provider registered")
+        provider.close(accumulator_id=acc_id)
+        return {"status": "ok", "closed": True}
+
+    @app.get("/tools/accumulator/config")
+    def get_tool_accumulator_config_route() -> Dict[str, Any]:
+        """Get Tool Output Accumulator configuration and health."""
+        if not _is_tool_output_accumulator_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_output_accumulator.enabled"},
+            )
+        provider = _get_tool_output_accumulator_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool output accumulator provider registered")
+        health = provider.health_check()
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": provider.__class__.__name__,
+            "config": provider.get_config().to_dict(),
+            "health": health,
+        }
+
     return app
 
 
