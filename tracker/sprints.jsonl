@@ -88,3 +88,6 @@
 {"event":"accepted","story":"US-34","feature":"F-0094","level":4,"note":"Verified 14 unit and integration tests asserting 6-layer assembly, global scoring, Hebbian edge updates, headroom compression, and 503 off-switch","date":"2027-02-07","commit":"11bde2a9c8da"}
 {"event":"closed","sprint":"S28","date":"2027-02-07","planned_points":2,"velocity":2,"done":["US-34"],"not_done":{}}
 {"event":"planned","sprint":"S29","start":"2027-02-08","end":"2027-02-11","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-35"],"date":"2027-02-08"}
+{"event":"accepted","story":"US-35","feature":"F-0095","level":4,"note":"Unit and integration tests pass; provider registered in sidecar with 503 off-switch.","date":"2027-02-08","commit":"7fed9cb6c59e"}
+{"event":"closed","sprint":"S29","date":"2027-02-11","planned_points":2,"velocity":2,"done":["US-35"],"not_done":{}}
+{"event":"planned","sprint":"S30","start":"2027-02-12","end":"2027-02-15","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-36"],"date":"2027-02-12"}
