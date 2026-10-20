@@ -3345,6 +3345,186 @@ def create_app(
             raise HTTPException(status_code=404, detail=f"Snapshot {snapshot_id} not found")
         return {"status": "ok", "snapshot": snapshot.to_dict()}
 
+    # SPEC §4.10 / F-0022 / US-51: Holographic HRR (Memory Binding)
+    from sidecar.memory.hrr import HolographicMemory
+    from sidecar.providers.holographic import HolographicConfig, HRRVector
+
+    active_registry.register("holographic_hrr", "default", HolographicMemory)
+    active_registry.register("associative_memory", "default", HolographicMemory)
+
+    _holographic_instance: Optional[HolographicMemory] = None
+
+    def _get_holographic_provider() -> Optional[HolographicMemory]:
+        nonlocal _holographic_instance
+        provider_cls = app.state.registry.get_active_provider("holographic_hrr", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("associative_memory", default_name="default")
+        if not provider_cls:
+            return None
+        if _holographic_instance is None or not isinstance(_holographic_instance, provider_cls):
+            dim = config.get("locus.memory.hrr.dimension", 2048)
+            threshold = config.get("locus.memory.hrr.similarity_threshold", 0.70)
+            cache_path = config.get("locus.memory.hrr.codebook_path", None)
+            hrr_cfg = HolographicConfig(
+                enabled=config.get("locus.holographic_hrr.enabled", config.get("locus.memory.hrr.enabled", True)),
+                dimension=int(dim),
+                similarity_threshold=float(threshold),
+                codebook_cache_path=cache_path,
+            )
+            _holographic_instance = provider_cls(config=hrr_cfg)
+        return _holographic_instance
+
+    def _is_holographic_enabled() -> bool:
+        if config.get("locus.holographic_hrr.enabled") is False:
+            return False
+        if config.get("locus.memory.hrr.enabled") is False:
+            return False
+        return True
+
+    @app.get("/memory/hrr/config")
+    def get_holographic_config_route() -> Dict[str, Any]:
+        """Get Holographic HRR configuration and status."""
+        if not _is_holographic_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.holographic_hrr.enabled"},
+            )
+        provider = _get_holographic_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No holographic provider registered")
+        return {"status": "ok", "config": provider.config.to_dict()}
+
+    @app.post("/memory/hrr/bind")
+    def bind_holographic_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Circular convolution: a ⊛ b."""
+        if not _is_holographic_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.holographic_hrr.enabled"},
+            )
+        provider = _get_holographic_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No holographic provider registered")
+        a_vec = HRRVector.from_dict(body.get("a", {}))
+        b_vec = HRRVector.from_dict(body.get("b", {}))
+        res = provider.bind(a_vec, b_vec)
+        return {"status": "ok", "vector": res.to_dict()}
+
+    @app.post("/memory/hrr/unbind")
+    def unbind_holographic_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Circular correlation: a ≈ c ⊙ b."""
+        if not _is_holographic_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.holographic_hrr.enabled"},
+            )
+        provider = _get_holographic_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No holographic provider registered")
+        c_vec = HRRVector.from_dict(body.get("c", {}))
+        b_vec = HRRVector.from_dict(body.get("b", {}))
+        res = provider.unbind(c_vec, b_vec)
+        return {"status": "ok", "vector": res.to_dict()}
+
+    @app.post("/memory/hrr/bundle")
+    def bundle_holographic_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Vector superposition: s = normalize(sum(vectors))."""
+        if not _is_holographic_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.holographic_hrr.enabled"},
+            )
+        provider = _get_holographic_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No holographic provider registered")
+        raw_vecs = body.get("vectors", [])
+        if not raw_vecs:
+            raise HTTPException(status_code=400, detail="vectors list cannot be empty")
+        vecs = [HRRVector.from_dict(v) for v in raw_vecs]
+        res = provider.bundle(vecs)
+        return {"status": "ok", "vector": res.to_dict()}
+
+    @app.post("/memory/hrr/cleanup")
+    def cleanup_holographic_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Associative recall against codebook symbols."""
+        if not _is_holographic_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.holographic_hrr.enabled"},
+            )
+        provider = _get_holographic_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No holographic provider registered")
+        vec = HRRVector.from_dict(body.get("vector", {}))
+        threshold = body.get("threshold")
+        th_val = float(threshold) if threshold is not None else None
+        sym, sim = provider.cleanup_with_score(vec, threshold=th_val)
+        return {"status": "ok", "symbol": sym, "similarity": sim}
+
+    @app.post("/memory/hrr/encode_state")
+    def encode_state_holographic_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Fast Ephemeral State Composition Pipeline."""
+        if not _is_holographic_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.holographic_hrr.enabled"},
+            )
+        provider = _get_holographic_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No holographic provider registered")
+        curr_task = body.get("current_task")
+        act_mode = body.get("active_mode")
+        stress_lvl = body.get("stress_level")
+        res = provider.encode_ephemeral_state(curr_task, act_mode, stress_lvl)
+        return {"status": "ok", "vector": res.to_dict()}
+
+    @app.get("/memory/hrr/codebook/symbols")
+    def list_holographic_symbols_route() -> Dict[str, Any]:
+        """List registered symbols in HRR codebook."""
+        if not _is_holographic_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.holographic_hrr.enabled"},
+            )
+        provider = _get_holographic_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No holographic provider registered")
+        symbols = provider.list_symbols()
+        return {"status": "ok", "symbols": symbols}
+
+    @app.post("/memory/hrr/codebook/symbol")
+    def get_or_create_symbol_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Retrieve or create proto-vector for a symbol."""
+        if not _is_holographic_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.holographic_hrr.enabled"},
+            )
+        provider = _get_holographic_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No holographic provider registered")
+        symbol = body.get("symbol")
+        if not symbol:
+            raise HTTPException(status_code=400, detail="symbol is required")
+        vec = provider.get_or_create_symbol(str(symbol))
+        return {"status": "ok", "symbol": symbol, "vector": vec.to_dict()}
+
+    @app.get("/memory/hrr/codebook/symbols/{symbol}")
+    def get_holographic_symbol_route(symbol: str) -> Dict[str, Any]:
+        """Retrieve stored proto-vector for a symbol if present."""
+        if not _is_holographic_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.holographic_hrr.enabled"},
+            )
+        provider = _get_holographic_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No holographic provider registered")
+        vec = provider.get_symbol_vector(symbol)
+        if not vec:
+            raise HTTPException(status_code=404, detail=f"Symbol {symbol} not found in codebook")
+        return {"status": "ok", "symbol": symbol, "vector": vec.to_dict()}
+
     return app
 
 

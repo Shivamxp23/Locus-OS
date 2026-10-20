@@ -983,7 +983,7 @@ features:
   category: Memory
   verdict: LOCUS-NEW
   source: Locus design spec
-  provider: null
+  provider: HolographicMemory
   layer: sidecar
   inherited: false
   manual: false
@@ -1007,11 +1007,26 @@ features:
     '§4.10: Holographic Reduced Representations (HRR Memory Binding)': 47cf02cb2a5441f6
   evidence:
     files:
+    - sidecar/providers/holographic.py
+    - sidecar/memory/hrr.py
+    - sidecar/memory/hrr_codebook.py
+    - locus-extension/src/memory/hrr-adapter.ts
+    - locus-extension/src/holographic.ts
     - sidecar/holographic/
-    symbols: []
+    symbols:
+    - file: sidecar/providers/holographic.py
+      name: BaseAssociativeMemoryProvider
+    - file: sidecar/providers/holographic.py
+      name: HRRVector
+    - file: sidecar/memory/hrr.py
+      name: HolographicMemory
+    - file: sidecar/memory/hrr_codebook.py
+      name: HRRCodebook
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_holographic_hrr.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_holographic_hrr_service.py -q
   depends_on: []
 - id: F-0023
   title: STDP Reinforcement
