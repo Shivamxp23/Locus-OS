@@ -64,6 +64,14 @@ from sidecar.providers.git_tools import (
     GitLogEntry,
     GitStatusResult,
 )
+from sidecar.providers.tool_call_validation import (
+    BaseToolCallValidationProvider,
+    ToolCallGuardrailConfig,
+    ToolCategory,
+    ValidationAction,
+    ValidationDecision,
+    ValidationObservation,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -287,4 +295,10 @@ __all__ = [
     "GitDiffResult",
     "GitLogEntry",
     "GitStatusResult",
+    "BaseToolCallValidationProvider",
+    "ToolCallGuardrailConfig",
+    "ToolCategory",
+    "ValidationAction",
+    "ValidationDecision",
+    "ValidationObservation",
 ]

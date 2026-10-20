@@ -1879,6 +1879,113 @@ def create_app(
             "git_binary": health.get("git_binary"),
         }
 
+    # Tool Call Validation routes (SPEC §3.8 / F-0100)
+    from sidecar.tool_call_validation import ToolCallValidationProvider
+    active_registry.register("tool_call_validation", "default", ToolCallValidationProvider)
+    active_registry.register("tool_validation", "default", ToolCallValidationProvider)
+    active_registry.register("guardrails", "default", ToolCallValidationProvider)
+
+    _tool_validation_instance: Optional[Any] = None
+
+    def _get_tool_validation_provider() -> Optional[Any]:
+        nonlocal _tool_validation_instance
+        provider_cls = app.state.registry.get_active_provider("tool_call_validation", default_name="default")
+        if not provider_cls:
+            provider_cls = app.state.registry.get_active_provider("tool_validation", default_name="default")
+        if not provider_cls:
+            return None
+        if _tool_validation_instance is None or not isinstance(_tool_validation_instance, provider_cls):
+            _tool_validation_instance = provider_cls()
+        return _tool_validation_instance
+
+    def _is_tool_call_validation_enabled() -> bool:
+        if config.get("locus.tool_call_validation.enabled") is False:
+            return False
+        if config.get("locus.tools.validation.enabled") is False:
+            return False
+        if config.get("locus.brain.tool_call_validation.enabled") is False:
+            return False
+        return True
+
+    @app.post("/tools/validate")
+    def validate_tool_call_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate tool call parameters and evaluate pre-execution guardrails."""
+        if not _is_tool_call_validation_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_call_validation.enabled"},
+            )
+        provider = _get_tool_validation_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool call validation provider registered")
+        tool_name = body.get("tool_name", "")
+        if not tool_name:
+            raise HTTPException(status_code=400, detail="Missing required field: tool_name")
+        params = body.get("params") or {}
+        schema = body.get("schema")
+        try:
+            decision = provider.before_call(tool_name=tool_name, params=params, schema=schema)
+            return {"status": "ok", "decision": decision.to_dict()}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @app.post("/tools/observe")
+    def observe_tool_call_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """Record tool execution outcome, updating failure streaks and duplicate detectors."""
+        if not _is_tool_call_validation_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_call_validation.enabled"},
+            )
+        provider = _get_tool_validation_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool call validation provider registered")
+        tool_name = body.get("tool_name", "")
+        if not tool_name:
+            raise HTTPException(status_code=400, detail="Missing required field: tool_name")
+        params = body.get("params") or {}
+        result = body.get("result")
+        failed = body.get("failed")
+        try:
+            observation = provider.observe_call(tool_name=tool_name, params=params, result=result, failed=failed)
+            return {"status": "ok", "observation": observation.to_dict()}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @app.post("/tools/reset")
+    def reset_tool_validation_route() -> Dict[str, Any]:
+        """Reset turn-local streak counters and loop detectors."""
+        if not _is_tool_call_validation_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_call_validation.enabled"},
+            )
+        provider = _get_tool_validation_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool call validation provider registered")
+        provider.reset_for_turn()
+        return {"status": "ok", "reset": True}
+
+    @app.get("/tools/validation/config")
+    def get_tool_validation_config_route() -> Dict[str, Any]:
+        """Get Tool Call Validation configuration and health."""
+        if not _is_tool_call_validation_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"disabled": "locus.tool_call_validation.enabled"},
+            )
+        provider = _get_tool_validation_provider()
+        if not provider:
+            raise HTTPException(status_code=404, detail="No tool call validation provider registered")
+        health = provider.health_check()
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": provider.__class__.__name__,
+            "config": provider.get_config().to_dict(),
+            "health": health,
+        }
+
     return app
 
 
