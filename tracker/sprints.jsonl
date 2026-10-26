@@ -186,3 +186,4 @@
 {"event":"planned","sprint":"S61","start":"2027-06-16","end":"2027-06-19","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-67"],"date":"2027-06-16"}
 {"event":"accepted","story":"US-67","feature":"F-0121","level":4,"note":"Live Sprint Review demo verified: procedural experience memory captures tool trajectories, deterministic deduplication and text redaction validated, Relevant Operating Experience injection block verified, dual-model accepted","date":"2027-06-19","commit":"e7e863acf6f2"}
 {"event":"closed","sprint":"S61","date":"2027-06-19","planned_points":2,"velocity":2,"done":["US-67"],"not_done":{}}
+{"event":"planned","sprint":"S62","start":"2027-06-20","end":"2027-06-23","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-68"],"date":"2027-06-20"}
