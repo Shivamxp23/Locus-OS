@@ -4441,11 +4441,11 @@ features:
   - '§15.1: Web Search (8 Providers)'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Tools
   verdict: KEEP-PI
-  source: null
-  provider: null
-  layer: unknown
+  source: pi/web_search
+  provider: default_web_search
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4453,11 +4453,27 @@ features:
   spec_sha:
     '§15.1: Web Search (8 Providers)': 702677e9e5d3e2da
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/search/providers.py
+    - sidecar/search/manager.py
+    - sidecar/providers/web_search.py
+    - locus-extension/src/search/web-search.ts
+    - tests/unit/test_web_search.py
+    - tests/integration/test_web_search_service.py
+    symbols:
+    - file: sidecar/search/providers.py
+      name: TavilySearchProvider
+    - file: sidecar/search/providers.py
+      name: BraveSearchProvider
+    - file: sidecar/search/manager.py
+      name: WebSearchManager
+    - file: sidecar/providers/web_search.py
+      name: DefaultWebSearchProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_web_search.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_web_search_service.py -q
   depends_on: []
 - id: F-0106
   title: Pi Utilities (Clipboard, Syntax Highlighting, Frontmatter, File Watcher)

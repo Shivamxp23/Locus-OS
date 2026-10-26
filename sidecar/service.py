@@ -6493,6 +6493,144 @@ def create_app(
             "active_tts": active_tts,
         }
 
+    # -------------------------------------------------------------------------
+    # SPEC §15.1: Web Search (8 Providers) (F-0105 / US-77)
+    # -------------------------------------------------------------------------
+    from sidecar.search.manager import WebSearchManager
+    from sidecar.search.providers import (
+        BaseSearchProvider,
+        BraveSearchProvider,
+        ExaSearchProvider,
+        FullContentFetchProvider,
+        GeminiSearchProvider,
+        MockSearchProvider,
+        OpenAISearchProvider,
+        ParallelSearchProvider,
+        PerplexitySearchProvider,
+        SearchResult,
+        TavilySearchProvider,
+    )
+    from sidecar.providers.web_search import (
+        BaseWebSearchProvider,
+        DefaultWebSearchProvider,
+    )
+
+    active_registry.register(
+        "web_search_8_providers", "default_web_search", DefaultWebSearchProvider
+    )
+    active_registry.register(
+        "web_search", "default_web_search", DefaultWebSearchProvider
+    )
+
+    _web_search_provider_instance: Optional[BaseWebSearchProvider] = None
+
+    def _is_web_search_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("web_search_8_providers"):
+            return False
+        v1 = config.get("locus.web_search_8_providers.enabled")
+        if v1 is not None and not config.is_enabled("locus.web_search_8_providers.enabled"):
+            return False
+        v2 = config.get("locus.web_search.enabled")
+        if v2 is not None and not config.is_enabled("locus.web_search.enabled"):
+            return False
+        return True
+
+    def _get_web_search_provider() -> BaseWebSearchProvider:
+        nonlocal _web_search_provider_instance
+        if _web_search_provider_instance is None:
+            res = app.state.registry.get_active_provider(
+                "web_search_8_providers", default_name="default_web_search"
+            )
+            if isinstance(res, BaseWebSearchProvider):
+                _web_search_provider_instance = res
+            elif callable(res):
+                _web_search_provider_instance = res()
+        if _web_search_provider_instance is None:
+            _web_search_provider_instance = DefaultWebSearchProvider()
+        return _web_search_provider_instance
+
+    @app.post("/search/query")
+    def search_query_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §15.1: Execute web search across 8 providers."""
+        if not _is_web_search_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Web search is disabled",
+                    "disabled": "locus.web_search_8_providers.enabled",
+                },
+            )
+        b = body or {}
+        query = b.get("query") or ""
+        max_results = int(b.get("max_results") or 5)
+        req_provider = b.get("provider")
+
+        provider = _get_web_search_provider()
+        try:
+            results = provider.search(query=query, max_results=max_results, provider=req_provider)
+            active_name = (
+                req_provider
+                or (provider.manager.active_provider.name if hasattr(provider, "manager") else "default")
+            )
+            return {
+                "status": "ok",
+                "query": query,
+                "provider": active_name,
+                "results": [r.to_dict() for r in results],
+            }
+        except Exception as e:
+            logger.warning(f"Search failed: {e}")
+            return JSONResponse(
+                status_code=400,
+                content={"status": "error", "message": str(e)},
+            )
+
+    @app.post("/search/fetch")
+    def search_fetch_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §15.1: Full content fetch route for document / webpage parsing."""
+        if not _is_web_search_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Web search is disabled",
+                    "disabled": "locus.web_search_8_providers.enabled",
+                },
+            )
+        b = body or {}
+        url = b.get("url") or ""
+        provider = _get_web_search_provider()
+        res = provider.fetch_content(url)
+        return res
+
+    @app.get("/search/providers")
+    def search_providers_route() -> Any:
+        """SPEC §15.1: List registered and available search providers."""
+        if not _is_web_search_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Web search is disabled",
+                    "disabled": "locus.web_search_8_providers.enabled",
+                },
+            )
+        provider = _get_web_search_provider()
+        active_name = (
+            provider.manager.active_provider.name
+            if hasattr(provider, "manager") and hasattr(provider.manager, "active_provider")
+            else "unknown"
+        )
+        available = (
+            provider.manager.list_available_providers()
+            if hasattr(provider, "manager")
+            else []
+        )
+        return {
+            "status": "ok",
+            "providers": provider.list_providers(),
+            "available_providers": available,
+            "active_provider": active_name,
+        }
+
     return app
 
 
