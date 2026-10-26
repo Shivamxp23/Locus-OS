@@ -242,6 +242,10 @@ from sidecar.providers.injection_filter import (
     BaseInjectionFilterProvider,
     DefaultInjectionFilterProvider,
 )
+from sidecar.providers.file_safety import (
+    BaseFileSafetyProvider,
+    DefaultFileSafetyProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -587,4 +591,6 @@ __all__ = [
     "DefaultAgentExperienceProvider",
     "BaseInjectionFilterProvider",
     "DefaultInjectionFilterProvider",
+    "BaseFileSafetyProvider",
+    "DefaultFileSafetyProvider",
 ]

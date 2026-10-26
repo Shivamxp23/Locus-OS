@@ -4433,11 +4433,11 @@ features:
   - '§13.2: File Safety'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Security
   verdict: LOCUS-NEW
   source: null
-  provider: null
-  layer: unknown
+  provider: default_file_safety
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4446,11 +4446,24 @@ features:
   spec_sha:
     '§13.2: File Safety': 9a92d07f68eff7ee
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/security/file_safety.py
+    - sidecar/providers/file_safety.py
+    - locus-extension/src/security/file-safety.ts
+    symbols:
+    - file: sidecar/security/file_safety.py
+      name: CwdJail
+    - file: sidecar/security/file_safety.py
+      name: FileStateTracker
+    - file: sidecar/security/file_safety.py
+      name: PathValidationDecision
+    - file: sidecar/providers/file_safety.py
+      name: DefaultFileSafetyProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_file_safety.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_file_safety_service.py -q
   depends_on: []
 - id: F-0108
   title: Autonomy Tiers

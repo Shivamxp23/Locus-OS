@@ -5468,6 +5468,103 @@ def create_app(
         provider = _get_injection_filter_provider()
         return provider.normalize(input_text=text)
 
+    # File Safety routes (SPEC §13.2: File Safety / F-0107 / US-69)
+    from sidecar.security.file_safety import (
+        CwdJail,
+        FileStateRecord,
+        FileStateTracker,
+        PathValidationDecision,
+    )
+    from sidecar.providers.file_safety import (
+        BaseFileSafetyProvider,
+        DefaultFileSafetyProvider,
+    )
+
+    active_registry.register("file_safety", "default_file_safety", DefaultFileSafetyProvider)
+
+    _file_safety_provider_instance: Optional[BaseFileSafetyProvider] = None
+
+    def _is_file_safety_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("file_safety"):
+            return False
+        v1 = config.get("locus.file_safety.enabled")
+        if v1 is not None and not config.is_enabled("locus.file_safety.enabled"):
+            return False
+        v2 = config.get("locus.security.file_safety.enabled")
+        if v2 is not None and not config.is_enabled("locus.security.file_safety.enabled"):
+            return False
+        return True
+
+    def _get_file_safety_provider() -> BaseFileSafetyProvider:
+        nonlocal _file_safety_provider_instance
+        if _file_safety_provider_instance is None:
+            provider_cls = app.state.registry.get_active_provider(
+                "file_safety", default_name="default_file_safety"
+            )
+            if provider_cls:
+                try:
+                    res = provider_cls()
+                    if isinstance(res, BaseFileSafetyProvider):
+                        _file_safety_provider_instance = res
+                except Exception:
+                    pass
+        if _file_safety_provider_instance is None:
+            _file_safety_provider_instance = DefaultFileSafetyProvider()
+        return _file_safety_provider_instance
+
+    @app.post("/security/file/validate")
+    def file_validate_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.2: Validate path against cwd_jail and blocked patterns."""
+        if not _is_file_safety_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "File Safety is disabled",
+                    "disabled": "locus.file_safety.enabled",
+                },
+            )
+        b = body or {}
+        path_str = str(b.get("path") or "")
+        op = str(b.get("operation") or "read")
+        cwd = b.get("cwd")
+        provider = _get_file_safety_provider()
+        return provider.validate_path(path=path_str, operation=op, cwd=cwd)
+
+    @app.post("/security/file/record")
+    def file_record_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.2: Track file modification."""
+        if not _is_file_safety_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "File Safety is disabled",
+                    "disabled": "locus.file_safety.enabled",
+                },
+            )
+        b = body or {}
+        path_str = str(b.get("path") or "")
+        op = str(b.get("operation") or "modify")
+        content = b.get("content")
+        provider = _get_file_safety_provider()
+        return provider.record_modification(path=path_str, operation=op, content=content)
+
+    @app.get("/security/file/history")
+    def file_history_route(limit: int = 50) -> Any:
+        """SPEC §13.2: Get file state modification history."""
+        if not _is_file_safety_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "File Safety is disabled",
+                    "disabled": "locus.file_safety.enabled",
+                },
+            )
+        provider = _get_file_safety_provider()
+        return {
+            "status": "ok",
+            "history": provider.get_history(limit=limit),
+        }
+
     return app
 
 
