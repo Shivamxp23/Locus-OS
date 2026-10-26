@@ -45,6 +45,13 @@ from sidecar.security.think_scrubber import (
     StreamingThinkScrubber,
     ThinkTokenScrubber,
 )
+from sidecar.security.sanitizer import (
+    MessageSanitizer,
+    SURROGATE_RE,
+    sanitize_messages,
+    sanitize_structure_surrogates,
+    sanitize_surrogates,
+)
 
 __all__ = [
     "NormalizedPrompt",
@@ -77,4 +84,9 @@ __all__ = [
     "ScrubState",
     "StreamingThinkScrubber",
     "ThinkTokenScrubber",
+    "MessageSanitizer",
+    "SURROGATE_RE",
+    "sanitize_messages",
+    "sanitize_structure_surrogates",
+    "sanitize_surrogates",
 ]

@@ -1992,7 +1992,7 @@ features:
   category: Security
   verdict: AUGMENT
   source: Pi + Locus
-  provider: null
+  provider: default_message_sanitizer
   layer: sidecar
   inherited: false
   manual: false
@@ -2012,10 +2012,20 @@ features:
   evidence:
     files:
     - sidecar/security/sanitizer.py
-    symbols: []
+    - sidecar/providers/message_sanitizer.py
+    - locus-extension/src/security/message-sanitize.ts
+    - tests/unit/test_message_sanitizer.py
+    - tests/integration/test_message_sanitizer_service.py
+    symbols:
+    - file: sidecar/security/sanitizer.py
+      name: MessageSanitizer
+    - file: sidecar/providers/message_sanitizer.py
+      name: DefaultMessageSanitizerProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_message_sanitizer.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_message_sanitizer_service.py -q
   depends_on: []
 - id: F-0044
   title: STT / TTS Providers

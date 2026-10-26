@@ -266,6 +266,10 @@ from sidecar.providers.think_scrubber import (
     BaseThinkScrubberProvider,
     DefaultThinkScrubberProvider,
 )
+from sidecar.providers.message_sanitizer import (
+    BaseMessageSanitizerProvider,
+    DefaultMessageSanitizerProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -623,4 +627,6 @@ __all__ = [
     "DefaultDataRedactionProvider",
     "BaseThinkScrubberProvider",
     "DefaultThinkScrubberProvider",
+    "BaseMessageSanitizerProvider",
+    "DefaultMessageSanitizerProvider",
 ]

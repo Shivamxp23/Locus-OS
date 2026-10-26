@@ -6161,6 +6161,113 @@ def create_app(
             "tags": provider.list_tags(),
         }
 
+    # =========================================================================
+    # SPEC §13.10: Message Sanitization (F-0043 / US-75)
+    # =========================================================================
+    from sidecar.security.sanitizer import (
+        MessageSanitizer,
+        SURROGATE_RE,
+        sanitize_messages,
+        sanitize_structure_surrogates,
+        sanitize_surrogates,
+    )
+    from sidecar.providers.message_sanitizer import (
+        BaseMessageSanitizerProvider,
+        DefaultMessageSanitizerProvider,
+    )
+
+    active_registry.register("message_sanitization", "default_message_sanitizer", DefaultMessageSanitizerProvider)
+    active_registry.register("sanitizer", "default", DefaultMessageSanitizerProvider)
+
+    _message_sanitizer_provider_instance: Optional[BaseMessageSanitizerProvider] = None
+
+    def _is_message_sanitizer_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("message_sanitization"):
+            return False
+        v1 = config.get("locus.message_sanitization.enabled")
+        if v1 is not None and not config.is_enabled("locus.message_sanitization.enabled"):
+            return False
+        v2 = config.get("locus.security.message_sanitization.enabled")
+        if v2 is not None and not config.is_enabled("locus.security.message_sanitization.enabled"):
+            return False
+        return True
+
+    def _get_message_sanitizer_provider() -> BaseMessageSanitizerProvider:
+        nonlocal _message_sanitizer_provider_instance
+        if _message_sanitizer_provider_instance is None:
+            try:
+                res = app.state.registry.get_active_provider(
+                    "message_sanitization", default_name="default_message_sanitizer"
+                )
+                if isinstance(res, BaseMessageSanitizerProvider):
+                    _message_sanitizer_provider_instance = res
+                elif isinstance(res, type) and issubclass(res, BaseMessageSanitizerProvider):
+                    _message_sanitizer_provider_instance = res()
+            except Exception:
+                pass
+        if _message_sanitizer_provider_instance is None:
+            _message_sanitizer_provider_instance = DefaultMessageSanitizerProvider()
+        return _message_sanitizer_provider_instance
+
+    @app.post("/security/sanitize/text")
+    def sanitize_text_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.10: Sanitize string text, replacing lone surrogates with U+FFFD."""
+        if not _is_message_sanitizer_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Message Sanitization is disabled",
+                    "disabled": "locus.message_sanitization.enabled",
+                },
+            )
+        b = body or {}
+        text = str(b.get("text") or "")
+        provider = _get_message_sanitizer_provider()
+        return {
+            "status": "ok",
+            "sanitized": provider.sanitize_text(text),
+        }
+
+    @app.post("/security/sanitize/structure")
+    def sanitize_structure_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.10: Recursively sanitize nested dictionary and list payloads."""
+        if not _is_message_sanitizer_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Message Sanitization is disabled",
+                    "disabled": "locus.message_sanitization.enabled",
+                },
+            )
+        b = body or {}
+        payload = b.get("payload")
+        provider = _get_message_sanitizer_provider()
+        sanitized, found = provider.sanitize_structure(payload)
+        return {
+            "status": "ok",
+            "sanitized": sanitized,
+            "found": found,
+        }
+
+    @app.post("/security/sanitize/messages")
+    def sanitize_messages_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.10: Sanitize full message history prior to LLM API dispatch."""
+        if not _is_message_sanitizer_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Message Sanitization is disabled",
+                    "disabled": "locus.message_sanitization.enabled",
+                },
+            )
+        b = body or {}
+        messages = b.get("messages") or []
+        provider = _get_message_sanitizer_provider()
+        return {
+            "status": "ok",
+            "messages": provider.sanitize_messages(messages),
+        }
+
     return app
 
 
