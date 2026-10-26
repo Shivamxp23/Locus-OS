@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `c6f2dfc3b3` - 2026-10-27T03:19:45+0530 - with test runs
+- commit `f44063a6f0` - 2026-10-27T03:44:33+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **54.3%** | old claimed average 71.4% over 86 rows
-- integrated or better: 74 | proven: 0 | overclaims (claimed >= verified + 25): 36 | no evidence: 43
-- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 62, 'NO_EVIDENCE': 43, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **55.0%** | old claimed average 71.4% over 86 rows
+- integrated or better: 75 | proven: 0 | overclaims (claimed >= verified + 25): 35 | no evidence: 42
+- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 63, 'NO_EVIDENCE': 42, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -13,7 +13,6 @@
 | F-0056 | Operating Modes / Scheduler | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/scheduler/. Create them or correct the path. |
 | F-0059 | PageIndex Retrieval | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/search/pageindex.py. Create them or correct the path. |
 | F-0064 | Dual Interface / Check-ins | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/. Create them or correct the path. |
-| F-0042 | Think Token Scrubbing | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/think_scrubber.py. Create them or correct the p |
 | F-0043 | Message Sanitization | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/sanitizer.py. Create them or correct the path. |
 | F-0061 | Rough Note Parser | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/rough_note_parser.py. Create them or correct t |
 | F-0062 | Link Dump Logger | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/link_logger.py. Create them or correct the pat |
@@ -29,6 +28,7 @@
 | F-0048 | MCP Server/Client | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/mcp_client.py. Create them or correct the path. |
 | F-0065 | Error Classifier | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/diagnostics/error_classifier.py. Create them or correct  |
 | F-0071 | Workflows | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/scheduler/workflow.py. Create them or correct the path. |
+| F-0073 | Cause Chain Engine | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/cause_chain.py. Create them or correct the path. |
 
 ## All features
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -74,7 +74,7 @@
 | F-0039 | Project Trust | 100% | 100% | INHERITED_OK |  |  |
 | F-0040 | Shell Blocklist | 70% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0041 | Data Redaction | 75% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0042 | Think Token Scrubbing | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/think_scrubber.py. Create them or correct the p |
+| F-0042 | Think Token Scrubbing | 75% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0043 | Message Sanitization | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/sanitizer.py. Create them or correct the path. |
 | F-0044 | STT / TTS Providers | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/voice/. Create them or correct the path. |
 | F-0045 | Browser Automation | 45% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/browser/. Create them or correct the path. |
