@@ -1550,10 +1550,22 @@ features:
   evidence:
     files:
     - sidecar/acp_server.py
-    symbols: []
+    - sidecar/providers/acp_protocol.py
+    - locus-extension/src/protocols/acp/client.ts
+    symbols:
+    - file: sidecar/acp_server.py
+      name: ACPServer
+    - file: sidecar/acp_server.py
+      name: ACPClient
+    - file: sidecar/acp_server.py
+      name: ACPEvent
+    - file: sidecar/providers/acp_protocol.py
+      name: DefaultACPClientProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_acp_protocol.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_acp_protocol_service.py -q
   depends_on: []
 - id: F-0034
   title: Plugin LLM

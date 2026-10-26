@@ -222,6 +222,10 @@ from sidecar.providers.skill_marketplace import (
     BaseSkillMarketplaceProvider,
     DefaultSkillMarketplaceProvider,
 )
+from sidecar.providers.acp_protocol import (
+    BaseACPClientProvider,
+    DefaultACPClientProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -557,4 +561,6 @@ __all__ = [
     "DefaultCLIDoctorDiagnosticsProvider",
     "BaseSkillMarketplaceProvider",
     "DefaultSkillMarketplaceProvider",
+    "BaseACPClientProvider",
+    "DefaultACPClientProvider",
 ]

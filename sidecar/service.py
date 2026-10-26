@@ -4936,6 +4936,93 @@ def create_app(
         provider = _get_skill_marketplace_provider()
         return {"status": "ok", "installed": provider.list_installed()}
 
+    # ACP Protocol routes (SPEC §9.4: Agent Communication Protocol (ACP Client & Transport) / F-0033 / US-64)
+    from sidecar.providers.acp_protocol import (
+        BaseACPClientProvider,
+        DefaultACPClientProvider,
+    )
+
+    active_registry.register(
+        "acp_protocol", "default_acp_protocol", DefaultACPClientProvider
+    )
+
+    _acp_provider_instance: Optional[BaseACPClientProvider] = None
+
+    def _is_acp_protocol_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("acp_protocol"):
+            return False
+        val1 = config.get("locus.acp_protocol.enabled")
+        if val1 is not None and not config.is_enabled("locus.acp_protocol.enabled"):
+            return False
+        val2 = config.get("locus.protocols.acp.enabled")
+        if val2 is not None and not config.is_enabled("locus.protocols.acp.enabled"):
+            return False
+        return True
+
+    def _get_acp_provider() -> BaseACPClientProvider:
+        nonlocal _acp_provider_instance
+        if _acp_provider_instance is None:
+            provider_cls = app.state.registry.get_active_provider(
+                "acp_protocol", default_name="default_acp_protocol"
+            )
+            if provider_cls:
+                try:
+                    res = provider_cls()
+                    if isinstance(res, BaseACPClientProvider):
+                        _acp_provider_instance = res
+                except Exception:
+                    pass
+        if _acp_provider_instance is None:
+            _acp_provider_instance = DefaultACPClientProvider()
+        return _acp_provider_instance
+
+    @app.post("/protocols/acp/initialize")
+    def acp_initialize_route(body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """SPEC §9.4 lines 6071-6088: Capability negotiation handshake."""
+        if not _is_acp_protocol_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "ACP Protocol is disabled",
+                    "disabled": "locus.acp_protocol.enabled",
+                },
+            )
+        client_info = body.get("client_info") if body else None
+        provider = _get_acp_provider()
+        return provider.initialize(client_info=client_info)
+
+    @app.post("/protocols/acp/execute")
+    def acp_execute_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """SPEC §9.4 lines 6090-6111: Dispatch task to target agent."""
+        if not _is_acp_protocol_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "ACP Protocol is disabled",
+                    "disabled": "locus.acp_protocol.enabled",
+                },
+            )
+        target = str(body.get("target_agent_id", "default-agent"))
+        prompt = str(body.get("prompt", ""))
+        tools = list(body.get("tools") or [])
+        provider = _get_acp_provider()
+        return provider.execute(target_agent_id=target, prompt=prompt, tools=tools)
+
+    @app.post("/protocols/acp/cancel")
+    def acp_cancel_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """SPEC §9.4 lines 6113-6119: Send request cancellation notification."""
+        if not _is_acp_protocol_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "ACP Protocol is disabled",
+                    "disabled": "locus.acp_protocol.enabled",
+                },
+            )
+        request_id = int(body.get("request_id", 0))
+        provider = _get_acp_provider()
+        return provider.cancel(request_id)
+
     return app
 
 
