@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `f850d81f8b` - 2026-10-27T04:31:25+0530 - with test runs
+- commit `eb6d499b71` - 2026-10-27T04:54:06+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **56.4%** | old claimed average 71.4% over 86 rows
-- integrated or better: 77 | proven: 0 | overclaims (claimed >= verified + 25): 33 | no evidence: 40
-- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 65, 'NO_EVIDENCE': 40, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **57.0%** | old claimed average 71.4% over 86 rows
+- integrated or better: 78 | proven: 0 | overclaims (claimed >= verified + 25): 33 | no evidence: 39
+- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 66, 'NO_EVIDENCE': 39, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -137,7 +137,7 @@
 | F-0102 | Tool Output Accumulator | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0103 | Tool Timeout / Budget | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0104 | Custom Locus Tools | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0105 | Web Search (8 Providers) | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0105 | Web Search (8 Providers) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0106 | Pi Utilities (Clipboard, Syntax Highlighting | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0107 | File Safety | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0108 | Autonomy Tiers | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
