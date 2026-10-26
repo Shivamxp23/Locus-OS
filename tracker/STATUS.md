@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `e5b12fcb2d` - 2026-10-27T01:05:56+0530 - with test runs
+- commit `03c48e022d` - 2026-10-27T01:27:56+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **50.2%** | old claimed average 71.4% over 86 rows
-- integrated or better: 68 | proven: 0 | overclaims (claimed >= verified + 25): 39 | no evidence: 49
-- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 56, 'NO_EVIDENCE': 49, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **51.0%** | old claimed average 71.4% over 86 rows
+- integrated or better: 69 | proven: 0 | overclaims (claimed >= verified + 25): 38 | no evidence: 47
+- by level: {'FILES_PRESENT': 5, 'INHERITED_OK': 12, 'INTEGRATED': 57, 'NO_EVIDENCE': 47, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -13,14 +13,12 @@
 | F-0056 | Operating Modes / Scheduler | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/scheduler/. Create them or correct the path. |
 | F-0059 | PageIndex Retrieval | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/search/pageindex.py. Create them or correct the path. |
 | F-0064 | Dual Interface / Check-ins | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/. Create them or correct the path. |
-| F-0037 | Injection Filter | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/injection_filter.py. Create them or correct the |
 | F-0041 | Data Redaction | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/redact.py. Create them or correct the path. |
 | F-0042 | Think Token Scrubbing | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/think_scrubber.py. Create them or correct the p |
 | F-0043 | Message Sanitization | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/sanitizer.py. Create them or correct the path. |
 | F-0061 | Rough Note Parser | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/rough_note_parser.py. Create them or correct t |
 | F-0062 | Link Dump Logger | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/link_logger.py. Create them or correct the pat |
 | F-0066 | Health Checks | 90% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
-| F-0040 | Shell Blocklist | 70% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/. Create them or correct the path. |
 | F-0057 | Goal Tracker (3-Layer Stack) | 85% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0063 | Excalidraw MCP Skill | 70% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/display/excalidraw_builder.py. Create them or correct th |
 | F-0054 | CI/CD / Docker | 65% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/deployment/. Create them or correct the path. |
@@ -29,6 +27,8 @@
 | F-0068 | Connectivity Check | 60% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
 | F-0072 | Collector + Chunker | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/collector.py. Create them or correct the path. |
 | F-0075 | Content Engine | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/content/engine.py. Create them or correct the path. |
+| F-0040 | Shell Blocklist | 70% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
+| F-0048 | MCP Server/Client | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/mcp_client.py. Create them or correct the path. |
 
 ## All features
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -69,10 +69,10 @@
 | F-0034 | Plugin LLM | 10% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0035 | Learning / Profiling / Reward Model | 70% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0036 | Subagents / AutoResearch | 60% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0037 | Injection Filter | 80% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/injection_filter.py. Create them or correct the |
+| F-0037 | Injection Filter | 80% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0038 | Shell Sandbox | 100% | 100% | INHERITED_OK |  |  |
 | F-0039 | Project Trust | 100% | 100% | INHERITED_OK |  |  |
-| F-0040 | Shell Blocklist | 70% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/. Create them or correct the path. |
+| F-0040 | Shell Blocklist | 70% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0041 | Data Redaction | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/redact.py. Create them or correct the path. |
 | F-0042 | Think Token Scrubbing | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/think_scrubber.py. Create them or correct the p |
 | F-0043 | Message Sanitization | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/sanitizer.py. Create them or correct the path. |
