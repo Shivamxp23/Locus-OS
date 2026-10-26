@@ -1416,15 +1416,29 @@ features:
   spec_targets:
   - locus/extensions/footer-widget/
   spec_sha:
-    '§7.1-7.9: Terminal Interface & Footer Widget': fff228a89d6ea4b8
+    '§7.1-7.9: Terminal Interface & Native @earendil-works/pi-tui Augmentation': fff228a89d6ea4b8
   evidence:
     files:
     - locus_cli/curses_ui.py
     - sidecar/display/dashboard.py
-    symbols: []
+    - sidecar/providers/tui_dashboard.py
+    - locus-extension/src/ui/footer-widget.ts
+    symbols:
+    - file: sidecar/display/dashboard.py
+      name: DashboardState
+    - file: sidecar/display/dashboard.py
+      name: LocusDashboardRenderer
+    - file: sidecar/display/dashboard.py
+      name: TUIDashboardEngine
+    - file: sidecar/providers/tui_dashboard.py
+      name: DefaultTUIDashboardProvider
+    - file: locus_cli/curses_ui.py
+      name: CursesDashboard
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_tui_dashboard.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_tui_dashboard_service.py -q
   depends_on: []
 - id: F-0031
   title: CLI / Doctor Diagnostics

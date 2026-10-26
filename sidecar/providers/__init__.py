@@ -210,6 +210,10 @@ from sidecar.providers.coding_context import (
     BaseCodingContextProvider,
     DefaultCodingContextProvider,
 )
+from sidecar.providers.tui_dashboard import (
+    BaseTUIDashboardProvider,
+    DefaultTUIDashboardProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -539,4 +543,6 @@ __all__ = [
     "DefaultContextReferenceProvider",
     "BaseCodingContextProvider",
     "DefaultCodingContextProvider",
+    "BaseTUIDashboardProvider",
+    "DefaultTUIDashboardProvider",
 ]

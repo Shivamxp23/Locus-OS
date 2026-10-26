@@ -4628,6 +4628,113 @@ def create_app(
         formatted = provider.format_layer(state)
         return {"status": "ok", "formatted_layer": formatted}
 
+    # TUI / Dashboard routes (SPEC §7.1-7.9: Terminal Interface & Native @earendil-works/pi-tui Augmentation / F-0030 / US-61)
+    from sidecar.display.dashboard import DashboardState, LocusDashboardRenderer, TUIDashboardEngine
+    from sidecar.providers.tui_dashboard import BaseTUIDashboardProvider, DefaultTUIDashboardProvider
+
+    active_registry.register("tui_dashboard", "default_tui_dashboard", DefaultTUIDashboardProvider)
+
+    _tui_dashboard_provider_instance: Optional[BaseTUIDashboardProvider] = None
+
+    def _is_tui_dashboard_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("tui_dashboard"):
+            return False
+        val1 = config.get("locus.tui_dashboard.enabled")
+        if val1 is not None and not config.is_enabled("locus.tui_dashboard.enabled"):
+            return False
+        return True
+
+    def _get_tui_dashboard_provider() -> BaseTUIDashboardProvider:
+        nonlocal _tui_dashboard_provider_instance
+        if _tui_dashboard_provider_instance is None:
+            provider_cls = app.state.registry.get_active_provider(
+                "tui_dashboard", default_name="default_tui_dashboard"
+            )
+            if provider_cls:
+                try:
+                    res = provider_cls()
+                    if isinstance(res, BaseTUIDashboardProvider):
+                        _tui_dashboard_provider_instance = res
+                    else:
+                        _tui_dashboard_provider_instance = DefaultTUIDashboardProvider()
+                except Exception:
+                    _tui_dashboard_provider_instance = DefaultTUIDashboardProvider()
+            else:
+                _tui_dashboard_provider_instance = DefaultTUIDashboardProvider()
+        return _tui_dashboard_provider_instance
+
+    @app.get("/display/dashboard/config")
+    def get_dashboard_config_route() -> Dict[str, Any]:
+        """SPEC §7.1-7.9: Get TUI dashboard configuration & enabled state."""
+        if not _is_tui_dashboard_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "TUI Dashboard is disabled", "disabled": "locus.tui_dashboard.enabled"},
+            )
+        return {
+            "status": "ok",
+            "enabled": True,
+            "provider": "default_tui_dashboard",
+        }
+
+    @app.get("/display/dashboard/state")
+    def get_dashboard_state_get_route() -> Dict[str, Any]:
+        """SPEC §7.1-7.9 lines 5840-5858: Get current dashboard metrics state."""
+        if not _is_tui_dashboard_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "TUI Dashboard is disabled", "disabled": "locus.tui_dashboard.enabled"},
+            )
+        provider = _get_tui_dashboard_provider()
+        state = provider.get_dashboard_state()
+        footer = provider.format_footer(width=80)
+        return {
+            "status": "ok",
+            "state": state.to_dict(),
+            "footer_preview": footer,
+        }
+
+    @app.post("/display/dashboard/state")
+    def get_dashboard_state_post_route(body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """SPEC §7.1-7.9 lines 5840-5858: Query or update dashboard metrics state."""
+        if not _is_tui_dashboard_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "TUI Dashboard is disabled", "disabled": "locus.tui_dashboard.enabled"},
+            )
+        provider = _get_tui_dashboard_provider()
+        if body and "state" in body:
+            new_state = DashboardState.from_dict(body["state"])
+            if hasattr(provider, "engine"):
+                provider.engine.update_state(new_state)
+        state = provider.get_dashboard_state()
+        return {
+            "status": "ok",
+            "state": state.to_dict(),
+        }
+
+    @app.post("/display/dashboard/format")
+    def format_dashboard_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """SPEC §7.1-7.9 lines 5849-5858: Format 3-column footer and dashboard panel."""
+        if not _is_tui_dashboard_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "TUI Dashboard is disabled", "disabled": "locus.tui_dashboard.enabled"},
+            )
+        state_data = body.get("state") or {}
+        state = DashboardState.from_dict(state_data) if state_data else None
+        width = int(body.get("width", 80))
+        provider = _get_tui_dashboard_provider()
+        if state and hasattr(provider, "engine"):
+            provider.engine.update_state(state)
+        footer = provider.format_footer(width=width)
+        dashboard_panel = provider.format_dashboard(width=width)
+        return {
+            "status": "ok",
+            "footer": footer,
+            "dashboard": dashboard_panel,
+        }
+
     return app
 
 
