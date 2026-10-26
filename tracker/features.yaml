@@ -4742,11 +4742,22 @@ features:
   spec_sha:
     '§9.2: Skill System & Multi-Source Marketplace': ef174370c43422dc
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/skills/marketplace.py
+    - sidecar/providers/skill_marketplace.py
+    - locus-extension/src/skills/marketplace.ts
+    symbols:
+    - file: sidecar/skills/marketplace.py
+      name: SkillManifest
+    - file: sidecar/skills/marketplace.py
+      name: SkillMarketplaceEngine
+    - file: sidecar/providers/skill_marketplace.py
+      name: DefaultSkillMarketplaceProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_skill_marketplace.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_skill_marketplace_service.py -q
   depends_on: []
 - id: F-0120
   title: Self-Evolving Architect Bot

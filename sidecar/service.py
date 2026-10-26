@@ -4834,6 +4834,108 @@ def create_app(
         provider = _get_cli_doctor_provider()
         return provider.set_config(key, val)
 
+    # Skill System & Multi-Source Marketplace routes (SPEC §9.2: Skill System & Multi-Source Marketplace / F-0119 / US-63)
+    from sidecar.providers.skill_marketplace import (
+        BaseSkillMarketplaceProvider,
+        DefaultSkillMarketplaceProvider,
+    )
+
+    active_registry.register(
+        "skill_marketplace", "default_skill_marketplace", DefaultSkillMarketplaceProvider
+    )
+
+    _skill_marketplace_provider_instance: Optional[BaseSkillMarketplaceProvider] = None
+
+    def _is_skill_marketplace_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("skill_marketplace"):
+            return False
+        val1 = config.get("locus.skill_system_multi_source_marketplace.enabled")
+        if val1 is not None and not config.is_enabled("locus.skill_system_multi_source_marketplace.enabled"):
+            return False
+        val2 = config.get("locus.skills.marketplace.enabled")
+        if val2 is not None and not config.is_enabled("locus.skills.marketplace.enabled"):
+            return False
+        return True
+
+    def _get_skill_marketplace_provider() -> BaseSkillMarketplaceProvider:
+        nonlocal _skill_marketplace_provider_instance
+        if _skill_marketplace_provider_instance is None:
+            provider_cls = app.state.registry.get_active_provider(
+                "skill_marketplace", default_name="default_skill_marketplace"
+            )
+            if provider_cls:
+                try:
+                    res = provider_cls()
+                    if isinstance(res, BaseSkillMarketplaceProvider):
+                        _skill_marketplace_provider_instance = res
+                except Exception:
+                    pass
+        if _skill_marketplace_provider_instance is None:
+            _skill_marketplace_provider_instance = DefaultSkillMarketplaceProvider()
+        return _skill_marketplace_provider_instance
+
+    @app.get("/skills/marketplace/sources")
+    def get_marketplace_sources_route() -> Dict[str, Any]:
+        """SPEC §9.2 lines 6025-6031: List registered marketplace sources and URLs."""
+        if not _is_skill_marketplace_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Skill Marketplace is disabled",
+                    "disabled": "locus.skill_system_multi_source_marketplace.enabled",
+                },
+            )
+        provider = _get_skill_marketplace_provider()
+        return {"status": "ok", "sources": provider.get_sources()}
+
+    @app.get("/skills/marketplace/manifest")
+    def get_skill_manifest_route(source: str, skill_name: str) -> Dict[str, Any]:
+        """SPEC §9.2 lines 6033-6035: Fetch remote skill manifest."""
+        if not _is_skill_marketplace_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Skill Marketplace is disabled",
+                    "disabled": "locus.skill_system_multi_source_marketplace.enabled",
+                },
+            )
+        provider = _get_skill_marketplace_provider()
+        manifest = provider.get_manifest(source, skill_name)
+        prereqs = provider.validate_prerequisites(manifest)
+        return {"status": "ok", "manifest": manifest, "prerequisites": prereqs}
+
+    @app.post("/skills/marketplace/install")
+    def install_skill_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """SPEC §9.2 lines 6024-6048: Install skill from remote marketplace."""
+        if not _is_skill_marketplace_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Skill Marketplace is disabled",
+                    "disabled": "locus.skill_system_multi_source_marketplace.enabled",
+                },
+            )
+        source = str(body.get("source", "pi-gallery"))
+        skill_name = str(body.get("skill_name", ""))
+        if not skill_name:
+            return JSONResponse(status_code=400, content={"detail": "Missing 'skill_name' in request body"})
+        provider = _get_skill_marketplace_provider()
+        return provider.install_skill(source, skill_name)
+
+    @app.get("/skills/marketplace/installed")
+    def list_installed_skills_route() -> Dict[str, Any]:
+        """SPEC §9.2 line 6046: List installed skill bundles."""
+        if not _is_skill_marketplace_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Skill Marketplace is disabled",
+                    "disabled": "locus.skill_system_multi_source_marketplace.enabled",
+                },
+            )
+        provider = _get_skill_marketplace_provider()
+        return {"status": "ok", "installed": provider.list_installed()}
+
     return app
 
 

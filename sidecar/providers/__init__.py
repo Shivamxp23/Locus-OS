@@ -218,6 +218,10 @@ from sidecar.providers.cli_doctor_diagnostics import (
     BaseCLIDoctorDiagnosticsProvider,
     DefaultCLIDoctorDiagnosticsProvider,
 )
+from sidecar.providers.skill_marketplace import (
+    BaseSkillMarketplaceProvider,
+    DefaultSkillMarketplaceProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -551,4 +555,6 @@ __all__ = [
     "DefaultTUIDashboardProvider",
     "BaseCLIDoctorDiagnosticsProvider",
     "DefaultCLIDoctorDiagnosticsProvider",
+    "BaseSkillMarketplaceProvider",
+    "DefaultSkillMarketplaceProvider",
 ]
