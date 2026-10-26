@@ -196,3 +196,5 @@
 {"event":"accepted","story":"US-70","feature":"F-0108","level":4,"note":"Live Sprint Review demo verified: READONLY, SUPERVISED, and FULL autonomy tiers, tool category heuristics and overrides, approval gate enforcement, and 503 off-switches verified and dual-model accepted","date":"2027-07-01","commit":"90bfff709e19"}
 {"event":"closed","sprint":"S64","date":"2027-07-01","planned_points":2,"velocity":2,"done":["US-70"],"not_done":{}}
 {"event":"planned","sprint":"S65","start":"2027-07-02","end":"2027-07-05","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-71"],"date":"2027-07-02"}
+{"event":"accepted","story":"US-71","feature":"F-0109","level":4,"note":"Live Sprint Review demo verified: in-memory approval queue with 10-minute TTL, status checks, user approval/rejection resolution, wait polling, and 503 off-switches verified and dual-model accepted","date":"2027-07-05","commit":"6c20f76fecee"}
+{"event":"closed","sprint":"S65","date":"2027-07-05","planned_points":2,"velocity":2,"done":["US-71"],"not_done":{}}
