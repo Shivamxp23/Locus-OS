@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `f50cdbfee2` - 2026-10-26T23:03:20+0530 - with test runs
+- commit `e78db0fba4` - 2026-10-26T23:23:46+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **46.8%** | old claimed average 71.4% over 86 rows
-- integrated or better: 63 | proven: 0 | overclaims (claimed >= verified + 25): 40 | no evidence: 54
-- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 51, 'NO_EVIDENCE': 54, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **47.5%** | old claimed average 71.4% over 86 rows
+- integrated or better: 64 | proven: 0 | overclaims (claimed >= verified + 25): 40 | no evidence: 53
+- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 52, 'NO_EVIDENCE': 53, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -151,7 +151,7 @@
 | F-0116 | Cross-Faction Efficiency | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0117 | Four-Level Emergency Protocol | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0118 | Memory Provider Interface | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0119 | Skill System & Multi-Source Marketplace | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0119 | Skill System & Multi-Source Marketplace | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0120 | Self-Evolving Architect Bot | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0121 | Agent Experience Tracking (Procedural Memory | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0122 | LOCUS_SHORTHAND 4× Text Compressor | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
