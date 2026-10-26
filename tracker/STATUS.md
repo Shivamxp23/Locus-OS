@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `e78db0fba4` - 2026-10-26T23:23:46+0530 - with test runs
+- commit `1666f00960` - 2026-10-26T23:42:44+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **47.5%** | old claimed average 71.4% over 86 rows
-- integrated or better: 64 | proven: 0 | overclaims (claimed >= verified + 25): 40 | no evidence: 53
-- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 52, 'NO_EVIDENCE': 53, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **48.2%** | old claimed average 71.4% over 86 rows
+- integrated or better: 65 | proven: 0 | overclaims (claimed >= verified + 25): 39 | no evidence: 52
+- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 53, 'NO_EVIDENCE': 52, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -65,7 +65,7 @@
 | F-0030 | TUI / Dashboard | 55% | 85% | INTEGRATED | SPEC_CHANGED | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0031 | CLI / Doctor Diagnostics | 85% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0032 | Extension System | 100% | 100% | INHERITED_OK |  |  |
-| F-0033 | ACP Protocol | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/acp_server.py. Create them or correct the path. |
+| F-0033 | ACP Protocol | 55% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0034 | Plugin LLM | 10% | 0% | NO_EVIDENCE | NO_FILES_NAMED | Name the files this feature lives in (evidence.files). |
 | F-0035 | Learning / Profiling / Reward Model | 70% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0036 | Subagents / AutoResearch | 60% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
