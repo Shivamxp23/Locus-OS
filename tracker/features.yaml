@@ -2036,7 +2036,7 @@ features:
   category: Voice
   verdict: MULTI-PROVIDER
   source: Hermes + Locus
-  provider: STTProvider, TTSProvider
+  provider: default_voice
   layer: sidecar
   inherited: false
   manual: false
@@ -2055,11 +2055,27 @@ features:
     '§14.1-14.4: Voice Pipeline': 8a4b2db661c1b83b
   evidence:
     files:
-    - sidecar/voice/
-    symbols: []
+    - sidecar/voice/stt.py
+    - sidecar/voice/tts.py
+    - sidecar/voice/pipeline.py
+    - sidecar/providers/voice.py
+    - locus-extension/src/voice/voice.ts
+    - tests/unit/test_voice_pipeline.py
+    - tests/integration/test_voice_service.py
+    symbols:
+    - file: sidecar/voice/stt.py
+      name: GroqWhisperSTTProvider
+    - file: sidecar/voice/tts.py
+      name: EdgeTTSProvider
+    - file: sidecar/voice/pipeline.py
+      name: VoicePipelineManager
+    - file: sidecar/providers/voice.py
+      name: DefaultVoiceProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_voice_pipeline.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_voice_service.py -q
   depends_on: []
 - id: F-0045
   title: Browser Automation

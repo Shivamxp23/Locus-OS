@@ -6268,6 +6268,231 @@ def create_app(
             "messages": provider.sanitize_messages(messages),
         }
 
+    # -------------------------------------------------------------------------
+    # SPEC §14.1-14.4: Voice Pipeline (F-0044 / US-76)
+    # -------------------------------------------------------------------------
+    import base64
+    from sidecar.voice.pipeline import VoicePipelineManager
+    from sidecar.voice.stt import (
+        BaseSTTProvider,
+        GroqWhisperSTTProvider,
+        WhisperLocalSTTProvider,
+        OpenAISTTProvider,
+        AzureSTTProvider,
+        MockSTTProvider,
+    )
+    from sidecar.voice.tts import (
+        BaseTTSProvider,
+        EdgeTTSProvider,
+        ElevenLabsTTSProvider,
+        PiperTTSProvider,
+        OpenAITTSProvider,
+        MockTTSProvider,
+    )
+    from sidecar.providers.voice import (
+        BaseVoiceProvider,
+        DefaultVoiceProvider,
+    )
+
+    active_registry.register("voice", "default_voice", DefaultVoiceProvider)
+
+    _voice_provider_instance: Optional[BaseVoiceProvider] = None
+
+    def _is_voice_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("voice"):
+            return False
+        v1 = config.get("locus.voice.enabled")
+        if v1 is not None and not config.is_enabled("locus.voice.enabled"):
+            return False
+        return True
+
+    def _is_stt_enabled() -> bool:
+        if not _is_voice_enabled():
+            return False
+        v = config.get("locus.stt.enabled")
+        if v is not None and not config.is_enabled("locus.stt.enabled"):
+            return False
+        return True
+
+    def _is_tts_enabled() -> bool:
+        if not _is_voice_enabled():
+            return False
+        v = config.get("locus.tts.enabled")
+        if v is not None and not config.is_enabled("locus.tts.enabled"):
+            return False
+        return True
+
+    def _get_voice_provider() -> BaseVoiceProvider:
+        nonlocal _voice_provider_instance
+        if _voice_provider_instance is None:
+            res = app.state.registry.get_active_provider(
+                "voice", default_name="default_voice"
+            )
+            if isinstance(res, BaseVoiceProvider):
+                _voice_provider_instance = res
+            elif callable(res):
+                _voice_provider_instance = res()
+        if _voice_provider_instance is None:
+            _voice_provider_instance = DefaultVoiceProvider()
+        return _voice_provider_instance
+
+    @app.post("/voice/stt/transcribe")
+    def voice_stt_transcribe_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §14.1: Speech-to-Text transcription route."""
+        if not _is_stt_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "STT is disabled",
+                    "disabled": "locus.stt.enabled",
+                },
+            )
+        b = body or {}
+        raw_audio = b.get("audio") or b.get("audio_base64") or ""
+        language = b.get("language") or "en"
+        model = b.get("model")
+        if isinstance(raw_audio, str):
+            try:
+                audio_bytes = base64.b64decode(raw_audio)
+            except Exception:
+                audio_bytes = raw_audio.encode("utf-8")
+        elif isinstance(raw_audio, bytes):
+            audio_bytes = raw_audio
+        else:
+            audio_bytes = b""
+
+        provider = _get_voice_provider()
+        transcript = provider.transcribe(audio_bytes, language=language, model=model)
+        active_name = (
+            provider.pipeline.active_stt.name
+            if hasattr(provider, "pipeline") and hasattr(provider.pipeline, "active_stt")
+            else "stt"
+        )
+        return {
+            "status": "ok",
+            "text": transcript,
+            "provider": active_name,
+        }
+
+    @app.post("/voice/tts/synthesize")
+    def voice_tts_synthesize_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §14.2: Text-to-Speech synthesis route."""
+        if not _is_tts_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "TTS is disabled",
+                    "disabled": "locus.tts.enabled",
+                },
+            )
+        b = body or {}
+        text = b.get("text") or ""
+        voice = b.get("voice")
+
+        provider = _get_voice_provider()
+        audio_bytes = provider.synthesize(text, voice=voice)
+        audio_b64 = base64.b64encode(audio_bytes).decode("ascii")
+        active_name = (
+            provider.pipeline.active_tts.name
+            if hasattr(provider, "pipeline") and hasattr(provider.pipeline, "active_tts")
+            else "tts"
+        )
+        return {
+            "status": "ok",
+            "audio": audio_b64,
+            "format": "wav",
+            "provider": active_name,
+        }
+
+    @app.post("/voice/process_message")
+    def voice_process_message_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §14.3: Telegram Voice Message Flow (Audio → STT → Process → TTS → Audio)."""
+        if not _is_voice_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Voice pipeline is disabled",
+                    "disabled": "locus.voice.enabled",
+                },
+            )
+        b = body or {}
+        raw_audio = b.get("audio") or b.get("audio_base64") or ""
+        voice = b.get("voice")
+        if isinstance(raw_audio, str):
+            try:
+                audio_bytes = base64.b64decode(raw_audio)
+            except Exception:
+                audio_bytes = raw_audio.encode("utf-8")
+        elif isinstance(raw_audio, bytes):
+            audio_bytes = raw_audio
+        else:
+            audio_bytes = b""
+
+        provider = _get_voice_provider()
+        transcript, response_text, out_bytes = provider.process_voice_message(
+            audio_bytes, voice=voice
+        )
+        return {
+            "status": "ok",
+            "transcript": transcript,
+            "response": response_text,
+            "audio": base64.b64encode(out_bytes).decode("ascii"),
+            "format": "wav",
+        }
+
+    @app.get("/voice/providers")
+    def voice_providers_route() -> Any:
+        """SPEC §14.1-14.4: List registered STT and TTS providers."""
+        if not _is_voice_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Voice pipeline is disabled",
+                    "disabled": "locus.voice.enabled",
+                },
+            )
+        provider = _get_voice_provider()
+        active_stt = (
+            provider.pipeline.active_stt.name
+            if hasattr(provider, "pipeline") and hasattr(provider.pipeline, "active_stt")
+            else "unknown"
+        )
+        active_tts = (
+            provider.pipeline.active_tts.name
+            if hasattr(provider, "pipeline") and hasattr(provider.pipeline, "active_tts")
+            else "unknown"
+        )
+        return {
+            "status": "ok",
+            "stt_providers": provider.list_stt_providers(),
+            "tts_providers": provider.list_tts_providers(),
+            "default_stt": active_stt,
+            "default_tts": active_tts,
+        }
+
+    @app.get("/voice/voices")
+    def voice_voices_route() -> Any:
+        """SPEC §14.2: List available voices for active TTS provider."""
+        if not _is_voice_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Voice pipeline is disabled",
+                    "disabled": "locus.voice.enabled",
+                },
+            )
+        provider = _get_voice_provider()
+        active_tts = (
+            provider.pipeline.active_tts.name
+            if hasattr(provider, "pipeline") and hasattr(provider.pipeline, "active_tts")
+            else "unknown"
+        )
+        return {
+            "status": "ok",
+            "voices": provider.list_voices(),
+            "active_tts": active_tts,
+        }
+
     return app
 
 

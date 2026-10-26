@@ -270,6 +270,10 @@ from sidecar.providers.message_sanitizer import (
     BaseMessageSanitizerProvider,
     DefaultMessageSanitizerProvider,
 )
+from sidecar.providers.voice import (
+    BaseVoiceProvider,
+    DefaultVoiceProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -629,4 +633,6 @@ __all__ = [
     "DefaultThinkScrubberProvider",
     "BaseMessageSanitizerProvider",
     "DefaultMessageSanitizerProvider",
+    "BaseVoiceProvider",
+    "DefaultVoiceProvider",
 ]
