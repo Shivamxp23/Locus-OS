@@ -183,3 +183,4 @@
 {"event":"planned","sprint":"S60","start":"2027-06-12","end":"2027-06-15","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-66"],"date":"2027-06-12"}
 {"event":"accepted","story":"US-66","feature":"F-0120","level":4,"note":"Demo passed: Self-Evolving Architect Bot verified at Level 4 (85%), multi-signal gathering, target classification (config vs prompt vs code), risk-gating, harness delegation per Philosophy Pt 7, and 503 off-switch verified with 11 passing tests.","date":"2027-06-15","commit":"9880f09e940f"}
 {"event":"closed","sprint":"S60","date":"2027-06-15","planned_points":2,"velocity":2,"done":["US-66"],"not_done":{}}
+{"event":"planned","sprint":"S61","start":"2027-06-16","end":"2027-06-19","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-67"],"date":"2027-06-16"}
