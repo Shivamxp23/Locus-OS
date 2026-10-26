@@ -5140,6 +5140,122 @@ def create_app(
         provider = _get_plugin_llm_provider()
         return provider.get_all_usage()
 
+    # Self-Evolving Architect Bot routes (SPEC §10.8: Self-Evolving Architect Bot / F-0120 / US-66)
+    from sidecar.architect.engine import (
+        ArchitectCandidate,
+        ArchitectEngine,
+        RiskClass,
+        SignalBundle,
+        TargetClass,
+    )
+    from sidecar.providers.architect import (
+        BaseArchitectProvider,
+        DefaultArchitectProvider,
+    )
+
+    active_registry.register("architect", "default_architect", DefaultArchitectProvider)
+
+    _architect_provider_instance: Optional[BaseArchitectProvider] = None
+
+    def _is_architect_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("architect"):
+            return False
+        val = config.get("locus.architect.enabled")
+        if val is not None and not config.is_enabled("locus.architect.enabled"):
+            return False
+        return True
+
+    def _get_architect_provider() -> BaseArchitectProvider:
+        nonlocal _architect_provider_instance
+        if _architect_provider_instance is None:
+            provider_cls = app.state.registry.get_active_provider(
+                "architect", default_name="default_architect"
+            )
+            if provider_cls:
+                try:
+                    res = provider_cls()
+                    if isinstance(res, BaseArchitectProvider):
+                        _architect_provider_instance = res
+                except Exception:
+                    pass
+        if _architect_provider_instance is None:
+            _architect_provider_instance = DefaultArchitectProvider()
+        return _architect_provider_instance
+
+    @app.post("/architect/scan")
+    def architect_scan_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §10.8 line 6319: Scan signals and propose improvement candidates."""
+        if not _is_architect_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Architect Bot is disabled",
+                    "disabled": "locus.architect.enabled",
+                },
+            )
+        b = body or {}
+        provider = _get_architect_provider()
+        return provider.scan(
+            reward_model=b.get("reward_model"),
+            hebbian_weights=b.get("hebbian_weights"),
+            experiences=b.get("experiences"),
+            life_os_metrics=b.get("life_os_metrics"),
+        )
+
+    @app.get("/architect/candidates")
+    def architect_candidates_route() -> Any:
+        """SPEC §10.8 lines 6319-6334: Get list of active improvement candidates."""
+        if not _is_architect_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Architect Bot is disabled",
+                    "disabled": "locus.architect.enabled",
+                },
+            )
+        provider = _get_architect_provider()
+        return {
+            "status": "ok",
+            "candidates": provider.get_candidates(),
+        }
+
+    @app.post("/architect/apply")
+    def architect_apply_route(body: Dict[str, Any]) -> Any:
+        """SPEC §10.8 lines 6330-6337: Apply or stage candidate patch based on risk gate."""
+        if not _is_architect_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Architect Bot is disabled",
+                    "disabled": "locus.architect.enabled",
+                },
+            )
+        candidate_id = str(body.get("candidate_id", ""))
+        provider = _get_architect_provider()
+        try:
+            return provider.apply_candidate(candidate_id=candidate_id)
+        except KeyError as e:
+            return JSONResponse(status_code=404, content={"status": "error", "detail": str(e)})
+        except Exception as e:
+            return JSONResponse(status_code=400, content={"status": "error", "detail": str(e)})
+
+    @app.get("/architect/history")
+    def architect_history_route() -> Any:
+        """SPEC §10.8 lines 6335-6337: Get history of patch applications and outcomes."""
+        if not _is_architect_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Architect Bot is disabled",
+                    "disabled": "locus.architect.enabled",
+                },
+            )
+        provider = _get_architect_provider()
+        return {
+            "status": "ok",
+            "history": provider.get_history(),
+        }
+
     return app
 
 

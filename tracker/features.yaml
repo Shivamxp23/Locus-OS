@@ -4790,11 +4790,11 @@ features:
   - '§10.8: Self-Evolving Architect Bot'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
-  verdict: UNKNOWN
+  category: Learning
+  verdict: LOCUS-ORIGINAL DESIGN
   source: null
-  provider: null
-  layer: unknown
+  provider: default_architect
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4803,11 +4803,24 @@ features:
   spec_sha:
     '§10.8: Self-Evolving Architect Bot': 07ee48faf951cd68
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/architect/engine.py
+    - sidecar/providers/architect.py
+    - locus-extension/src/architect/client.ts
+    symbols:
+    - file: sidecar/architect/engine.py
+      name: ArchitectEngine
+    - file: sidecar/architect/engine.py
+      name: ArchitectCandidate
+    - file: sidecar/architect/engine.py
+      name: SignalBundle
+    - file: sidecar/providers/architect.py
+      name: DefaultArchitectProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_architect.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_architect_service.py -q
   depends_on: []
 - id: F-0121
   title: Agent Experience Tracking (Procedural Memory)

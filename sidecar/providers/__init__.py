@@ -230,6 +230,10 @@ from sidecar.providers.plugin_llm import (
     BasePluginLLMProvider,
     DefaultPluginLLMProvider,
 )
+from sidecar.providers.architect import (
+    BaseArchitectProvider,
+    DefaultArchitectProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -569,4 +573,6 @@ __all__ = [
     "DefaultACPClientProvider",
     "BasePluginLLMProvider",
     "DefaultPluginLLMProvider",
+    "BaseArchitectProvider",
+    "DefaultArchitectProvider",
 ]
