@@ -278,6 +278,10 @@ from sidecar.providers.web_search import (
     BaseWebSearchProvider,
     DefaultWebSearchProvider,
 )
+from sidecar.providers.browser import (
+    BaseBrowserProvider,
+    DefaultBrowserProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -641,4 +645,6 @@ __all__ = [
     "DefaultVoiceProvider",
     "BaseWebSearchProvider",
     "DefaultWebSearchProvider",
+    "BaseBrowserProvider",
+    "DefaultBrowserProvider",
 ]

@@ -6631,6 +6631,196 @@ def create_app(
             "active_provider": active_name,
         }
 
+    # -------------------------------------------------------------------------
+    # SPEC §16.1-16.2 + §20.1-20.3: Browser Automation & Desktop Control (F-0045 / US-78)
+    # -------------------------------------------------------------------------
+    from sidecar.browser.automation import (
+        BaseBrowserEngine,
+        BrowserbaseProvider,
+        BrowserResult,
+        BrowserTask,
+        MockBrowserProvider,
+        PlaywrightBrowserProvider,
+        UIElement,
+    )
+    from sidecar.browser.manager import BrowserAutomationManager
+    from sidecar.browser.screen_intelligence import ScreenIntelligence
+    from sidecar.providers.browser import (
+        BaseBrowserProvider,
+        DefaultBrowserProvider,
+    )
+
+    active_registry.register(
+        "browser_automation", "default_browser", DefaultBrowserProvider
+    )
+    active_registry.register(
+        "browser", "default_browser", DefaultBrowserProvider
+    )
+
+    _browser_provider_instance: Optional[BaseBrowserProvider] = None
+
+    def _is_browser_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("browser_automation"):
+            return False
+        v1 = config.get("locus.browser.enabled")
+        if v1 is not None and not config.is_enabled("locus.browser.enabled"):
+            return False
+        v2 = config.get("locus.browser_automation.enabled")
+        if v2 is not None and not config.is_enabled("locus.browser_automation.enabled"):
+            return False
+        return True
+
+    def _get_browser_provider() -> BaseBrowserProvider:
+        nonlocal _browser_provider_instance
+        if _browser_provider_instance is None:
+            res = app.state.registry.get_active_provider(
+                "browser_automation", default_name="default_browser"
+            )
+            if isinstance(res, BaseBrowserProvider):
+                _browser_provider_instance = res
+            elif callable(res):
+                _browser_provider_instance = res()
+        if _browser_provider_instance is None:
+            _browser_provider_instance = DefaultBrowserProvider()
+        return _browser_provider_instance
+
+    @app.post("/browser/navigate")
+    def browser_navigate_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §16.1: Navigate to target URL in browser engine."""
+        if not _is_browser_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Browser automation is disabled",
+                    "disabled": "locus.browser_automation.enabled",
+                },
+            )
+        b = body or {}
+        url = b.get("url") or "about:blank"
+        provider = _get_browser_provider()
+        res = provider.navigate(url)
+        return {"status": "ok", **res.to_dict()}
+
+    @app.post("/browser/click")
+    def browser_click_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §16.1: Click element by selector or coordinate."""
+        if not _is_browser_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Browser automation is disabled",
+                    "disabled": "locus.browser_automation.enabled",
+                },
+            )
+        b = body or {}
+        selector = b.get("selector")
+        x = b.get("x")
+        y = b.get("y")
+        provider = _get_browser_provider()
+        res = provider.click(selector=selector, x=x, y=y)
+        return {"status": "ok", **res.to_dict()}
+
+    @app.post("/browser/type")
+    def browser_type_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §16.1: Type text into browser page element."""
+        if not _is_browser_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Browser automation is disabled",
+                    "disabled": "locus.browser_automation.enabled",
+                },
+            )
+        b = body or {}
+        text = b.get("text") or ""
+        selector = b.get("selector")
+        provider = _get_browser_provider()
+        res = provider.type_text(text, selector=selector)
+        return {"status": "ok", **res.to_dict()}
+
+    @app.post("/browser/screenshot")
+    def browser_screenshot_route() -> Any:
+        """SPEC §16.1: Capture screenshot of current page."""
+        if not _is_browser_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Browser automation is disabled",
+                    "disabled": "locus.browser_automation.enabled",
+                },
+            )
+        provider = _get_browser_provider()
+        shot = provider.screenshot()
+        return {
+            "status": "ok",
+            "screenshot": base64.b64encode(shot).decode("ascii"),
+            "format": "png",
+        }
+
+    @app.post("/browser/analyze")
+    def browser_analyze_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §16.1: Analyze screen elements via Screen Intelligence."""
+        if not _is_browser_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Browser automation is disabled",
+                    "disabled": "locus.browser_automation.enabled",
+                },
+            )
+        b = body or {}
+        raw_shot = b.get("screenshot")
+        shot_bytes = base64.b64decode(raw_shot) if raw_shot else None
+        provider = _get_browser_provider()
+        elements = provider.analyze_screen(shot_bytes)
+        return {
+            "status": "ok",
+            "elements": [e.to_dict() for e in elements],
+        }
+
+    @app.post("/browser/automate")
+    def browser_automate_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §16.1: Execute multi-step automated browser task flow."""
+        if not _is_browser_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Browser automation is disabled",
+                    "disabled": "locus.browser_automation.enabled",
+                },
+            )
+        b = body or {}
+        url = b.get("url") or "about:blank"
+        actions = b.get("actions") or []
+        capture_shot = bool(b.get("capture_screenshot", True))
+        task = BrowserTask(url=url, actions=actions, capture_screenshot=capture_shot)
+        provider = _get_browser_provider()
+        res = provider.automate_task(task)
+        return {"status": "ok", **res.to_dict()}
+
+    @app.get("/browser/providers")
+    def browser_providers_route() -> Any:
+        """SPEC §16.1: List browser automation engines and active driver."""
+        if not _is_browser_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Browser automation is disabled",
+                    "disabled": "locus.browser_automation.enabled",
+                },
+            )
+        provider = _get_browser_provider()
+        active_name = (
+            provider.manager.active_engine.name
+            if hasattr(provider, "manager") and hasattr(provider.manager, "active_engine")
+            else "unknown"
+        )
+        return {
+            "status": "ok",
+            "engines": provider.list_engines(),
+            "active_engine": active_name,
+        }
+
     return app
 
 

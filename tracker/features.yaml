@@ -2086,7 +2086,7 @@ features:
   category: Browser
   verdict: MULTI-PROVIDER
   source: OpenHuman + Pi
-  provider: BrowserProvider
+  provider: default_browser
   layer: sidecar
   inherited: false
   manual: false
@@ -2105,11 +2105,27 @@ features:
     '§16.1-16.2 + §20.1-20.3: Browser Automation & Desktop Control': 834e3869ac84f0f5
   evidence:
     files:
-    - sidecar/browser/
-    symbols: []
+    - sidecar/browser/automation.py
+    - sidecar/browser/screen_intelligence.py
+    - sidecar/browser/manager.py
+    - sidecar/providers/browser.py
+    - locus-extension/src/browser/browser.ts
+    - tests/unit/test_browser_automation.py
+    - tests/integration/test_browser_service.py
+    symbols:
+    - file: sidecar/browser/automation.py
+      name: PlaywrightBrowserProvider
+    - file: sidecar/browser/screen_intelligence.py
+      name: ScreenIntelligence
+    - file: sidecar/browser/manager.py
+      name: BrowserAutomationManager
+    - file: sidecar/providers/browser.py
+      name: DefaultBrowserProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_browser_automation.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_browser_service.py -q
   depends_on: []
 - id: F-0046
   title: Telegram Gateway
