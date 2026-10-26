@@ -234,6 +234,10 @@ from sidecar.providers.architect import (
     BaseArchitectProvider,
     DefaultArchitectProvider,
 )
+from sidecar.providers.agent_experience import (
+    BaseAgentExperienceProvider,
+    DefaultAgentExperienceProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -575,4 +579,6 @@ __all__ = [
     "DefaultPluginLLMProvider",
     "BaseArchitectProvider",
     "DefaultArchitectProvider",
+    "BaseAgentExperienceProvider",
+    "DefaultAgentExperienceProvider",
 ]

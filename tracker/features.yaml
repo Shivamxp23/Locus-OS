@@ -4828,11 +4828,11 @@ features:
   - '§10.9: Agent Experience Tracking (Procedural Memory)'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Memory
   verdict: MULTI-PROVIDER
-  source: null
-  provider: null
-  layer: unknown
+  source: src/openhuman/agent_experience/
+  provider: default_agent_experience
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4842,11 +4842,24 @@ features:
   spec_sha:
     '§10.9: Agent Experience Tracking (Procedural Memory)': 1a8f6904e6270e82
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/experience/procedural.py
+    - sidecar/providers/agent_experience.py
+    - locus-extension/src/experience/client.ts
+    symbols:
+    - file: sidecar/experience/procedural.py
+      name: AgentExperience
+    - file: sidecar/experience/procedural.py
+      name: ExperienceStore
+    - file: sidecar/experience/procedural.py
+      name: AgentExperienceCaptureHook
+    - file: sidecar/providers/agent_experience.py
+      name: DefaultAgentExperienceProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_agent_experience.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_agent_experience_service.py -q
   depends_on: []
 - id: F-0122
   title: LOCUS_SHORTHAND 4× Text Compressor

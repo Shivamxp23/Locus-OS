@@ -5256,6 +5256,123 @@ def create_app(
             "history": provider.get_history(),
         }
 
+    # Agent Experience Tracking (Procedural Memory) routes (SPEC §10.9: Agent Experience Tracking / F-0121 / US-67)
+    from sidecar.experience.procedural import (
+        AgentExperience,
+        AgentExperienceCaptureHook,
+        ExperienceStore,
+        prepend_experience_block,
+        redact_text,
+        render_experience_hits,
+        stable_experience_id,
+    )
+    from sidecar.providers.agent_experience import (
+        BaseAgentExperienceProvider,
+        DefaultAgentExperienceProvider,
+    )
+
+    active_registry.register("agent_experience", "default_agent_experience", DefaultAgentExperienceProvider)
+
+    _agent_experience_provider_instance: Optional[BaseAgentExperienceProvider] = None
+
+    def _is_agent_experience_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("agent_experience"):
+            return False
+        v1 = config.get("locus.agent_experience_tracking_procedural_memory.enabled")
+        if v1 is not None and not config.is_enabled("locus.agent_experience_tracking_procedural_memory.enabled"):
+            return False
+        v2 = config.get("locus.experience.enabled")
+        if v2 is not None and not config.is_enabled("locus.experience.enabled"):
+            return False
+        return True
+
+    def _get_agent_experience_provider() -> BaseAgentExperienceProvider:
+        nonlocal _agent_experience_provider_instance
+        if _agent_experience_provider_instance is None:
+            provider_cls = app.state.registry.get_active_provider(
+                "agent_experience", default_name="default_agent_experience"
+            )
+            if provider_cls:
+                try:
+                    res = provider_cls()
+                    if isinstance(res, BaseAgentExperienceProvider):
+                        _agent_experience_provider_instance = res
+                except Exception:
+                    pass
+        if _agent_experience_provider_instance is None:
+            _agent_experience_provider_instance = DefaultAgentExperienceProvider()
+        return _agent_experience_provider_instance
+
+    @app.post("/experience/record")
+    def experience_record_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §10.9 lines 6386-6415: Capture candidates from turn tool loop."""
+        if not _is_agent_experience_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Agent Experience Tracking is disabled",
+                    "disabled": "locus.experience.enabled",
+                },
+            )
+        b = body or {}
+        provider = _get_agent_experience_provider()
+        return provider.record_turn(turn_context=b)
+
+    @app.post("/experience/query")
+    def experience_query_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §10.9 lines 6417-6425: Query scored procedural experiences."""
+        if not _is_agent_experience_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Agent Experience Tracking is disabled",
+                    "disabled": "locus.experience.enabled",
+                },
+            )
+        b = body or {}
+        fp = str(b.get("task_fingerprint") or "")
+        limit = int(b.get("limit") or 5)
+        provider = _get_agent_experience_provider()
+        return {
+            "status": "ok",
+            "experiences": provider.query_experiences(task_fingerprint=fp, limit=limit),
+        }
+
+    @app.post("/experience/render")
+    def experience_render_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §10.9 lines 6417-6425: Render Relevant Operating Experience block prepended to message."""
+        if not _is_agent_experience_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Agent Experience Tracking is disabled",
+                    "disabled": "locus.experience.enabled",
+                },
+            )
+        b = body or {}
+        fp = str(b.get("task_fingerprint") or "")
+        limit = int(b.get("limit") or 5)
+        message = str(b.get("message") or "")
+        provider = _get_agent_experience_provider()
+        return provider.render_block(task_fingerprint=fp, limit=limit, message=message)
+
+    @app.get("/experience/list")
+    def experience_list_route(limit: int = 50) -> Any:
+        """SPEC §10.9 lines 6370-6385: List stored experiences."""
+        if not _is_agent_experience_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Agent Experience Tracking is disabled",
+                    "disabled": "locus.experience.enabled",
+                },
+            )
+        provider = _get_agent_experience_provider()
+        return {
+            "status": "ok",
+            "experiences": provider.list_experiences(limit=limit),
+        }
+
     return app
 
 
