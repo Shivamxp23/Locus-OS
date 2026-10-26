@@ -204,3 +204,4 @@
 {"event":"planned","sprint":"S67","start":"2027-07-10","end":"2027-07-13","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-73"],"date":"2027-07-10"}
 {"event":"accepted","story":"US-73","feature":"F-0041","level":4,"note":"ran pytest on unit and integration tests for F-0041: 18 passed, regex key masking and 503 off-switches confirmed","date":"2027-07-13","commit":"6e303e9ff5cb"}
 {"event":"closed","sprint":"S67","date":"2027-07-13","planned_points":2,"velocity":2,"done":["US-73"],"not_done":{}}
+{"event":"planned","sprint":"S68","start":"2027-07-14","end":"2027-07-17","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-74"],"date":"2027-07-14"}
