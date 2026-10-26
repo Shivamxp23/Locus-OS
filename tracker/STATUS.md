@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `83078fdcd9` - 2026-10-27T04:05:19+0530 - with test runs
+- commit `f850d81f8b` - 2026-10-27T04:31:25+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **55.7%** | old claimed average 71.4% over 86 rows
-- integrated or better: 76 | proven: 0 | overclaims (claimed >= verified + 25): 34 | no evidence: 41
-- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 64, 'NO_EVIDENCE': 41, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **56.4%** | old claimed average 71.4% over 86 rows
+- integrated or better: 77 | proven: 0 | overclaims (claimed >= verified + 25): 33 | no evidence: 40
+- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 65, 'NO_EVIDENCE': 40, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -20,7 +20,6 @@
 | F-0063 | Excalidraw MCP Skill | 70% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/display/excalidraw_builder.py. Create them or correct th |
 | F-0054 | CI/CD / Docker | 65% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/deployment/. Create them or correct the path. |
 | F-0067 | Notifications | 65% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/. Create them or correct the path. |
-| F-0044 | STT / TTS Providers | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/voice/. Create them or correct the path. |
 | F-0068 | Connectivity Check | 60% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
 | F-0072 | Collector + Chunker | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/collector.py. Create them or correct the path. |
 | F-0075 | Content Engine | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/content/engine.py. Create them or correct the path. |
@@ -29,6 +28,7 @@
 | F-0071 | Workflows | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/scheduler/workflow.py. Create them or correct the path. |
 | F-0073 | Cause Chain Engine | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/cause_chain.py. Create them or correct the path. |
 | F-0074 | SOUL.md / Wants Engine | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/soul.py. Create them or correct the path. |
+| F-0080 | Redis Integration | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/redis_state.py. Create them or correct the path. |
 
 ## All features
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -76,7 +76,7 @@
 | F-0041 | Data Redaction | 75% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0042 | Think Token Scrubbing | 75% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0043 | Message Sanitization | 75% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0044 | STT / TTS Providers | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/voice/. Create them or correct the path. |
+| F-0044 | STT / TTS Providers | 60% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0045 | Browser Automation | 45% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/browser/. Create them or correct the path. |
 | F-0046 | Telegram Gateway | 90% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0047 | Graceful Restart | 50% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/. Create them or correct the path. |
