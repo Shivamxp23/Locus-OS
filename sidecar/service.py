@@ -5700,6 +5700,133 @@ def create_app(
             "tiers": provider.get_tiers_info(),
         }
 
+    # Approval Gate routes (SPEC §13.5: Approval Gate / F-0109 / US-71)
+    from sidecar.security.approval_store import (
+        ApprovalRequest,
+        ApprovalStatus,
+        ApprovalStore,
+    )
+    from sidecar.providers.approval_gate import (
+        BaseApprovalGateProvider,
+        DefaultApprovalGateProvider,
+    )
+
+    active_registry.register("approval_gate", "default_approval_gate", DefaultApprovalGateProvider)
+
+    _approval_gate_provider_instance: Optional[BaseApprovalGateProvider] = None
+
+    def _is_approval_gate_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("approval_gate"):
+            return False
+        v1 = config.get("locus.approval_gate.enabled")
+        if v1 is not None and not config.is_enabled("locus.approval_gate.enabled"):
+            return False
+        v2 = config.get("locus.security.approval_gate.enabled")
+        if v2 is not None and not config.is_enabled("locus.security.approval_gate.enabled"):
+            return False
+        return True
+
+    def _get_approval_gate_provider() -> BaseApprovalGateProvider:
+        nonlocal _approval_gate_provider_instance
+        if _approval_gate_provider_instance is None:
+            provider_cls = app.state.registry.get_active_provider(
+                "approval_gate", default_name="default_approval_gate"
+            )
+            if provider_cls:
+                try:
+                    res = provider_cls()
+                    if isinstance(res, BaseApprovalGateProvider):
+                        _approval_gate_provider_instance = res
+                except Exception:
+                    pass
+        if _approval_gate_provider_instance is None:
+            _approval_gate_provider_instance = DefaultApprovalGateProvider()
+        return _approval_gate_provider_instance
+
+    @app.post("/security/approval/request")
+    def approval_request_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.5: Queue an approval request with 10-minute default TTL."""
+        if not _is_approval_gate_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Approval Gate is disabled",
+                    "disabled": "locus.approval_gate.enabled",
+                },
+            )
+        b = body or {}
+        task_id = str(b.get("task_id") or "")
+        changes = b.get("changes")
+        ttl = b.get("ttl")
+        provider = _get_approval_gate_provider()
+        return provider.queue_approval(task_id=task_id, changes=changes, ttl=ttl)
+
+    @app.get("/security/approval/status")
+    def approval_status_route(task_id: str = "") -> Any:
+        """SPEC §13.5: Get approval request status."""
+        if not _is_approval_gate_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Approval Gate is disabled",
+                    "disabled": "locus.approval_gate.enabled",
+                },
+            )
+        provider = _get_approval_gate_provider()
+        return provider.get_status(task_id=task_id)
+
+    @app.post("/security/approval/resolve")
+    def approval_resolve_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.5: Resolve pending approval request (approve or reject)."""
+        if not _is_approval_gate_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Approval Gate is disabled",
+                    "disabled": "locus.approval_gate.enabled",
+                },
+            )
+        b = body or {}
+        task_id = str(b.get("task_id") or "")
+        status = str(b.get("status") or "rejected")
+        resolved_by = b.get("resolved_by")
+        provider = _get_approval_gate_provider()
+        return provider.resolve(task_id=task_id, status=status, resolved_by=resolved_by)
+
+    @app.post("/security/approval/wait")
+    def approval_wait_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.5: Wait for approval resolution."""
+        if not _is_approval_gate_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Approval Gate is disabled",
+                    "disabled": "locus.approval_gate.enabled",
+                },
+            )
+        b = body or {}
+        task_id = str(b.get("task_id") or "")
+        timeout = b.get("timeout")
+        provider = _get_approval_gate_provider()
+        return provider.wait(task_id=task_id, timeout=timeout)
+
+    @app.get("/security/approval/pending")
+    def approval_pending_route() -> Any:
+        """SPEC §13.5: List active pending approvals."""
+        if not _is_approval_gate_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Approval Gate is disabled",
+                    "disabled": "locus.approval_gate.enabled",
+                },
+            )
+        provider = _get_approval_gate_provider()
+        return {
+            "status": "ok",
+            "pending": provider.list_pending(),
+        }
+
     return app
 
 

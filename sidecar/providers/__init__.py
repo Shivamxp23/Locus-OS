@@ -250,6 +250,10 @@ from sidecar.providers.autonomy_tiers import (
     BaseAutonomyTiersProvider,
     DefaultAutonomyTiersProvider,
 )
+from sidecar.providers.approval_gate import (
+    BaseApprovalGateProvider,
+    DefaultApprovalGateProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -599,4 +603,6 @@ __all__ = [
     "DefaultFileSafetyProvider",
     "BaseAutonomyTiersProvider",
     "DefaultAutonomyTiersProvider",
+    "BaseApprovalGateProvider",
+    "DefaultApprovalGateProvider",
 ]

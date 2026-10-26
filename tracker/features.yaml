@@ -4511,11 +4511,11 @@ features:
   - '§13.5: Approval Gate'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Security
   verdict: LOCUS-NEW
   source: null
-  provider: null
-  layer: unknown
+  provider: default_approval_gate
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4525,11 +4525,24 @@ features:
   spec_sha:
     '§13.5: Approval Gate': b3813471e5ae7785
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/security/approval_store.py
+    - sidecar/providers/approval_gate.py
+    - locus-extension/src/security/approval-gate.ts
+    symbols:
+    - file: sidecar/security/approval_store.py
+      name: ApprovalStatus
+    - file: sidecar/security/approval_store.py
+      name: ApprovalRequest
+    - file: sidecar/security/approval_store.py
+      name: ApprovalStore
+    - file: sidecar/providers/approval_gate.py
+      name: DefaultApprovalGateProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_approval_gate.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_approval_gate_service.py -q
   depends_on: []
 - id: F-0110
   title: Context Compression

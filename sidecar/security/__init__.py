@@ -1,5 +1,5 @@
 """
-SPEC §13.1, §13.2, §13.4: Security modules.
+SPEC §13.1, §13.2, §13.4, §13.5: Security modules.
 """
 from sidecar.security.injection_filter import (
     NormalizedPrompt,
@@ -20,6 +20,11 @@ from sidecar.security.autonomy_tiers import (
     TierEvaluationDecision,
     ToolCategory,
 )
+from sidecar.security.approval_store import (
+    ApprovalRequest,
+    ApprovalStatus,
+    ApprovalStore,
+)
 
 __all__ = [
     "NormalizedPrompt",
@@ -35,4 +40,7 @@ __all__ = [
     "AutonomyTierManager",
     "TierEvaluationDecision",
     "ToolCategory",
+    "ApprovalRequest",
+    "ApprovalStatus",
+    "ApprovalStore",
 ]
