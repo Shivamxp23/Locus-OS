@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `eb6d499b71` - 2026-10-27T04:54:06+0530 - with test runs
+- commit `b61d71cc6d` - 2026-10-27T05:17:32+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **57.0%** | old claimed average 71.4% over 86 rows
-- integrated or better: 78 | proven: 0 | overclaims (claimed >= verified + 25): 33 | no evidence: 39
-- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 66, 'NO_EVIDENCE': 39, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **57.7%** | old claimed average 71.4% over 86 rows
+- integrated or better: 79 | proven: 0 | overclaims (claimed >= verified + 25): 32 | no evidence: 38
+- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 67, 'NO_EVIDENCE': 38, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -77,7 +77,7 @@
 | F-0042 | Think Token Scrubbing | 75% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0043 | Message Sanitization | 75% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0044 | STT / TTS Providers | 60% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0045 | Browser Automation | 45% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/browser/. Create them or correct the path. |
+| F-0045 | Browser Automation | 45% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0046 | Telegram Gateway | 90% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0047 | Graceful Restart | 50% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/gateway/. Create them or correct the path. |
 | F-0048 | MCP Server/Client | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/mcp_client.py. Create them or correct the path. |
