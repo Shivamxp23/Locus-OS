@@ -1,5 +1,5 @@
 """
-SPEC §13.1: Prompt Injection Protection module.
+SPEC §13.1, §13.2, §13.4: Security modules.
 """
 from sidecar.security.injection_filter import (
     NormalizedPrompt,
@@ -14,6 +14,12 @@ from sidecar.security.file_safety import (
     FileStateTracker,
     PathValidationDecision,
 )
+from sidecar.security.autonomy_tiers import (
+    AutonomyTier,
+    AutonomyTierManager,
+    TierEvaluationDecision,
+    ToolCategory,
+)
 
 __all__ = [
     "NormalizedPrompt",
@@ -25,4 +31,8 @@ __all__ = [
     "FileStateRecord",
     "FileStateTracker",
     "PathValidationDecision",
+    "AutonomyTier",
+    "AutonomyTierManager",
+    "TierEvaluationDecision",
+    "ToolCategory",
 ]

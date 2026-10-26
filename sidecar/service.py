@@ -5565,6 +5565,141 @@ def create_app(
             "history": provider.get_history(limit=limit),
         }
 
+    # Autonomy Tiers routes (SPEC §13.4: Autonomy Tiers / F-0108 / US-70)
+    from sidecar.security.autonomy_tiers import (
+        AutonomyTier,
+        AutonomyTierManager,
+        TierEvaluationDecision,
+        ToolCategory,
+    )
+    from sidecar.providers.autonomy_tiers import (
+        BaseAutonomyTiersProvider,
+        DefaultAutonomyTiersProvider,
+    )
+
+    active_registry.register("autonomy_tiers", "default_autonomy_tiers", DefaultAutonomyTiersProvider)
+
+    _autonomy_tiers_provider_instance: Optional[BaseAutonomyTiersProvider] = None
+
+    def _is_autonomy_tiers_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("autonomy_tiers"):
+            return False
+        v1 = config.get("locus.autonomy_tiers.enabled")
+        if v1 is not None and not config.is_enabled("locus.autonomy_tiers.enabled"):
+            return False
+        v2 = config.get("locus.security.autonomy_tiers.enabled")
+        if v2 is not None and not config.is_enabled("locus.security.autonomy_tiers.enabled"):
+            return False
+        return True
+
+    def _get_autonomy_tiers_provider() -> BaseAutonomyTiersProvider:
+        nonlocal _autonomy_tiers_provider_instance
+        if _autonomy_tiers_provider_instance is None:
+            provider_cls = app.state.registry.get_active_provider(
+                "autonomy_tiers", default_name="default_autonomy_tiers"
+            )
+            if provider_cls:
+                try:
+                    res = provider_cls()
+                    if isinstance(res, BaseAutonomyTiersProvider):
+                        _autonomy_tiers_provider_instance = res
+                except Exception:
+                    pass
+        if _autonomy_tiers_provider_instance is None:
+            _autonomy_tiers_provider_instance = DefaultAutonomyTiersProvider()
+        return _autonomy_tiers_provider_instance
+
+    @app.get("/security/autonomy/tier")
+    def autonomy_get_tier_route() -> Any:
+        """SPEC §13.4: Get current autonomy tier."""
+        if not _is_autonomy_tiers_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Autonomy Tiers is disabled",
+                    "disabled": "locus.autonomy_tiers.enabled",
+                },
+            )
+        provider = _get_autonomy_tiers_provider()
+        return {
+            "status": "ok",
+            "tier": provider.get_tier(),
+        }
+
+    @app.post("/security/autonomy/tier")
+    def autonomy_set_tier_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.4: Set current autonomy tier."""
+        if not _is_autonomy_tiers_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Autonomy Tiers is disabled",
+                    "disabled": "locus.autonomy_tiers.enabled",
+                },
+            )
+        b = body or {}
+        tier = str(b.get("tier") or "supervised")
+        provider = _get_autonomy_tiers_provider()
+        return provider.set_tier(tier)
+
+    @app.post("/security/autonomy/evaluate")
+    def autonomy_evaluate_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.4: Evaluate tool call against autonomy tier permissions."""
+        if not _is_autonomy_tiers_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Autonomy Tiers is disabled",
+                    "disabled": "locus.autonomy_tiers.enabled",
+                },
+            )
+        b = body or {}
+        tool_name = str(b.get("tool_name") or "")
+        has_approval = bool(b.get("has_approval", False))
+        category = b.get("category")
+        tier = b.get("tier")
+        provider = _get_autonomy_tiers_provider()
+        return provider.evaluate_tool(
+            tool_name=tool_name,
+            has_approval=has_approval,
+            category=category,
+            tier=tier,
+        )
+
+    @app.post("/security/autonomy/classify")
+    def autonomy_classify_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.4: Classify tool category."""
+        if not _is_autonomy_tiers_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Autonomy Tiers is disabled",
+                    "disabled": "locus.autonomy_tiers.enabled",
+                },
+            )
+        b = body or {}
+        tool_name = str(b.get("tool_name") or "")
+        explicit_category = b.get("category")
+        provider = _get_autonomy_tiers_provider()
+        return provider.classify_tool(tool_name=tool_name, explicit_category=explicit_category)
+
+    @app.get("/security/autonomy/tiers")
+    def autonomy_list_tiers_route() -> Any:
+        """SPEC §13.4: List all available autonomy tiers and policy definitions."""
+        if not _is_autonomy_tiers_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Autonomy Tiers is disabled",
+                    "disabled": "locus.autonomy_tiers.enabled",
+                },
+            )
+        provider = _get_autonomy_tiers_provider()
+        return {
+            "status": "ok",
+            "tiers": provider.get_tiers_info(),
+        }
+
     return app
 
 

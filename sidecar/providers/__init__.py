@@ -246,6 +246,10 @@ from sidecar.providers.file_safety import (
     BaseFileSafetyProvider,
     DefaultFileSafetyProvider,
 )
+from sidecar.providers.autonomy_tiers import (
+    BaseAutonomyTiersProvider,
+    DefaultAutonomyTiersProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -593,4 +597,6 @@ __all__ = [
     "DefaultInjectionFilterProvider",
     "BaseFileSafetyProvider",
     "DefaultFileSafetyProvider",
+    "BaseAutonomyTiersProvider",
+    "DefaultAutonomyTiersProvider",
 ]

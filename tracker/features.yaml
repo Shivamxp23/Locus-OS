@@ -4471,11 +4471,11 @@ features:
   - '§13.4: Autonomy Tiers'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Security
   verdict: LOCUS-NEW
   source: null
-  provider: null
-  layer: unknown
+  provider: default_autonomy_tiers
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4484,11 +4484,26 @@ features:
   spec_sha:
     '§13.4: Autonomy Tiers': 6a1ade1216592cf0
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/security/autonomy_tiers.py
+    - sidecar/providers/autonomy_tiers.py
+    - locus-extension/src/security/autonomy-tiers.ts
+    symbols:
+    - file: sidecar/security/autonomy_tiers.py
+      name: AutonomyTier
+    - file: sidecar/security/autonomy_tiers.py
+      name: ToolCategory
+    - file: sidecar/security/autonomy_tiers.py
+      name: TierEvaluationDecision
+    - file: sidecar/security/autonomy_tiers.py
+      name: AutonomyTierManager
+    - file: sidecar/providers/autonomy_tiers.py
+      name: DefaultAutonomyTiersProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_autonomy_tiers.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_autonomy_tiers_service.py -q
   depends_on: []
 - id: F-0109
   title: Approval Gate
