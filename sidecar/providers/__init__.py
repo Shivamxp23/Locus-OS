@@ -254,6 +254,10 @@ from sidecar.providers.approval_gate import (
     BaseApprovalGateProvider,
     DefaultApprovalGateProvider,
 )
+from sidecar.providers.shell_blocklist import (
+    BaseShellBlocklistProvider,
+    DefaultShellBlocklistProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -605,4 +609,6 @@ __all__ = [
     "DefaultAutonomyTiersProvider",
     "BaseApprovalGateProvider",
     "DefaultApprovalGateProvider",
+    "BaseShellBlocklistProvider",
+    "DefaultShellBlocklistProvider",
 ]

@@ -1860,7 +1860,7 @@ features:
   category: Security
   verdict: AUGMENT
   source: Pi + Locus
-  provider: null
+  provider: default_shell_blocklist
   layer: sidecar
   inherited: false
   manual: false
@@ -1879,11 +1879,21 @@ features:
     '§13.7: Shell Blocklist': a63a698dca5c38c4
   evidence:
     files:
-    - sidecar/security/
-    symbols: []
+    - sidecar/security/shell_policy.py
+    - sidecar/providers/shell_blocklist.py
+    - locus-extension/src/security/shell-policy.ts
+    symbols:
+    - file: sidecar/security/shell_policy.py
+      name: ShellInspectionDecision
+    - file: sidecar/security/shell_policy.py
+      name: ShellPolicyEngine
+    - file: sidecar/providers/shell_blocklist.py
+      name: DefaultShellBlocklistProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_shell_blocklist.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_shell_blocklist_service.py -q
   depends_on: []
 - id: F-0041
   title: Data Redaction

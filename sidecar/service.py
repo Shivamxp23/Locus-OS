@@ -5827,6 +5827,104 @@ def create_app(
             "pending": provider.list_pending(),
         }
 
+    # Shell Blocklist routes (SPEC §13.7: Shell Blocklist / F-0040 / US-72)
+    from sidecar.security.shell_policy import (
+        DEFAULT_BLOCKED_PATTERNS as DEFAULT_BLOCKED_SHELL_PATTERNS,
+        SENSITIVE_HOME_DIRS,
+        SENSITIVE_HOME_FILES,
+        ShellInspectionDecision,
+        ShellPolicyEngine,
+    )
+    from sidecar.providers.shell_blocklist import (
+        BaseShellBlocklistProvider,
+        DefaultShellBlocklistProvider,
+    )
+
+    active_registry.register("shell_blocklist", "default_shell_blocklist", DefaultShellBlocklistProvider)
+
+    _shell_blocklist_provider_instance: Optional[BaseShellBlocklistProvider] = None
+
+    def _is_shell_blocklist_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("shell_blocklist"):
+            return False
+        v1 = config.get("locus.shell_blocklist.enabled")
+        if v1 is not None and not config.is_enabled("locus.shell_blocklist.enabled"):
+            return False
+        v2 = config.get("locus.security.shell_blocklist.enabled")
+        if v2 is not None and not config.is_enabled("locus.security.shell_blocklist.enabled"):
+            return False
+        return True
+
+    def _get_shell_blocklist_provider() -> BaseShellBlocklistProvider:
+        nonlocal _shell_blocklist_provider_instance
+        if _shell_blocklist_provider_instance is None:
+            provider_cls = app.state.registry.get_active_provider(
+                "shell_blocklist", default_name="default_shell_blocklist"
+            )
+            if provider_cls:
+                try:
+                    res = provider_cls()
+                    if isinstance(res, BaseShellBlocklistProvider):
+                        _shell_blocklist_provider_instance = res
+                except Exception:
+                    pass
+        if _shell_blocklist_provider_instance is None:
+            _shell_blocklist_provider_instance = DefaultShellBlocklistProvider()
+        return _shell_blocklist_provider_instance
+
+    @app.post("/security/shell/check")
+    def shell_check_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.7: Inspect shell command against destructive and sensitive patterns."""
+        if not _is_shell_blocklist_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Shell Blocklist is disabled",
+                    "disabled": "locus.shell_blocklist.enabled",
+                },
+            )
+        b = body or {}
+        command = str(b.get("command") or "")
+        provider = _get_shell_blocklist_provider()
+        return provider.check_command(command)
+
+    @app.post("/security/shell/check_path")
+    def shell_check_path_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.7: Inspect path against sensitive home dirs and files."""
+        if not _is_shell_blocklist_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Shell Blocklist is disabled",
+                    "disabled": "locus.shell_blocklist.enabled",
+                },
+            )
+        b = body or {}
+        path_str = str(b.get("path") or "")
+        operation = str(b.get("operation") or "read")
+        outside_boundary = bool(b.get("outside_boundary", False))
+        provider = _get_shell_blocklist_provider()
+        if operation == "write":
+            return provider.is_write_denied(path=path_str, outside_boundary=outside_boundary)
+        return provider.is_read_blocked(path=path_str)
+
+    @app.get("/security/shell/patterns")
+    def shell_patterns_route() -> Any:
+        """SPEC §13.7: List active blocked shell patterns."""
+        if not _is_shell_blocklist_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Shell Blocklist is disabled",
+                    "disabled": "locus.shell_blocklist.enabled",
+                },
+            )
+        provider = _get_shell_blocklist_provider()
+        return {
+            "status": "ok",
+            "patterns": provider.list_blocked_patterns(),
+        }
+
     return app
 
 
