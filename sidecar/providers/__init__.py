@@ -214,6 +214,10 @@ from sidecar.providers.tui_dashboard import (
     BaseTUIDashboardProvider,
     DefaultTUIDashboardProvider,
 )
+from sidecar.providers.cli_doctor_diagnostics import (
+    BaseCLIDoctorDiagnosticsProvider,
+    DefaultCLIDoctorDiagnosticsProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -545,4 +549,6 @@ __all__ = [
     "DefaultCodingContextProvider",
     "BaseTUIDashboardProvider",
     "DefaultTUIDashboardProvider",
+    "BaseCLIDoctorDiagnosticsProvider",
+    "DefaultCLIDoctorDiagnosticsProvider",
 ]

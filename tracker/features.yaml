@@ -1468,10 +1468,24 @@ features:
   evidence:
     files:
     - locus_cli/main.py
-    symbols: []
+    - locus_cli/config.py
+    - locus_cli/doctor.py
+    - locus_cli/gateway_service.py
+    - sidecar/providers/cli_doctor_diagnostics.py
+    symbols:
+    - file: locus_cli/main.py
+      name: locus_cli_entrypoint
+    - file: locus_cli/config.py
+      name: get_config
+    - file: locus_cli/gateway_service.py
+      name: GatewayServiceManager
+    - file: sidecar/providers/cli_doctor_diagnostics.py
+      name: DefaultCLIDoctorDiagnosticsProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_cli_doctor_diagnostics.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_cli_doctor_diagnostics_service.py -q
   depends_on: []
 - id: F-0032
   title: Extension System

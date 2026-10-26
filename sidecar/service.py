@@ -4735,6 +4735,105 @@ def create_app(
             "dashboard": dashboard_panel,
         }
 
+    # CLI / Doctor Diagnostics routes (SPEC §8.1-8.10: CLI Commands, Multi-Surface Management, Telegram Settings & Headless VM Topology / F-0031 / US-62)
+    from sidecar.providers.cli_doctor_diagnostics import (
+        BaseCLIDoctorDiagnosticsProvider,
+        DefaultCLIDoctorDiagnosticsProvider,
+    )
+
+    active_registry.register(
+        "cli_doctor_diagnostics", "default_cli_doctor_diagnostics", DefaultCLIDoctorDiagnosticsProvider
+    )
+
+    _cli_doctor_provider_instance: Optional[BaseCLIDoctorDiagnosticsProvider] = None
+
+    def _is_cli_doctor_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("cli_doctor_diagnostics"):
+            return False
+        val = config.get("locus.cli_doctor_diagnostics.enabled")
+        if val is not None and not config.is_enabled("locus.cli_doctor_diagnostics.enabled"):
+            return False
+        return True
+
+    def _get_cli_doctor_provider() -> BaseCLIDoctorDiagnosticsProvider:
+        nonlocal _cli_doctor_provider_instance
+        if _cli_doctor_provider_instance is None:
+            provider_cls = app.state.registry.get_active_provider(
+                "cli_doctor_diagnostics", default_name="default_cli_doctor_diagnostics"
+            )
+            if provider_cls:
+                try:
+                    res = provider_cls()
+                    if isinstance(res, BaseCLIDoctorDiagnosticsProvider):
+                        _cli_doctor_provider_instance = res
+                except Exception:
+                    pass
+        if _cli_doctor_provider_instance is None:
+            _cli_doctor_provider_instance = DefaultCLIDoctorDiagnosticsProvider()
+        return _cli_doctor_provider_instance
+
+    @app.get("/system/doctor")
+    def system_doctor_route(full: bool = False, strict: bool = False) -> Dict[str, Any]:
+        """SPEC §8.1-8.10 line 5606: Query diagnostic health probes across subsystems."""
+        if not _is_cli_doctor_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "CLI Doctor Diagnostics is disabled",
+                    "disabled": "locus.cli_doctor_diagnostics.enabled",
+                },
+            )
+        provider = _get_cli_doctor_provider()
+        return provider.run_diagnostics(full=full, strict=strict)
+
+    @app.post("/system/reload")
+    def system_reload_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """SPEC §8.1-8.10 line 5598: Hot-reload subsystem provider."""
+        if not _is_cli_doctor_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "CLI Doctor Diagnostics is disabled",
+                    "disabled": "locus.cli_doctor_diagnostics.enabled",
+                },
+            )
+        subsystem = str(body.get("subsystem", "all"))
+        provider = _get_cli_doctor_provider()
+        return provider.reload_subsystem(subsystem)
+
+    @app.get("/system/config")
+    def system_config_get_route(key: Optional[str] = None) -> Dict[str, Any]:
+        """SPEC §8.1-8.10 line 5485: Export system configuration."""
+        if not _is_cli_doctor_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "CLI Doctor Diagnostics is disabled",
+                    "disabled": "locus.cli_doctor_diagnostics.enabled",
+                },
+            )
+        provider = _get_cli_doctor_provider()
+        cfg = provider.get_config(key)
+        return {"status": "ok", "key": key, "config": cfg}
+
+    @app.post("/system/config")
+    def system_config_post_route(body: Dict[str, Any]) -> Dict[str, Any]:
+        """SPEC §8.1-8.10 line 5655: Persist configuration update and trigger reload."""
+        if not _is_cli_doctor_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "CLI Doctor Diagnostics is disabled",
+                    "disabled": "locus.cli_doctor_diagnostics.enabled",
+                },
+            )
+        key = str(body.get("key", ""))
+        val = body.get("val")
+        if not key:
+            return JSONResponse(status_code=400, content={"detail": "Missing 'key' in request body"})
+        provider = _get_cli_doctor_provider()
+        return provider.set_config(key, val)
+
     return app
 
 
