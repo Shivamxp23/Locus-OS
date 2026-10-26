@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `435ed0d259` - 2026-10-27T00:06:52+0530 - with test runs
-- guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **48.9%** | old claimed average 71.4% over 86 rows
-- integrated or better: 66 | proven: 0 | overclaims (claimed >= verified + 25): 39 | no evidence: 51
-- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 54, 'NO_EVIDENCE': 51, 'UNIT_VERIFIED': 4}
+- commit `1a84b69e62` (dirty working tree) - 2026-10-27T00:41:36+0530 - with test runs
+- guard: PASS {'FAIL': 0, 'WARN': 10, 'INFO': 0}
+- features: 125 | verified average **49.6%** | old claimed average 71.4% over 86 rows
+- integrated or better: 67 | proven: 0 | overclaims (claimed >= verified + 25): 39 | no evidence: 50
+- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 55, 'NO_EVIDENCE': 50, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -152,7 +152,7 @@
 | F-0117 | Four-Level Emergency Protocol | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0118 | Memory Provider Interface | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0119 | Skill System & Multi-Source Marketplace | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0120 | Self-Evolving Architect Bot | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0120 | Self-Evolving Architect Bot | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0121 | Agent Experience Tracking (Procedural Memory | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0122 | LOCUS_SHORTHAND 4× Text Compressor | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0123 | 3-Level Tag Hierarchy & Semantic Indexing | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
