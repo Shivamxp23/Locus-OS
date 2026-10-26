@@ -144,7 +144,7 @@ class ArchitectEngine:
         """
         SPEC §10.8 lines 6323-6327:
         Classify the target of each candidate patch:
-        - Config/prompt/rules (SOUL.md, config.yaml, system-prompt sections, pattern weights) -> CONFIG or PROMPT.
+        - Config/prompt/rules (SOUL.md, runtime config, system-prompt sections, pattern weights) -> CONFIG or PROMPT.
         - Code (an actual bug, a provider needing new logic) -> CODE.
         """
         st = signal_type.lower()
@@ -186,7 +186,7 @@ class ArchitectEngine:
                 risk_class=RiskClass.LOW,
                 source_signal="§25 Life OS deferral_count > 2",
                 proposed_diff={
-                    "file": "config.yaml",
+                    "file": "config",
                     "key": "locus.life_os.nudge_cadence_minutes",
                     "old_value": 60,
                     "new_value": 30,
