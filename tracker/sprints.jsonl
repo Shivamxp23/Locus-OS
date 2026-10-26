@@ -169,3 +169,5 @@
 {"event":"accepted","story":"US-61","feature":"F-0030","level":4,"note":"9 unit and integration tests passing; DashboardState, LocusDashboardRenderer 3-column layout, CursesDashboard fallback, DefaultTUIDashboardProvider, 503 off-switch, verified at L4 INTEGRATED (85%)","date":"2027-05-26","commit":"93bd43794212"}
 {"event":"closed","sprint":"S55","date":"2027-05-26","planned_points":2,"velocity":2,"done":["US-61"],"not_done":{}}
 {"event":"planned","sprint":"S56","start":"2027-05-27","end":"2027-05-30","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-62"],"date":"2027-05-27"}
+{"event":"accepted","story":"US-62","feature":"F-0031","level":4,"note":"9 unit and integration tests passing; locus_cli entrypoint, config get/set/export, gateway lifecycle, DefaultCLIDoctorDiagnosticsProvider, 503 off-switch, verified at L4 INTEGRATED (85%)","date":"2027-05-30","commit":"f50cdbfee221"}
+{"event":"closed","sprint":"S56","date":"2027-05-30","planned_points":2,"velocity":2,"done":["US-62"],"not_done":{}}
