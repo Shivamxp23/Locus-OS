@@ -238,6 +238,10 @@ from sidecar.providers.agent_experience import (
     BaseAgentExperienceProvider,
     DefaultAgentExperienceProvider,
 )
+from sidecar.providers.injection_filter import (
+    BaseInjectionFilterProvider,
+    DefaultInjectionFilterProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -581,4 +585,6 @@ __all__ = [
     "DefaultArchitectProvider",
     "BaseAgentExperienceProvider",
     "DefaultAgentExperienceProvider",
+    "BaseInjectionFilterProvider",
+    "DefaultInjectionFilterProvider",
 ]

@@ -1745,7 +1745,7 @@ features:
   category: Security
   verdict: AUGMENT
   source: Pi + Hermes + Locus
-  provider: null
+  provider: default_injection_filter
   layer: sidecar
   inherited: false
   manual: false
@@ -1765,10 +1765,24 @@ features:
   evidence:
     files:
     - sidecar/security/injection_filter.py
-    symbols: []
+    - sidecar/providers/injection_filter.py
+    - locus-extension/src/security/prompt-injection.ts
+    symbols:
+    - file: sidecar/security/injection_filter.py
+      name: NormalizedPrompt
+    - file: sidecar/security/injection_filter.py
+      name: PromptEnforcementDecision
+    - file: sidecar/security/injection_filter.py
+      name: enforce_prompt_input
+    - file: sidecar/security/injection_filter.py
+      name: normalize_prompt
+    - file: sidecar/providers/injection_filter.py
+      name: DefaultInjectionFilterProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_injection_filter.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_injection_filter_service.py -q
   depends_on: []
 - id: F-0038
   title: Shell Sandbox

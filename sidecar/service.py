@@ -5373,6 +5373,101 @@ def create_app(
             "experiences": provider.list_experiences(limit=limit),
         }
 
+    # Prompt Injection Protection (Injection Filter) routes (SPEC §13.1: Prompt Injection Protection / F-0037 / US-68)
+    from sidecar.security.injection_filter import (
+        NormalizedPrompt,
+        PromptEnforcementDecision,
+        enforce_prompt_input,
+        normalize_prompt,
+        scan_tool_definition,
+    )
+    from sidecar.providers.injection_filter import (
+        BaseInjectionFilterProvider,
+        DefaultInjectionFilterProvider,
+    )
+
+    active_registry.register("injection_filter", "default_injection_filter", DefaultInjectionFilterProvider)
+
+    _injection_filter_provider_instance: Optional[BaseInjectionFilterProvider] = None
+
+    def _is_injection_filter_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("injection_filter"):
+            return False
+        v1 = config.get("locus.injection_filter.enabled")
+        if v1 is not None and not config.is_enabled("locus.injection_filter.enabled"):
+            return False
+        v2 = config.get("locus.security.prompt_injection.enabled")
+        if v2 is not None and not config.is_enabled("locus.security.prompt_injection.enabled"):
+            return False
+        return True
+
+    def _get_injection_filter_provider() -> BaseInjectionFilterProvider:
+        nonlocal _injection_filter_provider_instance
+        if _injection_filter_provider_instance is None:
+            provider_cls = app.state.registry.get_active_provider(
+                "injection_filter", default_name="default_injection_filter"
+            )
+            if provider_cls:
+                try:
+                    res = provider_cls()
+                    if isinstance(res, BaseInjectionFilterProvider):
+                        _injection_filter_provider_instance = res
+                except Exception:
+                    pass
+        if _injection_filter_provider_instance is None:
+            _injection_filter_provider_instance = DefaultInjectionFilterProvider()
+        return _injection_filter_provider_instance
+
+    @app.post("/security/injection/enforce")
+    def injection_enforce_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.1: Screen prompt input and return enforcement decision."""
+        if not _is_injection_filter_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Injection Filter is disabled",
+                    "disabled": "locus.injection_filter.enabled",
+                },
+            )
+        b = body or {}
+        text = str(b.get("input_text") or "")
+        ctx = b.get("context")
+        provider = _get_injection_filter_provider()
+        return provider.enforce(input_text=text, context=ctx)
+
+    @app.post("/security/injection/scan_tool")
+    def injection_scan_tool_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.1: Scan tool metadata definition."""
+        if not _is_injection_filter_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Injection Filter is disabled",
+                    "disabled": "locus.injection_filter.enabled",
+                },
+            )
+        b = body or {}
+        name = str(b.get("name") or "")
+        description = str(b.get("description") or "")
+        provider = _get_injection_filter_provider()
+        return provider.scan_tool(name=name, description=description)
+
+    @app.post("/security/injection/normalize")
+    def injection_normalize_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.1: Normalize input prompt."""
+        if not _is_injection_filter_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Injection Filter is disabled",
+                    "disabled": "locus.injection_filter.enabled",
+                },
+            )
+        b = body or {}
+        text = str(b.get("input_text") or "")
+        provider = _get_injection_filter_provider()
+        return provider.normalize(input_text=text)
+
     return app
 
 
