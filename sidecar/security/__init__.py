@@ -39,6 +39,12 @@ from sidecar.security.redact import (
     DataRedactor,
     mask_token,
 )
+from sidecar.security.think_scrubber import (
+    SUPPORTED_TAGS as SUPPORTED_THINK_TAGS,
+    ScrubState,
+    StreamingThinkScrubber,
+    ThinkTokenScrubber,
+)
 
 __all__ = [
     "NormalizedPrompt",
@@ -67,4 +73,8 @@ __all__ = [
     "SENSITIVE_QUERY_PARAMS",
     "DataRedactor",
     "mask_token",
+    "SUPPORTED_THINK_TAGS",
+    "ScrubState",
+    "StreamingThinkScrubber",
+    "ThinkTokenScrubber",
 ]

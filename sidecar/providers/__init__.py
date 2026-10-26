@@ -262,6 +262,10 @@ from sidecar.providers.data_redaction import (
     BaseDataRedactionProvider,
     DefaultDataRedactionProvider,
 )
+from sidecar.providers.think_scrubber import (
+    BaseThinkScrubberProvider,
+    DefaultThinkScrubberProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -617,4 +621,6 @@ __all__ = [
     "DefaultShellBlocklistProvider",
     "BaseDataRedactionProvider",
     "DefaultDataRedactionProvider",
+    "BaseThinkScrubberProvider",
+    "DefaultThinkScrubberProvider",
 ]

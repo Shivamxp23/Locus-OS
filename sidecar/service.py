@@ -6028,6 +6028,139 @@ def create_app(
             "patterns": provider.list_patterns(),
         }
 
+    # =========================================================================
+    # SPEC §13.9: Think Token Scrubbing (F-0042 / US-74)
+    # =========================================================================
+    from sidecar.security.think_scrubber import (
+        SUPPORTED_TAGS as SUPPORTED_THINK_TAGS,
+        ScrubState,
+        StreamingThinkScrubber,
+        ThinkTokenScrubber,
+    )
+    from sidecar.providers.think_scrubber import (
+        BaseThinkScrubberProvider,
+        DefaultThinkScrubberProvider,
+    )
+
+    active_registry.register("think_scrubber", "default_think_scrubber", DefaultThinkScrubberProvider)
+
+    _think_scrubber_provider_instance: Optional[BaseThinkScrubberProvider] = None
+
+    def _is_think_scrubber_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("think_scrubber"):
+            return False
+        v1 = config.get("locus.think_token_scrubbing.enabled")
+        if v1 is not None and not config.is_enabled("locus.think_token_scrubbing.enabled"):
+            return False
+        v2 = config.get("locus.security.think_scrubbing.enabled")
+        if v2 is not None and not config.is_enabled("locus.security.think_scrubbing.enabled"):
+            return False
+        return True
+
+    def _get_think_scrubber_provider() -> BaseThinkScrubberProvider:
+        nonlocal _think_scrubber_provider_instance
+        if _think_scrubber_provider_instance is None:
+            try:
+                res = app.state.registry.get_active_provider(
+                    "think_scrubber", default_name="default_think_scrubber"
+                )
+                if isinstance(res, BaseThinkScrubberProvider):
+                    _think_scrubber_provider_instance = res
+                elif isinstance(res, type) and issubclass(res, BaseThinkScrubberProvider):
+                    _think_scrubber_provider_instance = res()
+            except Exception:
+                pass
+        if _think_scrubber_provider_instance is None:
+            _think_scrubber_provider_instance = DefaultThinkScrubberProvider()
+        return _think_scrubber_provider_instance
+
+    @app.post("/security/think_scrubber/feed")
+    def think_scrubber_feed_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.9: Feed a delta text chunk through the streaming think scrubber."""
+        if not _is_think_scrubber_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Think Token Scrubbing is disabled",
+                    "disabled": "locus.think_token_scrubbing.enabled",
+                },
+            )
+        b = body or {}
+        delta = str(b.get("delta") if "delta" in b else (b.get("text") or ""))
+        provider = _get_think_scrubber_provider()
+        return {
+            "status": "ok",
+            "visible": provider.feed_chunk(delta),
+        }
+
+    @app.post("/security/think_scrubber/flush")
+    def think_scrubber_flush_route() -> Any:
+        """SPEC §13.9: Flush held-back stream buffer at end of assistant turn."""
+        if not _is_think_scrubber_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Think Token Scrubbing is disabled",
+                    "disabled": "locus.think_token_scrubbing.enabled",
+                },
+            )
+        provider = _get_think_scrubber_provider()
+        return {
+            "status": "ok",
+            "visible": provider.flush(),
+        }
+
+    @app.post("/security/think_scrubber/scrub_complete")
+    def think_scrubber_scrub_complete_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.9: Batch scrub thinking blocks from a complete text payload."""
+        if not _is_think_scrubber_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Think Token Scrubbing is disabled",
+                    "disabled": "locus.think_token_scrubbing.enabled",
+                },
+            )
+        b = body or {}
+        text = str(b.get("text") or "")
+        provider = _get_think_scrubber_provider()
+        return {
+            "status": "ok",
+            "scrubbed": provider.scrub_text(text),
+        }
+
+    @app.post("/security/think_scrubber/reset")
+    def think_scrubber_reset_route() -> Any:
+        """SPEC §13.9: Reset streaming scrubber state for a new turn."""
+        if not _is_think_scrubber_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Think Token Scrubbing is disabled",
+                    "disabled": "locus.think_token_scrubbing.enabled",
+                },
+            )
+        provider = _get_think_scrubber_provider()
+        provider.reset()
+        return {"status": "ok"}
+
+    @app.get("/security/think_scrubber/tags")
+    def think_scrubber_tags_route() -> Any:
+        """SPEC §13.9: List supported thinking token tags."""
+        if not _is_think_scrubber_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Think Token Scrubbing is disabled",
+                    "disabled": "locus.think_token_scrubbing.enabled",
+                },
+            )
+        provider = _get_think_scrubber_provider()
+        return {
+            "status": "ok",
+            "tags": provider.list_tags(),
+        }
+
     return app
 
 

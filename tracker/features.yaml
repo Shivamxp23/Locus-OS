@@ -1948,7 +1948,7 @@ features:
   category: Security
   verdict: AUGMENT
   source: Pi + Locus
-  provider: null
+  provider: default_think_scrubber
   layer: sidecar
   inherited: false
   manual: false
@@ -1968,10 +1968,20 @@ features:
   evidence:
     files:
     - sidecar/security/think_scrubber.py
-    symbols: []
+    - sidecar/providers/think_scrubber.py
+    - locus-extension/src/security/think-scrubber.ts
+    - tests/unit/test_think_scrubber.py
+    - tests/integration/test_think_scrubber_service.py
+    symbols:
+    - file: sidecar/security/think_scrubber.py
+      name: StreamingThinkScrubber
+    - file: sidecar/providers/think_scrubber.py
+      name: DefaultThinkScrubberProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_think_scrubber.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_think_scrubber_service.py -q
   depends_on: []
 - id: F-0043
   title: Message Sanitization
