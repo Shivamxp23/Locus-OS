@@ -1576,7 +1576,7 @@ features:
   category: Extensions
   verdict: LOCUS-NEW
   source: Hermes plugin_llm.py
-  provider: null
+  provider: default_plugin_llm
   layer: unknown
   inherited: false
   manual: false
@@ -1594,11 +1594,24 @@ features:
   spec_sha:
     '§9.9: Plugin LLM Sandboxing & Auxiliary Bridge': a0529db70a17ca0a
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/plugins/llm_bridge.py
+    - sidecar/providers/plugin_llm.py
+    - locus-extension/src/plugins/llm-bridge.ts
+    symbols:
+    - file: sidecar/plugins/llm_bridge.py
+      name: PluginLLMBridge
+    - file: sidecar/plugins/llm_bridge.py
+      name: DefaultAuxiliaryClient
+    - file: sidecar/plugins/llm_bridge.py
+      name: AuxiliaryClientPool
+    - file: sidecar/providers/plugin_llm.py
+      name: DefaultPluginLLMProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_plugin_llm.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_plugin_llm_service.py -q
   depends_on: []
 - id: F-0035
   title: Learning / Profiling / Reward Model

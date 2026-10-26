@@ -226,6 +226,10 @@ from sidecar.providers.acp_protocol import (
     BaseACPClientProvider,
     DefaultACPClientProvider,
 )
+from sidecar.providers.plugin_llm import (
+    BasePluginLLMProvider,
+    DefaultPluginLLMProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -563,4 +567,6 @@ __all__ = [
     "DefaultSkillMarketplaceProvider",
     "BaseACPClientProvider",
     "DefaultACPClientProvider",
+    "BasePluginLLMProvider",
+    "DefaultPluginLLMProvider",
 ]

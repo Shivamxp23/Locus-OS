@@ -5023,6 +5023,123 @@ def create_app(
         provider = _get_acp_provider()
         return provider.cancel(request_id)
 
+    # Plugin LLM Sandboxing & Auxiliary Bridge routes (SPEC §9.9: Plugin LLM Sandboxing & Auxiliary Bridge / F-0034 / US-65)
+    from sidecar.plugins.llm_bridge import (
+        AuxiliaryTimeoutError,
+        PluginLLMBridge,
+        QuotaExceededError,
+    )
+    from sidecar.providers.plugin_llm import (
+        BasePluginLLMProvider,
+        DefaultPluginLLMProvider,
+    )
+
+    active_registry.register("plugin_llm", "default_plugin_llm", DefaultPluginLLMProvider)
+
+    _plugin_llm_provider_instance: Optional[BasePluginLLMProvider] = None
+
+    def _is_plugin_llm_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("plugin_llm"):
+            return False
+        val1 = config.get("locus.plugin_llm.enabled")
+        if val1 is not None and not config.is_enabled("locus.plugin_llm.enabled"):
+            return False
+        val2 = config.get("locus.plugins.auxiliary_llm.enabled")
+        if val2 is not None and not config.is_enabled("locus.plugins.auxiliary_llm.enabled"):
+            return False
+        return True
+
+    def _get_plugin_llm_provider() -> BasePluginLLMProvider:
+        nonlocal _plugin_llm_provider_instance
+        if _plugin_llm_provider_instance is None:
+            provider_cls = app.state.registry.get_active_provider(
+                "plugin_llm", default_name="default_plugin_llm"
+            )
+            if provider_cls:
+                try:
+                    res = provider_cls()
+                    if isinstance(res, BasePluginLLMProvider):
+                        _plugin_llm_provider_instance = res
+                except Exception:
+                    pass
+        if _plugin_llm_provider_instance is None:
+            _plugin_llm_provider_instance = DefaultPluginLLMProvider()
+        return _plugin_llm_provider_instance
+
+    @app.post("/plugins/llm/generate")
+    def plugin_llm_generate_route(body: Dict[str, Any]) -> Any:
+        """SPEC §9.9 lines 6165-6187: Execute sandboxed plugin LLM call."""
+        if not _is_plugin_llm_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Plugin LLM Sandboxing is disabled",
+                    "disabled": "locus.plugin_llm.enabled",
+                },
+            )
+        plugin_id = str(body.get("plugin_id", "default-plugin"))
+        messages = list(body.get("messages") or [])
+        max_tokens = int(body.get("max_tokens", 500))
+        temperature = float(body.get("temperature", 0.2))
+        timeout = float(body.get("timeout", 15.0))
+
+        provider = _get_plugin_llm_provider()
+        res = provider.generate(
+            plugin_id=plugin_id,
+            messages=messages,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            timeout=timeout,
+        )
+        if res.get("status") == "error":
+            if res.get("error") == "quota_exceeded":
+                return JSONResponse(status_code=429, content=res)
+            return JSONResponse(status_code=400, content=res)
+        return res
+
+    @app.get("/plugins/llm/quota")
+    def plugin_llm_quota_route(plugin_id: str = "default-plugin") -> Any:
+        """SPEC §9.9 lines 6162-6164: Get plugin daily quota and usage."""
+        if not _is_plugin_llm_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Plugin LLM Sandboxing is disabled",
+                    "disabled": "locus.plugin_llm.enabled",
+                },
+            )
+        provider = _get_plugin_llm_provider()
+        return provider.get_quota(plugin_id=plugin_id)
+
+    @app.post("/plugins/llm/reset")
+    def plugin_llm_reset_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §9.9 line 6188: Reset plugin daily token counter."""
+        if not _is_plugin_llm_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Plugin LLM Sandboxing is disabled",
+                    "disabled": "locus.plugin_llm.enabled",
+                },
+            )
+        plugin_id = str((body or {}).get("plugin_id", "default-plugin"))
+        provider = _get_plugin_llm_provider()
+        return provider.reset_quota(plugin_id=plugin_id)
+
+    @app.get("/plugins/llm/usage")
+    def plugin_llm_usage_route() -> Any:
+        """SPEC §9.9 lines 6189-6190: Get aggregated usage across all plugins."""
+        if not _is_plugin_llm_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Plugin LLM Sandboxing is disabled",
+                    "disabled": "locus.plugin_llm.enabled",
+                },
+            )
+        provider = _get_plugin_llm_provider()
+        return provider.get_all_usage()
+
     return app
 
 
