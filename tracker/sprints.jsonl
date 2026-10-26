@@ -174,3 +174,4 @@
 {"event":"planned","sprint":"S57","start":"2027-05-31","end":"2027-06-03","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-63"],"date":"2027-05-31"}
 {"event":"accepted","story":"US-63","feature":"F-0119","level":4,"note":"9 unit and integration tests passing; SkillManifest, SkillMarketplaceEngine multi-index, DefaultSkillMarketplaceProvider, 503 off-switch, verified at L4 INTEGRATED (85%)","date":"2027-06-03","commit":"e78db0fba4f0"}
 {"event":"closed","sprint":"S57","date":"2027-06-03","planned_points":2,"velocity":2,"done":["US-63"],"not_done":{}}
+{"event":"planned","sprint":"S58","start":"2027-06-04","end":"2027-06-07","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-64"],"date":"2027-06-04"}
