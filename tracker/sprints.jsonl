@@ -217,3 +217,5 @@
 {"event":"accepted","story":"US-77","feature":"F-0105","level":4,"note":"Accept US-77: Web Search 8 providers and manager verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-07-29","commit":"8539a2f32ed5"}
 {"event":"closed","sprint":"S71","date":"2027-07-29","planned_points":2,"velocity":2,"done":["US-77"],"not_done":{}}
 {"event":"planned","sprint":"S72","start":"2027-07-30","end":"2027-08-02","goal":"A research job runs on the VM by itself and the owner hears about it on Telegram.","capacity":2,"points":2,"stories":["US-78"],"date":"2027-07-30"}
+{"event":"accepted","story":"US-78","feature":"F-0045","level":4,"note":"Accept US-78: Browser Automation and Screen Intelligence verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-08-02","commit":"f42e753b5031"}
+{"event":"closed","sprint":"S72","date":"2027-08-02","planned_points":2,"velocity":2,"done":["US-78"],"not_done":{}}
