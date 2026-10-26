@@ -1904,7 +1904,7 @@ features:
   category: Security
   verdict: AUGMENT
   source: Pi + Locus
-  provider: null
+  provider: default_data_redaction
   layer: sidecar
   inherited: false
   manual: false
@@ -1924,10 +1924,20 @@ features:
   evidence:
     files:
     - sidecar/security/redact.py
-    symbols: []
+    - sidecar/providers/data_redaction.py
+    - locus-extension/src/security/redact.ts
+    - tests/unit/test_data_redaction.py
+    - tests/integration/test_data_redaction_service.py
+    symbols:
+    - file: sidecar/security/redact.py
+      name: DataRedactor
+    - file: sidecar/providers/data_redaction.py
+      name: DefaultDataRedactionProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_data_redaction.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_data_redaction_service.py -q
   depends_on: []
 - id: F-0042
   title: Think Token Scrubbing

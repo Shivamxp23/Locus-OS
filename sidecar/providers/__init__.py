@@ -258,6 +258,10 @@ from sidecar.providers.shell_blocklist import (
     BaseShellBlocklistProvider,
     DefaultShellBlocklistProvider,
 )
+from sidecar.providers.data_redaction import (
+    BaseDataRedactionProvider,
+    DefaultDataRedactionProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -611,4 +615,6 @@ __all__ = [
     "DefaultApprovalGateProvider",
     "BaseShellBlocklistProvider",
     "DefaultShellBlocklistProvider",
+    "BaseDataRedactionProvider",
+    "DefaultDataRedactionProvider",
 ]

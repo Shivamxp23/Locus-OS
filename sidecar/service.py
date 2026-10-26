@@ -5925,6 +5925,109 @@ def create_app(
             "patterns": provider.list_blocked_patterns(),
         }
 
+    # Data Redaction routes (SPEC §13.8: Data Redaction / F-0041 / US-73)
+    from sidecar.security.redact import (
+        KEY_PATTERNS,
+        SENSITIVE_BODY_KEYS,
+        SENSITIVE_QUERY_PARAMS,
+        DataRedactor,
+        mask_token,
+    )
+    from sidecar.providers.data_redaction import (
+        BaseDataRedactionProvider,
+        DefaultDataRedactionProvider,
+    )
+
+    active_registry.register("data_redaction", "default_data_redaction", DefaultDataRedactionProvider)
+
+    _data_redaction_provider_instance: Optional[BaseDataRedactionProvider] = None
+
+    def _is_data_redaction_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("data_redaction"):
+            return False
+        v1 = config.get("locus.data_redaction.enabled")
+        if v1 is not None and not config.is_enabled("locus.data_redaction.enabled"):
+            return False
+        v2 = config.get("locus.security.data_redaction.enabled")
+        if v2 is not None and not config.is_enabled("locus.security.data_redaction.enabled"):
+            return False
+        v3 = config.get("locus.security.redaction.enabled")
+        if v3 is not None and not config.is_enabled("locus.security.redaction.enabled"):
+            return False
+        return True
+
+    def _get_data_redaction_provider() -> BaseDataRedactionProvider:
+        nonlocal _data_redaction_provider_instance
+        if _data_redaction_provider_instance is None:
+            provider_cls = app.state.registry.get_active_provider(
+                "data_redaction", default_name="default_data_redaction"
+            )
+            if provider_cls:
+                try:
+                    res = provider_cls()
+                    if isinstance(res, BaseDataRedactionProvider):
+                        _data_redaction_provider_instance = res
+                except Exception:
+                    pass
+        if _data_redaction_provider_instance is None:
+            _data_redaction_provider_instance = DefaultDataRedactionProvider()
+        return _data_redaction_provider_instance
+
+    @app.post("/security/redact/text")
+    def redact_text_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.8: Redact sensitive API keys, tokens, and query params from text."""
+        if not _is_data_redaction_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Data Redaction is disabled",
+                    "disabled": "locus.data_redaction.enabled",
+                },
+            )
+        b = body or {}
+        text = str(b.get("text") or "")
+        provider = _get_data_redaction_provider()
+        return {
+            "status": "ok",
+            "redacted": provider.redact_text(text),
+        }
+
+    @app.post("/security/redact/structure")
+    def redact_structure_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §13.8: Redact sensitive fields in nested JSON dictionaries and lists."""
+        if not _is_data_redaction_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Data Redaction is disabled",
+                    "disabled": "locus.data_redaction.enabled",
+                },
+            )
+        b = body or {}
+        payload = b.get("payload")
+        provider = _get_data_redaction_provider()
+        return {
+            "status": "ok",
+            "redacted": provider.redact_payload(payload),
+        }
+
+    @app.get("/security/redact/patterns")
+    def redact_patterns_route() -> Any:
+        """SPEC §13.8: List active vendor and custom redaction patterns."""
+        if not _is_data_redaction_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Data Redaction is disabled",
+                    "disabled": "locus.data_redaction.enabled",
+                },
+            )
+        provider = _get_data_redaction_provider()
+        return {
+            "status": "ok",
+            "patterns": provider.list_patterns(),
+        }
+
     return app
 
 

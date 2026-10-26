@@ -1,5 +1,5 @@
 """
-SPEC §13.1, §13.2, §13.4, §13.5, §13.7: Security modules.
+SPEC §13.1, §13.2, §13.4, §13.5, §13.7, §13.8: Security modules.
 """
 from sidecar.security.injection_filter import (
     NormalizedPrompt,
@@ -32,6 +32,13 @@ from sidecar.security.shell_policy import (
     ShellInspectionDecision,
     ShellPolicyEngine,
 )
+from sidecar.security.redact import (
+    KEY_PATTERNS,
+    SENSITIVE_BODY_KEYS,
+    SENSITIVE_QUERY_PARAMS,
+    DataRedactor,
+    mask_token,
+)
 
 __all__ = [
     "NormalizedPrompt",
@@ -55,4 +62,9 @@ __all__ = [
     "SENSITIVE_HOME_FILES",
     "ShellInspectionDecision",
     "ShellPolicyEngine",
+    "KEY_PATTERNS",
+    "SENSITIVE_BODY_KEYS",
+    "SENSITIVE_QUERY_PARAMS",
+    "DataRedactor",
+    "mask_token",
 ]
