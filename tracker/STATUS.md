@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `72cef4cd9e` - 2026-10-27T02:34:44+0530 - with test runs
+- commit `33caeb73a8` - 2026-10-27T02:56:24+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **53.1%** | old claimed average 71.4% over 86 rows
-- integrated or better: 72 | proven: 0 | overclaims (claimed >= verified + 25): 38 | no evidence: 44
-- by level: {'FILES_PRESENT': 5, 'INHERITED_OK': 12, 'INTEGRATED': 60, 'NO_EVIDENCE': 44, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **53.6%** | old claimed average 71.4% over 86 rows
+- integrated or better: 73 | proven: 0 | overclaims (claimed >= verified + 25): 37 | no evidence: 44
+- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 61, 'NO_EVIDENCE': 44, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -27,8 +27,8 @@
 | F-0068 | Connectivity Check | 60% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
 | F-0072 | Collector + Chunker | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/collector.py. Create them or correct the path. |
 | F-0075 | Content Engine | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/content/engine.py. Create them or correct the path. |
-| F-0040 | Shell Blocklist | 70% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0048 | MCP Server/Client | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/mcp_client.py. Create them or correct the path. |
+| F-0065 | Error Classifier | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/diagnostics/error_classifier.py. Create them or correct  |
 
 ## All features
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -72,7 +72,7 @@
 | F-0037 | Injection Filter | 80% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0038 | Shell Sandbox | 100% | 100% | INHERITED_OK |  |  |
 | F-0039 | Project Trust | 100% | 100% | INHERITED_OK |  |  |
-| F-0040 | Shell Blocklist | 70% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
+| F-0040 | Shell Blocklist | 70% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0041 | Data Redaction | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/redact.py. Create them or correct the path. |
 | F-0042 | Think Token Scrubbing | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/think_scrubber.py. Create them or correct the p |
 | F-0043 | Message Sanitization | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/security/sanitizer.py. Create them or correct the path. |
