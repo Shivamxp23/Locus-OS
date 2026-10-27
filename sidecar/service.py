@@ -6713,6 +6713,10 @@ def create_app(
         BaseFourLevelEmergencyProtocolProvider,
         DefaultFourLevelEmergencyProtocolProvider,
     )
+    from sidecar.providers.pageindex import (
+        BasePageIndexRetrievalProvider,
+        DefaultPageIndexRetrievalProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -9002,6 +9006,99 @@ def create_app(
                 },
             )
         provider = _get_emergency_protocol_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    active_registry.register(
+        "pageindex_retrieval", "default_pageindex", DefaultPageIndexRetrievalProvider
+    )
+    active_registry.register(
+        "pageindex", "default_pageindex", DefaultPageIndexRetrievalProvider
+    )
+
+    def _is_pageindex_enabled() -> Tuple[bool, str]:
+        switch = "locus.pageindex_retrieval.enabled"
+        val = config.get(switch)
+        if val is not None and not config.is_enabled(switch):
+            return False, switch
+        return True, ""
+
+    def _get_pageindex_provider() -> BasePageIndexRetrievalProvider:
+        if not hasattr(app.state, "pageindex_provider") or app.state.pageindex_provider is None:
+            prov_cls = active_registry.get("pageindex_retrieval", "default_pageindex")
+            if prov_cls:
+                app.state.pageindex_provider = prov_cls()
+            else:
+                app.state.pageindex_provider = DefaultPageIndexRetrievalProvider()
+        return app.state.pageindex_provider
+
+    @app.post("/pageindex/build-tree")
+    def pageindex_build_tree_route(body: Dict[str, Any]) -> Any:
+        """SPEC §27.1: Build hierarchical PageIndex tree over markdown content."""
+        enabled, switch = _is_pageindex_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "PageIndex retrieval is disabled",
+                    "disabled": switch,
+                },
+            )
+        content = body.get("content", "")
+        doc_name = body.get("doc_name", "document.md")
+        min_node_token = int(body.get("min_node_token", 50))
+        summary_token_threshold = int(body.get("summary_token_threshold", 200))
+        provider = _get_pageindex_provider()
+        res = provider.build_tree(
+            content=content,
+            doc_name=doc_name,
+            min_node_token=min_node_token,
+            summary_token_threshold=summary_token_threshold,
+        )
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/pageindex/retrieve")
+    def pageindex_retrieve_route(body: Dict[str, Any]) -> Any:
+        """SPEC §27.1: Perform vectorless reasoning tree search."""
+        enabled, switch = _is_pageindex_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "PageIndex retrieval is disabled",
+                    "disabled": switch,
+                },
+            )
+        query = body.get("query", "")
+        doc_name = body.get("doc_name")
+        tree_data = body.get("tree_data")
+        provider = _get_pageindex_provider()
+        res = provider.retrieve(
+            query=query,
+            doc_name=doc_name,
+            tree_data=tree_data,
+        )
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/pageindex/status")
+    def pageindex_status_route() -> Any:
+        """SPEC §27.1: Diagnostic status of PageIndex retrieval."""
+        enabled, switch = _is_pageindex_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "PageIndex retrieval is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_pageindex_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

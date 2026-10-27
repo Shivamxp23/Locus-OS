@@ -2888,10 +2888,23 @@ features:
   evidence:
     files:
     - sidecar/search/pageindex.py
-    symbols: []
+    - sidecar/providers/pageindex.py
+    - locus-extension/src/search/pageindex.ts
+    - locus-extension/src/search/index.ts
+    symbols:
+    - name: PageIndexEngine
+      file: sidecar/search/pageindex.py
+    - name: PageIndexDoc
+      file: sidecar/search/pageindex.py
+    - name: PageIndexNode
+      file: sidecar/search/pageindex.py
+    - name: DefaultPageIndexRetrievalProvider
+      file: sidecar/providers/pageindex.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_pageindex_retrieval.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_pageindex_service.py -q
   depends_on: []
 - id: F-0060
   title: Obsidian Self-Hosted LiveSync & CouchDB Real-Time Sync Engine

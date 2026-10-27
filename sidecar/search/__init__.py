@@ -3,6 +3,12 @@ SPEC §15.1 lines 2713-2719:
 Web Search module re-exports (F-0105 / US-77).
 """
 from sidecar.search.manager import WebSearchManager
+from sidecar.search.pageindex import (
+    PageIndexDoc,
+    PageIndexEngine,
+    PageIndexNode,
+    PageIndexSearchResult,
+)
 from sidecar.search.providers import (
     BaseSearchProvider,
     BraveSearchProvider,
@@ -30,4 +36,8 @@ __all__ = [
     "FullContentFetchProvider",
     "MockSearchProvider",
     "WebSearchManager",
+    "PageIndexDoc",
+    "PageIndexEngine",
+    "PageIndexNode",
+    "PageIndexSearchResult",
 ]

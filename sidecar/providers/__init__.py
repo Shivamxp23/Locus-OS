@@ -437,6 +437,10 @@ from sidecar.providers.emergency_protocol import (
     BaseFourLevelEmergencyProtocolProvider,
     DefaultFourLevelEmergencyProtocolProvider,
 )
+from sidecar.providers.pageindex import (
+    BasePageIndexRetrievalProvider,
+    DefaultPageIndexRetrievalProvider,
+)
 
 __all__ = [
 
@@ -740,4 +744,6 @@ __all__ = [
     "DefaultCrossFactionEfficiencyProvider",
     "BaseFourLevelEmergencyProtocolProvider",
     "DefaultFourLevelEmergencyProtocolProvider",
+    "BasePageIndexRetrievalProvider",
+    "DefaultPageIndexRetrievalProvider",
 ]
