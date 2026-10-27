@@ -470,6 +470,10 @@ from sidecar.providers.error_classifier import (
     BaseErrorClassifierProvider,
     DefaultErrorClassifierProvider,
 )
+from sidecar.providers.auxiliary_llm import (
+    BaseAuxiliaryLLMProvider,
+    DefaultAuxiliaryLLMProvider,
+)
 
 __all__ = [
 
@@ -790,4 +794,6 @@ __all__ = [
     "DefaultDualInterfaceProvider",
     "BaseErrorClassifierProvider",
     "DefaultErrorClassifierProvider",
+    "BaseAuxiliaryLLMProvider",
+    "DefaultAuxiliaryLLMProvider",
 ]

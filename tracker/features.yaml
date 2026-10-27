@@ -5466,11 +5466,11 @@ features:
   - '§29.2: Auxiliary LLM Client'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Observability
   verdict: LOCUS-NEW
-  source: null
+  source: Hermes auxiliary_client.py
   provider: null
-  layer: unknown
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -5479,11 +5479,34 @@ features:
   spec_sha:
     '§29.2: Auxiliary LLM Client': 9f48b55bdb49c40e
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/diagnostics/auxiliary_client.py
+    - sidecar/diagnostics/__init__.py
+    - sidecar/providers/auxiliary_llm.py
+    - sidecar/providers/__init__.py
+    - sidecar/service.py
+    - locus-extension/src/auxiliary-client.ts
+    - locus-extension/src/diagnostics/auxiliary-client.ts
+    - locus-extension/src/diagnostics/index.ts
+    - locus-extension/src/index.ts
+    - tests/unit/test_auxiliary_llm.py
+    - tests/integration/test_auxiliary_llm_service.py
+    symbols:
+    - name: AuxiliaryLLMClient
+      file: sidecar/diagnostics/auxiliary_client.py
+    - name: AuxiliaryLLMConfig
+      file: sidecar/diagnostics/auxiliary_client.py
+    - name: AuxiliaryGenerationRequest
+      file: sidecar/diagnostics/auxiliary_client.py
+    - name: AuxiliaryGenerationResult
+      file: sidecar/diagnostics/auxiliary_client.py
+    - name: DefaultAuxiliaryLLMProvider
+      file: sidecar/providers/auxiliary_llm.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_auxiliary_llm.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_auxiliary_llm_service.py -q
   depends_on: []
 - id: F-0125
   title: 'Modularity foundation: provider registry + config accessor (sidecar and TypeScript)'

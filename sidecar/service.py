@@ -6745,6 +6745,10 @@ def create_app(
         BaseErrorClassifierProvider,
         DefaultErrorClassifierProvider,
     )
+    from sidecar.providers.auxiliary_llm import (
+        BaseAuxiliaryLLMProvider,
+        DefaultAuxiliaryLLMProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -9756,6 +9760,84 @@ def create_app(
                 },
             )
         provider = _get_error_classifier_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # Auxiliary LLM Client routes (SPEC §29.2 / F-0124 / US-103)
+    active_registry.register(
+        "auxiliary_llm", "default_auxiliary_llm", DefaultAuxiliaryLLMProvider
+    )
+
+    def _is_auxiliary_llm_enabled() -> Tuple[bool, str]:
+        switch = "locus.auxiliary_llm_client.enabled"
+        val = config.get(switch)
+        if val is not None and not config.is_enabled(switch):
+            return False, switch
+        return True, ""
+
+    def _get_auxiliary_llm_provider() -> BaseAuxiliaryLLMProvider:
+        if not hasattr(app.state, "auxiliary_llm_provider") or app.state.auxiliary_llm_provider is None:
+            prov_cls = active_registry.get("auxiliary_llm", "default_auxiliary_llm")
+            if prov_cls:
+                app.state.auxiliary_llm_provider = prov_cls()
+            else:
+                app.state.auxiliary_llm_provider = DefaultAuxiliaryLLMProvider()
+        return app.state.auxiliary_llm_provider
+
+    @app.post("/auxiliary/llm/generate")
+    def auxiliary_llm_generate_route(body: Dict[str, Any]) -> Any:
+        """SPEC §29.2: Execute background generation with auxiliary client."""
+        enabled, switch = _is_auxiliary_llm_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Auxiliary LLM client is disabled",
+                    "disabled": switch,
+                },
+            )
+        prompt = str(body.get("prompt", ""))
+        system_prompt = body.get("system_prompt")
+        model = body.get("model")
+        provider = _get_auxiliary_llm_provider()
+        res = provider.generate(prompt=prompt, system_prompt=system_prompt, model=model)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/auxiliary/llm/model")
+    def auxiliary_llm_model_route() -> Any:
+        """SPEC §29.2: Get active auxiliary model configuration."""
+        enabled, switch = _is_auxiliary_llm_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Auxiliary LLM client is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_auxiliary_llm_provider()
+        res = provider.get_model_info()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/auxiliary/llm/status")
+    def auxiliary_llm_status_route() -> Any:
+        """SPEC §29.2: Auxiliary LLM client operational status."""
+        enabled, switch = _is_auxiliary_llm_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Auxiliary LLM client is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_auxiliary_llm_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)
