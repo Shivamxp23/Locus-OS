@@ -2257,11 +2257,47 @@ features:
     '§18.5: Obsidian MCP (Vault Bridge)': d136113d50bb1ae7
   evidence:
     files:
-    - sidecar/mcp_client.py
-    symbols: []
+    - sidecar/mcp/client.py
+    - sidecar/mcp/registry.py
+    - sidecar/mcp/sanitize.py
+    - sidecar/mcp/server.py
+    - sidecar/providers/mcp.py
+    - locus-extension/src/mcp/client.ts
+    - locus-extension/src/mcp/registry.ts
+    - locus-extension/src/mcp/server.ts
+    - locus-extension/src/mcp/index.ts
+    symbols:
+    - name: sanitize_for_llm
+      file: sidecar/mcp/sanitize.py
+    - name: strip_control_chars
+      file: sidecar/mcp/sanitize.py
+    - name: strip_instruction_fences
+      file: sidecar/mcp/sanitize.py
+    - name: truncate_to_bytes
+      file: sidecar/mcp/sanitize.py
+    - name: MockMcpClient
+      file: sidecar/mcp/client.py
+    - name: McpStdioClient
+      file: sidecar/mcp/client.py
+    - name: McpHttpClient
+      file: sidecar/mcp/client.py
+    - name: McpRegistry
+      file: sidecar/mcp/registry.py
+    - name: McpServerConfig
+      file: sidecar/mcp/registry.py
+    - name: SecretRef
+      file: sidecar/mcp/registry.py
+    - name: LocusMcpServer
+      file: sidecar/mcp/server.py
+    - name: McpWriteRecord
+      file: sidecar/mcp/server.py
+    - name: DefaultMcpProvider
+      file: sidecar/providers/mcp.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_mcp_server_client.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_mcp_service.py -q
   depends_on: []
 - id: F-0049
   title: Trajectory Recording

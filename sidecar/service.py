@@ -6657,6 +6657,10 @@ def create_app(
         BaseGracefulRestartProvider,
         DefaultGracefulRestartProvider,
     )
+    from sidecar.providers.mcp import (
+        BaseMcpProvider,
+        DefaultMcpProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -7102,6 +7106,174 @@ def create_app(
             )
         provider = _get_graceful_restart_provider()
         return {"status": "ok", **provider.get_status()}
+
+    # Model Context Protocol (MCP Server/Client) (F-0048 / US-81)
+    active_registry.register(
+        "mcp_server_client", "default_mcp", DefaultMcpProvider
+    )
+    active_registry.register(
+        "mcp", "default_mcp", DefaultMcpProvider
+    )
+
+    def _is_mcp_enabled() -> tuple[bool, str]:
+        v1 = config.get("locus.mcp_server_client.enabled")
+        if v1 is not None and not config.is_enabled("locus.mcp_server_client.enabled"):
+            return False, "locus.mcp_server_client.enabled"
+        v2 = config.get("locus.mcp.enabled")
+        if v2 is not None and not config.is_enabled("locus.mcp.enabled"):
+            return False, "locus.mcp.enabled"
+        if not app.state.registry.is_feature_enabled("mcp_server_client") and not app.state.registry.is_feature_enabled("mcp"):
+            return False, "locus.mcp_server_client.enabled"
+        return True, ""
+
+    def _get_mcp_provider() -> BaseMcpProvider:
+        if not hasattr(app.state, "mcp_provider") or app.state.mcp_provider is None:
+            res = app.state.registry.get_active_provider(
+                "mcp_server_client", default_name="default_mcp"
+            )
+            if isinstance(res, BaseMcpProvider):
+                app.state.mcp_provider = res
+            elif callable(res):
+                app.state.mcp_provider = res()
+            else:
+                app.state.mcp_provider = DefaultMcpProvider()
+        return app.state.mcp_provider
+
+    @app.post("/mcp/servers/connect")
+    async def mcp_server_connect_route(body: Dict[str, Any]) -> Any:
+        """SPEC §18.1-18.4: Connect to an external MCP server."""
+        enabled, switch = _is_mcp_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "MCP server/client is disabled",
+                    "disabled": switch,
+                },
+            )
+        server_id = body.get("server_id")
+        if not server_id:
+            raise HTTPException(status_code=400, detail="Missing required field: server_id")
+        provider = _get_mcp_provider()
+        res = await provider.connect_server(server_id)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/mcp/servers/disconnect")
+    async def mcp_server_disconnect_route(body: Dict[str, Any]) -> Any:
+        """SPEC §18.1-18.4: Disconnect from an external MCP server."""
+        enabled, switch = _is_mcp_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "MCP server/client is disabled",
+                    "disabled": switch,
+                },
+            )
+        server_id = body.get("server_id")
+        if not server_id:
+            raise HTTPException(status_code=400, detail="Missing required field: server_id")
+        provider = _get_mcp_provider()
+        res = await provider.disconnect_server(server_id)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/mcp/servers/list")
+    def mcp_servers_list_route() -> Any:
+        """SPEC §18.1-18.4: List configured MCP servers and status."""
+        enabled, switch = _is_mcp_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "MCP server/client is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_mcp_provider()
+        res = provider.list_servers()
+        if isinstance(res, list) and res and isinstance(res[0], dict) and res[0].get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res[0])
+        return {"status": "ok", "servers": res}
+
+    @app.get("/mcp/tools/list")
+    async def mcp_tools_list_route() -> Any:
+        """SPEC §18.1-18.4: List all sanitized tools from connected servers."""
+        enabled, switch = _is_mcp_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "MCP server/client is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_mcp_provider()
+        res = await provider.list_tools()
+        if isinstance(res, list) and res and isinstance(res[0], dict) and res[0].get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res[0])
+        return {"status": "ok", "tools": res}
+
+    @app.post("/mcp/tools/call")
+    async def mcp_tools_call_route(body: Dict[str, Any]) -> Any:
+        """SPEC §18.1-18.4: Call a tool on a connected MCP server."""
+        enabled, switch = _is_mcp_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "MCP server/client is disabled",
+                    "disabled": switch,
+                },
+            )
+        server_id = body.get("server_id")
+        tool_name = body.get("tool_name")
+        if not server_id or not tool_name:
+            raise HTTPException(status_code=400, detail="Missing server_id or tool_name")
+        provider = _get_mcp_provider()
+        res = await provider.call_tool(server_id, tool_name, body.get("arguments"))
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return {"status": "ok", "result": res}
+
+    @app.post("/mcp/server/jsonrpc")
+    def mcp_server_jsonrpc_route(body: Dict[str, Any]) -> Any:
+        """SPEC §18.1-18.4: JSON-RPC 2.0 endpoint for Locus-as-MCP-Server."""
+        enabled, switch = _is_mcp_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "MCP server/client is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_mcp_provider()
+        res = provider.handle_server_jsonrpc(body, client_info="remote-http-client")
+        if isinstance(res, dict) and res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/mcp/status")
+    def mcp_status_route() -> Any:
+        """SPEC §18.1-18.4: Get status of MCP provider and supervisor."""
+        enabled, switch = _is_mcp_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "MCP server/client is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_mcp_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
 
     return app
 

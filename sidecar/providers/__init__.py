@@ -390,6 +390,7 @@ from sidecar.providers.subagents import (
 )
 from sidecar.providers.trajectory import BaseTrajectoryRecorder, TrajectorySession, TurnRecord
 from sidecar.providers.vault_sync import BaseVaultSyncProvider, SyncState
+from sidecar.providers.mcp import BaseMcpProvider, DefaultMcpProvider
 
 __all__ = [
 
@@ -659,4 +660,6 @@ __all__ = [
     "DefaultScreenProvider",
     "BaseGracefulRestartProvider",
     "DefaultGracefulRestartProvider",
+    "BaseMcpProvider",
+    "DefaultMcpProvider",
 ]
