@@ -6753,6 +6753,10 @@ def create_app(
         BaseHealthChecksProvider,
         DefaultHealthChecksProvider,
     )
+    from sidecar.providers.notifications import (
+        BaseNotificationsProvider,
+        DefaultNotificationsProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -9917,6 +9921,102 @@ def create_app(
                 },
             )
         provider = _get_health_checks_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # Notifications routes (SPEC §29.4 / F-0067 / US-105)
+    active_registry.register(
+        "notifications", "default_notifications", DefaultNotificationsProvider
+    )
+
+    def _is_notifications_enabled() -> Tuple[bool, str]:
+        switch = "locus.notifications.enabled"
+        val = config.get(switch)
+        if val is not None and not config.is_enabled(switch):
+            return False, switch
+        return True, ""
+
+    def _get_notifications_provider() -> BaseNotificationsProvider:
+        if not hasattr(app.state, "notifications_provider") or app.state.notifications_provider is None:
+            prov_cls = active_registry.get("notifications", "default_notifications")
+            if prov_cls:
+                app.state.notifications_provider = prov_cls()
+            else:
+                app.state.notifications_provider = DefaultNotificationsProvider()
+        return app.state.notifications_provider
+
+    @app.post("/notifications/send")
+    def notifications_send_route(body: Dict[str, Any]) -> Any:
+        """SPEC §29.4: Priority-aware notification dispatch."""
+        enabled, switch = _is_notifications_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Notifications feature is disabled",
+                    "disabled": switch,
+                },
+            )
+        message = str(body.get("message", ""))
+        priority = str(body.get("priority", "MEDIUM"))
+        metadata = body.get("metadata") or {}
+        provider = _get_notifications_provider()
+        res = provider.send_notification(message=message, priority=priority, metadata=metadata)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/notifications/queue")
+    def notifications_queue_route() -> Any:
+        """SPEC §29.4: View buffered notifications."""
+        enabled, switch = _is_notifications_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Notifications feature is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_notifications_provider()
+        res = provider.get_queue(undelivered_only=True)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/notifications/process_queue")
+    def notifications_process_queue_route() -> Any:
+        """SPEC §29.4: Flush and deliver queued notification digest."""
+        enabled, switch = _is_notifications_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Notifications feature is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_notifications_provider()
+        res = provider.process_queue()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/notifications/status")
+    def notifications_status_route() -> Any:
+        """SPEC §29.4: Notification subsystem status and telemetry."""
+        enabled, switch = _is_notifications_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Notifications feature is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_notifications_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

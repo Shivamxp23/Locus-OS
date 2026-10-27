@@ -21,6 +21,14 @@ from sidecar.diagnostics.health_checker import (
     SystemHealthReport,
     health_check_all,
 )
+from sidecar.diagnostics.notifications import (
+    BaseNotificationChannel,
+    MemoryNotificationChannel,
+    NotificationDeliveryResult,
+    NotificationDispatcher,
+    NotificationPriority,
+    QueuedNotification,
+)
 
 __all__ = [
     "ErrorCategory",
@@ -37,4 +45,10 @@ __all__ = [
     "ProviderHealthResult",
     "SystemHealthReport",
     "health_check_all",
+    "NotificationPriority",
+    "QueuedNotification",
+    "NotificationDeliveryResult",
+    "BaseNotificationChannel",
+    "MemoryNotificationChannel",
+    "NotificationDispatcher",
 ]

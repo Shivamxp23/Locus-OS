@@ -3292,10 +3292,33 @@ features:
   evidence:
     files:
     - sidecar/gateway/
-    symbols: []
+    - sidecar/diagnostics/notifications.py
+    - sidecar/diagnostics/__init__.py
+    - sidecar/providers/notifications.py
+    - sidecar/providers/__init__.py
+    - sidecar/service.py
+    - locus-extension/src/notifications.ts
+    - locus-extension/src/index.ts
+    - tests/unit/test_notifications.py
+    - tests/integration/test_notifications_service.py
+    symbols:
+    - name: NotificationDispatcher
+      file: sidecar/diagnostics/notifications.py
+    - name: NotificationPriority
+      file: sidecar/diagnostics/notifications.py
+    - name: QueuedNotification
+      file: sidecar/diagnostics/notifications.py
+    - name: NotificationDeliveryResult
+      file: sidecar/diagnostics/notifications.py
+    - name: MemoryNotificationChannel
+      file: sidecar/diagnostics/notifications.py
+    - name: DefaultNotificationsProvider
+      file: sidecar/providers/notifications.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_notifications.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_notifications_service.py -q
   depends_on: []
 - id: F-0068
   title: Connectivity Check

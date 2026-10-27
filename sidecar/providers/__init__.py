@@ -478,6 +478,10 @@ from sidecar.providers.health_checks import (
     BaseHealthChecksProvider,
     DefaultHealthChecksProvider,
 )
+from sidecar.providers.notifications import (
+    BaseNotificationsProvider,
+    DefaultNotificationsProvider,
+)
 
 __all__ = [
 
@@ -802,4 +806,6 @@ __all__ = [
     "DefaultAuxiliaryLLMProvider",
     "BaseHealthChecksProvider",
     "DefaultHealthChecksProvider",
+    "BaseNotificationsProvider",
+    "DefaultNotificationsProvider",
 ]
