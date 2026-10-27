@@ -6733,6 +6733,10 @@ def create_app(
         BaseLinkDumpLoggerProvider,
         DefaultLinkDumpLoggerProvider,
     )
+    from sidecar.providers.excalidraw import (
+        BaseDiagramGeneratorProvider,
+        DefaultDiagramGeneratorProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -9468,6 +9472,76 @@ def create_app(
                 },
             )
         provider = _get_link_dump_logger_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    active_registry.register(
+        "excalidraw_builder", "default_diagram_generator", DefaultDiagramGeneratorProvider
+    )
+    active_registry.register(
+        "diagram_generator", "default_diagram_generator", DefaultDiagramGeneratorProvider
+    )
+
+    def _is_diagram_generator_enabled() -> Tuple[bool, str]:
+        switch = "locus.tools.excalidraw.enabled"
+        val = config.get(switch)
+        if val is not None and not config.is_enabled(switch):
+            return False, switch
+        return True, ""
+
+    def _get_diagram_generator_provider() -> BaseDiagramGeneratorProvider:
+        if not hasattr(app.state, "diagram_generator_provider") or app.state.diagram_generator_provider is None:
+            prov_cls = active_registry.get("excalidraw_builder", "default_diagram_generator")
+            if prov_cls:
+                app.state.diagram_generator_provider = prov_cls()
+            else:
+                app.state.diagram_generator_provider = DefaultDiagramGeneratorProvider()
+        return app.state.diagram_generator_provider
+
+    @app.post("/diagrams/excalidraw/generate")
+    def diagrams_excalidraw_generate_route(body: Dict[str, Any]) -> Any:
+        """SPEC §27.7: Generate Excalidraw architecture diagram and save to vault."""
+        enabled, switch = _is_diagram_generator_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Excalidraw diagram generator is disabled",
+                    "disabled": switch,
+                },
+            )
+        system_spec = str(body.get("system_spec", ""))
+        output_filename = str(body.get("output_filename", "architecture_diagram"))
+        save_to_vault = bool(body.get("save_to_vault", True))
+        vault_root = body.get("vault_root")
+        provider = _get_diagram_generator_provider()
+        res = provider.generate_diagram(
+            system_spec=system_spec,
+            output_filename=output_filename,
+            save_to_vault=save_to_vault,
+            vault_root=vault_root,
+        )
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        elif res.get("status_code") == 400:
+            return JSONResponse(status_code=400, content=res)
+        return res
+
+    @app.get("/diagrams/excalidraw/status")
+    def diagrams_excalidraw_status_route() -> Any:
+        """SPEC §27.7: Diagnostic status of Excalidraw diagram generator."""
+        enabled, switch = _is_diagram_generator_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Excalidraw diagram generator is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_diagram_generator_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

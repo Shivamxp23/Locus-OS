@@ -457,6 +457,11 @@ from sidecar.providers.link_logger import (
     BaseLinkDumpLoggerProvider,
     DefaultLinkDumpLoggerProvider,
 )
+from sidecar.providers.excalidraw import (
+    BaseDiagramGeneratorProvider,
+    DefaultDiagramGeneratorProvider,
+    DiagramGeneratorProvider,
+)
 
 __all__ = [
 
@@ -770,4 +775,7 @@ __all__ = [
     "DefaultRoughNoteParserProvider",
     "BaseLinkDumpLoggerProvider",
     "DefaultLinkDumpLoggerProvider",
+    "BaseDiagramGeneratorProvider",
+    "DiagramGeneratorProvider",
+    "DefaultDiagramGeneratorProvider",
 ]

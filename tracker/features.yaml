@@ -3090,10 +3090,26 @@ features:
   evidence:
     files:
     - sidecar/display/excalidraw_builder.py
-    symbols: []
+    - sidecar/tools/excalidraw_builder.py
+    - sidecar/providers/excalidraw.py
+    - locus-extension/src/tools/excalidraw.ts
+    - locus-extension/src/tools/index.ts
+    symbols:
+    - name: ExcalidrawDiagramBuilder
+      file: sidecar/display/excalidraw_builder.py
+    - name: create_rectangle
+      file: sidecar/display/excalidraw_builder.py
+    - name: create_arrow
+      file: sidecar/display/excalidraw_builder.py
+    - name: compute_dag_layout
+      file: sidecar/display/excalidraw_builder.py
+    - name: DefaultDiagramGeneratorProvider
+      file: sidecar/providers/excalidraw.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_excalidraw_builder.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_excalidraw_service.py -q
   depends_on: []
 - id: F-0064
   title: Dual Interface / Check-ins

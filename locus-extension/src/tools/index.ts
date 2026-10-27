@@ -211,3 +211,6 @@ export function register_canonical_locus_tools(agent_context: any): void {
     });
   }
 }
+
+export * from "./excalidraw";
+
