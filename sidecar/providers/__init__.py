@@ -445,6 +445,10 @@ from sidecar.providers.shorthand import (
     BaseShorthandCompressorProvider,
     DefaultShorthandCompressorProvider,
 )
+from sidecar.providers.tag_manager import (
+    BaseTagHierarchyProvider,
+    DefaultTagHierarchyProvider,
+)
 
 __all__ = [
 
@@ -752,4 +756,6 @@ __all__ = [
     "DefaultPageIndexRetrievalProvider",
     "BaseShorthandCompressorProvider",
     "DefaultShorthandCompressorProvider",
+    "BaseTagHierarchyProvider",
+    "DefaultTagHierarchyProvider",
 ]

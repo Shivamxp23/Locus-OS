@@ -6721,6 +6721,10 @@ def create_app(
         BaseShorthandCompressorProvider,
         DefaultShorthandCompressorProvider,
     )
+    from sidecar.providers.tag_manager import (
+        BaseTagHierarchyProvider,
+        DefaultTagHierarchyProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -9221,6 +9225,105 @@ def create_app(
                 },
             )
         provider = _get_shorthand_compressor_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    active_registry.register(
+        "3_level_tag_hierarchy_semantic_indexing", "default_tag_hierarchy", DefaultTagHierarchyProvider
+    )
+    active_registry.register(
+        "tag_hierarchy", "default_tag_hierarchy", DefaultTagHierarchyProvider
+    )
+
+    def _is_tag_hierarchy_enabled() -> Tuple[bool, str]:
+        switch = "locus.3_level_tag_hierarchy_semantic_indexing.enabled"
+        val = config.get(switch)
+        if val is not None and not config.is_enabled(switch):
+            return False, switch
+        return True, ""
+
+    def _get_tag_hierarchy_provider() -> BaseTagHierarchyProvider:
+        if not hasattr(app.state, "tag_hierarchy_provider") or app.state.tag_hierarchy_provider is None:
+            prov_cls = active_registry.get("3_level_tag_hierarchy_semantic_indexing", "default_tag_hierarchy")
+            if prov_cls:
+                app.state.tag_hierarchy_provider = prov_cls()
+            else:
+                app.state.tag_hierarchy_provider = DefaultTagHierarchyProvider()
+        return app.state.tag_hierarchy_provider
+
+    @app.post("/vault/tags/normalize")
+    def vault_tags_normalize_route(body: Dict[str, Any]) -> Any:
+        """SPEC §27.4: Normalize tags to 3-level taxonomy."""
+        enabled, switch = _is_tag_hierarchy_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "3-Level tag hierarchy is disabled",
+                    "disabled": switch,
+                },
+            )
+        tags = body.get("tags", [])
+        provider = _get_tag_hierarchy_provider()
+        res = provider.normalize_tags(tags=tags)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/vault/tags/validate")
+    def vault_tags_validate_route(body: Dict[str, Any]) -> Any:
+        """SPEC §27.4: Validate single tag against 3-level hierarchy."""
+        enabled, switch = _is_tag_hierarchy_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "3-Level tag hierarchy is disabled",
+                    "disabled": switch,
+                },
+            )
+        tag = str(body.get("tag", ""))
+        provider = _get_tag_hierarchy_provider()
+        res = provider.validate_tag(tag=tag)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/vault/tags/index")
+    def vault_tags_index_route(body: Dict[str, Any]) -> Any:
+        """SPEC §27.4: Index note tags and calculate domain distribution."""
+        enabled, switch = _is_tag_hierarchy_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "3-Level tag hierarchy is disabled",
+                    "disabled": switch,
+                },
+            )
+        note_path = str(body.get("note_path", "note.md"))
+        tags = body.get("tags", [])
+        provider = _get_tag_hierarchy_provider()
+        res = provider.index_note(note_path=note_path, tags=tags)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/vault/tags/status")
+    def vault_tags_status_route() -> Any:
+        """SPEC §27.4: Diagnostic status of tag hierarchy manager."""
+        enabled, switch = _is_tag_hierarchy_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "3-Level tag hierarchy is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_tag_hierarchy_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

@@ -5368,11 +5368,25 @@ features:
   spec_sha:
     '§27.4: 3-Level Tag Hierarchy & Semantic Indexing': 5d253b4e944ee45e
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/vault/tag_manager.py
+    - sidecar/providers/tag_manager.py
+    - locus-extension/src/vault/tag-manager.ts
+    - locus-extension/src/vault/index.ts
+    symbols:
+    - name: TagManager
+      file: sidecar/vault/tag_manager.py
+    - name: TagIndexRecord
+      file: sidecar/vault/tag_manager.py
+    - name: TagValidationResult
+      file: sidecar/vault/tag_manager.py
+    - name: DefaultTagHierarchyProvider
+      file: sidecar/providers/tag_manager.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_tag_manager_hierarchy.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_tag_hierarchy_service.py -q
   depends_on: []
 - id: F-0124
   title: Auxiliary LLM Client
