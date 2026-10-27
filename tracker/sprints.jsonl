@@ -270,3 +270,4 @@
 {"event":"planned","sprint":"S89","start":"2027-10-06","end":"2027-10-09","goal":"Everything is recorded and backed up to the vault; Neo4j Agent Memory is the memory layer.","capacity":2,"points":2,"stories":["US-95"],"date":"2027-10-06"}
 {"event":"accepted","story":"US-95","feature":"F-0059","level":4,"note":"Accept US-95: PageIndex Retrieval verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-10-09","commit":"8ef450ba6c32"}
 {"event":"closed","sprint":"S89","date":"2027-10-09","planned_points":2,"velocity":2,"done":["US-95"],"not_done":{}}
+{"event":"planned","sprint":"S90","start":"2027-10-10","end":"2027-10-13","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-96"],"date":"2027-10-10"}
