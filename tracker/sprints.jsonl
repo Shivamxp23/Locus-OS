@@ -259,3 +259,5 @@
 {"event":"accepted","story":"US-91","feature":"F-0114","level":4,"note":"Accept US-91: Review Cadence System verified at level 4 INTEGRATED (85%) with independent cadence toggles and dual-model approval","date":"2027-09-23","commit":"dbefb475570f"}
 {"event":"closed","sprint":"S85","date":"2027-09-23","planned_points":2,"velocity":2,"done":["US-91"],"not_done":{}}
 {"event":"planned","sprint":"S86","start":"2027-09-24","end":"2027-09-27","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-92"],"date":"2027-09-24"}
+{"event":"accepted","story":"US-92","feature":"F-0115","level":4,"note":"Accept US-92: Goal Stack Enforcement verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-09-27","commit":"273c268213de"}
+{"event":"closed","sprint":"S86","date":"2027-09-27","planned_points":2,"velocity":2,"done":["US-92"],"not_done":{}}
