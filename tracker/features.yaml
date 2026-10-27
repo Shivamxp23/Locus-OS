@@ -5128,11 +5128,25 @@ features:
   spec_sha:
     '§25.16: Four-Level Emergency Protocol': 912ce423df96144a
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/life_os/emergency_protocol.py
+    - sidecar/providers/emergency_protocol.py
+    - locus-extension/src/scheduler/emergency-protocol.ts
+    - locus-extension/src/scheduler/index.ts
+    symbols:
+    - name: FourLevelEmergencyProtocol
+      file: sidecar/life_os/emergency_protocol.py
+    - name: EmergencyLevel
+      file: sidecar/life_os/emergency_protocol.py
+    - name: EmergencyAssessment
+      file: sidecar/life_os/emergency_protocol.py
+    - name: DefaultFourLevelEmergencyProtocolProvider
+      file: sidecar/providers/emergency_protocol.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_emergency_protocol.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_emergency_protocol_service.py -q
   depends_on: []
 - id: F-0118
   title: Memory Provider Interface

@@ -433,6 +433,10 @@ from sidecar.providers.cross_faction import (
     BaseCrossFactionEfficiencyProvider,
     DefaultCrossFactionEfficiencyProvider,
 )
+from sidecar.providers.emergency_protocol import (
+    BaseFourLevelEmergencyProtocolProvider,
+    DefaultFourLevelEmergencyProtocolProvider,
+)
 
 __all__ = [
 
@@ -734,4 +738,6 @@ __all__ = [
     "DefaultGoalStackEnforcementProvider",
     "BaseCrossFactionEfficiencyProvider",
     "DefaultCrossFactionEfficiencyProvider",
+    "BaseFourLevelEmergencyProtocolProvider",
+    "DefaultFourLevelEmergencyProtocolProvider",
 ]

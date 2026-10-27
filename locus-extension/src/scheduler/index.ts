@@ -9,3 +9,4 @@ export * from "./goal-tracker.js";
 export * from "./reviews.js";
 export * from "./goal-enforcement.js";
 export * from "./cross-faction.js";
+export * from "./emergency-protocol.js";

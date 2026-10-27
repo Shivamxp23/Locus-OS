@@ -24,6 +24,14 @@ from sidecar.life_os.emergency import (
     EmergencyTask,
     EmergencyTaskInjector,
 )
+from sidecar.life_os.emergency_protocol import (
+    EmergencyAssessment,
+    EmergencyLevel,
+    EmergencyProtocolStatus,
+    FourLevelEmergencyProtocol,
+    ProtocolActivationResult,
+    ProtocolDeactivationResult,
+)
 from sidecar.life_os.exhaustion import (
     ExhaustionMetrics,
     ExhaustionPrediction,
@@ -82,6 +90,12 @@ __all__ = [
     "FactionSplitResult",
     "EmergencyTask",
     "EmergencyTaskInjector",
+    "EmergencyAssessment",
+    "EmergencyLevel",
+    "EmergencyProtocolStatus",
+    "FourLevelEmergencyProtocol",
+    "ProtocolActivationResult",
+    "ProtocolDeactivationResult",
     "ExhaustionMetrics",
     "ExhaustionPrediction",
     "ExhaustionPredictor",

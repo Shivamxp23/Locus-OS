@@ -6709,6 +6709,10 @@ def create_app(
         BaseCrossFactionEfficiencyProvider,
         DefaultCrossFactionEfficiencyProvider,
     )
+    from sidecar.providers.emergency_protocol import (
+        BaseFourLevelEmergencyProtocolProvider,
+        DefaultFourLevelEmergencyProtocolProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -8871,6 +8875,133 @@ def create_app(
                 },
             )
         provider = _get_cross_faction_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    active_registry.register(
+        "four_level_emergency_protocol", "default_emergency_protocol", DefaultFourLevelEmergencyProtocolProvider
+    )
+    active_registry.register(
+        "emergency_protocol", "default_emergency_protocol", DefaultFourLevelEmergencyProtocolProvider
+    )
+
+    def _is_emergency_protocol_enabled() -> Tuple[bool, str]:
+        switch = "locus.four_level_emergency_protocol.enabled"
+        val = config.get(switch)
+        if val is not None and not config.is_enabled(switch):
+            return False, switch
+        return True, ""
+
+    def _get_emergency_protocol_provider() -> BaseFourLevelEmergencyProtocolProvider:
+        if not hasattr(app.state, "emergency_protocol_provider") or app.state.emergency_protocol_provider is None:
+            prov_cls = active_registry.get("four_level_emergency_protocol", "default_emergency_protocol")
+            if prov_cls:
+                app.state.emergency_protocol_provider = prov_cls()
+            else:
+                app.state.emergency_protocol_provider = DefaultFourLevelEmergencyProtocolProvider()
+        return app.state.emergency_protocol_provider
+
+    @app.post("/emergency-protocol/evaluate")
+    def emergency_protocol_evaluate_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.16: Evaluate disruption and return emergency level recommendation."""
+        enabled, switch = _is_emergency_protocol_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Four-level emergency protocol is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_emergency_protocol_provider()
+        res = provider.evaluate_situation(
+            disruption_hours=float(body.get("disruption_hours", 0.0)),
+            disruption_days=int(body.get("disruption_days", 0)),
+            is_life_event=bool(body.get("is_life_event", False)),
+            trigger_reason=str(body.get("trigger_reason", "")),
+        )
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/emergency-protocol/activate")
+    def emergency_protocol_activate_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.16: Activate emergency protocol level."""
+        enabled, switch = _is_emergency_protocol_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Four-level emergency protocol is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_emergency_protocol_provider()
+        try:
+            res = provider.activate_protocol(
+                level=int(body.get("level", 1)),
+                reason=str(body.get("reason", "")),
+            )
+        except ValueError as exc:
+            return JSONResponse(status_code=400, content={"error": str(exc)})
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/emergency-protocol/deactivate")
+    def emergency_protocol_deactivate_route() -> Any:
+        """SPEC §25.16: Deactivate emergency protocol and restore standard operation."""
+        enabled, switch = _is_emergency_protocol_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Four-level emergency protocol is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_emergency_protocol_provider()
+        res = provider.deactivate_protocol()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/emergency-protocol/apply-overrides")
+    def emergency_protocol_apply_overrides_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.16: Apply scheduling overrides based on active or specified level."""
+        enabled, switch = _is_emergency_protocol_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Four-level emergency protocol is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_emergency_protocol_provider()
+        tasks = body.get("tasks", [])
+        lvl = body.get("level")
+        level_int = int(lvl) if lvl is not None else None
+        res = provider.apply_scheduling_overrides(tasks=tasks, level=level_int)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/emergency-protocol/status")
+    def emergency_protocol_status_route() -> Any:
+        """SPEC §25.16: Diagnostic status of four-level emergency protocol."""
+        enabled, switch = _is_emergency_protocol_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Four-level emergency protocol is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_emergency_protocol_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)
