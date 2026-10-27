@@ -247,3 +247,5 @@
 {"event":"accepted","story":"US-87","feature":"F-0111","level":4,"note":"Accept US-87: Emergency Task Injection verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-09-07","commit":"6cd400146675"}
 {"event":"closed","sprint":"S81","date":"2027-09-07","planned_points":2,"velocity":2,"done":["US-87"],"not_done":{}}
 {"event":"planned","sprint":"S82","start":"2027-09-08","end":"2027-09-11","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-88"],"date":"2027-09-08"}
+{"event":"accepted","story":"US-88","feature":"F-0112","level":4,"note":"Accept US-88: Exhaustion Predictor verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-09-11","commit":"e24823a9cb5d"}
+{"event":"closed","sprint":"S82","date":"2027-09-11","planned_points":2,"velocity":2,"done":["US-88"],"not_done":{}}
