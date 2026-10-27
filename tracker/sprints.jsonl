@@ -255,3 +255,4 @@
 {"event":"planned","sprint":"S84","start":"2027-09-16","end":"2027-09-19","goal":"Every task at every scale gets a priority score; Locus drives other harnesses.","capacity":2,"points":2,"stories":["US-90"],"date":"2027-09-16"}
 {"event":"accepted","story":"US-90","feature":"F-0057","level":4,"note":"Accept US-90: Goal Tracker 3-Layer Stack verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-09-19","commit":"d9971f6d25f2"}
 {"event":"closed","sprint":"S84","date":"2027-09-19","planned_points":2,"velocity":2,"done":["US-90"],"not_done":{}}
+{"event":"planned","sprint":"S85","start":"2027-09-20","end":"2027-09-23","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-91"],"date":"2027-09-20"}
