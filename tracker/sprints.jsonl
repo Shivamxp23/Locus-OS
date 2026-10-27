@@ -225,3 +225,4 @@
 {"event":"planned","sprint":"S74","start":"2027-08-07","end":"2027-08-10","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-80"],"date":"2027-08-07"}
 {"event":"accepted","story":"US-80","feature":"F-0047","level":4,"note":"Accept US-80: Graceful Gateway Restart & State Snapshotting verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-08-10","commit":"34ccd3c6b5c1"}
 {"event":"closed","sprint":"S74","date":"2027-08-10","planned_points":2,"velocity":2,"done":["US-80"],"not_done":{}}
+{"event":"planned","sprint":"S75","start":"2027-08-11","end":"2027-08-14","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-81"],"date":"2027-08-11"}
