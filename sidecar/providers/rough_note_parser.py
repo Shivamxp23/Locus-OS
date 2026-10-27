@@ -12,11 +12,6 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
 from sidecar import config
-from sidecar.ingestion.rough_note_parser import (
-    ParseRoughNoteResult,
-    RoughNote,
-    RoughNoteParser,
-)
 
 logger = logging.getLogger("locus.providers.rough_note_parser")
 
@@ -57,8 +52,12 @@ class DefaultRoughNoteParserProvider(BaseRoughNoteParserProvider):
 
     FEATURE_SWITCH = "locus.rough_note_parser.enabled"
 
-    def __init__(self, parser: Optional[RoughNoteParser] = None) -> None:
-        self.parser = parser or RoughNoteParser()
+    def __init__(self, parser: Optional[Any] = None) -> None:
+        if parser is None:
+            from sidecar.ingestion.rough_note_parser import RoughNoteParser
+            self.parser = RoughNoteParser()
+        else:
+            self.parser = parser
 
     @property
     def name(self) -> str:
