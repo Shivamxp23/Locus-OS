@@ -4957,11 +4957,23 @@ features:
   spec_sha:
     '§25.11: Weekly Faction Rebalance': 8b647b7bb21283a7
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/life_os/rebalance.py
+    - sidecar/providers/rebalance.py
+    - locus-extension/src/scheduler/rebalance.ts
+    - locus-extension/src/scheduler/index.ts
+    symbols:
+    - name: RebalanceResult
+      file: sidecar/life_os/rebalance.py
+    - name: WeeklyFactionRebalancer
+      file: sidecar/life_os/rebalance.py
+    - name: DefaultWeeklyFactionRebalanceProvider
+      file: sidecar/providers/rebalance.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_weekly_faction_rebalance.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_rebalance_service.py -q
   depends_on: []
 - id: F-0114
   title: Review Cadence System

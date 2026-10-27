@@ -6689,6 +6689,10 @@ def create_app(
         BaseExhaustionPredictorProvider,
         DefaultExhaustionPredictorProvider,
     )
+    from sidecar.providers.rebalance import (
+        BaseWeeklyFactionRebalanceProvider,
+        DefaultWeeklyFactionRebalanceProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -8277,6 +8281,123 @@ def create_app(
                 },
             )
         provider = _get_exhaustion_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # Weekly Faction Rebalance (F-0113 / US-89 / SPEC §25.11)
+    active_registry.register(
+        "weekly_faction_rebalance", "default_rebalance", DefaultWeeklyFactionRebalanceProvider
+    )
+    active_registry.register(
+        "rebalance", "default_rebalance", DefaultWeeklyFactionRebalanceProvider
+    )
+
+    def _is_rebalance_enabled() -> tuple[bool, str]:
+        v1 = config.get("locus.weekly_faction_rebalance.enabled")
+        if v1 is not None and not config.is_enabled("locus.weekly_faction_rebalance.enabled"):
+            return False, "locus.weekly_faction_rebalance.enabled"
+        v2 = config.get("locus.life_os.rebalance.enabled")
+        if v2 is not None and not config.is_enabled("locus.life_os.rebalance.enabled"):
+            return False, "locus.life_os.rebalance.enabled"
+        if not app.state.registry.is_feature_enabled("weekly_faction_rebalance") and not app.state.registry.is_feature_enabled("rebalance"):
+            return False, "locus.weekly_faction_rebalance.enabled"
+        return True, ""
+
+    def _get_rebalance_provider() -> BaseWeeklyFactionRebalanceProvider:
+        if not hasattr(app.state, "rebalance_provider") or app.state.rebalance_provider is None:
+            res = app.state.registry.get_provider(
+                "weekly_faction_rebalance", default_name="default_rebalance"
+            )
+            if isinstance(res, BaseWeeklyFactionRebalanceProvider):
+                app.state.rebalance_provider = res
+            elif callable(res):
+                app.state.rebalance_provider = res()
+            else:
+                app.state.rebalance_provider = DefaultWeeklyFactionRebalanceProvider()
+        return app.state.rebalance_provider
+
+    @app.post("/rebalance/calculate")
+    def rebalance_calculate_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §25.11: Calculate weekly faction rebalance and adjust weights."""
+        enabled, switch = _is_rebalance_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Weekly faction rebalance is disabled",
+                    "disabled": switch,
+                },
+            )
+        payload = body or {}
+        actual_hours = payload.get("actual_hours")
+        base_weights = payload.get("base_weights")
+        target_percentages = payload.get("target_percentages")
+        correction_factor = payload.get("correction_factor")
+
+        provider = _get_rebalance_provider()
+        res = provider.calculate_rebalance(
+            actual_hours=actual_hours,
+            base_weights=base_weights,
+            target_percentages=target_percentages,
+            correction_factor=correction_factor,
+        )
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/rebalance/weights")
+    def rebalance_weights_route() -> Any:
+        """SPEC §25.11: Retrieve active faction scheduling weights."""
+        enabled, switch = _is_rebalance_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Weekly faction rebalance is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_rebalance_provider()
+        res = provider.get_active_weights()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/rebalance/duration")
+    def rebalance_duration_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.11: Log completed task duration for faction."""
+        enabled, switch = _is_rebalance_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Weekly faction rebalance is disabled",
+                    "disabled": switch,
+                },
+            )
+        faction = body.get("faction", "Craft/Skills")
+        duration_hours = float(body.get("duration_hours", 0.0))
+        provider = _get_rebalance_provider()
+        res = provider.record_duration(faction=faction, duration_hours=duration_hours)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/rebalance/status")
+    def rebalance_status_route() -> Any:
+        """SPEC §25.11: Get diagnostic status of weekly faction rebalancer."""
+        enabled, switch = _is_rebalance_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Weekly faction rebalance is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_rebalance_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

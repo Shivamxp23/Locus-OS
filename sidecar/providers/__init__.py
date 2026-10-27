@@ -410,6 +410,11 @@ from sidecar.providers.exhaustion import (
     DefaultExhaustionPredictorProvider,
     ExhaustionPredictorProvider,
 )
+from sidecar.providers.rebalance import (
+    BaseWeeklyFactionRebalanceProvider,
+    DefaultWeeklyFactionRebalanceProvider,
+    WeeklyFactionRebalanceProvider,
+)
 
 __all__ = [
 
@@ -698,4 +703,7 @@ __all__ = [
     "BaseExhaustionPredictorProvider",
     "DefaultExhaustionPredictorProvider",
     "ExhaustionPredictorProvider",
+    "BaseWeeklyFactionRebalanceProvider",
+    "DefaultWeeklyFactionRebalanceProvider",
+    "WeeklyFactionRebalanceProvider",
 ]

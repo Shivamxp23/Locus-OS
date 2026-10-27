@@ -42,6 +42,12 @@ from sidecar.life_os.lag import (
 )
 from sidecar.life_os.modes import OPERATING_MODE_RULES, resolve_operating_mode
 from sidecar.life_os.provider import LifeOSProvider
+from sidecar.life_os.rebalance import (
+    RebalanceResult,
+    STANDARD_FACTION_TARGETS,
+    WeeklyFactionRebalancer,
+    normalize_faction_name,
+)
 from sidecar.life_os.tws import calculate_tws, log_post_task
 
 __all__ = [
@@ -62,7 +68,11 @@ __all__ = [
     "GoalStackLevel",
     "LifeOSProvider",
     "OPERATING_MODE_RULES",
+    "RebalanceResult",
+    "STANDARD_FACTION_TARGETS",
     "ThreeLayerGoalStack",
+    "WeeklyFactionRebalancer",
+    "normalize_faction_name",
     "calculate_action_gap",
     "calculate_dcs",
     "calculate_lag_score",
