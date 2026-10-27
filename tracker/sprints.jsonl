@@ -235,3 +235,5 @@
 {"event":"accepted","story":"US-83","feature":"F-0053","level":4,"note":"Accept US-83: Google Calendar verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-08-22","commit":"27de0107b0a1"}
 {"event":"closed","sprint":"S77","date":"2027-08-22","planned_points":2,"velocity":2,"done":["US-83"],"not_done":{}}
 {"event":"planned","sprint":"S78","start":"2027-08-23","end":"2027-08-26","goal":"A research job runs on the VM by itself and the owner hears about it on Telegram.","capacity":2,"points":2,"stories":["US-84"],"date":"2027-08-23"}
+{"event":"accepted","story":"US-84","feature":"F-0054","level":4,"note":"Accept US-84: CI/CD, Docker and Batch Runner verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-08-26","commit":"3fea04964f23"}
+{"event":"closed","sprint":"S78","date":"2027-08-26","planned_points":2,"velocity":2,"done":["US-84"],"not_done":{}}
