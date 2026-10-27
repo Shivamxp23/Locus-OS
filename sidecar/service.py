@@ -6741,6 +6741,10 @@ def create_app(
         BaseDualInterfaceProvider,
         DefaultDualInterfaceProvider,
     )
+    from sidecar.providers.error_classifier import (
+        BaseErrorClassifierProvider,
+        DefaultErrorClassifierProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -9676,6 +9680,82 @@ def create_app(
                 },
             )
         provider = _get_dual_interface_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # Error Classifier routes (SPEC §29.1 / F-0065 / US-102)
+    active_registry.register(
+        "error_classifier", "default_error_classifier", DefaultErrorClassifierProvider
+    )
+
+    def _is_error_classifier_enabled() -> Tuple[bool, str]:
+        switch = "locus.error_classifier.enabled"
+        val = config.get(switch)
+        if val is not None and not config.is_enabled(switch):
+            return False, switch
+        return True, ""
+
+    def _get_error_classifier_provider() -> BaseErrorClassifierProvider:
+        if not hasattr(app.state, "error_classifier_provider") or app.state.error_classifier_provider is None:
+            prov_cls = active_registry.get("error_classifier", "default_error_classifier")
+            if prov_cls:
+                app.state.error_classifier_provider = prov_cls()
+            else:
+                app.state.error_classifier_provider = DefaultErrorClassifierProvider()
+        return app.state.error_classifier_provider
+
+    @app.post("/diagnostics/error/classify")
+    def diagnostics_error_classify_route(body: Dict[str, Any]) -> Any:
+        """SPEC §29.1: Classify error into 7-category taxonomy and recovery strategy."""
+        enabled, switch = _is_error_classifier_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Error classifier is disabled",
+                    "disabled": switch,
+                },
+            )
+        error_payload = body.get("error", body)
+        provider = _get_error_classifier_provider()
+        res = provider.classify_error(error_payload)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/diagnostics/error/taxonomy")
+    def diagnostics_error_taxonomy_route() -> Any:
+        """SPEC §29.1: Retrieve 7-category error taxonomy and recovery strategy definitions."""
+        enabled, switch = _is_error_classifier_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Error classifier is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_error_classifier_provider()
+        res = provider.get_taxonomy()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/diagnostics/error/status")
+    def diagnostics_error_status_route() -> Any:
+        """SPEC §29.1: Error classifier diagnostic and operational status."""
+        enabled, switch = _is_error_classifier_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Error classifier is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_error_classifier_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

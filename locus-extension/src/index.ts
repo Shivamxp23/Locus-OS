@@ -46,6 +46,7 @@ export * from "./ui/doctor-overlay";
 export * from "./tools/index";
 export * from "./tools/locus_vault";
 export * from "./gateway/index";
+export * from "./diagnostics/index";
 export * from "./tracking/pricing";
 export * from "./tracking/rate-limits";
 export * from "./tracking/usage";

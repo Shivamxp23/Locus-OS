@@ -466,6 +466,10 @@ from sidecar.providers.dual_interface import (
     BaseDualInterfaceProvider,
     DefaultDualInterfaceProvider,
 )
+from sidecar.providers.error_classifier import (
+    BaseErrorClassifierProvider,
+    DefaultErrorClassifierProvider,
+)
 
 __all__ = [
 
@@ -784,4 +788,6 @@ __all__ = [
     "DefaultDiagramGeneratorProvider",
     "BaseDualInterfaceProvider",
     "DefaultDualInterfaceProvider",
+    "BaseErrorClassifierProvider",
+    "DefaultErrorClassifierProvider",
 ]

@@ -3188,10 +3188,26 @@ features:
   evidence:
     files:
     - sidecar/diagnostics/error_classifier.py
-    symbols: []
+    - sidecar/diagnostics/__init__.py
+    - sidecar/providers/error_classifier.py
+    - locus-extension/src/diagnostics/error-classifier.ts
+    - locus-extension/src/diagnostics/index.ts
+    - tests/unit/test_error_classifier.py
+    - tests/integration/test_error_classifier_service.py
+    symbols:
+    - name: ErrorClassifier
+      file: sidecar/diagnostics/error_classifier.py
+    - name: ErrorCategory
+      file: sidecar/diagnostics/error_classifier.py
+    - name: RecoveryAction
+      file: sidecar/diagnostics/error_classifier.py
+    - name: DefaultErrorClassifierProvider
+      file: sidecar/providers/error_classifier.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_error_classifier.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_error_classifier_service.py -q
   depends_on: []
 - id: F-0066
   title: Health Checks
