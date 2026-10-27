@@ -4905,11 +4905,11 @@ features:
   - '§25.10: Exhaustion Predictor'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Life OS
   verdict: LOCUS-NEW
-  source: null
-  provider: null
-  layer: unknown
+  source: Locus design spec
+  provider: ExhaustionPredictorProvider
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4918,11 +4918,25 @@ features:
   spec_sha:
     '§25.10: Exhaustion Predictor': f7215c6ac4a60376
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/life_os/exhaustion.py
+    - sidecar/providers/exhaustion.py
+    - locus-extension/src/scheduler/exhaustion.ts
+    - locus-extension/src/scheduler/index.ts
+    symbols:
+    - name: ExhaustionMetrics
+      file: sidecar/life_os/exhaustion.py
+    - name: ExhaustionPrediction
+      file: sidecar/life_os/exhaustion.py
+    - name: ExhaustionPredictor
+      file: sidecar/life_os/exhaustion.py
+    - name: DefaultExhaustionPredictorProvider
+      file: sidecar/providers/exhaustion.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_exhaustion_predictor.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_exhaustion_service.py -q
   depends_on: []
 - id: F-0113
   title: Weekly Faction Rebalance

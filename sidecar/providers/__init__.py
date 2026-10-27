@@ -405,6 +405,11 @@ from sidecar.providers.emergency import (
     DefaultEmergencyTaskProvider,
     EmergencyTaskProvider,
 )
+from sidecar.providers.exhaustion import (
+    BaseExhaustionPredictorProvider,
+    DefaultExhaustionPredictorProvider,
+    ExhaustionPredictorProvider,
+)
 
 __all__ = [
 
@@ -690,4 +695,7 @@ __all__ = [
     "BaseEmergencyTaskProvider",
     "DefaultEmergencyTaskProvider",
     "EmergencyTaskProvider",
+    "BaseExhaustionPredictorProvider",
+    "DefaultExhaustionPredictorProvider",
+    "ExhaustionPredictorProvider",
 ]

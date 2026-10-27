@@ -6685,6 +6685,10 @@ def create_app(
         BaseEmergencyTaskProvider,
         DefaultEmergencyTaskProvider,
     )
+    from sidecar.providers.exhaustion import (
+        BaseExhaustionPredictorProvider,
+        DefaultExhaustionPredictorProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -8204,6 +8208,75 @@ def create_app(
                 },
             )
         provider = _get_emergency_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # Exhaustion Predictor (F-0112 / US-88 / SPEC §25.10)
+    active_registry.register(
+        "exhaustion_predictor", "default_exhaustion", DefaultExhaustionPredictorProvider
+    )
+    active_registry.register(
+        "exhaustion", "default_exhaustion", DefaultExhaustionPredictorProvider
+    )
+
+    def _is_exhaustion_enabled() -> tuple[bool, str]:
+        v1 = config.get("locus.exhaustion_predictor.enabled")
+        if v1 is not None and not config.is_enabled("locus.exhaustion_predictor.enabled"):
+            return False, "locus.exhaustion_predictor.enabled"
+        v2 = config.get("locus.life_os.exhaustion.enabled")
+        if v2 is not None and not config.is_enabled("locus.life_os.exhaustion.enabled"):
+            return False, "locus.life_os.exhaustion.enabled"
+        if not app.state.registry.is_feature_enabled("exhaustion_predictor") and not app.state.registry.is_feature_enabled("exhaustion"):
+            return False, "locus.exhaustion_predictor.enabled"
+        return True, ""
+
+    def _get_exhaustion_provider() -> BaseExhaustionPredictorProvider:
+        if not hasattr(app.state, "exhaustion_predictor_provider") or app.state.exhaustion_predictor_provider is None:
+            res = app.state.registry.get_active_provider(
+                "exhaustion_predictor", default_name="default_exhaustion"
+            )
+            if isinstance(res, BaseExhaustionPredictorProvider):
+                app.state.exhaustion_predictor_provider = res
+            elif callable(res):
+                app.state.exhaustion_predictor_provider = res()
+            else:
+                app.state.exhaustion_predictor_provider = DefaultExhaustionPredictorProvider()
+        return app.state.exhaustion_predictor_provider
+
+    @app.post("/exhaustion/predict")
+    def exhaustion_predict_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.10: Forecast 24h DCS drop and evaluate pre-emptive survival mode."""
+        enabled, switch = _is_exhaustion_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Exhaustion predictor is disabled",
+                    "disabled": switch,
+                },
+            )
+        metrics = body.get("metrics", body)
+        provider = _get_exhaustion_provider()
+        res = provider.predict_exhaustion(metrics=metrics)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/exhaustion/status")
+    def exhaustion_status_route() -> Any:
+        """SPEC §25.10: Get diagnostic status of exhaustion predictor."""
+        enabled, switch = _is_exhaustion_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Exhaustion predictor is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_exhaustion_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

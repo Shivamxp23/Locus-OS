@@ -19,6 +19,11 @@ from sidecar.life_os.emergency import (
     EmergencyTask,
     EmergencyTaskInjector,
 )
+from sidecar.life_os.exhaustion import (
+    ExhaustionMetrics,
+    ExhaustionPrediction,
+    ExhaustionPredictor,
+)
 from sidecar.life_os.factions import (
     DEFAULT_FACTION_TARGETS,
     FACTION_CRISIS_HIERARCHY,
@@ -45,6 +50,9 @@ __all__ = [
     "CRISIS_FACTION_ORDER",
     "EmergencyTask",
     "EmergencyTaskInjector",
+    "ExhaustionMetrics",
+    "ExhaustionPrediction",
+    "ExhaustionPredictor",
     "DeferralAction",
     "DeferralRecord",
     "DeferralTracker",
