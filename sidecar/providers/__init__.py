@@ -392,6 +392,7 @@ from sidecar.providers.trajectory import BaseTrajectoryRecorder, TrajectorySessi
 from sidecar.providers.vault_sync import BaseVaultSyncProvider, SyncState
 from sidecar.providers.mcp import BaseMcpProvider, DefaultMcpProvider
 from sidecar.providers.vnc import BaseVNCProvider, DefaultVNCProvider
+from sidecar.providers.calendar import BaseCalendarProvider, DefaultCalendarProvider
 
 __all__ = [
 
@@ -665,4 +666,6 @@ __all__ = [
     "DefaultMcpProvider",
     "BaseVNCProvider",
     "DefaultVNCProvider",
+    "BaseCalendarProvider",
+    "DefaultCalendarProvider",
 ]

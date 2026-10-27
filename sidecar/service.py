@@ -6665,6 +6665,10 @@ def create_app(
         BaseVNCProvider,
         DefaultVNCProvider,
     )
+    from sidecar.providers.calendar import (
+        BaseCalendarProvider,
+        DefaultCalendarProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -7426,6 +7430,210 @@ def create_app(
                 },
             )
         provider = _get_vnc_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # Google Calendar, Gmail, Webhooks (F-0053 / US-83 / SPEC §21.1-21.3)
+    active_registry.register(
+        "google_calendar", "default_calendar", DefaultCalendarProvider
+    )
+    active_registry.register(
+        "calendar", "default_calendar", DefaultCalendarProvider
+    )
+    active_registry.register(
+        "webhooks", "default_calendar", DefaultCalendarProvider
+    )
+
+    def _is_calendar_enabled() -> tuple[bool, str]:
+        v1 = config.get("locus.integrations.calendar.enabled")
+        if v1 is not None and not config.is_enabled("locus.integrations.calendar.enabled"):
+            return False, "locus.integrations.calendar.enabled"
+        v2 = config.get("locus.google_calendar.enabled")
+        if v2 is not None and not config.is_enabled("locus.google_calendar.enabled"):
+            return False, "locus.google_calendar.enabled"
+        if not app.state.registry.is_feature_enabled("google_calendar") and not app.state.registry.is_feature_enabled("calendar"):
+            return False, "locus.integrations.calendar.enabled"
+        return True, ""
+
+    def _get_calendar_provider() -> BaseCalendarProvider:
+        if not hasattr(app.state, "calendar_provider") or app.state.calendar_provider is None:
+            res = app.state.registry.get_active_provider(
+                "google_calendar", default_name="default_calendar"
+            )
+            if isinstance(res, BaseCalendarProvider):
+                app.state.calendar_provider = res
+            elif callable(res):
+                app.state.calendar_provider = res()
+            else:
+                app.state.calendar_provider = DefaultCalendarProvider()
+        return app.state.calendar_provider
+
+    @app.post("/integrations/calendar/auth-url")
+    def calendar_auth_url_route(body: Dict[str, Any] = Body(default={})) -> Any:
+        """SPEC §21.1: Generate OAuth 2.0 authorization URL."""
+        enabled, switch = _is_calendar_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Google Calendar integration is disabled",
+                    "disabled": switch,
+                },
+            )
+        redirect_uri = body.get("redirect_uri", "urn:ietf:wg:oauth:2.0:oob")
+        provider = _get_calendar_provider()
+        res = provider.get_auth_url(redirect_uri=redirect_uri)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/integrations/calendar/exchange")
+    def calendar_exchange_route(body: Dict[str, Any]) -> Any:
+        """SPEC §21.1: Exchange auth code for Google OAuth tokens."""
+        enabled, switch = _is_calendar_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Google Calendar integration is disabled",
+                    "disabled": switch,
+                },
+            )
+        code = body.get("code")
+        if not code:
+            raise HTTPException(status_code=400, detail="Missing required code parameter")
+        redirect_uri = body.get("redirect_uri", "urn:ietf:wg:oauth:2.0:oob")
+        provider = _get_calendar_provider()
+        res = provider.exchange_code(code=code, redirect_uri=redirect_uri)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/integrations/calendar/events")
+    def calendar_events_route(time_min: Optional[str] = None, time_max: Optional[str] = None) -> Any:
+        """SPEC §21.1: List calendar events."""
+        enabled, switch = _is_calendar_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Google Calendar integration is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_calendar_provider()
+        res = provider.list_events(time_min=time_min, time_max=time_max)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/integrations/calendar/events")
+    def calendar_create_event_route(body: Dict[str, Any]) -> Any:
+        """SPEC §21.1: Create scheduled event in calendar."""
+        enabled, switch = _is_calendar_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Google Calendar integration is disabled",
+                    "disabled": switch,
+                },
+            )
+        summary = body.get("summary")
+        start_time = body.get("start_time")
+        end_time = body.get("end_time")
+        if not summary or not start_time or not end_time:
+            raise HTTPException(status_code=400, detail="Missing required fields: summary, start_time, end_time")
+        provider = _get_calendar_provider()
+        res = provider.create_event(
+            summary=summary,
+            start_time=start_time,
+            end_time=end_time,
+            description=body.get("description", ""),
+            location=body.get("location", ""),
+            attendees=body.get("attendees", []),
+        )
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/integrations/calendar/temporal")
+    def calendar_temporal_context_route() -> Any:
+        """SPEC §21.1: Get formatted schedule for Context Forge temporal layer."""
+        enabled, switch = _is_calendar_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Google Calendar integration is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_calendar_provider()
+        res = provider.get_temporal_context()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/integrations/webhooks/register")
+    def webhook_register_route(body: Dict[str, Any]) -> Any:
+        """SPEC §21.3: Register outgoing webhook endpoint."""
+        enabled, switch = _is_calendar_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Google Calendar integration is disabled",
+                    "disabled": switch,
+                },
+            )
+        url = body.get("url")
+        events = body.get("events")
+        if not url or not events:
+            raise HTTPException(status_code=400, detail="Missing required fields: url, events")
+        provider = _get_calendar_provider()
+        res = provider.register_webhook(url=url, events=events, secret=body.get("secret"))
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/integrations/webhooks/fire")
+    def webhook_fire_route(body: Dict[str, Any]) -> Any:
+        """SPEC §21.3: Dispatch event notification to subscribed webhooks."""
+        enabled, switch = _is_calendar_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Google Calendar integration is disabled",
+                    "disabled": switch,
+                },
+            )
+        event_type = body.get("event_type")
+        payload = body.get("payload", {})
+        if not event_type:
+            raise HTTPException(status_code=400, detail="Missing required field: event_type")
+        provider = _get_calendar_provider()
+        res = provider.fire_webhook(event_type=event_type, payload=payload)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/integrations/calendar/status")
+    def calendar_status_route() -> Any:
+        """SPEC §21.1-21.3: Get diagnostic status of calendar & webhook integrations."""
+        enabled, switch = _is_calendar_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Google Calendar integration is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_calendar_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

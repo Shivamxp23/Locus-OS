@@ -2530,10 +2530,26 @@ features:
   evidence:
     files:
     - sidecar/integrations/calendar_sync.py
-    symbols: []
+    - sidecar/integrations/__init__.py
+    - sidecar/providers/calendar.py
+    - locus-extension/src/integrations/calendar.ts
+    - locus-extension/src/integrations/index.ts
+    symbols:
+    - name: CalendarEvent
+      file: sidecar/integrations/calendar_sync.py
+    - name: MockGoogleCalendarClient
+      file: sidecar/integrations/calendar_sync.py
+    - name: GoogleCalendarSync
+      file: sidecar/integrations/calendar_sync.py
+    - name: WebhookManager
+      file: sidecar/integrations/calendar_sync.py
+    - name: DefaultCalendarProvider
+      file: sidecar/providers/calendar.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_google_calendar.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_calendar_service.py -q
   depends_on: []
 - id: F-0054
   title: CI/CD / Docker
