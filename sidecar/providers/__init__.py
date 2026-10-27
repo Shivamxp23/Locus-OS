@@ -391,6 +391,7 @@ from sidecar.providers.subagents import (
 from sidecar.providers.trajectory import BaseTrajectoryRecorder, TrajectorySession, TurnRecord
 from sidecar.providers.vault_sync import BaseVaultSyncProvider, SyncState
 from sidecar.providers.mcp import BaseMcpProvider, DefaultMcpProvider
+from sidecar.providers.vnc import BaseVNCProvider, DefaultVNCProvider
 
 __all__ = [
 
@@ -662,4 +663,6 @@ __all__ = [
     "DefaultGracefulRestartProvider",
     "BaseMcpProvider",
     "DefaultMcpProvider",
+    "BaseVNCProvider",
+    "DefaultVNCProvider",
 ]

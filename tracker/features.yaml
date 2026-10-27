@@ -2455,7 +2455,7 @@ features:
   verdict: LOCUS-NEW
   source: Locus design spec
   provider: null
-  layer: unknown
+  layer: sidecar
   inherited: false
   manual: false
   claimed:
@@ -2474,11 +2474,32 @@ features:
   spec_sha:
     '§20.3: VNC / Remote Desktop Protocol Control': f8a5707589bbf271
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/desktop/vnc_client.py
+    - sidecar/desktop/__init__.py
+    - sidecar/providers/vnc.py
+    - locus-extension/src/desktop/vnc.ts
+    - locus-extension/src/desktop/index.ts
+    symbols:
+    - name: BoundingBox
+      file: sidecar/desktop/vnc_client.py
+    - name: SecurityException
+      file: sidecar/desktop/vnc_client.py
+    - name: compute_bezier_path
+      file: sidecar/desktop/vnc_client.py
+    - name: char_to_keysym
+      file: sidecar/desktop/vnc_client.py
+    - name: MockRFBProtocolClient
+      file: sidecar/desktop/vnc_client.py
+    - name: VNCDesktopController
+      file: sidecar/desktop/vnc_client.py
+    - name: DefaultVNCProvider
+      file: sidecar/providers/vnc.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_vnc_remote.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_vnc_service.py -q
   depends_on: []
 - id: F-0053
   title: Google Calendar

@@ -6661,6 +6661,10 @@ def create_app(
         BaseMcpProvider,
         DefaultMcpProvider,
     )
+    from sidecar.providers.vnc import (
+        BaseVNCProvider,
+        DefaultVNCProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -7270,6 +7274,158 @@ def create_app(
                 },
             )
         provider = _get_mcp_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # VNC Remote Desktop Protocol Control (F-0052 / US-82 / SPEC §20.3)
+    active_registry.register(
+        "vnc_remote", "default_vnc", DefaultVNCProvider
+    )
+    active_registry.register(
+        "vnc", "default_vnc", DefaultVNCProvider
+    )
+
+    def _is_vnc_enabled() -> tuple[bool, str]:
+        v1 = config.get("locus.vnc.enabled")
+        if v1 is not None and not config.is_enabled("locus.vnc.enabled"):
+            return False, "locus.vnc.enabled"
+        v2 = config.get("locus.tools.vnc.enabled")
+        if v2 is not None and not config.is_enabled("locus.tools.vnc.enabled"):
+            return False, "locus.tools.vnc.enabled"
+        if not app.state.registry.is_feature_enabled("vnc_remote") and not app.state.registry.is_feature_enabled("vnc"):
+            return False, "locus.vnc.enabled"
+        return True, ""
+
+    def _get_vnc_provider() -> BaseVNCProvider:
+        if not hasattr(app.state, "vnc_provider") or app.state.vnc_provider is None:
+            res = app.state.registry.get_active_provider(
+                "vnc_remote", default_name="default_vnc"
+            )
+            if isinstance(res, BaseVNCProvider):
+                app.state.vnc_provider = res
+            elif callable(res):
+                app.state.vnc_provider = res()
+            else:
+                app.state.vnc_provider = DefaultVNCProvider()
+        return app.state.vnc_provider
+
+    @app.post("/vnc/connect")
+    def vnc_connect_route(body: Dict[str, Any] = Body(default={})) -> Any:
+        """SPEC §20.3: Establish connection to remote VNC display."""
+        enabled, switch = _is_vnc_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "VNC remote control is disabled",
+                    "disabled": switch,
+                },
+            )
+        host = body.get("host", "127.0.0.1")
+        port = int(body.get("port", 5900))
+        password = body.get("password", "")
+        provider = _get_vnc_provider()
+        res = provider.connect(host=host, port=port, password=password)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/vnc/disconnect")
+    def vnc_disconnect_route() -> Any:
+        """SPEC §20.3: Disconnect from remote VNC display."""
+        enabled, switch = _is_vnc_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "VNC remote control is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_vnc_provider()
+        res = provider.disconnect()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/vnc/capture")
+    def vnc_capture_route() -> Any:
+        """SPEC §20.3: Capture current display framebuffer."""
+        enabled, switch = _is_vnc_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "VNC remote control is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_vnc_provider()
+        res = provider.capture_framebuffer()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/vnc/click")
+    def vnc_click_route(body: Dict[str, Any]) -> Any:
+        """SPEC §20.3: Perform mouse move and click within safe boundary."""
+        enabled, switch = _is_vnc_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "VNC remote control is disabled",
+                    "disabled": switch,
+                },
+            )
+        if "x" not in body or "y" not in body:
+            raise HTTPException(status_code=400, detail="Missing required x or y coordinates")
+        x = int(body["x"])
+        y = int(body["y"])
+        button = str(body.get("button", "left"))
+        steps = int(body.get("steps", 5))
+        provider = _get_vnc_provider()
+        res = provider.click(x=x, y=y, button=button, steps=steps)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        if res.get("status_code") == 403:
+            return JSONResponse(status_code=403, content=res)
+        return res
+
+    @app.post("/vnc/type")
+    def vnc_type_route(body: Dict[str, Any]) -> Any:
+        """SPEC §20.3: Inject keystrokes into remote desktop."""
+        enabled, switch = _is_vnc_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "VNC remote control is disabled",
+                    "disabled": switch,
+                },
+            )
+        text = body.get("text", "")
+        provider = _get_vnc_provider()
+        res = provider.type_keys(text=text)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/vnc/status")
+    def vnc_status_route() -> Any:
+        """SPEC §20.3: Get diagnostic status of VNC remote controller."""
+        enabled, switch = _is_vnc_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "VNC remote control is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_vnc_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)
