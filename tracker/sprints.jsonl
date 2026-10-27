@@ -241,3 +241,5 @@
 {"event":"accepted","story":"US-85","feature":"F-0106","level":4,"note":"Accept US-85: Pi Utilities verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-08-30","commit":"9136f276431e"}
 {"event":"closed","sprint":"S79","date":"2027-08-30","planned_points":2,"velocity":2,"done":["US-85"],"not_done":{}}
 {"event":"planned","sprint":"S80","start":"2027-08-31","end":"2027-09-03","goal":"Every task at every scale gets a priority score; Locus drives other harnesses.","capacity":2,"points":2,"stories":["US-86"],"date":"2027-08-31"}
+{"event":"accepted","story":"US-86","feature":"F-0056","level":4,"note":"Accept US-86: Operating Modes / Scheduler verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-09-03","commit":"a321cdcc289a"}
+{"event":"closed","sprint":"S80","date":"2027-09-03","planned_points":2,"velocity":2,"done":["US-86"],"not_done":{}}
