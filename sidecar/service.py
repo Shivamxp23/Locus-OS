@@ -6729,6 +6729,10 @@ def create_app(
         BaseRoughNoteParserProvider,
         DefaultRoughNoteParserProvider,
     )
+    from sidecar.providers.link_logger import (
+        BaseLinkDumpLoggerProvider,
+        DefaultLinkDumpLoggerProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -9395,6 +9399,75 @@ def create_app(
                 },
             )
         provider = _get_rough_note_parser_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    active_registry.register(
+        "link_dump_logger", "default_link_dump_logger", DefaultLinkDumpLoggerProvider
+    )
+
+    def _is_link_dump_logger_enabled() -> Tuple[bool, str]:
+        switch = "locus.link_dump_logger.enabled"
+        val = config.get(switch)
+        if val is not None and not config.is_enabled(switch):
+            return False, switch
+        return True, ""
+
+    def _get_link_dump_logger_provider() -> BaseLinkDumpLoggerProvider:
+        if not hasattr(app.state, "link_dump_logger_provider") or app.state.link_dump_logger_provider is None:
+            prov_cls = active_registry.get("link_dump_logger", "default_link_dump_logger")
+            if prov_cls:
+                app.state.link_dump_logger_provider = prov_cls()
+            else:
+                app.state.link_dump_logger_provider = DefaultLinkDumpLoggerProvider()
+        return app.state.link_dump_logger_provider
+
+    @app.post("/ingestion/link/process")
+    def ingestion_link_process_route(body: Dict[str, Any]) -> Any:
+        """SPEC §27.6: Scrape URL, synthesize 3 takeaways, and archive to vault."""
+        enabled, switch = _is_link_dump_logger_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Link dump logger is disabled",
+                    "disabled": switch,
+                },
+            )
+        url = str(body.get("url", ""))
+        user_commentary = str(body.get("user_commentary", ""))
+        html_content = body.get("html_content")
+        save_to_vault = bool(body.get("save_to_vault", True))
+        vault_root = body.get("vault_root")
+        provider = _get_link_dump_logger_provider()
+        res = provider.process_link(
+            url=url,
+            user_commentary=user_commentary,
+            html_content=html_content,
+            save_to_vault=save_to_vault,
+            vault_root=vault_root,
+        )
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        elif res.get("status_code") == 400:
+            return JSONResponse(status_code=400, content=res)
+        return res
+
+    @app.get("/ingestion/link/status")
+    def ingestion_link_status_route() -> Any:
+        """SPEC §27.6: Diagnostic status of link dump logger."""
+        enabled, switch = _is_link_dump_logger_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Link dump logger is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_link_dump_logger_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

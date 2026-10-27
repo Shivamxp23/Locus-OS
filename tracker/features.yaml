@@ -3041,10 +3041,23 @@ features:
   evidence:
     files:
     - sidecar/ingestion/link_logger.py
-    symbols: []
+    - sidecar/providers/link_logger.py
+    - locus-extension/src/ingestion/link-logger.ts
+    - locus-extension/src/ingestion/index.ts
+    symbols:
+    - name: LinkDumpLogger
+      file: sidecar/ingestion/link_logger.py
+    - name: LinkResourceSummary
+      file: sidecar/ingestion/link_logger.py
+    - name: ProcessLinkDumpResult
+      file: sidecar/ingestion/link_logger.py
+    - name: DefaultLinkDumpLoggerProvider
+      file: sidecar/providers/link_logger.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_link_logger.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_link_logger_service.py -q
   depends_on: []
 - id: F-0063
   title: Excalidraw MCP Skill

@@ -453,6 +453,10 @@ from sidecar.providers.rough_note_parser import (
     BaseRoughNoteParserProvider,
     DefaultRoughNoteParserProvider,
 )
+from sidecar.providers.link_logger import (
+    BaseLinkDumpLoggerProvider,
+    DefaultLinkDumpLoggerProvider,
+)
 
 __all__ = [
 
@@ -764,4 +768,6 @@ __all__ = [
     "DefaultTagHierarchyProvider",
     "BaseRoughNoteParserProvider",
     "DefaultRoughNoteParserProvider",
+    "BaseLinkDumpLoggerProvider",
+    "DefaultLinkDumpLoggerProvider",
 ]
