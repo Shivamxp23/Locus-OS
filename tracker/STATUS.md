@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `d6c83b119b` - 2026-10-27T16:44:44+0530 - with test runs
+- commit `a54662eab7` - 2026-10-27T17:19:48+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **74.0%** | old claimed average 71.4% over 86 rows
-- integrated or better: 103 | proven: 0 | overclaims (claimed >= verified + 25): 19 | no evidence: 14
-- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 91, 'NO_EVIDENCE': 14, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **74.7%** | old claimed average 71.4% over 86 rows
+- integrated or better: 104 | proven: 0 | overclaims (claimed >= verified + 25): 19 | no evidence: 13
+- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 92, 'NO_EVIDENCE': 13, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -156,5 +156,5 @@
 | F-0121 | Agent Experience Tracking (Procedural Memory | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0122 | LOCUS_SHORTHAND 4× Text Compressor | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0123 | 3-Level Tag Hierarchy & Semantic Indexing | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0124 | Auxiliary LLM Client | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0124 | Auxiliary LLM Client | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0125 | Modularity foundation: provider registry + c | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
