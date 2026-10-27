@@ -264,3 +264,4 @@
 {"event":"planned","sprint":"S87","start":"2027-09-28","end":"2027-10-01","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-93"],"date":"2027-09-28"}
 {"event":"accepted","story":"US-93","feature":"F-0116","level":4,"note":"Accept US-93: Cross-Faction Efficiency verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-10-01","commit":"c2a6abb99a53"}
 {"event":"closed","sprint":"S87","date":"2027-10-01","planned_points":2,"velocity":2,"done":["US-93"],"not_done":{}}
+{"event":"planned","sprint":"S88","start":"2027-10-02","end":"2027-10-05","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-94"],"date":"2027-10-02"}
