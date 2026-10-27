@@ -6681,6 +6681,10 @@ def create_app(
         BaseSchedulerProvider,
         DefaultSchedulerProvider,
     )
+    from sidecar.providers.emergency import (
+        BaseEmergencyTaskProvider,
+        DefaultEmergencyTaskProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -8109,6 +8113,97 @@ def create_app(
                 },
             )
         provider = _get_scheduler_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # Emergency Task Injection (F-0111 / US-87 / SPEC §25.9)
+    active_registry.register(
+        "emergency_task_injection", "default_emergency", DefaultEmergencyTaskProvider
+    )
+    active_registry.register(
+        "emergency", "default_emergency", DefaultEmergencyTaskProvider
+    )
+
+    def _is_emergency_enabled() -> tuple[bool, str]:
+        v1 = config.get("locus.emergency_task_injection.enabled")
+        if v1 is not None and not config.is_enabled("locus.emergency_task_injection.enabled"):
+            return False, "locus.emergency_task_injection.enabled"
+        v2 = config.get("locus.life_os.emergency.enabled")
+        if v2 is not None and not config.is_enabled("locus.life_os.emergency.enabled"):
+            return False, "locus.life_os.emergency.enabled"
+        if not app.state.registry.is_feature_enabled("emergency_task_injection") and not app.state.registry.is_feature_enabled("emergency"):
+            return False, "locus.emergency_task_injection.enabled"
+        return True, ""
+
+    def _get_emergency_provider() -> BaseEmergencyTaskProvider:
+        if not hasattr(app.state, "emergency_task_provider") or app.state.emergency_task_provider is None:
+            res = app.state.registry.get_active_provider(
+                "emergency_task_injection", default_name="default_emergency"
+            )
+            if isinstance(res, BaseEmergencyTaskProvider):
+                app.state.emergency_task_provider = res
+            elif callable(res):
+                app.state.emergency_task_provider = res()
+            else:
+                app.state.emergency_task_provider = DefaultEmergencyTaskProvider()
+        return app.state.emergency_task_provider
+
+    @app.post("/emergency/prioritize")
+    def emergency_prioritize_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.9: Prioritize task pool with emergency bypass and faction crisis ordering."""
+        enabled, switch = _is_emergency_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Emergency task injection is disabled",
+                    "disabled": switch,
+                },
+            )
+        tasks = body.get("tasks", [])
+        bypass_tws = body.get("bypass_tws")
+        provider = _get_emergency_provider()
+        res = provider.prioritize_tasks(tasks=tasks, bypass_tws=bypass_tws)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/emergency/inject")
+    def emergency_inject_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.9: Inject emergency task into active schedule timeline."""
+        enabled, switch = _is_emergency_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Emergency task injection is disabled",
+                    "disabled": switch,
+                },
+            )
+        timeline = body.get("timeline", [])
+        task = body.get("task", {})
+        at_index = int(body.get("at_index", 0))
+        provider = _get_emergency_provider()
+        res = provider.inject_task(timeline=timeline, task=task, at_index=at_index)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/emergency/status")
+    def emergency_status_route() -> Any:
+        """SPEC §25.9: Get status of emergency task injection subsystem."""
+        enabled, switch = _is_emergency_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Emergency task injection is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_emergency_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

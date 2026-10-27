@@ -400,6 +400,11 @@ from sidecar.providers.scheduler import (
     DefaultSchedulerProvider,
     SchedulerProvider,
 )
+from sidecar.providers.emergency import (
+    BaseEmergencyTaskProvider,
+    DefaultEmergencyTaskProvider,
+    EmergencyTaskProvider,
+)
 
 __all__ = [
 
@@ -682,4 +687,7 @@ __all__ = [
     "BaseSchedulerProvider",
     "DefaultSchedulerProvider",
     "SchedulerProvider",
+    "BaseEmergencyTaskProvider",
+    "DefaultEmergencyTaskProvider",
+    "EmergencyTaskProvider",
 ]

@@ -4868,11 +4868,11 @@ features:
   - '§25.9: Emergency Task Injection'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Life OS
   verdict: LOCUS-NEW
-  source: null
-  provider: null
-  layer: unknown
+  source: Locus design spec
+  provider: EmergencyTaskProvider
+  layer: sidecar
   inherited: false
   manual: false
   claimed: null
@@ -4881,11 +4881,23 @@ features:
   spec_sha:
     '§25.9: Emergency Task Injection': 1aed1b6df1181bc2
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/life_os/emergency.py
+    - sidecar/providers/emergency.py
+    - locus-extension/src/scheduler/emergency.ts
+    - locus-extension/src/scheduler/index.ts
+    symbols:
+    - name: EmergencyTask
+      file: sidecar/life_os/emergency.py
+    - name: EmergencyTaskInjector
+      file: sidecar/life_os/emergency.py
+    - name: DefaultEmergencyTaskProvider
+      file: sidecar/providers/emergency.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_emergency_task_injection.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_emergency_service.py -q
   depends_on: []
 - id: F-0112
   title: Exhaustion Predictor

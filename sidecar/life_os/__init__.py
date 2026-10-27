@@ -14,6 +14,11 @@ from sidecar.life_os.deferral import (
     DeferralRecord,
     DeferralTracker,
 )
+from sidecar.life_os.emergency import (
+    CRISIS_FACTION_ORDER,
+    EmergencyTask,
+    EmergencyTaskInjector,
+)
 from sidecar.life_os.factions import (
     DEFAULT_FACTION_TARGETS,
     FACTION_CRISIS_HIERARCHY,
@@ -37,6 +42,9 @@ from sidecar.life_os.tws import calculate_tws, log_post_task
 __all__ = [
     "DEFAULT_FACTION_TARGETS",
     "FACTION_CRISIS_HIERARCHY",
+    "CRISIS_FACTION_ORDER",
+    "EmergencyTask",
+    "EmergencyTaskInjector",
     "DeferralAction",
     "DeferralRecord",
     "DeferralTracker",
