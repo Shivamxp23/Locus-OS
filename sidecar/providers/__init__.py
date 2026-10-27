@@ -449,6 +449,10 @@ from sidecar.providers.tag_manager import (
     BaseTagHierarchyProvider,
     DefaultTagHierarchyProvider,
 )
+from sidecar.providers.rough_note_parser import (
+    BaseRoughNoteParserProvider,
+    DefaultRoughNoteParserProvider,
+)
 
 __all__ = [
 
@@ -758,4 +762,6 @@ __all__ = [
     "DefaultShorthandCompressorProvider",
     "BaseTagHierarchyProvider",
     "DefaultTagHierarchyProvider",
+    "BaseRoughNoteParserProvider",
+    "DefaultRoughNoteParserProvider",
 ]

@@ -6725,6 +6725,10 @@ def create_app(
         BaseTagHierarchyProvider,
         DefaultTagHierarchyProvider,
     )
+    from sidecar.providers.rough_note_parser import (
+        BaseRoughNoteParserProvider,
+        DefaultRoughNoteParserProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -9324,6 +9328,73 @@ def create_app(
                 },
             )
         provider = _get_tag_hierarchy_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    active_registry.register(
+        "rough_note_parser", "default_rough_note_parser", DefaultRoughNoteParserProvider
+    )
+
+    def _is_rough_note_parser_enabled() -> Tuple[bool, str]:
+        switch = "locus.rough_note_parser.enabled"
+        val = config.get(switch)
+        if val is not None and not config.is_enabled(switch):
+            return False, switch
+        return True, ""
+
+    def _get_rough_note_parser_provider() -> BaseRoughNoteParserProvider:
+        if not hasattr(app.state, "rough_note_parser_provider") or app.state.rough_note_parser_provider is None:
+            prov_cls = active_registry.get("rough_note_parser", "default_rough_note_parser")
+            if prov_cls:
+                app.state.rough_note_parser_provider = prov_cls()
+            else:
+                app.state.rough_note_parser_provider = DefaultRoughNoteParserProvider()
+        return app.state.rough_note_parser_provider
+
+    @app.post("/ingestion/rough-note/parse")
+    def ingestion_rough_note_parse_route(body: Dict[str, Any]) -> Any:
+        """SPEC §27.5: Parse raw thought stream and generate structured Obsidian note."""
+        enabled, switch = _is_rough_note_parser_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Rough note parser is disabled",
+                    "disabled": switch,
+                },
+            )
+        raw_text = str(body.get("raw_text", ""))
+        source = body.get("source")
+        save_to_vault = bool(body.get("save_to_vault", True))
+        vault_root = body.get("vault_root")
+        provider = _get_rough_note_parser_provider()
+        res = provider.parse_note(
+            raw_text=raw_text,
+            source=source,
+            save_to_vault=save_to_vault,
+            vault_root=vault_root,
+        )
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        elif res.get("status_code") == 400:
+            return JSONResponse(status_code=400, content=res)
+        return res
+
+    @app.get("/ingestion/rough-note/status")
+    def ingestion_rough_note_status_route() -> Any:
+        """SPEC §27.5: Diagnostic status of rough note parser."""
+        enabled, switch = _is_rough_note_parser_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Rough note parser is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_rough_note_parser_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

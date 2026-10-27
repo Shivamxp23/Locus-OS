@@ -2994,10 +2994,23 @@ features:
   evidence:
     files:
     - sidecar/ingestion/rough_note_parser.py
-    symbols: []
+    - sidecar/providers/rough_note_parser.py
+    - locus-extension/src/ingestion/rough-note-parser.ts
+    - locus-extension/src/ingestion/index.ts
+    symbols:
+    - name: RoughNoteParser
+      file: sidecar/ingestion/rough_note_parser.py
+    - name: RoughNote
+      file: sidecar/ingestion/rough_note_parser.py
+    - name: ParseRoughNoteResult
+      file: sidecar/ingestion/rough_note_parser.py
+    - name: DefaultRoughNoteParserProvider
+      file: sidecar/providers/rough_note_parser.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_rough_note_parser.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_rough_note_service.py -q
   depends_on: []
 - id: F-0062
   title: Link Dump Logger
