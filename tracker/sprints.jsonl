@@ -238,3 +238,5 @@
 {"event":"accepted","story":"US-84","feature":"F-0054","level":4,"note":"Accept US-84: CI/CD, Docker and Batch Runner verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-08-26","commit":"3fea04964f23"}
 {"event":"closed","sprint":"S78","date":"2027-08-26","planned_points":2,"velocity":2,"done":["US-84"],"not_done":{}}
 {"event":"planned","sprint":"S79","start":"2027-08-27","end":"2027-08-30","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-85"],"date":"2027-08-27"}
+{"event":"accepted","story":"US-85","feature":"F-0106","level":4,"note":"Accept US-85: Pi Utilities verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-08-30","commit":"9136f276431e"}
+{"event":"closed","sprint":"S79","date":"2027-08-30","planned_points":2,"velocity":2,"done":["US-85"],"not_done":{}}
