@@ -441,6 +441,10 @@ from sidecar.providers.pageindex import (
     BasePageIndexRetrievalProvider,
     DefaultPageIndexRetrievalProvider,
 )
+from sidecar.providers.shorthand import (
+    BaseShorthandCompressorProvider,
+    DefaultShorthandCompressorProvider,
+)
 
 __all__ = [
 
@@ -746,4 +750,6 @@ __all__ = [
     "DefaultFourLevelEmergencyProtocolProvider",
     "BasePageIndexRetrievalProvider",
     "DefaultPageIndexRetrievalProvider",
+    "BaseShorthandCompressorProvider",
+    "DefaultShorthandCompressorProvider",
 ]

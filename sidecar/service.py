@@ -6717,6 +6717,10 @@ def create_app(
         BasePageIndexRetrievalProvider,
         DefaultPageIndexRetrievalProvider,
     )
+    from sidecar.providers.shorthand import (
+        BaseShorthandCompressorProvider,
+        DefaultShorthandCompressorProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -9099,6 +9103,124 @@ def create_app(
                 },
             )
         provider = _get_pageindex_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    active_registry.register(
+        "locus_shorthand_4_text_compressor", "default_shorthand", DefaultShorthandCompressorProvider
+    )
+    active_registry.register(
+        "shorthand_compressor", "default_shorthand", DefaultShorthandCompressorProvider
+    )
+
+    def _is_shorthand_compressor_enabled() -> Tuple[bool, str]:
+        switch = "locus.locus_shorthand_4_text_compressor.enabled"
+        val = config.get(switch)
+        if val is not None and not config.is_enabled(switch):
+            return False, switch
+        return True, ""
+
+    def _get_shorthand_compressor_provider() -> BaseShorthandCompressorProvider:
+        if not hasattr(app.state, "shorthand_compressor_provider") or app.state.shorthand_compressor_provider is None:
+            prov_cls = active_registry.get("locus_shorthand_4_text_compressor", "default_shorthand")
+            if prov_cls:
+                app.state.shorthand_compressor_provider = prov_cls()
+            else:
+                app.state.shorthand_compressor_provider = DefaultShorthandCompressorProvider()
+        return app.state.shorthand_compressor_provider
+
+    @app.post("/compression/shorthand/compress")
+    def shorthand_compress_route(body: Dict[str, Any]) -> Any:
+        """SPEC §27.3: Compress text using LOCUS_SHORTHAND pipeline."""
+        enabled, switch = _is_shorthand_compressor_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "LOCUS_SHORTHAND 4x text compressor is disabled",
+                    "disabled": switch,
+                },
+            )
+        text = str(body.get("text", ""))
+        strip_articles = bool(body.get("strip_articles", True))
+        provider = _get_shorthand_compressor_provider()
+        res = provider.compress(text=text, strip_articles=strip_articles)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/compression/shorthand/decompress")
+    def shorthand_decompress_route(body: Dict[str, Any]) -> Any:
+        """SPEC §27.3: Decompress shorthand tokens back to readable words."""
+        enabled, switch = _is_shorthand_compressor_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "LOCUS_SHORTHAND 4x text compressor is disabled",
+                    "disabled": switch,
+                },
+            )
+        text = str(body.get("text", ""))
+        provider = _get_shorthand_compressor_provider()
+        res = provider.decompress(text=text)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/compression/shorthand/compress-event")
+    def shorthand_compress_event_route(body: Dict[str, Any]) -> Any:
+        """SPEC §27.3: Compress behavioral event into shorthand schema."""
+        enabled, switch = _is_shorthand_compressor_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "LOCUS_SHORTHAND 4x text compressor is disabled",
+                    "disabled": switch,
+                },
+            )
+        event_type = str(body.get("event_type", "generic"))
+        data = body.get("data", {})
+        provider = _get_shorthand_compressor_provider()
+        res = provider.compress_event(event_type=event_type, data=data)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/compression/shorthand/decoder")
+    def shorthand_decoder_route() -> Any:
+        """SPEC §27.3: Retrieve decoder dictionary for system prompt prepending."""
+        enabled, switch = _is_shorthand_compressor_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "LOCUS_SHORTHAND 4x text compressor is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_shorthand_compressor_provider()
+        res = provider.get_decoder_dictionary()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/compression/shorthand/status")
+    def shorthand_status_route() -> Any:
+        """SPEC §27.3: Diagnostic status of LOCUS_SHORTHAND compressor."""
+        enabled, switch = _is_shorthand_compressor_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "LOCUS_SHORTHAND 4x text compressor is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_shorthand_compressor_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

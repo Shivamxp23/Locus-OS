@@ -5331,11 +5331,23 @@ features:
   spec_sha:
     '§27.3: LOCUS_SHORTHAND 4× Text Compressor': a01c1c483a7a134f
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/compression/shorthand.py
+    - sidecar/providers/shorthand.py
+    - locus-extension/src/compression/shorthand.ts
+    - locus-extension/src/compression/index.ts
+    symbols:
+    - name: LocusShorthandCompressor
+      file: sidecar/compression/shorthand.py
+    - name: ShorthandCompressionResult
+      file: sidecar/compression/shorthand.py
+    - name: DefaultShorthandCompressorProvider
+      file: sidecar/providers/shorthand.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_locus_shorthand.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_shorthand_service.py -q
   depends_on: []
 - id: F-0123
   title: 3-Level Tag Hierarchy & Semantic Indexing
