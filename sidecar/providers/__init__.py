@@ -282,6 +282,10 @@ from sidecar.providers.browser import (
     BaseBrowserProvider,
     DefaultBrowserProvider,
 )
+from sidecar.providers.screen import (
+    BaseScreenProvider,
+    DefaultScreenProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -647,4 +651,6 @@ __all__ = [
     "DefaultWebSearchProvider",
     "BaseBrowserProvider",
     "DefaultBrowserProvider",
+    "BaseScreenProvider",
+    "DefaultScreenProvider",
 ]

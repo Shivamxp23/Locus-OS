@@ -6649,6 +6649,13 @@ def create_app(
         BaseBrowserProvider,
         DefaultBrowserProvider,
     )
+    from sidecar.providers.screen import (
+        BaseScreenProvider,
+        DefaultScreenProvider,
+    )
+    from sidecar.screen.capture import ScreenCaptureResult
+    from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
+    from sidecar.screen.screen_intelligence import ScreenElement
 
     active_registry.register(
         "browser_automation", "default_browser", DefaultBrowserProvider
@@ -6820,6 +6827,165 @@ def create_app(
             "engines": provider.list_engines(),
             "active_engine": active_name,
         }
+
+    # Computer Use / Screen Provider registration (F-0051 / US-79)
+    active_registry.register("screen", "default_screen", DefaultScreenProvider)
+    active_registry.register("computer_use", "default_screen", DefaultScreenProvider)
+    active_registry.register("desktop_control", "default_screen", DefaultScreenProvider)
+
+    _screen_provider_instance: Optional[BaseScreenProvider] = None
+
+    def _is_screen_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("screen"):
+            return False
+        v1 = config.get("locus.screen.enabled")
+        if v1 is not None and not config.is_enabled("locus.screen.enabled"):
+            return False
+        v2 = config.get("locus.computer_use.enabled")
+        if v2 is not None and not config.is_enabled("locus.computer_use.enabled"):
+            return False
+        v3 = config.get("locus.desktop_control.enabled")
+        if v3 is not None and not config.is_enabled("locus.desktop_control.enabled"):
+            return False
+        return True
+
+    def _get_screen_provider() -> BaseScreenProvider:
+        nonlocal _screen_provider_instance
+        if _screen_provider_instance is None:
+            res = app.state.registry.get_active_provider(
+                "screen", default_name="default_screen"
+            )
+            if isinstance(res, BaseScreenProvider):
+                _screen_provider_instance = res
+            elif callable(res):
+                _screen_provider_instance = res()
+        if _screen_provider_instance is None:
+            _screen_provider_instance = DefaultScreenProvider()
+        return _screen_provider_instance
+
+    @app.post("/screen/capture")
+    def screen_capture_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §16.1 line 6535: Native desktop screen capture."""
+        if not _is_screen_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Screen capture is disabled",
+                    "disabled": "locus.screen.enabled",
+                },
+            )
+        b = body or {}
+        display_id = int(b.get("display_id", 0))
+        region = b.get("region")
+        if region and isinstance(region, list) and len(region) == 4:
+            region = tuple(region)
+        else:
+            region = None
+        window_title = b.get("window_title")
+
+        provider = _get_screen_provider()
+        res = provider.capture_screen(display_id=display_id, region=region, window_title=window_title)
+        return {"status": "ok", **res.to_dict()}
+
+    @app.post("/screen/control")
+    def screen_control_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §16.1 lines 6529-6537: Native desktop control actions (click, type, window_focus)."""
+        if not _is_screen_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Desktop control is disabled",
+                    "disabled": "locus.desktop_control.enabled",
+                },
+            )
+        b = body or {}
+        action = DesktopAction(
+            action_type=b.get("action_type") or b.get("type") or "click",
+            x=b.get("x"),
+            y=b.get("y"),
+            text=b.get("text"),
+            key=b.get("key"),
+            keys=b.get("keys") or [],
+            window_title=b.get("window_title"),
+            delta_y=b.get("delta_y"),
+            metadata=b.get("metadata") or {},
+        )
+        provider = _get_screen_provider()
+        res = provider.control_desktop(action)
+        return {"status": "ok", **res.to_dict()}
+
+    @app.post("/screen/analyze")
+    def screen_analyze_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §16.1 lines 6516-6526: Analyze screen screenshot with Screen Intelligence."""
+        if not _is_screen_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Screen intelligence is disabled",
+                    "disabled": "locus.screen.enabled",
+                },
+            )
+        b = body or {}
+        shot_b64 = b.get("screenshot") or b.get("screenshot_base64")
+        prompt = b.get("prompt")
+        provider = _get_screen_provider()
+        elements = provider.analyze_screen(screenshot_base64=shot_b64, prompt=prompt)
+        return {
+            "status": "ok",
+            "elements": [e.to_dict() for e in elements],
+            "count": len(elements),
+        }
+
+    @app.post("/screen/execute")
+    def screen_execute_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §16.1: Execute multi-action computer use workflow."""
+        if not _is_screen_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Computer use workflow is disabled",
+                    "disabled": "locus.computer_use.enabled",
+                },
+            )
+        b = body or {}
+        raw_actions = b.get("actions") or []
+        actions: List[DesktopAction] = []
+        for a in raw_actions:
+            if isinstance(a, dict):
+                actions.append(
+                    DesktopAction(
+                        action_type=a.get("action_type") or a.get("type") or "click",
+                        x=a.get("x"),
+                        y=a.get("y"),
+                        text=a.get("text"),
+                        key=a.get("key"),
+                        keys=a.get("keys") or [],
+                        window_title=a.get("window_title"),
+                        delta_y=a.get("delta_y"),
+                        metadata=a.get("metadata") or {},
+                    )
+                )
+        provider = _get_screen_provider()
+        results = provider.execute_workflow(actions)
+        return {
+            "status": "ok",
+            "results": [r.to_dict() for r in results],
+            "count": len(results),
+        }
+
+    @app.get("/screen/status")
+    def screen_status_route() -> Any:
+        """SPEC §16.1: Get computer use subsystem status."""
+        if not _is_screen_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Screen / Computer Use is disabled",
+                    "disabled": "locus.screen.enabled",
+                },
+            )
+        provider = _get_screen_provider()
+        return {"status": "ok", **provider.get_status()}
 
     return app
 

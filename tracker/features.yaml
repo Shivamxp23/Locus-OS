@@ -2366,11 +2366,33 @@ features:
     '§16.1-16.2 + §20.1-20.3: Browser Automation & Desktop Control': 834e3869ac84f0f5
   evidence:
     files:
-    - sidecar/screen/
-    symbols: []
+    - sidecar/screen/capture.py
+    - sidecar/screen/desktop_control.py
+    - sidecar/screen/screen_intelligence.py
+    - sidecar/screen/manager.py
+    - sidecar/screen/__init__.py
+    - sidecar/providers/screen.py
+    - locus-extension/src/screen/screen.ts
+    symbols:
+    - file: sidecar/screen/capture.py
+      name: DesktopScreenCaptureProvider
+    - file: sidecar/screen/capture.py
+      name: MockScreenCaptureProvider
+    - file: sidecar/screen/desktop_control.py
+      name: NativeDesktopController
+    - file: sidecar/screen/desktop_control.py
+      name: MockDesktopController
+    - file: sidecar/screen/screen_intelligence.py
+      name: ScreenIntelligence
+    - file: sidecar/screen/manager.py
+      name: ComputerUseManager
+    - file: sidecar/providers/screen.py
+      name: DefaultScreenProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_screen_computer_use.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_screen_service.py -q
   depends_on: []
 - id: F-0052
   title: VNC Remote
