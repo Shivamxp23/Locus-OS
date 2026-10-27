@@ -250,3 +250,5 @@
 {"event":"accepted","story":"US-88","feature":"F-0112","level":4,"note":"Accept US-88: Exhaustion Predictor verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-09-11","commit":"e24823a9cb5d"}
 {"event":"closed","sprint":"S82","date":"2027-09-11","planned_points":2,"velocity":2,"done":["US-88"],"not_done":{}}
 {"event":"planned","sprint":"S83","start":"2027-09-12","end":"2027-09-15","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-89"],"date":"2027-09-12"}
+{"event":"accepted","story":"US-89","feature":"F-0113","level":4,"note":"Accept US-89: Weekly Faction Rebalance verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-09-15","commit":"81802fcd3826"}
+{"event":"closed","sprint":"S83","date":"2027-09-15","planned_points":2,"velocity":2,"done":["US-89"],"not_done":{}}
