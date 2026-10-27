@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `ab9e0ffc54` - 2026-10-27T07:40:48+0530 - with test runs
+- commit `41f8a1b097` - 2026-10-27T08:07:36+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **61.4%** | old claimed average 71.4% over 86 rows
-- integrated or better: 84 | proven: 0 | overclaims (claimed >= verified + 25): 28 | no evidence: 31
-- by level: {'FILES_PRESENT': 6, 'INHERITED_OK': 12, 'INTEGRATED': 72, 'NO_EVIDENCE': 31, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **62.0%** | old claimed average 71.4% over 86 rows
+- integrated or better: 85 | proven: 0 | overclaims (claimed >= verified + 25): 27 | no evidence: 30
+- by level: {'FILES_PRESENT': 6, 'INHERITED_OK': 12, 'INTEGRATED': 73, 'NO_EVIDENCE': 30, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -18,7 +18,6 @@
 | F-0057 | Goal Tracker (3-Layer Stack) | 85% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0063 | Excalidraw MCP Skill | 70% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/display/excalidraw_builder.py. Create them or correct th |
 | F-0064 | Dual Interface / Check-ins | 85% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
-| F-0054 | CI/CD / Docker | 65% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/deployment/. Create them or correct the path. |
 | F-0068 | Connectivity Check | 60% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
 | F-0072 | Collector + Chunker | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/collector.py. Create them or correct the path. |
 | F-0075 | Content Engine | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/content/engine.py. Create them or correct the path. |
@@ -29,6 +28,7 @@
 | F-0080 | Redis Integration | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/redis_state.py. Create them or correct the path. |
 | F-0067 | Notifications | 65% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0069 | Code Graph | 50% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: .graphifyignore. Create them or correct the path. |
+| F-0076 | Spaced Repetition | 60% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 
 ## All features
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -86,7 +86,7 @@
 | F-0051 | Computer Use / Screen | 40% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0052 | VNC Remote | 20% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0053 | Google Calendar | 35% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0054 | CI/CD / Docker | 65% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/deployment/. Create them or correct the path. |
+| F-0054 | CI/CD / Docker | 65% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0055 | DCS / TWS / Factions | 90% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0056 | Operating Modes / Scheduler | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/scheduler/. Create them or correct the path. |
 | F-0057 | Goal Tracker (3-Layer Stack) | 85% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
