@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `df5138d4b6` - 2026-10-27T12:09:49+0530 - with test runs
+- commit `aa3580c805` - 2026-10-27T12:36:20+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **68.0%** | old claimed average 71.4% over 86 rows
-- integrated or better: 94 | proven: 0 | overclaims (claimed >= verified + 25): 25 | no evidence: 22
-- by level: {'FILES_PRESENT': 5, 'INHERITED_OK': 12, 'INTEGRATED': 82, 'NO_EVIDENCE': 22, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **68.7%** | old claimed average 71.4% over 86 rows
+- integrated or better: 95 | proven: 0 | overclaims (claimed >= verified + 25): 25 | no evidence: 21
+- by level: {'FILES_PRESENT': 5, 'INHERITED_OK': 12, 'INTEGRATED': 83, 'NO_EVIDENCE': 21, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -149,7 +149,7 @@
 | F-0114 | Review Cadence System | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0115 | Goal Stack Enforcement | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0116 | Cross-Faction Efficiency | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0117 | Four-Level Emergency Protocol | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0117 | Four-Level Emergency Protocol | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0118 | Memory Provider Interface | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0119 | Skill System & Multi-Source Marketplace | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0120 | Self-Evolving Architect Bot | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
