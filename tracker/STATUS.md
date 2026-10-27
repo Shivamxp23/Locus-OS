@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `c323206bb5` - 2026-10-27T07:18:15+0530 - with test runs
+- commit `ab9e0ffc54` - 2026-10-27T07:40:48+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **60.7%** | old claimed average 71.4% over 86 rows
-- integrated or better: 83 | proven: 0 | overclaims (claimed >= verified + 25): 29 | no evidence: 32
-- by level: {'FILES_PRESENT': 6, 'INHERITED_OK': 12, 'INTEGRATED': 71, 'NO_EVIDENCE': 32, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **61.4%** | old claimed average 71.4% over 86 rows
+- integrated or better: 84 | proven: 0 | overclaims (claimed >= verified + 25): 28 | no evidence: 31
+- by level: {'FILES_PRESENT': 6, 'INHERITED_OK': 12, 'INTEGRATED': 72, 'NO_EVIDENCE': 31, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -85,7 +85,7 @@
 | F-0050 | AI Chat Archiver | 55% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0051 | Computer Use / Screen | 40% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0052 | VNC Remote | 20% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0053 | Google Calendar | 35% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/integrations/calendar_sync.py. Create them or correct th |
+| F-0053 | Google Calendar | 35% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0054 | CI/CD / Docker | 65% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/deployment/. Create them or correct the path. |
 | F-0055 | DCS / TWS / Factions | 90% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0056 | Operating Modes / Scheduler | 85% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/scheduler/. Create them or correct the path. |
