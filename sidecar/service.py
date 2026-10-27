@@ -6677,6 +6677,10 @@ def create_app(
         BasePiUtilitiesProvider,
         DefaultPiUtilitiesProvider,
     )
+    from sidecar.providers.scheduler import (
+        BaseSchedulerProvider,
+        DefaultSchedulerProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -7906,6 +7910,205 @@ def create_app(
                 },
             )
         provider = _get_utilities_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # Operating Modes / Scheduler (§25.5-25.8 & §25.12 / F-0056 / US-86)
+    active_registry.register(
+        "operating_modes_scheduler", "default_scheduler", DefaultSchedulerProvider
+    )
+    active_registry.register(
+        "scheduler_engine", "default_scheduler", DefaultSchedulerProvider
+    )
+
+    def _is_scheduler_enabled(feature: str = "scheduler") -> tuple[bool, str]:
+        v1 = config.get("locus.operating_modes_scheduler.enabled")
+        if v1 is not None and not config.is_enabled("locus.operating_modes_scheduler.enabled"):
+            return False, "locus.operating_modes_scheduler.enabled"
+        v2 = config.get("locus.scheduler.enabled")
+        if v2 is not None and not config.is_enabled("locus.scheduler.enabled"):
+            return False, "locus.scheduler.enabled"
+
+        sub_switches = {
+            "goal_stack": "locus.life_os.goal_stack.enabled",
+            "action_gap": "locus.life_os.action_gap.enabled",
+            "deferral": "locus.life_os.deferral.enabled",
+        }
+        if feature in sub_switches:
+            sub = sub_switches[feature]
+            val = config.get(sub)
+            if val is not None and not config.is_enabled(sub):
+                return False, sub
+
+        if not app.state.registry.is_feature_enabled("operating_modes_scheduler") and not app.state.registry.is_feature_enabled("scheduler_engine"):
+            return False, "locus.operating_modes_scheduler.enabled"
+        return True, ""
+
+    def _get_scheduler_provider() -> BaseSchedulerProvider:
+        if not hasattr(app.state, "operating_modes_scheduler_provider") or app.state.operating_modes_scheduler_provider is None:
+            res = app.state.registry.get_active_provider(
+                "operating_modes_scheduler", default_name="default_scheduler"
+            )
+            if isinstance(res, BaseSchedulerProvider):
+                app.state.operating_modes_scheduler_provider = res
+            elif callable(res):
+                app.state.operating_modes_scheduler_provider = res()
+            else:
+                app.state.operating_modes_scheduler_provider = DefaultSchedulerProvider()
+        return app.state.operating_modes_scheduler_provider
+
+    @app.post("/scheduler/goal-stack/validate")
+    def scheduler_goal_stack_validate_route() -> Any:
+        """SPEC §25.5: Validate three-layer goal stack hierarchy."""
+        enabled, switch = _is_scheduler_enabled("goal_stack")
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Goal stack validation is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_scheduler_provider()
+        res = provider.validate_goal_stack()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/scheduler/goal-stack/orphans")
+    def scheduler_goal_stack_orphans_route() -> Any:
+        """SPEC §25.5: Identify orphan tasks without valid project/outcome parents."""
+        enabled, switch = _is_scheduler_enabled("goal_stack")
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Goal stack validation is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_scheduler_provider()
+        res = provider.validate_goal_stack()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return {"status": "ok", "orphans": res.get("orphans", []), "orphan_count": res.get("orphan_count", 0)}
+
+    @app.post("/scheduler/action-gap/evaluate")
+    def scheduler_action_gap_evaluate_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.6: Evaluate action gaps across factions."""
+        enabled, switch = _is_scheduler_enabled("action_gap")
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Action gap tracking is disabled",
+                    "disabled": switch,
+                },
+            )
+        factions_data = body.get("factions", {})
+        provider = _get_scheduler_provider()
+        res = provider.evaluate_action_gaps(factions_data=factions_data)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/scheduler/deferral/record")
+    def scheduler_deferral_record_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.7: Record task deferral and apply 3/5/8+ escalation thresholds."""
+        enabled, switch = _is_scheduler_enabled("deferral")
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Deferral tracking is disabled",
+                    "disabled": switch,
+                },
+            )
+        task_id = str(body.get("task_id", ""))
+        reason = str(body.get("reason", ""))
+        provider = _get_scheduler_provider()
+        res = provider.record_deferral(task_id=task_id, reason=reason)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/scheduler/deferral/status/{task_id}")
+    def scheduler_deferral_status_route(task_id: str) -> Any:
+        """SPEC §25.7: Retrieve deferral history and status for a task."""
+        enabled, switch = _is_scheduler_enabled("deferral")
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Deferral tracking is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_scheduler_provider()
+        if hasattr(provider, "deferral_tracker"):
+            rec = provider.deferral_tracker.get_record(task_id)
+            return {"status": "ok", "record": rec.to_dict()}
+        return {"status": "ok", "record": {"task_id": task_id, "deferral_count": 0}}
+
+    @app.post("/scheduler/lag/bonus")
+    def scheduler_lag_bonus_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.8: Calculate TWS lag bonus from lag hours."""
+        enabled, switch = _is_scheduler_enabled("scheduler")
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Scheduler is disabled",
+                    "disabled": switch,
+                },
+            )
+        lag_hours = float(body.get("lag_hours", 0.0))
+        provider = _get_scheduler_provider()
+        res = provider.compute_lag_bonus(lag_hours=lag_hours)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/scheduler/schedule/generate")
+    def scheduler_schedule_generate_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.12: Generate daily dispatch schedule via deterministic 6-step engine."""
+        enabled, switch = _is_scheduler_enabled("scheduler")
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Scheduler is disabled",
+                    "disabled": switch,
+                },
+            )
+        dcs = float(body.get("dcs", 5.0))
+        tasks = body.get("tasks", [])
+        enforce_goal_stack = bool(body.get("enforce_goal_stack", True))
+        provider = _get_scheduler_provider()
+        res = provider.generate_schedule(
+            dcs=dcs,
+            candidate_tasks=tasks,
+            enforce_goal_stack=enforce_goal_stack,
+        )
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/scheduler/status")
+    def scheduler_status_route() -> Any:
+        """SPEC §25.5: Get diagnostic status of operating modes & scheduler subsystem."""
+        enabled, switch = _is_scheduler_enabled("scheduler")
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Scheduler is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_scheduler_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

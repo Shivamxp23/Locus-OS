@@ -395,6 +395,11 @@ from sidecar.providers.vnc import BaseVNCProvider, DefaultVNCProvider
 from sidecar.providers.calendar import BaseCalendarProvider, DefaultCalendarProvider
 from sidecar.providers.ci_cd_docker import BaseDeploymentProvider, DefaultDeploymentProvider
 from sidecar.providers.pi_utilities import BasePiUtilitiesProvider, DefaultPiUtilitiesProvider
+from sidecar.providers.scheduler import (
+    BaseSchedulerProvider,
+    DefaultSchedulerProvider,
+    SchedulerProvider,
+)
 
 __all__ = [
 
@@ -674,4 +679,7 @@ __all__ = [
     "DefaultDeploymentProvider",
     "BasePiUtilitiesProvider",
     "DefaultPiUtilitiesProvider",
+    "BaseSchedulerProvider",
+    "DefaultSchedulerProvider",
+    "SchedulerProvider",
 ]

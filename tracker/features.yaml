@@ -2713,12 +2713,40 @@ features:
     '§25.8: Lag Score + TWS Lag Bonus': 90930bd774906637
   evidence:
     files:
-    - sidecar/life_os.py
-    - sidecar/scheduler/
-    symbols: []
+    - sidecar/life_os/action_gap.py
+    - sidecar/life_os/deferral.py
+    - sidecar/life_os/goal_stack.py
+    - sidecar/life_os/lag.py
+    - sidecar/life_os/scheduler.py
+    - sidecar/providers/scheduler.py
+    - locus-extension/src/scheduler/goal-stack.ts
+    - locus-extension/src/scheduler/index.ts
+    symbols:
+    - name: FactionActionGap
+      file: sidecar/life_os/action_gap.py
+    - name: DeferralRecord
+      file: sidecar/life_os/deferral.py
+    - name: DeferralTracker
+      file: sidecar/life_os/deferral.py
+    - name: GoalNode
+      file: sidecar/life_os/goal_stack.py
+    - name: ThreeLayerGoalStack
+      file: sidecar/life_os/goal_stack.py
+    - name: FactionLagReport
+      file: sidecar/life_os/lag.py
+    - name: ScheduledBlock
+      file: sidecar/life_os/scheduler.py
+    - name: CandidateTask
+      file: sidecar/life_os/scheduler.py
+    - name: SixStepSchedulerEngine
+      file: sidecar/life_os/scheduler.py
+    - name: DefaultSchedulerProvider
+      file: sidecar/providers/scheduler.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_scheduler_operating_modes.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_scheduler_service.py -q
   depends_on: []
 - id: F-0057
   title: Goal Tracker (3-Layer Stack)
