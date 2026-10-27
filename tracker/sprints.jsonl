@@ -292,3 +292,5 @@
 {"event":"accepted","story":"US-102","feature":"F-0065","level":4,"note":"Demo passed: Run pytest on unit tests for F-0065: asserts core logic and off-switch behavior; 11 unit tests passed at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-11-06","commit":"940a26b9a44d"}
 {"event":"closed","sprint":"S96","date":"2027-11-06","planned_points":2,"velocity":2,"done":["US-102"],"not_done":{}}
 {"event":"planned","sprint":"S97","start":"2027-11-07","end":"2027-11-10","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-103"],"date":"2027-11-07"}
+{"event":"accepted","story":"US-103","feature":"F-0124","level":4,"note":"Accept US-103: Auxiliary LLM Client verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-11-10","commit":"94176f37e08e"}
+{"event":"closed","sprint":"S97","date":"2027-11-10","planned_points":2,"velocity":2,"done":["US-103"],"not_done":{}}
