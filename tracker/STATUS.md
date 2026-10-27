@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `b61d71cc6d` - 2026-10-27T05:17:32+0530 - with test runs
+- commit `f2cbefc758` - 2026-10-27T05:42:46+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **57.7%** | old claimed average 71.4% over 86 rows
-- integrated or better: 79 | proven: 0 | overclaims (claimed >= verified + 25): 32 | no evidence: 38
-- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 67, 'NO_EVIDENCE': 38, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **58.4%** | old claimed average 71.4% over 86 rows
+- integrated or better: 80 | proven: 0 | overclaims (claimed >= verified + 25): 31 | no evidence: 37
+- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 68, 'NO_EVIDENCE': 37, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -83,7 +83,7 @@
 | F-0048 | MCP Server/Client | 55% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/mcp_client.py. Create them or correct the path. |
 | F-0049 | Trajectory Recording | 40% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0050 | AI Chat Archiver | 55% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0051 | Computer Use / Screen | 40% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/screen/. Create them or correct the path. |
+| F-0051 | Computer Use / Screen | 40% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0052 | VNC Remote | 20% | 0% | NO_EVIDENCE | NO_FILES_NAMED | Name the files this feature lives in (evidence.files). |
 | F-0053 | Google Calendar | 35% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/integrations/calendar_sync.py. Create them or correct th |
 | F-0054 | CI/CD / Docker | 65% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/deployment/. Create them or correct the path. |
