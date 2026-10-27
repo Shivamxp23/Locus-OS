@@ -276,3 +276,4 @@
 {"event":"planned","sprint":"S91","start":"2027-10-14","end":"2027-10-17","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-97"],"date":"2027-10-14"}
 {"event":"accepted","story":"US-97","feature":"F-0123","level":4,"note":"Accept US-97: 3-Level Tag Hierarchy & Semantic Indexing verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-10-17","commit":"e83d79fa2dbd"}
 {"event":"closed","sprint":"S91","date":"2027-10-17","planned_points":2,"velocity":2,"done":["US-97"],"not_done":{}}
+{"event":"planned","sprint":"S92","start":"2027-10-18","end":"2027-10-21","goal":"Everything is recorded and backed up to the vault; Neo4j Agent Memory is the memory layer.","capacity":2,"points":2,"stories":["US-98"],"date":"2027-10-18"}
