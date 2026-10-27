@@ -1,16 +1,15 @@
 # Tracker status (computed, not written)
 
-- commit `6b2bfdba98` - 2026-10-27T13:56:24+0530 - with test runs
-- guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **70.8%** | old claimed average 71.4% over 86 rows
-- integrated or better: 98 | proven: 0 | overclaims (claimed >= verified + 25): 24 | no evidence: 18
-- by level: {'FILES_PRESENT': 5, 'INHERITED_OK': 12, 'INTEGRATED': 86, 'NO_EVIDENCE': 18, 'UNIT_VERIFIED': 4}
+- commit `1aa3751d07` (dirty working tree) - 2026-10-27T14:42:25+0530 - with test runs
+- guard: PASS {'FAIL': 0, 'WARN': 10, 'INFO': 0}
+- features: 125 | verified average **71.4%** | old claimed average 71.4% over 86 rows
+- integrated or better: 99 | proven: 0 | overclaims (claimed >= verified + 25): 23 | no evidence: 17
+- by level: {'FILES_PRESENT': 5, 'INHERITED_OK': 12, 'INTEGRATED': 87, 'NO_EVIDENCE': 17, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
 |---|---|---:|---:|---|---|---|
 | F-0078 | Master Conductor | 90% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/conductor.py. Create them or correct the path. |
-| F-0061 | Rough Note Parser | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/rough_note_parser.py. Create them or correct t |
 | F-0062 | Link Dump Logger | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/link_logger.py. Create them or correct the pat |
 | F-0066 | Health Checks | 90% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0063 | Excalidraw MCP Skill | 70% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/display/excalidraw_builder.py. Create them or correct th |
@@ -29,6 +28,7 @@
 | F-0081 | Obsidian/LightRAG Bridge | 45% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/vault/lightrag_bridge.py. Create them or correct the pat |
 | F-0070 | Subconscious | 40% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/heartbeat/. Create them or correct the path. |
 | F-0082 | Install Script (ALL platforms) | 100% | 65% | UNIT_VERIFIED | OVERCLAIM | Add evidence.integration: a DIFFERENT test that crosses a boundary (sidecar<->Pi, extensio |
+| F-0083 | Telegram Setup via /setup command | 100% | 65% | UNIT_VERIFIED | OVERCLAIM | Add evidence.integration: a DIFFERENT test that crosses a boundary (sidecar<->Pi, extensio |
 
 ## All features
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -93,7 +93,7 @@
 | F-0058 | Proactive Inner Loop | 70% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0059 | PageIndex Retrieval | 85% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0060 | Obsidian Self-Hosted LiveSync & CouchDB Real | 100% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0061 | Rough Note Parser | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/rough_note_parser.py. Create them or correct t |
+| F-0061 | Rough Note Parser | 75% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0062 | Link Dump Logger | 75% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/link_logger.py. Create them or correct the pat |
 | F-0063 | Excalidraw MCP Skill | 70% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/display/excalidraw_builder.py. Create them or correct th |
 | F-0064 | Dual Interface / Check-ins | 85% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
