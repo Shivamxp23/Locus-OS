@@ -393,6 +393,7 @@ from sidecar.providers.vault_sync import BaseVaultSyncProvider, SyncState
 from sidecar.providers.mcp import BaseMcpProvider, DefaultMcpProvider
 from sidecar.providers.vnc import BaseVNCProvider, DefaultVNCProvider
 from sidecar.providers.calendar import BaseCalendarProvider, DefaultCalendarProvider
+from sidecar.providers.ci_cd_docker import BaseDeploymentProvider, DefaultDeploymentProvider
 
 __all__ = [
 
@@ -668,4 +669,6 @@ __all__ = [
     "DefaultVNCProvider",
     "BaseCalendarProvider",
     "DefaultCalendarProvider",
+    "BaseDeploymentProvider",
+    "DefaultDeploymentProvider",
 ]

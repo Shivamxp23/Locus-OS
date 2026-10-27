@@ -2581,11 +2581,38 @@ features:
   evidence:
     files:
     - docker-compose.yml
-    - sidecar/deployment/
-    symbols: []
+    - sidecar/Dockerfile
+    - sidecar/deployment/docker_orchestrator.py
+    - sidecar/deployment/systemd_generator.py
+    - sidecar/deployment/batch_runner.py
+    - sidecar/deployment/__init__.py
+    - sidecar/providers/ci_cd_docker.py
+    - locus-extension/src/deployment/runner.ts
+    - locus-extension/src/deployment/index.ts
+    symbols:
+    - name: ContainerConfig
+      file: sidecar/deployment/docker_orchestrator.py
+    - name: DockerTopologyStatus
+      file: sidecar/deployment/docker_orchestrator.py
+    - name: DockerOrchestrator
+      file: sidecar/deployment/docker_orchestrator.py
+    - name: SystemdUnitConfig
+      file: sidecar/deployment/systemd_generator.py
+    - name: SystemdGenerator
+      file: sidecar/deployment/systemd_generator.py
+    - name: RunResult
+      file: sidecar/deployment/batch_runner.py
+    - name: BatchEvaluationReport
+      file: sidecar/deployment/batch_runner.py
+    - name: BatchTrajectoryRunner
+      file: sidecar/deployment/batch_runner.py
+    - name: DefaultDeploymentProvider
+      file: sidecar/providers/ci_cd_docker.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_ci_cd_docker.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_deployment_service.py -q
   depends_on: []
 - id: F-0055
   title: DCS / TWS / Factions

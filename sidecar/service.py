@@ -6669,6 +6669,10 @@ def create_app(
         BaseCalendarProvider,
         DefaultCalendarProvider,
     )
+    from sidecar.providers.ci_cd_docker import (
+        BaseDeploymentProvider,
+        DefaultDeploymentProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -7634,6 +7638,123 @@ def create_app(
                 },
             )
         provider = _get_calendar_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # CI/CD, Docker Deployment & Batch Runner (F-0054 / US-84 / SPEC §23.1-23.5)
+    active_registry.register(
+        "ci_cd_docker", "default_deployment", DefaultDeploymentProvider
+    )
+    active_registry.register(
+        "deployment", "default_deployment", DefaultDeploymentProvider
+    )
+
+    def _is_deployment_enabled() -> tuple[bool, str]:
+        v1 = config.get("locus.ci_cd_docker.enabled")
+        if v1 is not None and not config.is_enabled("locus.ci_cd_docker.enabled"):
+            return False, "locus.ci_cd_docker.enabled"
+        v2 = config.get("locus.deployment.enabled")
+        if v2 is not None and not config.is_enabled("locus.deployment.enabled"):
+            return False, "locus.deployment.enabled"
+        if not app.state.registry.is_feature_enabled("ci_cd_docker") and not app.state.registry.is_feature_enabled("deployment"):
+            return False, "locus.ci_cd_docker.enabled"
+        return True, ""
+
+    def _get_deployment_provider() -> BaseDeploymentProvider:
+        if not hasattr(app.state, "deployment_provider") or app.state.deployment_provider is None:
+            res = app.state.registry.get_active_provider(
+                "ci_cd_docker", default_name="default_deployment"
+            )
+            if isinstance(res, BaseDeploymentProvider):
+                app.state.deployment_provider = res
+            elif callable(res):
+                app.state.deployment_provider = res()
+            else:
+                app.state.deployment_provider = DefaultDeploymentProvider()
+        return app.state.deployment_provider
+
+    @app.get("/deployment/docker/status")
+    def docker_topology_status_route() -> Any:
+        """SPEC §23.2: Inspect and validate 5-container Docker topology."""
+        enabled, switch = _is_deployment_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "CI/CD & Docker deployment is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_deployment_provider()
+        res = provider.inspect_docker_topology()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/deployment/systemd/generate")
+    def systemd_generate_route(body: Dict[str, Any] = Body(default={})) -> Any:
+        """SPEC §23.1: Generate hardened systemd unit file."""
+        enabled, switch = _is_deployment_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "CI/CD & Docker deployment is disabled",
+                    "disabled": switch,
+                },
+            )
+        service_type = body.get("service_type", "sidecar")
+        working_dir = body.get("working_dir", "/opt/locus/locus-os")
+        user = body.get("user", "locus")
+        env_file = body.get("env_file", "/opt/locus/.locus/.env")
+        provider = _get_deployment_provider()
+        res = provider.generate_systemd_unit(
+            service_type=service_type,
+            working_dir=working_dir,
+            user=user,
+            env_file=env_file,
+        )
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/deployment/batch/evaluate")
+    def batch_evaluate_route(body: Dict[str, Any]) -> Any:
+        """SPEC §23.5: Execute batch evaluation across multiple trajectory runs."""
+        enabled, switch = _is_deployment_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "CI/CD & Docker deployment is disabled",
+                    "disabled": switch,
+                },
+            )
+        prompt = body.get("prompt")
+        if not prompt:
+            raise HTTPException(status_code=400, detail="Missing required field: prompt")
+        n_runs = int(body.get("n_runs", 3))
+        provider = _get_deployment_provider()
+        res = provider.evaluate_batch(prompt=prompt, n_runs=n_runs)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/deployment/status")
+    def deployment_status_route() -> Any:
+        """SPEC §23.1-23.5: Get diagnostic status of deployment subsystems."""
+        enabled, switch = _is_deployment_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "CI/CD & Docker deployment is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_deployment_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)
