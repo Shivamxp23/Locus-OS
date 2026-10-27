@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `f83646b5c5` - 2026-10-27T09:53:40+0530 - with test runs
+- commit `f690b0d0e6` - 2026-10-27T10:20:28+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **64.8%** | old claimed average 71.4% over 86 rows
-- integrated or better: 89 | proven: 0 | overclaims (claimed >= verified + 25): 26 | no evidence: 26
-- by level: {'FILES_PRESENT': 6, 'INHERITED_OK': 12, 'INTEGRATED': 77, 'NO_EVIDENCE': 26, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **65.4%** | old claimed average 71.4% over 86 rows
+- integrated or better: 90 | proven: 0 | overclaims (claimed >= verified + 25): 26 | no evidence: 25
+- by level: {'FILES_PRESENT': 6, 'INHERITED_OK': 12, 'INTEGRATED': 78, 'NO_EVIDENCE': 25, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -145,7 +145,7 @@
 | F-0110 | Context Compression | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0111 | Emergency Task Injection | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0112 | Exhaustion Predictor | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0113 | Weekly Faction Rebalance | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0113 | Weekly Faction Rebalance | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0114 | Review Cadence System | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0115 | Goal Stack Enforcement | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0116 | Cross-Faction Efficiency | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
