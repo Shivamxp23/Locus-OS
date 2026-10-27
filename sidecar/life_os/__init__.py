@@ -35,6 +35,11 @@ from sidecar.life_os.factions import (
     FACTION_CRISIS_HIERARCHY,
     compute_faction_lag,
 )
+from sidecar.life_os.goal_enforcement import (
+    BriefingOrphanReport,
+    EnforcementResult,
+    GoalStackEnforcer,
+)
 from sidecar.life_os.goal_stack import (
     GoalNode,
     GoalStackLevel,
@@ -79,6 +84,9 @@ __all__ = [
     "FactionBalanceReport",
     "FactionBalancer",
     "FactionLagReport",
+    "BriefingOrphanReport",
+    "EnforcementResult",
+    "GoalStackEnforcer",
     "SCHEDULER_FACTION_TARGETS",
     "canonicalize_faction",
     "GoalNode",

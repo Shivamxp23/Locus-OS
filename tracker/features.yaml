@@ -5050,11 +5050,25 @@ features:
   spec_sha:
     '§25.14: Goal Stack Enforcement': 4d7fb02bfc4211c8
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/life_os/goal_enforcement.py
+    - sidecar/providers/goal_enforcement.py
+    - locus-extension/src/scheduler/goal-enforcement.ts
+    - locus-extension/src/scheduler/index.ts
+    symbols:
+    - name: GoalStackEnforcer
+      file: sidecar/life_os/goal_enforcement.py
+    - name: EnforcementResult
+      file: sidecar/life_os/goal_enforcement.py
+    - name: BriefingOrphanReport
+      file: sidecar/life_os/goal_enforcement.py
+    - name: DefaultGoalStackEnforcementProvider
+      file: sidecar/providers/goal_enforcement.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_goal_stack_enforcement.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_goal_enforcement_service.py -q
   depends_on: []
 - id: F-0116
   title: Cross-Faction Efficiency

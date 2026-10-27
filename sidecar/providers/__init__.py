@@ -425,6 +425,10 @@ from sidecar.providers.reviews import (
     DefaultReviewCadenceProvider,
     ReviewCadenceProvider,
 )
+from sidecar.providers.goal_enforcement import (
+    BaseGoalStackEnforcementProvider,
+    DefaultGoalStackEnforcementProvider,
+)
 
 __all__ = [
 
@@ -722,4 +726,6 @@ __all__ = [
     "BaseReviewCadenceProvider",
     "DefaultReviewCadenceProvider",
     "ReviewCadenceProvider",
+    "BaseGoalStackEnforcementProvider",
+    "DefaultGoalStackEnforcementProvider",
 ]

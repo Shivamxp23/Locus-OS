@@ -7,3 +7,4 @@ export * from "./exhaustion.js";
 export * from "./rebalance.js";
 export * from "./goal-tracker.js";
 export * from "./reviews.js";
+export * from "./goal-enforcement.js";

@@ -6701,6 +6701,10 @@ def create_app(
         BaseReviewCadenceProvider,
         DefaultReviewCadenceProvider,
     )
+    from sidecar.providers.goal_enforcement import (
+        BaseGoalStackEnforcementProvider,
+        DefaultGoalStackEnforcementProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -8627,6 +8631,148 @@ def create_app(
                 },
             )
         provider = _get_reviews_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # -------------------------------------------------------------------------
+    # SPEC §25.14 lines 4897-4909: Goal Stack Enforcement
+    # -------------------------------------------------------------------------
+    active_registry.register(
+        "goal_stack_enforcement", "default_goal_enforcement", DefaultGoalStackEnforcementProvider
+    )
+    active_registry.register(
+        "goal_enforcement", "default_goal_enforcement", DefaultGoalStackEnforcementProvider
+    )
+
+    def _is_goal_enforcement_enabled() -> Tuple[bool, str]:
+        for switch in (
+            "locus.goal_stack_enforcement.enabled",
+        ):
+            val = config.get(switch)
+            if val is not None and not config.is_enabled(switch):
+                return False, switch
+        return True, ""
+
+    def _get_goal_enforcement_provider() -> BaseGoalStackEnforcementProvider:
+        if not hasattr(app.state, "goal_enforcement_provider") or app.state.goal_enforcement_provider is None:
+            prov_cls = active_registry.get("goal_stack_enforcement", "default_goal_enforcement")
+            if prov_cls:
+                app.state.goal_enforcement_provider = prov_cls()
+            else:
+                app.state.goal_enforcement_provider = DefaultGoalStackEnforcementProvider()
+        return app.state.goal_enforcement_provider
+
+    @app.post("/goal-enforcement/enforce-task")
+    def goal_enforcement_task_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.14: Enforce task parenting to project (milestone) and outcome (vision)."""
+        enabled, switch = _is_goal_enforcement_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Goal stack enforcement is disabled",
+                    "disabled": switch,
+                },
+            )
+        task_id = body.get("task_id", "")
+        stack_nodes = body.get("stack_nodes")
+        provider = _get_goal_enforcement_provider()
+        res = provider.enforce_task(task_id=task_id, stack_nodes=stack_nodes)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/goal-enforcement/enforce-project")
+    def goal_enforcement_project_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.14: Enforce project parenting to outcome (vision)."""
+        enabled, switch = _is_goal_enforcement_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Goal stack enforcement is disabled",
+                    "disabled": switch,
+                },
+            )
+        project_id = body.get("project_id", "")
+        stack_nodes = body.get("stack_nodes")
+        provider = _get_goal_enforcement_provider()
+        res = provider.enforce_project(project_id=project_id, stack_nodes=stack_nodes)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/goal-enforcement/briefing-orphans")
+    def goal_enforcement_briefing_orphans_get_route() -> Any:
+        """SPEC §25.14: Surface orphan tasks and projects formatted for morning briefing."""
+        enabled, switch = _is_goal_enforcement_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Goal stack enforcement is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_goal_enforcement_provider()
+        res = provider.surface_briefing_orphans()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/goal-enforcement/briefing-orphans")
+    def goal_enforcement_briefing_orphans_post_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.14: Surface orphan tasks and projects formatted for morning briefing with custom stack."""
+        enabled, switch = _is_goal_enforcement_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Goal stack enforcement is disabled",
+                    "disabled": switch,
+                },
+            )
+        stack_nodes = body.get("stack_nodes")
+        provider = _get_goal_enforcement_provider()
+        res = provider.surface_briefing_orphans(stack_nodes=stack_nodes)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/goal-enforcement/audit")
+    def goal_enforcement_audit_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.14: Audit full stack for orphan tasks and projects."""
+        enabled, switch = _is_goal_enforcement_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Goal stack enforcement is disabled",
+                    "disabled": switch,
+                },
+            )
+        stack_nodes = body.get("stack_nodes")
+        provider = _get_goal_enforcement_provider()
+        res = provider.audit_stack(stack_nodes=stack_nodes)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/goal-enforcement/status")
+    def goal_enforcement_status_route() -> Any:
+        """SPEC §25.14: Diagnostic status of goal stack enforcement."""
+        enabled, switch = _is_goal_enforcement_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Goal stack enforcement is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_goal_enforcement_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)
