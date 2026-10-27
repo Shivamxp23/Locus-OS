@@ -6697,6 +6697,10 @@ def create_app(
         BaseGoalTrackerProvider,
         DefaultGoalTrackerProvider,
     )
+    from sidecar.providers.reviews import (
+        BaseReviewCadenceProvider,
+        DefaultReviewCadenceProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -8535,6 +8539,94 @@ def create_app(
                 },
             )
         provider = _get_goal_tracker_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # Review Cadence System (F-0114 / US-91 / SPEC §25.13)
+    active_registry.register(
+        "review_cadence_system", "default_review_cadence", DefaultReviewCadenceProvider
+    )
+    active_registry.register(
+        "reviews", "default_review_cadence", DefaultReviewCadenceProvider
+    )
+
+    def _is_reviews_enabled() -> tuple[bool, str]:
+        v1 = config.get("locus.review_cadence_system.enabled")
+        if v1 is not None and not config.is_enabled("locus.review_cadence_system.enabled"):
+            return False, "locus.review_cadence_system.enabled"
+        v2 = config.get("locus.life_os.reviews.enabled")
+        if v2 is not None and not config.is_enabled("locus.life_os.reviews.enabled"):
+            return False, "locus.life_os.reviews.enabled"
+        if not app.state.registry.is_feature_enabled("review_cadence_system") and not app.state.registry.is_feature_enabled("reviews"):
+            return False, "locus.review_cadence_system.enabled"
+        return True, ""
+
+    def _get_reviews_provider() -> BaseReviewCadenceProvider:
+        if not hasattr(app.state, "reviews_provider") or app.state.reviews_provider is None:
+            res = app.state.registry.get_provider(
+                "review_cadence_system", default_name="default_review_cadence"
+            )
+            if isinstance(res, BaseReviewCadenceProvider):
+                app.state.reviews_provider = res
+            elif callable(res):
+                app.state.reviews_provider = res()
+            else:
+                app.state.reviews_provider = DefaultReviewCadenceProvider()
+        return app.state.reviews_provider
+
+    @app.post("/reviews/generate")
+    def reviews_generate_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.13: Generate review prompt and briefing for specified cadence."""
+        enabled, switch = _is_reviews_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Review cadence system is disabled",
+                    "disabled": switch,
+                },
+            )
+        cadence = body.get("cadence", "daily_standup")
+        context = body.get("context")
+        provider = _get_reviews_provider()
+        res = provider.generate_review(cadence=cadence, context=context)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/reviews/scheduled")
+    def reviews_scheduled_route() -> Any:
+        """SPEC §25.13: List active review cadences and schedules."""
+        enabled, switch = _is_reviews_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Review cadence system is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_reviews_provider()
+        res = provider.list_cadences()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/reviews/status")
+    def reviews_status_route() -> Any:
+        """SPEC §25.13: Get diagnostic status of review cadence system."""
+        enabled, switch = _is_reviews_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Review cadence system is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_reviews_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

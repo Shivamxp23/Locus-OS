@@ -5011,11 +5011,25 @@ features:
   spec_sha:
     '§25.13: Review Cadence System': 4ab08118bc6a54da
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/life_os/reviews.py
+    - sidecar/providers/reviews.py
+    - locus-extension/src/scheduler/reviews.ts
+    - locus-extension/src/scheduler/index.ts
+    symbols:
+    - name: ReviewCadence
+      file: sidecar/life_os/reviews.py
+    - name: ReviewPrompt
+      file: sidecar/life_os/reviews.py
+    - name: ReviewCadenceEngine
+      file: sidecar/life_os/reviews.py
+    - name: DefaultReviewCadenceProvider
+      file: sidecar/providers/reviews.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_review_cadence_system.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_reviews_service.py -q
   depends_on: []
 - id: F-0115
   title: Goal Stack Enforcement

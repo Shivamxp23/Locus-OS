@@ -420,6 +420,11 @@ from sidecar.providers.goal_tracker import (
     DefaultGoalTrackerProvider,
     GoalTrackerProvider,
 )
+from sidecar.providers.reviews import (
+    BaseReviewCadenceProvider,
+    DefaultReviewCadenceProvider,
+    ReviewCadenceProvider,
+)
 
 __all__ = [
 
@@ -714,4 +719,7 @@ __all__ = [
     "BaseGoalTrackerProvider",
     "DefaultGoalTrackerProvider",
     "GoalTrackerProvider",
+    "BaseReviewCadenceProvider",
+    "DefaultReviewCadenceProvider",
+    "ReviewCadenceProvider",
 ]

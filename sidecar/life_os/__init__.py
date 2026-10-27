@@ -54,6 +54,13 @@ from sidecar.life_os.rebalance import (
     WeeklyFactionRebalancer,
     normalize_faction_name,
 )
+from sidecar.life_os.reviews import (
+    CADENCE_SCHEDULE_DEFAULTS,
+    ReviewCadence,
+    ReviewCadenceEngine,
+    ReviewPrompt,
+    ReviewResult,
+)
 from sidecar.life_os.tws import calculate_tws, log_post_task
 
 __all__ = [
@@ -78,6 +85,11 @@ __all__ = [
     "GoalStackLevel",
     "LifeOSProvider",
     "OPERATING_MODE_RULES",
+    "CADENCE_SCHEDULE_DEFAULTS",
+    "ReviewCadence",
+    "ReviewCadenceEngine",
+    "ReviewPrompt",
+    "ReviewResult",
     "RebalanceResult",
     "STANDARD_FACTION_TARGETS",
     "ThreeLayerGoalStack",
