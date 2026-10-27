@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `41f8a1b097` - 2026-10-27T08:07:36+0530 - with test runs
+- commit `6f6fe58cef` - 2026-10-27T08:35:29+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **62.0%** | old claimed average 71.4% over 86 rows
-- integrated or better: 85 | proven: 0 | overclaims (claimed >= verified + 25): 27 | no evidence: 30
-- by level: {'FILES_PRESENT': 6, 'INHERITED_OK': 12, 'INTEGRATED': 73, 'NO_EVIDENCE': 30, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **62.7%** | old claimed average 71.4% over 86 rows
+- integrated or better: 86 | proven: 0 | overclaims (claimed >= verified + 25): 27 | no evidence: 29
+- by level: {'FILES_PRESENT': 6, 'INHERITED_OK': 12, 'INTEGRATED': 74, 'NO_EVIDENCE': 29, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -138,7 +138,7 @@
 | F-0103 | Tool Timeout / Budget | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0104 | Custom Locus Tools | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0105 | Web Search (8 Providers) | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0106 | Pi Utilities (Clipboard, Syntax Highlighting | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0106 | Pi Utilities (Clipboard, Syntax Highlighting | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0107 | File Safety | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0108 | Autonomy Tiers | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0109 | Approval Gate | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
