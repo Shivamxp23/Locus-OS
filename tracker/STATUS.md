@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `2cc33e7b9e` - 2026-10-27T13:02:04+0530 - with test runs
+- commit `c712f0150c` - 2026-10-27T13:28:16+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **69.4%** | old claimed average 71.4% over 86 rows
-- integrated or better: 96 | proven: 0 | overclaims (claimed >= verified + 25): 24 | no evidence: 20
-- by level: {'FILES_PRESENT': 5, 'INHERITED_OK': 12, 'INTEGRATED': 84, 'NO_EVIDENCE': 20, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **70.1%** | old claimed average 71.4% over 86 rows
+- integrated or better: 97 | proven: 0 | overclaims (claimed >= verified + 25): 24 | no evidence: 19
+- by level: {'FILES_PRESENT': 5, 'INHERITED_OK': 12, 'INTEGRATED': 85, 'NO_EVIDENCE': 19, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -154,7 +154,7 @@
 | F-0119 | Skill System & Multi-Source Marketplace | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0120 | Self-Evolving Architect Bot | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0121 | Agent Experience Tracking (Procedural Memory | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0122 | LOCUS_SHORTHAND 4× Text Compressor | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0122 | LOCUS_SHORTHAND 4× Text Compressor | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0123 | 3-Level Tag Hierarchy & Semantic Indexing | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0124 | Auxiliary LLM Client | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0125 | Modularity foundation: provider registry + c | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
