@@ -1,5 +1,5 @@
 """
-SPEC §17.10: Graceful Gateway Restart & State Snapshotting.
+SPEC §17.10 & §28.1-28.6: Gateway Subsystem (Dual-Interface & Lifecycle).
 """
 from sidecar.gateway.lifecycle import (
     BaseChannelAdapter,
@@ -8,6 +8,12 @@ from sidecar.gateway.lifecycle import (
     MockChannelAdapter,
     SessionSnapshot,
 )
+from sidecar.gateway.dual_interface import (
+    CheckInRecord,
+    CheckInSlot,
+    DualInterfaceEngine,
+    SessionMessage,
+)
 
 __all__ = [
     "BaseChannelAdapter",
@@ -15,4 +21,8 @@ __all__ = [
     "ForensicRecord",
     "SessionSnapshot",
     "GatewayLifecycleManager",
+    "CheckInRecord",
+    "CheckInSlot",
+    "DualInterfaceEngine",
+    "SessionMessage",
 ]

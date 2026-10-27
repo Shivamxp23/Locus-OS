@@ -6737,6 +6737,10 @@ def create_app(
         BaseDiagramGeneratorProvider,
         DefaultDiagramGeneratorProvider,
     )
+    from sidecar.providers.dual_interface import (
+        BaseDualInterfaceProvider,
+        DefaultDualInterfaceProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -9542,6 +9546,136 @@ def create_app(
                 },
             )
         provider = _get_diagram_generator_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    active_registry.register(
+        "dual_interface_checkins", "default_dual_interface", DefaultDualInterfaceProvider
+    )
+    active_registry.register(
+        "dual_interface", "default_dual_interface", DefaultDualInterfaceProvider
+    )
+
+    def _is_dual_interface_enabled() -> Tuple[bool, str]:
+        switch = "locus.dual_interface_checkins.enabled"
+        val = config.get(switch)
+        if val is not None and not config.is_enabled(switch):
+            return False, switch
+        return True, ""
+
+    def _get_dual_interface_provider() -> BaseDualInterfaceProvider:
+        if not hasattr(app.state, "dual_interface_provider") or app.state.dual_interface_provider is None:
+            prov_cls = active_registry.get("dual_interface_checkins", "default_dual_interface")
+            if prov_cls:
+                app.state.dual_interface_provider = prov_cls()
+            else:
+                app.state.dual_interface_provider = DefaultDualInterfaceProvider()
+        return app.state.dual_interface_provider
+
+    @app.post("/gateway/interface/message")
+    def gateway_interface_message_route(body: Dict[str, Any]) -> Any:
+        """SPEC §28.1: Route TUI/Telegram message into unified session state."""
+        enabled, switch = _is_dual_interface_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Dual interface / check-ins is disabled",
+                    "disabled": switch,
+                },
+            )
+        channel = str(body.get("channel", "tui"))
+        session_id = str(body.get("session_id", "default_session"))
+        content = str(body.get("content", ""))
+        sender = str(body.get("sender", "user"))
+        provider = _get_dual_interface_provider()
+        res = provider.route_interface_message(channel, session_id, content, sender)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/gateway/checkin/keyboard")
+    def gateway_checkin_keyboard_route(slot: str = "07:30_MORNING") -> Any:
+        """SPEC §28.2: Get 4 daily check-in inline keyboard."""
+        enabled, switch = _is_dual_interface_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Dual interface / check-ins is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_dual_interface_provider()
+        res = provider.get_checkin_keyboard(slot=slot)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/gateway/checkin/submit")
+    def gateway_checkin_submit_route(body: Dict[str, Any]) -> Any:
+        """SPEC §28.2: Submit structured check-in and calculate DCS operating mode."""
+        enabled, switch = _is_dual_interface_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Dual interface / check-ins is disabled",
+                    "disabled": switch,
+                },
+            )
+        slot = str(body.get("slot", "07:30_MORNING"))
+        energy = float(body.get("energy", 7.0))
+        stress = float(body.get("stress", 3.0))
+        mood = float(body.get("mood", 0.5))
+        readiness = str(body.get("readiness", "Ready to go!"))
+        notes = str(body.get("notes", ""))
+        provider = _get_dual_interface_provider()
+        res = provider.submit_checkin(
+            slot=slot,
+            energy=energy,
+            stress=stress,
+            mood=mood,
+            readiness=readiness,
+            notes=notes,
+        )
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/gateway/cost/budget")
+    def gateway_cost_budget_route() -> Any:
+        """SPEC §28.3: Retrieve zero-cost constraint status and budget checks."""
+        enabled, switch = _is_dual_interface_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Dual interface / check-ins is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_dual_interface_provider()
+        res = provider.get_budget_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/gateway/interface/status")
+    def gateway_interface_status_route() -> Any:
+        """SPEC §28.1-28.6: Diagnostic status of dual-interface manager."""
+        enabled, switch = _is_dual_interface_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Dual interface / check-ins is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_dual_interface_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

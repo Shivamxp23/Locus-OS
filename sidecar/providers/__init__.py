@@ -462,6 +462,10 @@ from sidecar.providers.excalidraw import (
     DefaultDiagramGeneratorProvider,
     DiagramGeneratorProvider,
 )
+from sidecar.providers.dual_interface import (
+    BaseDualInterfaceProvider,
+    DefaultDualInterfaceProvider,
+)
 
 __all__ = [
 
@@ -778,4 +782,6 @@ __all__ = [
     "BaseDiagramGeneratorProvider",
     "DiagramGeneratorProvider",
     "DefaultDiagramGeneratorProvider",
+    "BaseDualInterfaceProvider",
+    "DefaultDualInterfaceProvider",
 ]

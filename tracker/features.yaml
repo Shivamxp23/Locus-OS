@@ -3138,12 +3138,26 @@ features:
     '§28.1-28.6: Dual-Interface, Check-ins, Voice, Cost Model': 7ead669cd8430646
   evidence:
     files:
-    - sidecar/gateway/
-    - locus-extension/
-    symbols: []
+    - sidecar/gateway/dual_interface.py
+    - sidecar/providers/dual_interface.py
+    - locus-extension/src/gateway/dual-interface.ts
+    - tests/unit/test_dual_interface.py
+    - tests/integration/test_dual_interface_service.py
+    - locus-extension/src/gateway/index.ts
+    symbols:
+    - name: DualInterfaceEngine
+      file: sidecar/gateway/dual_interface.py
+    - name: CheckInRecord
+      file: sidecar/gateway/dual_interface.py
+    - name: CheckInSlot
+      file: sidecar/gateway/dual_interface.py
+    - name: DefaultDualInterfaceProvider
+      file: sidecar/providers/dual_interface.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_dual_interface.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_dual_interface_service.py -q
   depends_on: []
 - id: F-0065
   title: Error Classifier
