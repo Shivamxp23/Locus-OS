@@ -415,6 +415,11 @@ from sidecar.providers.rebalance import (
     DefaultWeeklyFactionRebalanceProvider,
     WeeklyFactionRebalanceProvider,
 )
+from sidecar.providers.goal_tracker import (
+    BaseGoalTrackerProvider,
+    DefaultGoalTrackerProvider,
+    GoalTrackerProvider,
+)
 
 __all__ = [
 
@@ -706,4 +711,7 @@ __all__ = [
     "BaseWeeklyFactionRebalanceProvider",
     "DefaultWeeklyFactionRebalanceProvider",
     "WeeklyFactionRebalanceProvider",
+    "BaseGoalTrackerProvider",
+    "DefaultGoalTrackerProvider",
+    "GoalTrackerProvider",
 ]

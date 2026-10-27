@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
 
+from sidecar.life_os.faction_balancer import FactionBalancer, canonicalize_faction
 from sidecar.life_os.goal_stack import GoalStackLevel, ThreeLayerGoalStack
 
 logger = logging.getLogger("locus.life_os.scheduler")
@@ -83,8 +84,13 @@ class SixStepSchedulerEngine:
     Deterministic 6-Step schedule generator for Locus Operating Modes & Scheduler.
     """
 
-    def __init__(self, goal_stack: Optional[ThreeLayerGoalStack] = None) -> None:
+    def __init__(
+        self,
+        goal_stack: Optional[ThreeLayerGoalStack] = None,
+        faction_balancer: Optional[FactionBalancer] = None,
+    ) -> None:
         self.goal_stack = goal_stack or ThreeLayerGoalStack()
+        self.faction_balancer = faction_balancer or FactionBalancer()
 
     def resolve_mode(self, dcs: float) -> Tuple[SchedulerOperatingMode, int]:
         """
@@ -144,18 +150,34 @@ class SixStepSchedulerEngine:
         # Step 4 & 5: Faction Balance Assignment + Ultradian Buffers
         scheduled_timeline: List[ScheduledBlock] = []
         assigned_task_ids: set[str] = set()
+        faction_allocations: Dict[str, float] = {}
 
-        task_idx = 0
         for b_type, duration in raw_blocks:
-            # Pick next unassigned task
+            # Pick next candidate task respecting faction balance constraint
             assigned_task: Optional[CandidateTask] = None
-            while task_idx < len(ranked_tasks):
-                cand = ranked_tasks[task_idx]
-                task_idx += 1
-                if cand.id not in assigned_task_ids:
+            waiting_tasks = [t for t in ranked_tasks if t.id not in assigned_task_ids]
+            waiting_factions = {t.faction for t in waiting_tasks}
+
+            for cand in waiting_tasks:
+                allowed, _ = self.faction_balancer.is_assignment_allowed(
+                    candidate_faction=cand.faction,
+                    proposed_minutes=float(duration),
+                    current_allocations=faction_allocations,
+                    waiting_factions=waiting_factions - {cand.faction},
+                )
+                if allowed:
                     assigned_task = cand
                     assigned_task_ids.add(cand.id)
+                    cand_fac = canonicalize_faction(cand.faction)
+                    faction_allocations[cand_fac] = faction_allocations.get(cand_fac, 0.0) + duration
                     break
+
+            if not assigned_task and waiting_tasks:
+                # If all were constrained, greedily assign top TWS unassigned task
+                assigned_task = waiting_tasks[0]
+                assigned_task_ids.add(assigned_task.id)
+                cand_fac = canonicalize_faction(assigned_task.faction)
+                faction_allocations[cand_fac] = faction_allocations.get(cand_fac, 0.0) + duration
 
             if assigned_task:
                 scheduled_timeline.append(
@@ -226,4 +248,5 @@ class SixStepSchedulerEngine:
                 "passed": len(goal_stack_errors) == 0,
                 "errors": goal_stack_errors,
             },
+            "faction_balance_evaluation": self.faction_balancer.evaluate_allocations(faction_allocations).to_dict(),
         }

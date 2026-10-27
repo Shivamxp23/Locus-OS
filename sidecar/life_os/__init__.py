@@ -24,6 +24,12 @@ from sidecar.life_os.exhaustion import (
     ExhaustionPrediction,
     ExhaustionPredictor,
 )
+from sidecar.life_os.faction_balancer import (
+    FactionBalanceReport,
+    FactionBalancer,
+    SCHEDULER_FACTION_TARGETS,
+    canonicalize_faction,
+)
 from sidecar.life_os.factions import (
     DEFAULT_FACTION_TARGETS,
     FACTION_CRISIS_HIERARCHY,
@@ -63,7 +69,11 @@ __all__ = [
     "DeferralRecord",
     "DeferralTracker",
     "FactionActionGap",
+    "FactionBalanceReport",
+    "FactionBalancer",
     "FactionLagReport",
+    "SCHEDULER_FACTION_TARGETS",
+    "canonicalize_faction",
     "GoalNode",
     "GoalStackLevel",
     "LifeOSProvider",

@@ -5,3 +5,4 @@ export * from "./goal-stack.js";
 export * from "./emergency.js";
 export * from "./exhaustion.js";
 export * from "./rebalance.js";
+export * from "./goal-tracker.js";

@@ -6693,6 +6693,10 @@ def create_app(
         BaseWeeklyFactionRebalanceProvider,
         DefaultWeeklyFactionRebalanceProvider,
     )
+    from sidecar.providers.goal_tracker import (
+        BaseGoalTrackerProvider,
+        DefaultGoalTrackerProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -8398,6 +8402,139 @@ def create_app(
                 },
             )
         provider = _get_rebalance_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # Goal Tracker (3-Layer Stack) & Faction Balancer (F-0057 / US-90 / SPEC §25.12)
+    active_registry.register(
+        "goal_tracker_3_layer_stack", "default_goal_tracker", DefaultGoalTrackerProvider
+    )
+    active_registry.register(
+        "goal_tracker", "default_goal_tracker", DefaultGoalTrackerProvider
+    )
+
+    def _is_goal_tracker_enabled() -> tuple[bool, str]:
+        v1 = config.get("locus.goal_tracker_3_layer_stack.enabled")
+        if v1 is not None and not config.is_enabled("locus.goal_tracker_3_layer_stack.enabled"):
+            return False, "locus.goal_tracker_3_layer_stack.enabled"
+        v2 = config.get("locus.life_os.goal_tracker.enabled")
+        if v2 is not None and not config.is_enabled("locus.life_os.goal_tracker.enabled"):
+            return False, "locus.life_os.goal_tracker.enabled"
+        if not app.state.registry.is_feature_enabled("goal_tracker_3_layer_stack") and not app.state.registry.is_feature_enabled("goal_tracker"):
+            return False, "locus.goal_tracker_3_layer_stack.enabled"
+        return True, ""
+
+    def _get_goal_tracker_provider() -> BaseGoalTrackerProvider:
+        if not hasattr(app.state, "goal_tracker_provider") or app.state.goal_tracker_provider is None:
+            res = app.state.registry.get_provider(
+                "goal_tracker_3_layer_stack", default_name="default_goal_tracker"
+            )
+            if isinstance(res, BaseGoalTrackerProvider):
+                app.state.goal_tracker_provider = res
+            elif callable(res):
+                app.state.goal_tracker_provider = res()
+            else:
+                app.state.goal_tracker_provider = DefaultGoalTrackerProvider()
+        return app.state.goal_tracker_provider
+
+    @app.post("/goal-tracker/validate")
+    def goal_tracker_validate_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.12 Step 6: Validate 3-layer hierarchy (Outcome -> Project -> Task)."""
+        enabled, switch = _is_goal_tracker_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Goal tracker is disabled",
+                    "disabled": switch,
+                },
+            )
+        task_id = body.get("task_id", "")
+        provider = _get_goal_tracker_provider()
+        res = provider.validate_task_hierarchy(task_id=task_id)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/goal-tracker/orphans")
+    def goal_tracker_orphans_route() -> Any:
+        """SPEC §25.12 Step 6: Detect orphan tasks/projects lacking parents."""
+        enabled, switch = _is_goal_tracker_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Goal tracker is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_goal_tracker_provider()
+        res = provider.detect_orphans()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/goal-tracker/balance-check")
+    def goal_tracker_balance_check_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.12 Step 4: Evaluate weekly faction distribution report."""
+        enabled, switch = _is_goal_tracker_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Goal tracker is disabled",
+                    "disabled": switch,
+                },
+            )
+        allocations = body.get("allocations_minutes", body)
+        provider = _get_goal_tracker_provider()
+        res = provider.evaluate_faction_balance(allocations_minutes=allocations)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/goal-tracker/assignment-allowed")
+    def goal_tracker_assignment_allowed_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.12 Step 4: Check if greedy task assignment complies with faction balance."""
+        enabled, switch = _is_goal_tracker_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Goal tracker is disabled",
+                    "disabled": switch,
+                },
+            )
+        cand_faction = body.get("candidate_faction", "Craft")
+        proposed_mins = float(body.get("proposed_minutes", 90.0))
+        current_allocs = body.get("current_allocations", {})
+        waiting_factions = body.get("waiting_factions", [])
+        provider = _get_goal_tracker_provider()
+        res = provider.check_assignment_allowed(
+            candidate_faction=cand_faction,
+            proposed_minutes=proposed_mins,
+            current_allocations=current_allocs,
+            waiting_factions=waiting_factions,
+        )
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/goal-tracker/status")
+    def goal_tracker_status_route() -> Any:
+        """SPEC §25.12: Get diagnostic status of goal tracker and faction balancer."""
+        enabled, switch = _is_goal_tracker_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Goal tracker is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_goal_tracker_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

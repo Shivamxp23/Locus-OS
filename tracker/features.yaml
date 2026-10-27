@@ -2777,11 +2777,28 @@ features:
     '§25.12: Six-Step Scheduling Algorithm (Full Mathematical Specification)': e545346d531a4185
   evidence:
     files:
-    - sidecar/life_os.py
-    symbols: []
+    - sidecar/life_os/faction_balancer.py
+    - sidecar/life_os/goal_stack.py
+    - sidecar/life_os/scheduler.py
+    - sidecar/providers/goal_tracker.py
+    - locus-extension/src/scheduler/goal-tracker.ts
+    - locus-extension/src/scheduler/index.ts
+    symbols:
+    - name: FactionBalancer
+      file: sidecar/life_os/faction_balancer.py
+    - name: FactionBalanceReport
+      file: sidecar/life_os/faction_balancer.py
+    - name: ThreeLayerGoalStack
+      file: sidecar/life_os/goal_stack.py
+    - name: SixStepSchedulerEngine
+      file: sidecar/life_os/scheduler.py
+    - name: DefaultGoalTrackerProvider
+      file: sidecar/providers/goal_tracker.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_goal_tracker_3_layer_stack.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_goal_tracker_service.py -q
   depends_on: []
 - id: F-0058
   title: Proactive Inner Loop
