@@ -273,3 +273,4 @@
 {"event":"planned","sprint":"S90","start":"2027-10-10","end":"2027-10-13","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-96"],"date":"2027-10-10"}
 {"event":"accepted","story":"US-96","feature":"F-0122","level":4,"note":"Accept US-96: LOCUS_SHORTHAND 4x Text Compressor verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-10-13","commit":"45a75b737797"}
 {"event":"closed","sprint":"S90","date":"2027-10-13","planned_points":2,"velocity":2,"done":["US-96"],"not_done":{}}
+{"event":"planned","sprint":"S91","start":"2027-10-14","end":"2027-10-17","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-97"],"date":"2027-10-14"}
