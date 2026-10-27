@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `90e75bc068` - 2026-10-27T11:15:24+0530 - with test runs
+- commit `1694eed1af` - 2026-10-27T11:42:45+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **66.7%** | old claimed average 71.4% over 86 rows
-- integrated or better: 92 | proven: 0 | overclaims (claimed >= verified + 25): 25 | no evidence: 24
-- by level: {'FILES_PRESENT': 5, 'INHERITED_OK': 12, 'INTEGRATED': 80, 'NO_EVIDENCE': 24, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **67.4%** | old claimed average 71.4% over 86 rows
+- integrated or better: 93 | proven: 0 | overclaims (claimed >= verified + 25): 25 | no evidence: 23
+- by level: {'FILES_PRESENT': 5, 'INHERITED_OK': 12, 'INTEGRATED': 81, 'NO_EVIDENCE': 23, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -147,7 +147,7 @@
 | F-0112 | Exhaustion Predictor | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0113 | Weekly Faction Rebalance | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0114 | Review Cadence System | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0115 | Goal Stack Enforcement | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0115 | Goal Stack Enforcement | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0116 | Cross-Faction Efficiency | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0117 | Four-Level Emergency Protocol | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0118 | Memory Provider Interface | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
