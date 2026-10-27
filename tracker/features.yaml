@@ -4634,11 +4634,11 @@ features:
   - '§24.1: Pi Utilities (Clipboard, Syntax Highlighting, Frontmatter, File Watcher)'
   mapping: exact
   origin: spec-gap (the old tracker had no row for this section)
-  category: null
+  category: Utilities
   verdict: KEEP-PI
-  source: null
+  source: Pi + Locus
   provider: null
-  layer: unknown
+  layer: mixed
   inherited: false
   manual: false
   claimed: null
@@ -4646,11 +4646,30 @@ features:
   spec_sha:
     '§24.1: Pi Utilities (Clipboard, Syntax Highlighting, Frontmatter, File Watcher)': 2a14a69e2b4663f6
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/utils/pi_utilities.py
+    - sidecar/utils/__init__.py
+    - sidecar/providers/pi_utilities.py
+    - locus-extension/src/utils/pi-utilities.ts
+    - locus-extension/src/utils/index.ts
+    symbols:
+    - name: ParsedDocument
+      file: sidecar/utils/pi_utilities.py
+    - name: ClipboardManager
+      file: sidecar/utils/pi_utilities.py
+    - name: FrontmatterParser
+      file: sidecar/utils/pi_utilities.py
+    - name: SyntaxHighlighter
+      file: sidecar/utils/pi_utilities.py
+    - name: FileWatcher
+      file: sidecar/utils/pi_utilities.py
+    - name: DefaultPiUtilitiesProvider
+      file: sidecar/providers/pi_utilities.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_pi_utilities.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_pi_utilities_service.py -q
   depends_on: []
 - id: F-0107
   title: File Safety

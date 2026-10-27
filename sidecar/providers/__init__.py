@@ -394,6 +394,7 @@ from sidecar.providers.mcp import BaseMcpProvider, DefaultMcpProvider
 from sidecar.providers.vnc import BaseVNCProvider, DefaultVNCProvider
 from sidecar.providers.calendar import BaseCalendarProvider, DefaultCalendarProvider
 from sidecar.providers.ci_cd_docker import BaseDeploymentProvider, DefaultDeploymentProvider
+from sidecar.providers.pi_utilities import BasePiUtilitiesProvider, DefaultPiUtilitiesProvider
 
 __all__ = [
 
@@ -671,4 +672,6 @@ __all__ = [
     "DefaultCalendarProvider",
     "BaseDeploymentProvider",
     "DefaultDeploymentProvider",
+    "BasePiUtilitiesProvider",
+    "DefaultPiUtilitiesProvider",
 ]

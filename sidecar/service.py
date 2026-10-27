@@ -6673,6 +6673,10 @@ def create_app(
         BaseDeploymentProvider,
         DefaultDeploymentProvider,
     )
+    from sidecar.providers.pi_utilities import (
+        BasePiUtilitiesProvider,
+        DefaultPiUtilitiesProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -7755,6 +7759,153 @@ def create_app(
                 },
             )
         provider = _get_deployment_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # Pi Utilities (Clipboard, Syntax Highlighting, Frontmatter, File Watcher) (F-0106 / US-85 / SPEC §24.1)
+    active_registry.register(
+        "pi_utilities_clipboard_syntax_highlighting_frontmatter_file_watcher", "default_pi_utilities", DefaultPiUtilitiesProvider
+    )
+    active_registry.register(
+        "pi_utilities", "default_pi_utilities", DefaultPiUtilitiesProvider
+    )
+    active_registry.register(
+        "utilities", "default_pi_utilities", DefaultPiUtilitiesProvider
+    )
+
+    def _is_utilities_enabled() -> tuple[bool, str]:
+        v1 = config.get("locus.pi_utilities_clipboard_syntax_highlighting_frontmatter_file_watcher.enabled")
+        if v1 is not None and not config.is_enabled("locus.pi_utilities_clipboard_syntax_highlighting_frontmatter_file_watcher.enabled"):
+            return False, "locus.pi_utilities_clipboard_syntax_highlighting_frontmatter_file_watcher.enabled"
+        v2 = config.get("locus.pi_utilities.enabled")
+        if v2 is not None and not config.is_enabled("locus.pi_utilities.enabled"):
+            return False, "locus.pi_utilities.enabled"
+        if not app.state.registry.is_feature_enabled("pi_utilities") and not app.state.registry.is_feature_enabled("utilities"):
+            return False, "locus.pi_utilities.enabled"
+        return True, ""
+
+    def _get_utilities_provider() -> BasePiUtilitiesProvider:
+        if not hasattr(app.state, "utilities_provider") or app.state.utilities_provider is None:
+            res = app.state.registry.get_active_provider(
+                "pi_utilities", default_name="default_pi_utilities"
+            )
+            if isinstance(res, BasePiUtilitiesProvider):
+                app.state.utilities_provider = res
+            elif callable(res):
+                app.state.utilities_provider = res()
+            else:
+                app.state.utilities_provider = DefaultPiUtilitiesProvider()
+        return app.state.utilities_provider
+
+    @app.post("/utils/clipboard/copy")
+    def clipboard_copy_route(body: Dict[str, Any]) -> Any:
+        """SPEC §24.1: Copy text to clipboard."""
+        enabled, switch = _is_utilities_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Pi utilities are disabled",
+                    "disabled": switch,
+                },
+            )
+        text = str(body.get("text", ""))
+        provider = _get_utilities_provider()
+        res = provider.copy_clipboard(text=text)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/utils/clipboard/paste")
+    def clipboard_paste_route() -> Any:
+        """SPEC §24.1: Paste text from clipboard."""
+        enabled, switch = _is_utilities_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Pi utilities are disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_utilities_provider()
+        res = provider.paste_clipboard()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/utils/frontmatter/parse")
+    def frontmatter_parse_route(body: Dict[str, Any]) -> Any:
+        """SPEC §24.1: Parse frontmatter from content."""
+        enabled, switch = _is_utilities_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Pi utilities are disabled",
+                    "disabled": switch,
+                },
+            )
+        content = str(body.get("content", ""))
+        provider = _get_utilities_provider()
+        res = provider.parse_frontmatter(content=content)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/utils/syntax/highlight")
+    def syntax_highlight_route(body: Dict[str, Any]) -> Any:
+        """SPEC §24.1: Syntax highlight code snippet."""
+        enabled, switch = _is_utilities_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Pi utilities are disabled",
+                    "disabled": switch,
+                },
+            )
+        code = str(body.get("code", ""))
+        language = str(body.get("language", "text"))
+        provider = _get_utilities_provider()
+        res = provider.highlight_syntax(code=code, language=language)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/utils/watcher/poll")
+    def watcher_poll_route() -> Any:
+        """SPEC §24.1: Poll file watcher for change events."""
+        enabled, switch = _is_utilities_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Pi utilities are disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_utilities_provider()
+        res = provider.poll_file_changes()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/utils/status")
+    def utilities_status_route() -> Any:
+        """SPEC §24.1: Get diagnostic status of utility subsystems."""
+        enabled, switch = _is_utilities_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Pi utilities are disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_utilities_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)
