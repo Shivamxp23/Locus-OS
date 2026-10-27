@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `3e55f8bdbb` - 2026-10-27T09:06:36+0530 - with test runs
+- commit `a0da4d8f12` - 2026-10-27T09:29:42+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **63.4%** | old claimed average 71.4% over 86 rows
-- integrated or better: 87 | proven: 0 | overclaims (claimed >= verified + 25): 26 | no evidence: 28
-- by level: {'FILES_PRESENT': 6, 'INHERITED_OK': 12, 'INTEGRATED': 75, 'NO_EVIDENCE': 28, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **64.1%** | old claimed average 71.4% over 86 rows
+- integrated or better: 88 | proven: 0 | overclaims (claimed >= verified + 25): 26 | no evidence: 27
+- by level: {'FILES_PRESENT': 6, 'INHERITED_OK': 12, 'INTEGRATED': 76, 'NO_EVIDENCE': 27, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -143,7 +143,7 @@
 | F-0108 | Autonomy Tiers | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0109 | Approval Gate | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0110 | Context Compression | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0111 | Emergency Task Injection | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0111 | Emergency Task Injection | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0112 | Exhaustion Predictor | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0113 | Weekly Faction Rebalance | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0114 | Review Cadence System | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
