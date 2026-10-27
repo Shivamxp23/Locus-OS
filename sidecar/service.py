@@ -6705,6 +6705,10 @@ def create_app(
         BaseGoalStackEnforcementProvider,
         DefaultGoalStackEnforcementProvider,
     )
+    from sidecar.providers.cross_faction import (
+        BaseCrossFactionEfficiencyProvider,
+        DefaultCrossFactionEfficiencyProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -8773,6 +8777,100 @@ def create_app(
                 },
             )
         provider = _get_goal_enforcement_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # -------------------------------------------------------------------------
+    # SPEC §25.15 lines 4910-4922: Cross-Faction Efficiency
+    # -------------------------------------------------------------------------
+    active_registry.register(
+        "cross_faction_efficiency", "default_cross_faction", DefaultCrossFactionEfficiencyProvider
+    )
+    active_registry.register(
+        "cross_faction", "default_cross_faction", DefaultCrossFactionEfficiencyProvider
+    )
+
+    def _is_cross_faction_enabled() -> Tuple[bool, str]:
+        for switch in (
+            "locus.cross_faction_efficiency.enabled",
+        ):
+            val = config.get(switch)
+            if val is not None and not config.is_enabled(switch):
+                return False, switch
+        return True, ""
+
+    def _get_cross_faction_provider() -> BaseCrossFactionEfficiencyProvider:
+        if not hasattr(app.state, "cross_faction_provider") or app.state.cross_faction_provider is None:
+            prov_cls = active_registry.get("cross_faction_efficiency", "default_cross_faction")
+            if prov_cls:
+                app.state.cross_faction_provider = prov_cls()
+            else:
+                app.state.cross_faction_provider = DefaultCrossFactionEfficiencyProvider()
+        return app.state.cross_faction_provider
+
+    @app.post("/cross-faction/split")
+    def cross_faction_split_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.15: Calculate weighted primary/secondary split for a task without double-counting."""
+        enabled, switch = _is_cross_faction_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Cross-faction efficiency is disabled",
+                    "disabled": switch,
+                },
+            )
+        task_id = body.get("task_id", "task")
+        duration = float(body.get("duration", 0.0))
+        primary_faction = body.get("primary_faction", "Craft")
+        secondary_factions = body.get("secondary_factions")
+        weights = body.get("weights")
+        provider = _get_cross_faction_provider()
+        res = provider.calculate_task_split(
+            task_id=task_id,
+            duration=duration,
+            primary_faction=primary_faction,
+            secondary_factions=secondary_factions,
+            custom_weights=weights,
+        )
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/cross-faction/aggregate")
+    def cross_faction_aggregate_route(body: Dict[str, Any]) -> Any:
+        """SPEC §25.15: Aggregate multiple task durations applying cross-faction efficiency."""
+        enabled, switch = _is_cross_faction_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Cross-faction efficiency is disabled",
+                    "disabled": switch,
+                },
+            )
+        tasks = body.get("tasks", [])
+        provider = _get_cross_faction_provider()
+        res = provider.aggregate_tasks(tasks=tasks)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/cross-faction/status")
+    def cross_faction_status_route() -> Any:
+        """SPEC §25.15: Diagnostic status of cross-faction efficiency."""
+        enabled, switch = _is_cross_faction_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Cross-faction efficiency is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_cross_faction_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

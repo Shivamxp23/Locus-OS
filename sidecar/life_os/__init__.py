@@ -8,6 +8,11 @@ from sidecar.life_os.action_gap import (
     calculate_action_gap,
     evaluate_faction_action_gaps,
 )
+from sidecar.life_os.cross_faction import (
+    CrossFactionAggregateResult,
+    CrossFactionAllocator,
+    FactionSplitResult,
+)
 from sidecar.life_os.dcs import calculate_dcs
 from sidecar.life_os.deferral import (
     DeferralAction,
@@ -72,6 +77,9 @@ __all__ = [
     "DEFAULT_FACTION_TARGETS",
     "FACTION_CRISIS_HIERARCHY",
     "CRISIS_FACTION_ORDER",
+    "CrossFactionAggregateResult",
+    "CrossFactionAllocator",
+    "FactionSplitResult",
     "EmergencyTask",
     "EmergencyTaskInjector",
     "ExhaustionMetrics",

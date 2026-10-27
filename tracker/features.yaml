@@ -5089,11 +5089,25 @@ features:
   spec_sha:
     '§25.15: Cross-Faction Efficiency': a3514f328b5079e2
   evidence:
-    files: []
-    symbols: []
+    files:
+    - sidecar/life_os/cross_faction.py
+    - sidecar/providers/cross_faction.py
+    - locus-extension/src/scheduler/cross-faction.ts
+    - locus-extension/src/scheduler/index.ts
+    symbols:
+    - name: CrossFactionAllocator
+      file: sidecar/life_os/cross_faction.py
+    - name: FactionSplitResult
+      file: sidecar/life_os/cross_faction.py
+    - name: CrossFactionAggregateResult
+      file: sidecar/life_os/cross_faction.py
+    - name: DefaultCrossFactionEfficiencyProvider
+      file: sidecar/providers/cross_faction.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_cross_faction_efficiency.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_cross_faction_service.py -q
   depends_on: []
 - id: F-0117
   title: Four-Level Emergency Protocol

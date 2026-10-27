@@ -429,6 +429,10 @@ from sidecar.providers.goal_enforcement import (
     BaseGoalStackEnforcementProvider,
     DefaultGoalStackEnforcementProvider,
 )
+from sidecar.providers.cross_faction import (
+    BaseCrossFactionEfficiencyProvider,
+    DefaultCrossFactionEfficiencyProvider,
+)
 
 __all__ = [
 
@@ -728,4 +732,6 @@ __all__ = [
     "ReviewCadenceProvider",
     "BaseGoalStackEnforcementProvider",
     "DefaultGoalStackEnforcementProvider",
+    "BaseCrossFactionEfficiencyProvider",
+    "DefaultCrossFactionEfficiencyProvider",
 ]
