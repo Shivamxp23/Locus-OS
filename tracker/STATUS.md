@@ -1,16 +1,15 @@
 # Tracker status (computed, not written)
 
-- commit `a54662eab7` - 2026-10-27T17:19:48+0530 - with test runs
+- commit `35f17a3ef1` - 2026-10-27T17:58:57+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **74.7%** | old claimed average 71.4% over 86 rows
-- integrated or better: 104 | proven: 0 | overclaims (claimed >= verified + 25): 19 | no evidence: 13
-- by level: {'FILES_PRESENT': 4, 'INHERITED_OK': 12, 'INTEGRATED': 92, 'NO_EVIDENCE': 13, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **75.3%** | old claimed average 71.4% over 86 rows
+- integrated or better: 105 | proven: 0 | overclaims (claimed >= verified + 25): 18 | no evidence: 13
+- by level: {'FILES_PRESENT': 3, 'INHERITED_OK': 12, 'INTEGRATED': 93, 'NO_EVIDENCE': 13, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
 |---|---|---:|---:|---|---|---|
 | F-0078 | Master Conductor | 90% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/conductor.py. Create them or correct the path. |
-| F-0066 | Health Checks | 90% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0068 | Connectivity Check | 60% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
 | F-0072 | Collector + Chunker | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/ingestion/collector.py. Create them or correct the path. |
 | F-0075 | Content Engine | 60% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/content/engine.py. Create them or correct the path. |
@@ -29,6 +28,7 @@
 | F-0079 | Dashboard/TUI Spec | 45% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0077 | QLoRA Pipeline | 25% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: sidecar/evolution/dataset_curator.py. Create them or correct the |
 | F-0002 | System Prompt Construction | 100% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
+| F-0003 | Tool System (13 Canonical Tools) | 100% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 
 ## All features
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -98,7 +98,7 @@
 | F-0063 | Excalidraw MCP Skill | 70% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0064 | Dual Interface / Check-ins | 85% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0065 | Error Classifier | 55% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0066 | Health Checks | 90% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
+| F-0066 | Health Checks | 90% | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0067 | Notifications | 65% | 15% | FILES_PRESENT | OVERCLAIM | Declare evidence.symbols that prove the implementation exists. |
 | F-0068 | Connectivity Check | 60% | 0% | NO_EVIDENCE | NO_FILES_NAMED,OVERCLAIM | Name the files this feature lives in (evidence.files). |
 | F-0069 | Code Graph | 50% | 0% | NO_EVIDENCE | CLAIMED_FILES_MISSING,OVERCLAIM | Files claimed but absent: .graphifyignore. Create them or correct the path. |
