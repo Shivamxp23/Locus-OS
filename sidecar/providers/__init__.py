@@ -286,6 +286,10 @@ from sidecar.providers.screen import (
     BaseScreenProvider,
     DefaultScreenProvider,
 )
+from sidecar.providers.graceful_restart import (
+    BaseGracefulRestartProvider,
+    DefaultGracefulRestartProvider,
+)
 from sidecar.providers.image_generation import (
     BaseImageGenerationProvider,
     ImageGenerationRequest,
@@ -653,4 +657,6 @@ __all__ = [
     "DefaultBrowserProvider",
     "BaseScreenProvider",
     "DefaultScreenProvider",
+    "BaseGracefulRestartProvider",
+    "DefaultGracefulRestartProvider",
 ]

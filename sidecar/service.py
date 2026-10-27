@@ -6653,6 +6653,10 @@ def create_app(
         BaseScreenProvider,
         DefaultScreenProvider,
     )
+    from sidecar.providers.graceful_restart import (
+        BaseGracefulRestartProvider,
+        DefaultGracefulRestartProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -6985,6 +6989,118 @@ def create_app(
                 },
             )
         provider = _get_screen_provider()
+        return {"status": "ok", **provider.get_status()}
+
+    # Graceful Gateway Restart & State Snapshotting (F-0047 / US-80)
+    active_registry.register(
+        "graceful_restart", "default_graceful_restart", DefaultGracefulRestartProvider
+    )
+    active_registry.register(
+        "gateway_lifecycle", "default_graceful_restart", DefaultGracefulRestartProvider
+    )
+
+    _graceful_restart_instance: Optional[BaseGracefulRestartProvider] = None
+
+    def _is_graceful_restart_enabled() -> bool:
+        if not app.state.registry.is_feature_enabled("graceful_restart"):
+            return False
+        v1 = config.get("locus.graceful_restart.enabled")
+        if v1 is not None and not config.is_enabled("locus.graceful_restart.enabled"):
+            return False
+        v2 = config.get("locus.gateway.graceful_restart.enabled")
+        if v2 is not None and not config.is_enabled("locus.gateway.graceful_restart.enabled"):
+            return False
+        return True
+
+    def _get_graceful_restart_provider() -> BaseGracefulRestartProvider:
+        nonlocal _graceful_restart_instance
+        if _graceful_restart_instance is None:
+            res = app.state.registry.get_active_provider(
+                "graceful_restart", default_name="default_graceful_restart"
+            )
+            if isinstance(res, BaseGracefulRestartProvider):
+                _graceful_restart_instance = res
+            elif callable(res):
+                _graceful_restart_instance = res()
+        if _graceful_restart_instance is None:
+            _graceful_restart_instance = DefaultGracefulRestartProvider()
+        return _graceful_restart_instance
+
+    @app.post("/gateway/restart/initiate")
+    def gateway_restart_initiate_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §17.10: Initiate graceful gateway shutdown / drain sequence."""
+        if not _is_graceful_restart_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Graceful restart is disabled",
+                    "disabled": "locus.graceful_restart.enabled",
+                },
+            )
+        b = body or {}
+        signal_type = b.get("signal_type") or "SIGTERM"
+        dry_run = bool(b.get("dry_run", True))
+        provider = _get_graceful_restart_provider()
+        res = provider.initiate_shutdown(signal_type=signal_type, dry_run=dry_run)
+        return {"status": "ok", **res}
+
+    @app.post("/gateway/restart/drain")
+    def gateway_restart_drain_route() -> Any:
+        """SPEC §17.10: Drain active in-flight requests."""
+        if not _is_graceful_restart_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Graceful restart is disabled",
+                    "disabled": "locus.graceful_restart.enabled",
+                },
+            )
+        provider = _get_graceful_restart_provider()
+        remaining = provider.drain_connections()
+        return {"status": "ok", "remaining_in_flight": remaining}
+
+    @app.post("/gateway/restart/snapshot")
+    def gateway_restart_snapshot_route() -> Any:
+        """SPEC §17.10: Snapshot active in-memory session states to recovery directory."""
+        if not _is_graceful_restart_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Graceful restart is disabled",
+                    "disabled": "locus.graceful_restart.enabled",
+                },
+            )
+        provider = _get_graceful_restart_provider()
+        saved = provider.snapshot_sessions()
+        return {"status": "ok", "snapshots_saved": len(saved), "files": saved}
+
+    @app.get("/gateway/restart/recovery")
+    def gateway_restart_recovery_route() -> Any:
+        """SPEC §17.10: List recovered session states from disk."""
+        if not _is_graceful_restart_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Graceful restart is disabled",
+                    "disabled": "locus.graceful_restart.enabled",
+                },
+            )
+        provider = _get_graceful_restart_provider()
+        recovered = provider.recover_sessions()
+        return {"status": "ok", "recovered_sessions": recovered, "count": len(recovered)}
+
+    @app.get("/gateway/restart/status")
+    def gateway_restart_status_route() -> Any:
+        """SPEC §17.10: Get diagnostic status of gateway lifecycle."""
+        if not _is_graceful_restart_enabled():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Graceful restart is disabled",
+                    "disabled": "locus.graceful_restart.enabled",
+                },
+            )
+        provider = _get_graceful_restart_provider()
         return {"status": "ok", **provider.get_status()}
 
     return app

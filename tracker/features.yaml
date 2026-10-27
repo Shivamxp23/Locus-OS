@@ -2202,11 +2202,26 @@ features:
     '§17.10: Graceful Gateway Restart & State Snapshotting': ac1dbd8e3a4e96cc
   evidence:
     files:
-    - sidecar/gateway/
-    symbols: []
+    - sidecar/gateway/lifecycle.py
+    - sidecar/gateway/__init__.py
+    - sidecar/providers/graceful_restart.py
+    - locus-extension/src/gateway/lifecycle.ts
+    symbols:
+    - file: sidecar/gateway/lifecycle.py
+      name: GatewayLifecycleManager
+    - file: sidecar/gateway/lifecycle.py
+      name: MockChannelAdapter
+    - file: sidecar/gateway/lifecycle.py
+      name: ForensicRecord
+    - file: sidecar/gateway/lifecycle.py
+      name: SessionSnapshot
+    - file: sidecar/providers/graceful_restart.py
+      name: DefaultGracefulRestartProvider
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - py -3 -m pytest tests/unit/test_graceful_restart.py -q
+    integration:
+    - py -3 -m pytest tests/integration/test_graceful_restart_service.py -q
   depends_on: []
 - id: F-0048
   title: MCP Server/Client
