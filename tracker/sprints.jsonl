@@ -267,3 +267,4 @@
 {"event":"planned","sprint":"S88","start":"2027-10-02","end":"2027-10-05","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-94"],"date":"2027-10-02"}
 {"event":"accepted","story":"US-94","feature":"F-0117","level":4,"note":"Accept US-94: Four-Level Emergency Protocol verified at level 4 INTEGRATED (85%) with dual-model approval","date":"2027-10-05","commit":"60e7e0e3da5f"}
 {"event":"closed","sprint":"S88","date":"2027-10-05","planned_points":2,"velocity":2,"done":["US-94"],"not_done":{}}
+{"event":"planned","sprint":"S89","start":"2027-10-06","end":"2027-10-09","goal":"Everything is recorded and backed up to the vault; Neo4j Agent Memory is the memory layer.","capacity":2,"points":2,"stories":["US-95"],"date":"2027-10-06"}
