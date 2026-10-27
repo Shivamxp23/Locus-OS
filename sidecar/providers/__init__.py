@@ -474,6 +474,10 @@ from sidecar.providers.auxiliary_llm import (
     BaseAuxiliaryLLMProvider,
     DefaultAuxiliaryLLMProvider,
 )
+from sidecar.providers.health_checks import (
+    BaseHealthChecksProvider,
+    DefaultHealthChecksProvider,
+)
 
 __all__ = [
 
@@ -796,4 +800,6 @@ __all__ = [
     "DefaultErrorClassifierProvider",
     "BaseAuxiliaryLLMProvider",
     "DefaultAuxiliaryLLMProvider",
+    "BaseHealthChecksProvider",
+    "DefaultHealthChecksProvider",
 ]

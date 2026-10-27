@@ -15,6 +15,12 @@ from sidecar.diagnostics.auxiliary_client import (
     DEFAULT_AUXILIARY_MODEL,
     DEFAULT_MAIN_MODEL,
 )
+from sidecar.diagnostics.health_checker import (
+    HealthChecker,
+    ProviderHealthResult,
+    SystemHealthReport,
+    health_check_all,
+)
 
 __all__ = [
     "ErrorCategory",
@@ -27,4 +33,8 @@ __all__ = [
     "AuxiliaryLLMClient",
     "DEFAULT_AUXILIARY_MODEL",
     "DEFAULT_MAIN_MODEL",
+    "HealthChecker",
+    "ProviderHealthResult",
+    "SystemHealthReport",
+    "health_check_all",
 ]

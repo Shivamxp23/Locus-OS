@@ -6749,6 +6749,10 @@ def create_app(
         BaseAuxiliaryLLMProvider,
         DefaultAuxiliaryLLMProvider,
     )
+    from sidecar.providers.health_checks import (
+        BaseHealthChecksProvider,
+        DefaultHealthChecksProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -9838,6 +9842,81 @@ def create_app(
                 },
             )
         provider = _get_auxiliary_llm_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # Health Checks routes (SPEC §29.3 / F-0066 / US-104)
+    active_registry.register(
+        "health_checks", "default_health_checks", DefaultHealthChecksProvider
+    )
+
+    def _is_health_checks_enabled() -> Tuple[bool, str]:
+        switch = "locus.health_checks.enabled"
+        val = config.get(switch)
+        if val is not None and not config.is_enabled(switch):
+            return False, switch
+        return True, ""
+
+    def _get_health_checks_provider() -> BaseHealthChecksProvider:
+        if not hasattr(app.state, "health_checks_provider") or app.state.health_checks_provider is None:
+            prov_cls = active_registry.get("health_checks", "default_health_checks")
+            if prov_cls:
+                app.state.health_checks_provider = prov_cls()
+            else:
+                app.state.health_checks_provider = DefaultHealthChecksProvider()
+        return app.state.health_checks_provider
+
+    @app.get("/diagnostics/health/all")
+    def health_check_all_route() -> Any:
+        """SPEC §29.3: Run health checks across all registered providers."""
+        enabled, switch = _is_health_checks_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Health checks feature is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_health_checks_provider()
+        res = provider.health_check_all()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/diagnostics/health/report")
+    def health_check_report_route() -> Any:
+        """SPEC §29.3: Comprehensive aggregate health report."""
+        enabled, switch = _is_health_checks_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Health checks feature is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_health_checks_provider()
+        res = provider.get_report()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/diagnostics/health/status")
+    def health_check_status_route() -> Any:
+        """SPEC §29.3: Health checks subsystem status."""
+        enabled, switch = _is_health_checks_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Health checks feature is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_health_checks_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

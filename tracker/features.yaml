@@ -3238,10 +3238,30 @@ features:
   evidence:
     files:
     - locus_cli/main.py
-    symbols: []
+    - sidecar/diagnostics/health_checker.py
+    - sidecar/diagnostics/__init__.py
+    - sidecar/providers/health_checks.py
+    - sidecar/providers/__init__.py
+    - sidecar/service.py
+    - locus-extension/src/health/checker.ts
+    - locus-extension/src/health/index.ts
+    - locus-extension/src/index.ts
+    - tests/unit/test_health_checks.py
+    - tests/integration/test_health_checks_service.py
+    symbols:
+    - name: HealthChecker
+      file: sidecar/diagnostics/health_checker.py
+    - name: ProviderHealthResult
+      file: sidecar/diagnostics/health_checker.py
+    - name: SystemHealthReport
+      file: sidecar/diagnostics/health_checker.py
+    - name: DefaultHealthChecksProvider
+      file: sidecar/providers/health_checks.py
     guard: []
-    unit: []
-    integration: []
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_health_checks.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_health_checks_service.py -q
   depends_on: []
 - id: F-0067
   title: Notifications
