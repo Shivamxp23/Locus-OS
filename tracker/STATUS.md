@@ -1,10 +1,10 @@
 # Tracker status (computed, not written)
 
-- commit `c712f0150c` - 2026-10-27T13:28:16+0530 - with test runs
+- commit `6b2bfdba98` - 2026-10-27T13:56:24+0530 - with test runs
 - guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
-- features: 125 | verified average **70.1%** | old claimed average 71.4% over 86 rows
-- integrated or better: 97 | proven: 0 | overclaims (claimed >= verified + 25): 24 | no evidence: 19
-- by level: {'FILES_PRESENT': 5, 'INHERITED_OK': 12, 'INTEGRATED': 85, 'NO_EVIDENCE': 19, 'UNIT_VERIFIED': 4}
+- features: 125 | verified average **70.8%** | old claimed average 71.4% over 86 rows
+- integrated or better: 98 | proven: 0 | overclaims (claimed >= verified + 25): 24 | no evidence: 18
+- by level: {'FILES_PRESENT': 5, 'INHERITED_OK': 12, 'INTEGRATED': 86, 'NO_EVIDENCE': 18, 'UNIT_VERIFIED': 4}
 
 ## Biggest gaps between old claim and evidence
 | ID | Feature | Claimed | Verified | Level | Flags | Next step |
@@ -155,6 +155,6 @@
 | F-0120 | Self-Evolving Architect Bot | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0121 | Agent Experience Tracking (Procedural Memory | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0122 | LOCUS_SHORTHAND 4× Text Compressor | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
-| F-0123 | 3-Level Tag Hierarchy & Semantic Indexing | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
+| F-0123 | 3-Level Tag Hierarchy & Semantic Indexing | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
 | F-0124 | Auxiliary LLM Client | - | 0% | NO_EVIDENCE |  | Name the files this feature lives in (evidence.files). |
 | F-0125 | Modularity foundation: provider registry + c | - | 85% | INTEGRATED |  | Run tools/tracker/record_proof.py, then the human adds the printed line to tracker/signoff |
