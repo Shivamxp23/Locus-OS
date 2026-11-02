@@ -300,3 +300,4 @@
 {"event":"planned","sprint":"S99","start":"2027-11-15","end":"2027-11-18","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-105"],"date":"2027-11-15"}
 {"event":"accepted","story":"US-105","feature":"F-0067","level":4,"note":"Ran pytest on test_notifications.py: all 10 tests passed; priority routing, quiet hours, and 503 switch verified","date":"2027-11-18","commit":"e88be670b8e2"}
 {"event":"closed","sprint":"S99","date":"2027-11-18","planned_points":2,"velocity":2,"done":["US-105"],"not_done":{}}
+{"event":"planned","sprint":"S100","start":"2027-11-19","end":"2027-11-22","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-106"],"date":"2027-11-19"}
