@@ -31,3 +31,4 @@ guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
 - Sidecar routes bind strictly to loopback (`127.0.0.1:8420`).
 - HTTP timeouts enforced on all probes (5s default probe timeout, 3s service probe timeout).
 - Modular off-switch (`locus.connectivity_check.enabled`) immediately returns HTTP 503 without probing.
+
