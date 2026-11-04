@@ -6757,6 +6757,10 @@ def create_app(
         BaseNotificationsProvider,
         DefaultNotificationsProvider,
     )
+    from sidecar.providers.connectivity import (
+        BaseConnectivityProvider,
+        DefaultConnectivityProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -10017,6 +10021,109 @@ def create_app(
                 },
             )
         provider = _get_notifications_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # Connectivity Check routes (SPEC §29.5 / F-0068 / US-106)
+    active_registry.register(
+        "connectivity", "default_connectivity", DefaultConnectivityProvider
+    )
+    active_registry.register(
+        "connectivity_check", "default_connectivity", DefaultConnectivityProvider
+    )
+
+    def _is_connectivity_enabled() -> Tuple[bool, str]:
+        switch = "locus.connectivity_check.enabled"
+        val = config.get(switch)
+        if val is not None and not config.is_enabled(switch):
+            return False, switch
+        return True, ""
+
+    def _get_connectivity_provider() -> BaseConnectivityProvider:
+        if not hasattr(app.state, "connectivity_provider") or app.state.connectivity_provider is None:
+            prov_cls = active_registry.get("connectivity", "default_connectivity") or active_registry.get("connectivity_check", "default_connectivity")
+            if prov_cls:
+                app.state.connectivity_provider = prov_cls()
+            else:
+                app.state.connectivity_provider = DefaultConnectivityProvider()
+        return app.state.connectivity_provider
+
+    @app.api_route("/connectivity/check", methods=["GET", "POST"])
+    def connectivity_check_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §29.5: Check internet connectivity probe endpoints."""
+        enabled, switch = _is_connectivity_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Connectivity Check feature is disabled",
+                    "disabled": switch,
+                },
+            )
+        timeout = None
+        force_refresh = False
+        if body and isinstance(body, dict):
+            timeout = body.get("timeout")
+            force_refresh = bool(body.get("force_refresh", False))
+        provider = _get_connectivity_provider()
+        res = provider.check_internet(timeout=timeout, force_refresh=force_refresh)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/connectivity/services")
+    def connectivity_services_route(body: Dict[str, Any]) -> Any:
+        """SPEC §29.5: Check internal/external services health endpoints."""
+        enabled, switch = _is_connectivity_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Connectivity Check feature is disabled",
+                    "disabled": switch,
+                },
+            )
+        services = body.get("services") or []
+        timeout = body.get("timeout")
+        provider = _get_connectivity_provider()
+        res = provider.check_services(services=services, timeout=timeout)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/connectivity/gates")
+    def connectivity_gates_route() -> Any:
+        """SPEC §29.5: Operational gates evaluation."""
+        enabled, switch = _is_connectivity_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Connectivity Check feature is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_connectivity_provider()
+        res = provider.evaluate_gates()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/connectivity/status")
+    def connectivity_status_route() -> Any:
+        """SPEC §29.5: Connectivity check subsystem status and telemetry."""
+        enabled, switch = _is_connectivity_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Connectivity Check feature is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_connectivity_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)
