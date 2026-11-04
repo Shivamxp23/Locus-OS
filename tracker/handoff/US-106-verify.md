@@ -1,5 +1,5 @@
 VERDICT: ACCEPT
-Verifier: In-session dual-model verification (Claude Opus / Gemini 3.8 Flash)
+Verifier: Claude Opus
 
 ## Guard output
 LOCUS GUARD mode=full root=C:\Users\soni8\Desktop\everything\University 2.0\Project(s)\5_Locus\locus-os
@@ -29,6 +29,5 @@ guard: PASS {'FAIL': 0, 'WARN': 9, 'INFO': 0}
 
 ## Security check
 - Sidecar routes bind strictly to loopback (`127.0.0.1:8420`).
-- HTTP timeouts enforced on all probes (5s default probe timeout, 3s service probe timeout).
+- HTTP timeouts enforced on all probes (5.0s probe timeout, 3.0s service probe timeout).
 - Modular off-switch (`locus.connectivity_check.enabled`) immediately returns HTTP 503 without probing.
-
