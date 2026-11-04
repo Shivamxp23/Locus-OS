@@ -303,3 +303,4 @@
 {"event":"planned","sprint":"S100","start":"2027-11-19","end":"2027-11-22","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-106"],"date":"2027-11-19"}
 {"event":"accepted","story":"US-106","feature":"F-0068","level":4,"note":"Connectivity check with dual probe fallback, service probe, gates, modular 503 off-switch, TypeScript client and full tests","date":"2027-11-19","commit":"ecc159fa3afd"}
 {"event":"closed","sprint":"S100","date":"2027-11-22","planned_points":2,"velocity":2,"done":["US-106"],"not_done":{}}
+{"event":"planned","sprint":"S101","start":"2027-11-23","end":"2027-11-26","goal":"Every feature reads config and registers as a provider through one accessor and one registry.","capacity":2,"points":2,"stories":["US-107"],"date":"2027-11-23"}
