@@ -29,6 +29,10 @@ from sidecar.diagnostics.notifications import (
     NotificationPriority,
     QueuedNotification,
 )
+from sidecar.diagnostics.connectivity import (
+    ConnectivityChecker,
+    DEFAULT_CONNECTIVITY_ENDPOINTS,
+)
 
 __all__ = [
     "ErrorCategory",
@@ -51,4 +55,6 @@ __all__ = [
     "BaseNotificationChannel",
     "MemoryNotificationChannel",
     "NotificationDispatcher",
+    "ConnectivityChecker",
+    "DEFAULT_CONNECTIVITY_ENDPOINTS",
 ]

@@ -50,6 +50,7 @@ export * from "./diagnostics/index";
 export * from "./auxiliary-client";
 export * from "./health/index";
 export * from "./notifications";
+export * from "./connectivity";
 export * from "./tracking/pricing";
 export * from "./tracking/rate-limits";
 export * from "./tracking/usage";

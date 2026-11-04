@@ -482,6 +482,10 @@ from sidecar.providers.notifications import (
     BaseNotificationsProvider,
     DefaultNotificationsProvider,
 )
+from sidecar.providers.connectivity import (
+    BaseConnectivityProvider,
+    DefaultConnectivityProvider,
+)
 
 __all__ = [
 
@@ -808,4 +812,6 @@ __all__ = [
     "DefaultHealthChecksProvider",
     "BaseNotificationsProvider",
     "DefaultNotificationsProvider",
+    "BaseConnectivityProvider",
+    "DefaultConnectivityProvider",
 ]

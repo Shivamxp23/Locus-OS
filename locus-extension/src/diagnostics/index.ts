@@ -3,3 +3,4 @@
  */
 export * from "./error-classifier";
 export * from "./auxiliary-client";
+export * from "../connectivity";
