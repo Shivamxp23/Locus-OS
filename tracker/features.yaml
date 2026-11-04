@@ -3373,7 +3373,7 @@ features:
   category: Observability
   verdict: AUGMENT
   source: Locus
-  provider: null
+  provider: codegraph
   layer: infra
   inherited: false
   manual: false
@@ -3392,11 +3392,27 @@ features:
     '§29.6: Code Graph Analysis': 31eaaa728660618a
   evidence:
     files:
-    - .graphifyignore
-    symbols: []
+    - sidecar/codegraph/analyzer.py
+    - sidecar/codegraph/__init__.py
+    - sidecar/providers/codegraph.py
+    - sidecar/providers/__init__.py
+    - sidecar/service.py
+    - locus-extension/src/codegraph/index.ts
+    - locus-extension/src/index.ts
+    - tests/unit/test_codegraph.py
+    - tests/integration/test_codegraph_service.py
+    symbols:
+    - file: sidecar/codegraph/analyzer.py
+      name: CodeGraphAnalyzer
+    - file: sidecar/codegraph/analyzer.py
+      name: DependencyGraph
+    - file: sidecar/providers/codegraph.py
+      name: DefaultCodeGraphProvider
+    unit:
+    - cmd: py -3 -m pytest tests/unit/test_codegraph.py -q
+    integration:
+    - cmd: py -3 -m pytest tests/integration/test_codegraph_service.py -q
     guard: []
-    unit: []
-    integration: []
   depends_on: []
 - id: F-0070
   title: Subconscious

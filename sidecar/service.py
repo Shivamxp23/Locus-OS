@@ -6761,6 +6761,10 @@ def create_app(
         BaseConnectivityProvider,
         DefaultConnectivityProvider,
     )
+    from sidecar.providers.codegraph import (
+        BaseCodeGraphProvider,
+        DefaultCodeGraphProvider,
+    )
     from sidecar.screen.capture import ScreenCaptureResult
     from sidecar.screen.desktop_control import DesktopAction, DesktopActionResult
     from sidecar.screen.screen_intelligence import ScreenElement
@@ -10124,6 +10128,117 @@ def create_app(
                 },
             )
         provider = _get_connectivity_provider()
+        res = provider.get_status()
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    # Code Graph Analysis routes (SPEC §29.6 / F-0069 / US-107)
+    active_registry.register(
+        "codegraph", "default_codegraph", DefaultCodeGraphProvider
+    )
+    active_registry.register(
+        "code_graph", "default_codegraph", DefaultCodeGraphProvider
+    )
+
+    def _is_codegraph_enabled() -> Tuple[bool, str]:
+        switch = "locus.code_graph.enabled"
+        val = config.get(switch)
+        if val is None:
+            switch = "locus.codegraph.enabled"
+            val = config.get(switch)
+        if val is not None and not config.is_enabled(switch):
+            return False, switch
+        return True, ""
+
+    def _get_codegraph_provider() -> BaseCodeGraphProvider:
+        if not hasattr(app.state, "codegraph_provider") or app.state.codegraph_provider is None:
+            prov_cls = active_registry.get("codegraph", "default_codegraph") or active_registry.get("code_graph", "default_codegraph")
+            if prov_cls:
+                app.state.codegraph_provider = prov_cls()
+            else:
+                app.state.codegraph_provider = DefaultCodeGraphProvider()
+        return app.state.codegraph_provider
+
+    @app.api_route("/codegraph/analyze", methods=["GET", "POST"])
+    def codegraph_analyze_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §29.6: Build dependency graph from AST scanning."""
+        enabled, switch = _is_codegraph_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Code Graph feature is disabled",
+                    "disabled": switch,
+                },
+            )
+        project_path = "."
+        if body and isinstance(body, dict):
+            project_path = body.get("project_path") or "."
+        provider = _get_codegraph_provider()
+        res = provider.analyze_codebase(project_path=project_path)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.post("/codegraph/scope")
+    def codegraph_scope_route(body: Dict[str, Any]) -> Any:
+        """SPEC §29.6: Identify minimal file set and expand with transitive dependents."""
+        enabled, switch = _is_codegraph_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Code Graph feature is disabled",
+                    "disabled": switch,
+                },
+            )
+        task_description = body.get("task_description") or ""
+        project_path = body.get("project_path") or "."
+        depth = int(body.get("depth", 2))
+        provider = _get_codegraph_provider()
+        res = provider.scope_task_files(task_description=task_description, project_path=project_path, depth=depth)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.api_route("/codegraph/graph", methods=["GET", "POST"])
+    def codegraph_graph_route(body: Optional[Dict[str, Any]] = None) -> Any:
+        """SPEC §29.6: Get pre-built /graphify graph if fresh, or build via AST scanner."""
+        enabled, switch = _is_codegraph_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Code Graph feature is disabled",
+                    "disabled": switch,
+                },
+            )
+        project_path = "."
+        max_age_hours = 24.0
+        if body and isinstance(body, dict):
+            project_path = body.get("project_path") or "."
+            if "max_age_hours" in body:
+                max_age_hours = float(body["max_age_hours"])
+        provider = _get_codegraph_provider()
+        res = provider.get_or_build_graph(project_path=project_path, max_age_hours=max_age_hours)
+        if res.get("status_code") == 503:
+            return JSONResponse(status_code=503, content=res)
+        return res
+
+    @app.get("/codegraph/status")
+    def codegraph_status_route() -> Any:
+        """SPEC §29.6: Code graph subsystem status and configuration."""
+        enabled, switch = _is_codegraph_enabled()
+        if not enabled:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "detail": "Code Graph feature is disabled",
+                    "disabled": switch,
+                },
+            )
+        provider = _get_codegraph_provider()
         res = provider.get_status()
         if res.get("status_code") == 503:
             return JSONResponse(status_code=503, content=res)

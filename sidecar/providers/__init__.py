@@ -486,6 +486,10 @@ from sidecar.providers.connectivity import (
     BaseConnectivityProvider,
     DefaultConnectivityProvider,
 )
+from sidecar.providers.codegraph import (
+    BaseCodeGraphProvider,
+    DefaultCodeGraphProvider,
+)
 
 __all__ = [
 
@@ -814,4 +818,6 @@ __all__ = [
     "DefaultNotificationsProvider",
     "BaseConnectivityProvider",
     "DefaultConnectivityProvider",
+    "BaseCodeGraphProvider",
+    "DefaultCodeGraphProvider",
 ]
